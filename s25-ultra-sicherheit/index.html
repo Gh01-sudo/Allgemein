@@ -1,0 +1,601 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>S25 Ultra Sicherheitskompass</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: Leitfaden mit Kapitelnavigation links, Text + interaktivem Handy-Modell je Kapitel */
+:root{
+  --bg:#EEF2F1; --surface:#FFFFFF; --ink:#13201F; --muted:#54625F; --line:#D3DCDA;
+  --accent:#0B6B62; --accent-soft:#D5ECE8; --warn:#B4531A; --warn-soft:#F8E4D6; --ok:#2E7D32; --bad:#B3261E;
+  --bezel:#1B1F22; --scr:#F3F4F7; --scrcard:#FFFFFF; --scrink:#111418; --scrmuted:#6B7178; --scrhl:#0B6B62;
+  --f-display:"Familjen Grotesk","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans","Segoe UI",system-ui,sans-serif;
+  --f-mono:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0F1615; --surface:#172120; --ink:#E4ECEA; --muted:#9AABA7; --line:#2A3735;
+  --accent:#4FC2B4; --accent-soft:#163B37; --warn:#F0A060; --warn-soft:#3A2618; --ok:#7BC67F; --bad:#F2867E;
+  --bezel:#050707; --scr:#0B0C0E; --scrcard:#1A1C20; --scrink:#ECEEF1; --scrmuted:#9097A0; --scrhl:#4FC2B4; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0F1615; --surface:#172120; --ink:#E4ECEA; --muted:#9AABA7; --line:#2A3735;
+  --accent:#4FC2B4; --accent-soft:#163B37; --warn:#F0A060; --warn-soft:#3A2618; --ok:#7BC67F; --bad:#F2867E;
+  --bezel:#050707; --scr:#0B0C0E; --scrcard:#1A1C20; --scrink:#ECEEF1; --scrmuted:#9097A0; --scrhl:#4FC2B4; color-scheme:dark}
+
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:16px;line-height:1.6;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--f-display);line-height:1.15;text-wrap:balance;margin:0}
+a{color:var(--accent)}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:4px}
+.wrap{max-width:1180px;margin:0 auto}
+.eyebrow{font-family:var(--f-mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+code,.path{font-family:var(--f-mono);font-size:.86em}
+
+/* Kopf */
+header.hero{padding-block:40px 28px;display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:32px;align-items:end}
+header.hero h1{font-size:clamp(34px,5.5vw,58px);font-weight:700;letter-spacing:-.02em}
+header.hero h1 span{color:var(--accent)}
+.lead{max-width:60ch;color:var(--muted);font-size:17px;margin:14px 0 0}
+.progress-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:center}
+.ring{width:92px;height:92px;flex:none}
+.ring circle{fill:none;stroke-width:9}
+.ring .bgc{stroke:var(--line)} .ring .fgc{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .5s}
+.ring text{fill:var(--ink);font-family:var(--f-display);font-weight:700;font-size:22px}
+.progress-card p{margin:4px 0 0;color:var(--muted);font-size:14px}
+.progress-card strong{font-family:var(--f-display);font-size:19px}
+
+/* Modell-Check */
+.model{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:36px}
+.model-head{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:baseline;justify-content:space-between}
+.model h2{font-size:24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.chip{font:600 14px var(--f-body);padding:8px 14px;border-radius:999px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.chip[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+.model-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.fact{border-top:2px solid var(--line);padding-top:10px;min-width:0}
+.fact b{display:block;font-family:var(--f-display);font-size:22px;font-variant-numeric:tabular-nums}
+.fact span{font-size:13px;color:var(--muted)}
+.fact.alert{border-color:var(--warn)} .fact.alert b{color:var(--warn)}
+.fact.good{border-color:var(--ok)}
+.model-note{margin:14px 0 0;font-size:14px;color:var(--muted)}
+.callout{margin-top:14px;padding:12px 14px;border-radius:10px;background:var(--warn-soft);color:var(--ink);font-size:15px}
+.callout[data-kind="ok"]{background:var(--accent-soft)}
+
+/* Layout Hauptteil */
+.main{display:grid;grid-template-columns:230px minmax(0,1fr);gap:40px;align-items:start}
+nav.toc{position:sticky;top:calc(env(safe-area-inset-top,0px) + 16px)}
+nav.toc ol{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:2px}
+nav.toc a{display:flex;gap:10px;align-items:center;padding:6px 8px;border-radius:8px;text-decoration:none;color:var(--ink);font-size:14px}
+nav.toc a:hover{background:var(--surface)}
+nav.toc .dot{width:10px;height:10px;border-radius:50%;border:2px solid var(--line);flex:none}
+nav.toc a.done .dot{background:var(--accent);border-color:var(--accent)}
+.filter{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:22px}
+.filter .chip{font-size:13px;padding:6px 12px}
+
+.tip-search{display:flex;gap:14px;align-items:flex-start;background:var(--accent-soft);border-radius:12px;padding:14px 16px;margin-bottom:30px;font-size:15px}
+.tip-search svg{flex:none;margin-top:2px}
+
+/* Kapitel */
+article.ch{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:28px;padding-block:30px;border-top:1px solid var(--line);scroll-margin-top:16px}
+article.ch[hidden]{display:none}
+.ch-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
+.badge{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
+.badge.p1{background:var(--warn-soft);color:var(--warn)}
+.badge.p2{background:var(--accent-soft);color:var(--accent)}
+.badge.p3{background:transparent;border:1px solid var(--line);color:var(--muted)}
+.ch h2{font-size:clamp(24px,3vw,30px)}
+.ch .why{color:var(--muted);max-width:62ch;margin:10px 0 16px}
+.ch ol.steps{margin:0 0 16px;padding-left:22px;display:grid;gap:6px;max-width:64ch}
+.ch .path{display:inline-block;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:6px 10px;margin:0 0 14px;line-height:1.5;max-width:100%;overflow-wrap:anywhere}
+.ch .note{font-size:14px;color:var(--muted);max-width:64ch;margin:0 0 16px}
+.done-toggle{display:inline-flex;gap:10px;align-items:center;cursor:pointer;font-weight:600;padding:10px 14px;border-radius:10px;border:1px solid var(--line);background:var(--surface);user-select:none}
+.done-toggle input{width:20px;height:20px;accent-color:var(--accent)}
+.done-toggle:has(input:checked){border-color:var(--accent);color:var(--accent)}
+
+/* Handy-Modell */
+.phone-col{display:flex;flex-direction:column;align-items:center;gap:10px}
+.phone{width:250px;max-width:100%;aspect-ratio:9/19;background:var(--bezel);border-radius:36px;padding:9px;position:relative;box-shadow:0 18px 40px -22px rgba(0,0,0,.45)}
+.phone::before{content:"";position:absolute;top:17px;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:#000;z-index:2}
+.screen{background:var(--scr);color:var(--scrink);border-radius:28px;height:100%;overflow:hidden;display:flex;flex-direction:column;font-family:var(--f-body)}
+.sbar{display:flex;justify-content:space-between;font:500 10px var(--f-mono);padding:12px 18px 0;color:var(--scrmuted)}
+.stitle{font-family:var(--f-display);font-weight:600;font-size:21px;padding:26px 16px 14px;line-height:1.15}
+.srows{padding:0 10px;display:flex;flex-direction:column;gap:8px;overflow:hidden}
+.sgroup{background:var(--scrcard);border-radius:16px;overflow:hidden}
+.srow{display:flex;align-items:center;gap:8px;padding:9px 12px;font-size:12.5px;line-height:1.3;position:relative}
+.srow + .srow{border-top:1px solid color-mix(in srgb,var(--scrmuted) 18%,transparent)}
+.srow .tx{flex:1;min-width:0}
+.srow .sub{display:block;font-size:10.5px;color:var(--scrmuted)}
+.srow .sub.on{color:var(--scrhl)}
+.tog{width:30px;height:17px;border-radius:9px;background:color-mix(in srgb,var(--scrmuted) 45%,transparent);position:relative;flex:none}
+.tog::after{content:"";position:absolute;top:2px;left:2px;width:13px;height:13px;border-radius:50%;background:#fff;transition:left .2s}
+.tog.on{background:var(--scrhl)} .tog.on::after{left:15px}
+.srow.hl{outline:2px solid var(--scrhl);outline-offset:-2px;border-radius:12px;background:color-mix(in srgb,var(--scrhl) 12%,var(--scrcard))}
+.srow.hl::before{content:"";position:absolute;right:10px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;border:2px solid var(--scrhl);opacity:.0;animation:tap 1.6s ease-out infinite}
+@keyframes tap{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.5);opacity:0}}
+@media (prefers-reduced-motion:reduce){.srow.hl::before{animation:none;opacity:.6}.ring .fgc{transition:none}}
+.caption{font-size:14px;text-align:center;max-width:270px;min-height:3.2em;color:var(--ink)}
+.caption .cnt{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:block;font-weight:500}
+.stepper{display:flex;gap:8px}
+.stepper button{font:600 14px var(--f-body);padding:7px 14px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.stepper button:disabled{opacity:.4;cursor:default}
+.stepper button.primary{background:var(--accent);border-color:var(--accent);color:var(--surface)}
+
+/* Quiz */
+section.block{padding-block:36px;border-top:1px solid var(--line)}
+section.block h2{font-size:clamp(24px,3vw,30px)}
+section.block > p{color:var(--muted);max-width:62ch}
+.quiz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin-top:18px}
+.sms{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.sms .from{font:500 12px var(--f-mono);color:var(--muted)}
+.bubble{background:var(--scr);border-radius:16px 16px 16px 4px;padding:12px 14px;font-size:15px;overflow-wrap:anywhere}
+.bubble u{color:var(--accent)}
+.sms .acts{display:flex;gap:8px;flex-wrap:wrap}
+.sms .acts button{flex:1;font:600 14px var(--f-body);padding:9px;border-radius:8px;border:1px solid var(--line);background:transparent;color:var(--ink);cursor:pointer}
+.sms .res{font-size:14px;border-radius:8px;padding:10px 12px}
+.sms .res.right{background:var(--accent-soft)} .sms .res.wrong{background:var(--warn-soft)}
+.quiz-score{margin-top:14px;font-weight:600}
+
+/* Notfallplan */
+.timeline{list-style:none;padding:0;margin:20px 0 0;display:grid;gap:0;counter-reset:t;max-width:760px}
+.timeline li{display:grid;grid-template-columns:48px minmax(0,1fr);gap:14px;padding-bottom:20px;position:relative}
+.timeline li::before{counter-increment:t;content:counter(t);width:36px;height:36px;border-radius:50%;background:var(--warn);color:var(--surface);font:700 16px var(--f-display);display:grid;place-items:center}
+.timeline li::after{content:"";position:absolute;left:17px;top:40px;bottom:2px;width:2px;background:var(--line)}
+.timeline li:last-child::after{display:none}
+.timeline h3{font-size:18px;margin-top:6px}
+.timeline p{margin:4px 0 0;color:var(--muted)}
+.copy{font:500 13px var(--f-mono);padding:2px 8px;border-radius:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer;margin-left:4px}
+
+/* Checkliste */
+.check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 24px;margin-top:16px;max-width:820px}
+.check-grid label{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.check-grid input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);flex:none}
+.reset{margin-top:16px;font:600 14px var(--f-body);background:transparent;border:1px solid var(--line);color:var(--muted);padding:8px 14px;border-radius:8px;cursor:pointer}
+footer{padding-block:30px 50px;color:var(--muted);font-size:13px;border-top:1px solid var(--line);margin-top:20px}
+footer p{max-width:80ch;margin:0 0 8px}
+
+@media (max-width:980px){
+  .main{grid-template-columns:minmax(0,1fr)} nav.toc{display:none}
+  header.hero{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:720px){
+  article.ch{grid-template-columns:minmax(0,1fr)}
+  .model-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .quiz,.check-grid{grid-template-columns:minmax(0,1fr)}
+}
+</style>
+<style>
+/* Ergänzungen für die S25-Ultra-Fassung */
+.hero-device{display:flex;gap:22px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.hero-device svg{flex:none}
+.hero-device .specs{display:grid;gap:6px;font-size:14px;min-width:0}
+.hero-device .specs div{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid var(--line);padding-bottom:5px}
+.hero-device .specs span:first-child{color:var(--muted)}
+.hero-device .specs span:last-child{font-weight:600;text-align:right;font-variant-numeric:tabular-nums}
+.sv-body{fill:var(--bezel)} .sv-scr{fill:var(--accent-soft)} .sv-cam{fill:var(--surface);stroke:var(--line)} .sv-pen{fill:var(--muted)}
+.statusbar{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px}
+.badge.new{background:var(--ink);color:var(--bg)}
+.tricks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:20px}
+.trick{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.trick .tk-head{display:flex;gap:10px;align-items:center;margin-bottom:6px}
+.trick .num{font:600 12px var(--f-mono);color:var(--accent)}
+.trick h3{font-size:18px}
+.trick p{margin:0;color:var(--muted);font-size:15px}
+.trick details{margin-top:10px}
+.trick summary{cursor:pointer;font-weight:600;color:var(--accent);list-style:none;display:inline-flex;gap:6px;align-items:center}
+.trick summary::-webkit-details-marker{display:none}
+.trick summary::before{content:"▸";transition:transform .2s}
+.trick details[open] summary::before{transform:rotate(90deg)}
+.trick .how{margin-top:10px;font-size:15px;color:var(--ink)}
+.trick .how .path{margin:0 0 8px}
+.trick .how ol{margin:0;padding-left:20px;display:grid;gap:4px}
+.reveal-all{margin-top:14px;font:600 14px var(--f-body);background:transparent;border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
+.src{font-size:13px;color:var(--muted)}
+.src ul{margin:6px 0 0;padding-left:18px}
+@media (max-width:720px){.tricks,.statusbar{grid-template-columns:minmax(0,1fr)}.hero-device{flex-direction:column;align-items:stretch}.hero-device svg{align-self:center}}
+</style>
+
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <div class="eyebrow">Anleitung · nur Galaxy S25 Ultra · One UI 9 · Android 17</div>
+      <h1>S25 Ultra <span>Sicherheits&shy;kompass</span></h1>
+      <p class="lead">Elf Einstellungen und vierzehn versteckte Tricks, die Ihr Galaxy S25 Ultra unter One UI 9 deutlich sicherer machen. Jedes Kapitel zeigt den Weg durchs Menü als klickbares Handy-Modell. Haken Sie ab, was erledigt ist: Der Fortschritt bleibt in diesem Browser gespeichert.</p>
+    </div>
+    <div class="progress-card" aria-live="polite">
+      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
+        <circle class="bgc" cx="50" cy="50" r="42"></circle>
+        <circle class="fgc" id="ringFg" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 50 50)"></circle>
+        <text id="ringTxt" x="50" y="58" text-anchor="middle">0/11</text>
+      </svg>
+      <div><strong id="progTitle">Noch nicht begonnen</strong><p id="progSub">Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.</p></div>
+    </div>
+  </header>
+
+  <section class="model" aria-labelledby="devH">
+    <div class="model-head">
+      <h2 id="devH">Ihr Gerät</h2>
+      <span class="eyebrow">Prüfen: Einstellungen › Telefoninfo › Softwareinformationen</span>
+    </div>
+    <div class="hero-device" style="margin-top:16px">
+      <svg width="120" height="200" viewBox="0 0 120 200" role="img" aria-label="Zeichnung des Galaxy S25 Ultra mit S Pen">
+        <rect class="sv-body" x="8" y="4" width="88" height="192" rx="14"></rect>
+        <rect class="sv-scr" x="12" y="8" width="80" height="184" rx="11"></rect>
+        <circle class="sv-body" cx="52" cy="16" r="3"></circle>
+        <rect class="sv-pen" x="104" y="20" width="7" height="150" rx="3.5"></rect>
+        <path class="sv-pen" d="M104 170h7l-3.5 14z"></path>
+        <rect x="24" y="40" width="56" height="8" rx="4" fill="var(--accent)"></rect>
+        <rect x="24" y="56" width="56" height="22" rx="6" fill="var(--surface)"></rect>
+        <rect x="24" y="84" width="56" height="44" rx="6" fill="var(--surface)"></rect>
+        <rect x="30" y="92" width="30" height="5" rx="2.5" fill="var(--line)"></rect>
+        <rect x="30" y="104" width="38" height="5" rx="2.5" fill="var(--line)"></rect>
+        <rect x="30" y="116" width="24" height="5" rx="2.5" fill="var(--line)"></rect>
+        <path d="M52 146l14 6v9c0 9-6 15-14 18-8-3-14-9-14-18v-9z" fill="var(--accent)"></path>
+        <path d="M46 162l4.5 4.5 9-9" stroke="var(--surface)" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"></path>
+      </svg>
+      <div class="specs" style="flex:1">
+        <div><span>Modellnummer</span><span>SM-S938B (Europa)</span></div>
+        <div><span>Marktstart</span><span>Februar 2025 mit One UI 7</span></div>
+        <div><span>Diese Anleitung</span><span>One UI 9 · Android 17</span></div>
+        <div><span>Updates zugesagt</span><span>7 Jahre, bis ca. 2032</span></div>
+        <div><span>Sicherheits-Hardware</span><span>Knox Vault (eigener Sicherheitschip)</span></div>
+        <div><span>S Pen</span><span>ohne Bluetooth, keine Fernsteuerung</span></div>
+      </div>
+    </div>
+    <div class="callout" data-kind="ok">Noch kein One UI 9? Samsung verteilt das Update seit Herbst 2026 schrittweise nach Region und Anbieter. Suchen Sie unter <b>Einstellungen › Software-Update</b> manuell danach. Bis es kommt, gelten die meisten Kapitel auch für One UI 8.</div>
+  </section>
+
+  <div class="main">
+    <nav class="toc" aria-label="Kapitel">
+      <div class="eyebrow">Kapitel</div>
+      <ol id="toc"></ol>
+      <div class="eyebrow" style="margin-top:18px">Außerdem</div>
+      <ol>
+        <li><a href="#tricks"><span class="dot"></span>Versteckte Tricks</a></li>
+        <li><a href="#quiz"><span class="dot"></span>Phishing-Quiz</a></li>
+        <li><a href="#notfall"><span class="dot"></span>Handy weg – was tun?</a></li>
+        <li><a href="#checkliste"><span class="dot"></span>Checkliste</a></li>
+      </ol>
+    </nav>
+
+    <main>
+      <div class="filter" role="group" aria-label="Kapitel filtern">
+        <button class="chip" data-f="all" aria-pressed="true">Alle Kapitel</button>
+        <button class="chip" data-f="p1" aria-pressed="false">Nur Pflicht</button>
+        <button class="chip" data-f="new" aria-pressed="false">Neu in One UI 9</button>
+        <button class="chip" data-f="open" aria-pressed="false">Noch offen</button>
+      </div>
+
+      <div class="tip-search">
+        <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
+        <div><strong>Menüpunkt nicht gefunden?</strong> Die deutschen Namen der neuen One-UI-9-Funktionen waren bei Redaktionsschluss noch nicht überall bestätigt. Tippen Sie in den Einstellungen oben auf die Lupe und suchen Sie nach dem fett gedruckten Begriff. Klappt das nicht, hilft der englische Name in Klammern.</div>
+      </div>
+
+      <div id="chapters"></div>
+
+      <section class="block" id="tricks" aria-labelledby="trH">
+        <div class="eyebrow">Für Fortgeschrittene</div>
+        <h2 id="trH">Versteckte Tricks</h2>
+        <p>Funktionen, die tief im Menü stecken oder kaum jemand kennt. Alle sind offizielle Bordmittel, nichts davon braucht Root, Zusatz-Apps oder Garantieverlust.</p>
+        <div class="tricks" id="trickBox"></div>
+        <button class="reveal-all" id="revealAll" type="button">Alle Tricks aufklappen</button>
+      </section>
+
+      <section class="block" id="quiz" aria-labelledby="quizH">
+        <div class="eyebrow">Training</div>
+        <h2 id="quizH">Echt oder Betrug?</h2>
+        <p>Die beste Einstellung hilft nicht, wenn man selbst auf den Link tippt. Entscheiden Sie bei jeder Nachricht.</p>
+        <div class="quiz" id="quizBox"></div>
+        <div class="quiz-score" id="quizScore" aria-live="polite"></div>
+      </section>
+
+      <section class="block" id="notfall" aria-labelledby="notH">
+        <div class="eyebrow">Notfallplan</div>
+        <h2 id="notH">S25 Ultra verloren oder gestohlen</h2>
+        <p>In dieser Reihenfolge handeln. Notieren Sie die IMEI jetzt schon: Im Ziffernblock der Telefon-App <code>*#06#</code> <button class="copy" data-copy="*#06#">kopieren</button> wählen und einen Screenshot an einem sicheren Ort ablegen.</p>
+        <ol class="timeline">
+          <li><div></div><div><h3>Aus der Ferne sperren</h3><p>Auf einem anderen Gerät <code>smartthingsfind.samsung.com</code> öffnen. Ohne Zugang zu Ihren Konten funktioniert die <b>Remote-Sperre</b> aus dem Diebstahlschutz: <code>android.com/lock</code>, nur mit Telefonnummer und Sicherheitsfrage.</p></div></li>
+          <li><div></div><div><h3>Orten</h3><p>Dank Offline-Suche wird das S25 Ultra auch ohne Internet über andere Galaxy- und Android-Geräte in der Nähe gefunden. Gehen Sie nicht selbst hin, sondern geben Sie den Standort an die Polizei.</p></div></li>
+          <li><div></div><div><h3>SIM und eSIM sperren lassen</h3><p>Rufen Sie die Sperr-Hotline Ihres Anbieters an. Bank- und Kreditkarten sperrt die zentrale Nummer 116 116, falls Samsung Wallet oder Google Wallet eingerichtet sind.</p></div></li>
+          <li><div></div><div><h3>Passwörter ändern, Gerät abmelden</h3><p>Zuerst Samsung- und Google-Konto, dann E-Mail, Banking und Messenger. In jedem Konto das verlorene Gerät aus der Geräteliste entfernen.</p></div></li>
+          <li><div></div><div><h3>Anzeige erstatten</h3><p>Bei der Polizei, mit IMEI und Kaufbeleg. Die Anzeige brauchen Sie auch für die Versicherung.</p></div></li>
+          <li><div></div><div><h3>Nur wenn es nicht zurückkommt: löschen</h3><p>In SmartThings Find „Daten löschen“ wählen. Danach lässt sich das Gerät nicht mehr orten. Die Aktivierungssperre bleibt bestehen, ein Dieb kann es nicht neu einrichten.</p></div></li>
+        </ol>
+      </section>
+
+      <section class="block" id="checkliste" aria-labelledby="chkH">
+        <div class="eyebrow">Zum Abhaken</div>
+        <h2 id="chkH">Ihre Checkliste</h2>
+        <p>Dieselben Haken wie in den Kapiteln.</p>
+        <div class="check-grid" id="checkGrid"></div>
+        <button class="reset" id="resetBtn" type="button">Alle Haken entfernen</button>
+        <span id="resetConfirm" hidden> <button class="reset" id="resetYes" type="button" style="border-color:var(--bad);color:var(--bad)">Ja, zurücksetzen</button> <button class="reset" id="resetNo" type="button">Abbrechen</button></span>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <p>Stand: November 2026, für das Galaxy S25 Ultra mit One UI 9 (Android 17). Funktionen und Menüs können sich je nach Region, Mobilfunkanbieter und Update-Stand unterscheiden. Diese Anleitung ist unabhängig und nicht von Samsung oder Google herausgegeben.</p>
+    <div class="src">Quellen zu den One-UI-9-Neuerungen:
+      <ul>
+        <li><a href="https://www.notebookcheck.net/Samsung-One-UI-9-Security-features-you-must-turn-on-yourself.1415703.0.html" target="_blank" rel="noopener">Notebookcheck: Security features you must turn on yourself</a></li>
+        <li><a href="https://www.engadget.com/2279220/samsung-galaxy-one-ui-9-features-you-should-use/" target="_blank" rel="noopener">Engadget: One UI 9 features you should use</a></li>
+        <li><a href="https://www.droid-life.com/2026/09/28/galaxy-s25-ultra-one-ui-9-updates-the-beginning/" target="_blank" rel="noopener">Droid Life: Galaxy S25 Ultra One UI 9 Updates</a></li>
+        <li><a href="https://www.bsi.bund.de/" target="_blank" rel="noopener">BSI: Tipps zur Smartphone-Sicherheit</a></li>
+      </ul>
+    </div>
+  </footer>
+</div>
+
+<script>
+(function(){
+"use strict";
+function store(k,v){try{if(v===undefined){return JSON.parse(localStorage.getItem(k));}localStorage.setItem(k,JSON.stringify(v));}catch(e){return null;}}
+
+/* Zeile: [Text, Untertext, Schalter(1 an / 0 aus / null), hervorgehoben] ; "|" trennt Gruppen */
+var CH=[
+{id:"updates",p:"p1",t:"One UI 9 und Sicherheitspatch installieren",
+ why:"Das S25 Ultra bekommt bis etwa 2032 Sicherheitsupdates. Sie schützen aber nur, wenn sie auch installiert werden. Mit One UI 9 kamen außerdem viele der Schutzfunktionen dieser Anleitung erst auf das Gerät.",
+ path:"Einstellungen › Software-Update › Herunterladen und installieren",
+ steps:["Öffnen Sie <b>Einstellungen › Software-Update</b> und tippen Sie auf <b>Herunterladen und installieren</b>.","Schalten Sie <b>Automatisch über WLAN herunterladen</b> ein.","Unter <b>Sicherheit und Datenschutz › Updates</b> zusätzlich das <b>Google Play-Systemupdate</b> prüfen.","Kontrolle: <b>Telefoninfo › Softwareinformationen</b> muss <b>One UI-Version 9</b> und <b>Android-Version 17</b> zeigen."],
+ note:"Der Sicherheitspatch sollte nie älter als drei Monate sein. Beim S25 Ultra kommen Patches in der Regel monatlich.",
+ screens:[
+  {t:"Software-Update",c:"<b>Herunterladen und installieren</b> antippen.",r:[["Herunterladen und installieren","One UI 9 verfügbar",null,1],["Automatisch über WLAN herunterladen","",0],["Letztes Update"]]},
+  {t:"Software-Update",c:"Automatisches Laden einschalten.",r:[["Herunterladen und installieren"],["Automatisch über WLAN herunterladen","Ein",1,1],["Letztes Update"]]},
+  {t:"Softwareinformationen",c:"Kontrolle nach dem Neustart.",r:[["One UI-Version","9.0",null,1],["Android-Version","17",null,1],["Android-Sicherheitspatch-Ebene","Aktueller Monat"],["Knox-Version"]]}
+ ]},
+{id:"sperre",p:"p1",n:1,t:"Starke Sperre und Sofort-Sicherheitssperre",
+ why:"Eine sechsstellige PIN oder ein Passwort ist das Schloss zu allem. Neu in One UI 9: Mit einem Tastengriff sperren Sie das Handy so, dass Fingerabdruck und Gesicht abgeschaltet sind. Niemand kann es dann durch Vorhalten vor Ihr Gesicht oder Ihren Finger entsperren.",
+ path:"Einstellungen › Sperrbildschirm und AOD › Sperrbildschirmtyp",
+ steps:["Unter <b>Sperrbildschirmtyp</b> eine <b>PIN</b> mit mindestens 6 Ziffern oder ein <b>Passwort</b> wählen.","Den Ultraschall-Fingerabdrucksensor mit zwei Fingern einrichten. Gesichtserkennung nur nutzen, wenn Ihnen Bequemlichkeit wichtiger ist.","<b>Sofort-Sicherheitssperre:</b> <b>Leiser-Taste und Seitentaste</b> gleichzeitig gedrückt halten. Alternativ in den Schnelleinstellungen auf das Ein/Aus-Symbol tippen.","Danach öffnet nur noch die PIN das Gerät."],
+ note:"One UI 9 bringt eine strengere Sperrregel: Nach falschen Eingaben werden die Wartezeiten immer länger, bis zu 24 Stunden. Nach dem 13. Fehlversuch lässt sich das Gerät nur noch durch Zurücksetzen auf Werkseinstellungen entsperren. Beim S25 Ultra, das per Update auf One UI 9 kam, gilt diese Regel erst nach einem Zurücksetzen auf Werkseinstellungen. Bis dahin bleiben die alten Einstellungen aktiv.",
+ screens:[
+  {t:"Sperrbildschirm und AOD",c:"<b>Sperrbildschirmtyp</b> antippen.",r:[["Sperrbildschirmtyp","Wischen",null,1],["Sichere Sperreinstellungen"],"|",["Always On Display","",1],["Now Bar"]]},
+  {t:"Sperrbildschirmtyp",c:"<b>PIN</b> wählen, mindestens 6 Ziffern.",r:[["Wischen"],["Muster"],["PIN","Empfohlen",null,1],["Passwort"],"|",["Gesichtserkennung"],["Fingerabdrücke"]]},
+  {t:"Sichere Sperreinstellungen",c:"Sperre sofort aktivieren und mit Seitentaste sperren.",r:[["Automatisch sperren","Sofort",null,1],["Sperren mit Seitentaste","",1],["Sperrmodus-Option anzeigen","",1],["Automatisch auf Werkseinstellungen zurücksetzen","",0]]}
+ ]},
+{id:"autosperre",p:"p1",t:"Automatische Sperre auf Maximum",
+ why:"Die Automatische Sperre (Auto Blocker) blockiert Apps aus fremden Quellen, Befehle über das USB-Kabel, schädliche Bilder in Messengern und inoffizielle Software-Updates. Beim S25 Ultra ist sie ab Werk an, aber nur in der Grundstufe.",
+ path:"Einstellungen › Sicherheit und Datenschutz › Automatische Sperre",
+ steps:["Prüfen Sie, dass die <b>Automatische Sperre</b> eingeschaltet ist.","Schalten Sie <b>Maximale Einschränkungen</b> ein.","Damit werden 2G-Netze blockiert, das automatische Verbinden mit ungesicherten WLANs verhindert, geteilte Alben blockiert und der Standort aus Fotos entfernt, die Sie teilen."],
+ note:"Wo es nur 2G-Empfang gibt, etwa in manchen Funklöchern auf dem Land, funktionieren Anrufe und SMS mit Maximalen Einschränkungen dann nicht. Für Reisen in solche Gegenden vorübergehend ausschalten.",
+ screens:[
+  {t:"Sicherheit und Datenschutz",c:"<b>Automatische Sperre</b> antippen.",r:[["Status: Sicher","Keine Probleme gefunden"],"|",["Konten"],["Updates"],["Automatische Sperre","Ein",null,1],["Schutz bei Geräteverlust"],["Datenschutz"]]},
+  {t:"Automatische Sperre",c:"<b>Maximale Einschränkungen</b> einschalten.",r:[["Ein","",1],"|",["Maximale Einschränkungen","2G, offene WLANs, Foto-Standort",0,1]]},
+  {t:"Automatische Sperre",c:"Fertig. Die vier Zusatzsperren sind aktiv.",r:[["Ein","",1],"|",["Maximale Einschränkungen","Ein",1,1],"|",["2G-Netze blockieren"],["Ungesicherte WLANs blockieren"],["Geteilte Alben blockieren"],["Standort aus Fotos entfernen"]]}
+ ]},
+{id:"diebstahl",p:"p1",n:1,t:"Diebstahlschutz mit Sicherheitsverzögerung",
+ why:"Wird Ihnen das Handy aus der Hand gerissen, sperrt es sich selbst. Neu ist die Sicherheitsverzögerung: Wer Ihre PIN ausgespäht hat, muss eine Stunde warten, bevor er neue Fingerabdrücke anlegen oder Schutzfunktionen abschalten kann. In der Zeit sperren Sie das Gerät aus der Ferne.",
+ path:"Einstellungen › Sicherheit und Datenschutz › Schutz bei Geräteverlust › Diebstahlschutz",
+ steps:["Unter <b>Diebstahlschutz</b> alle Schalter einschalten: <b>Identitätsprüfung</b> (Identity Check), <b>Sicherheitsverzögerung</b> (Security Delay), <b>Diebstahlerkennungssperre</b>, <b>Offline-Gerätesperre</b> und <b>Remote-Sperre</b>.","Bei der Identitätsprüfung <b>Vertrauenswürdige Orte</b> festlegen, etwa Ihre Wohnung.","Zurück zu <b>Schutz bei Geräteverlust</b>: <b>Mobilgerät suchen</b> mit <b>Offline-Suche</b> sowie <b>Mein Gerät finden</b> von Google einschalten."],
+ note:"Voraussetzung ist ein Samsung Account und eingeschaltetes Mobilgerät suchen. Samsung schaltet nicht alle Schalter automatisch ein.",
+ screens:[
+  {t:"Schutz bei Geräteverlust",c:"<b>Diebstahlschutz</b> öffnen.",r:[["Diebstahlschutz","",null,1],"|",["Mobilgerät suchen","Samsung",1],["Mein Gerät finden","Google",1]]},
+  {t:"Diebstahlschutz",c:"Alle Schalter einschalten, besonders die <b>Sicherheitsverzögerung</b>.",r:[["Identitätsprüfung","Biometrie außerhalb vertrauter Orte",1],["Sicherheitsverzögerung","1 Stunde Wartezeit",0,1],["Diebstahlerkennungssperre","",1],["Offline-Gerätesperre","",1],["Remote-Sperre","",1]]},
+  {t:"Mobilgerät suchen",c:"<b>Offline-Suche</b> findet das Handy auch ohne Internet.",r:[["Ein","",1],"|",["Remote-Entsperrung","",0],["Letzten Standort senden","",1],["Offline-Suche","",1,1]]}
+ ]},
+{id:"konten",p:"p1",t:"Konten, Passkeys und verschlüsseltes Backup",
+ why:"Wer Ihr Samsung- oder Google-Passwort kennt, kann das Handy aus der Ferne löschen oder Backups lesen. Ein zweiter Faktor und Passkeys verhindern das.",
+ path:"Einstellungen › [Ihr Name] › Sicherheit und Passwort",
+ steps:["Oben in den Einstellungen auf Ihren <b>Namen</b> tippen, dann <b>Sicherheit und Passwort</b>.","<b>Bestätigung in zwei Schritten</b> und einen <b>Passkey</b> einrichten.","Für Google: <b>Einstellungen › Google › Google-Konto verwalten › Sicherheit</b>, dort ebenfalls Passkey und Bestätigung in zwei Schritten.","Backup-Codes ausdrucken und getrennt vom Handy aufbewahren."],
+ note:"Der Trick „Erweiterter Datenschutz“ weiter unten verschlüsselt zusätzlich Ihre Samsung-Cloud-Daten so, dass nicht einmal Samsung sie lesen kann.",
+ screens:[
+  {t:"Einstellungen",c:"Oben auf Ihren <b>Namen</b> tippen.",r:[["Max Mustermann","Samsung Account",null,1],"|",["Galaxy AI"],["Verbindungen"],["Verbundene Geräte"]]},
+  {t:"Sicherheit und Passwort",c:"Zwei Schritte und Passkey aktivieren.",r:[["Passwort ändern"],["Passkeys","1 Passkey",null,1],["Bestätigung in zwei Schritten","Ein",1,1],["Biometrische Authentifizierung","",1]]}
+ ]},
+{id:"brief",p:"p2",n:1,t:"Security Brief in der Now Bar",
+ why:"One UI 9 überwacht mit KI auf dem Gerät, ob Apps sich wie Schadsoftware verhalten oder im Hintergrund unnötig auf Ihre Daten zugreifen. Die Warnung erscheint in der Now Bar auf dem Sperrbildschirm. Als bösartig eingestufte Apps werden blockiert, bis Sie entscheiden, ob sie gelöscht werden.",
+ path:"Now Brief › Einstellungen › Sicherheit und Datenschutz",
+ steps:["Auf dem Startbildschirm nach rechts wischen oder die Now Bar antippen, um <b>Now Brief</b> zu öffnen.","Über <b>⋮ › Einstellungen</b> die Karte <b>Sicherheit und Datenschutz</b> (Security Brief) einschalten.","Erscheint eine Warnung: antippen, App prüfen und im Zweifel deinstallieren."],
+ note:"Now Brief braucht einen Samsung Account. Ohne Anmeldung oder mit ausgeschaltetem Now Brief gibt es keine Warnungen. Selbst installierte APK-Dateien können Fehlalarme auslösen.",
+ screens:[
+  {t:"Now Brief",c:"Oben rechts <b>⋮</b> und <b>Einstellungen</b>.",r:[["Wetter heute"],["Termine"],["Einstellungen","",null,1]]},
+  {t:"Now Brief-Einstellungen",c:"<b>Sicherheit und Datenschutz</b> einschalten.",r:[["Kalender","",1],["Gesundheit","",1],["Sicherheit und Datenschutz","Security Brief",0,1],["Nachrichten","",0]]},
+  {t:"Now Bar",c:"So sieht eine Warnung aus.",r:[["Sicherheitswarnung","„Taschenlampe Pro“ greift im Hintergrund auf Kontakte zu",null,1],"|",["App prüfen"],["Später"]]}
+ ]},
+{id:"apps",p:"p2",t:"Berechtigungen und blauer Standort-Punkt",
+ why:"Neu in One UI 9: Ein blauer Punkt oben am Bildschirm zeigt, wenn eine App Ihren Standort abfragt. Grüne Punkte stehen wie bisher für Kamera und Mikrofon. Tippen Sie in den Schnelleinstellungen darauf, um zu sehen, welche App es war.",
+ path:"Einstellungen › Sicherheit und Datenschutz › Datenschutz › Berechtigungsmanager",
+ steps:["Im <b>Berechtigungsmanager</b> nacheinander <b>Standort</b>, <b>Kamera</b>, <b>Mikrofon</b> und <b>Kontakte</b> prüfen.","Unnötige Zugriffe auf <b>Nicht zulassen</b> oder <b>Nur während der Nutzung</b> setzen.","Bei Apps, die nur ungefähr wissen müssen, wo Sie sind (Wetter, Nachrichten): <b>Genauen Standort verwenden</b> ausschalten.","Wenn der blaue Punkt erscheint, obwohl Sie keine Karten-App nutzen: Schnelleinstellungen herunterziehen und den Punkt antippen."],
+ note:"Unter <b>Einstellungen › Apps › ⋮ › Spezieller Zugriff › Unbekannte Apps installieren</b> sollte keine App erlaubt sein.",
+ screens:[
+  {t:"Berechtigungsmanager",c:"Kategorie <b>Standort</b> wählen.",r:[["Kamera","12 von 48 Apps"],["Mikrofon","9 von 48 Apps"],["Standort","21 von 48 Apps",null,1],["Kontakte"],["Fotos und Videos"]]},
+  {t:"Wetter-App: Standort",c:"<b>Nur während der Nutzung</b>, ungefährer Standort genügt.",r:[["Immer zulassen"],["Nur während der Nutzung zulassen","",null,1],["Jedes Mal fragen"],["Nicht zulassen"],"|",["Genauen Standort verwenden","",0,1]]}
+ ]},
+{id:"anrufe",p:"p2",n:1,t:"Anrufprüfung und Warnung vor KI-Stimmen",
+ why:"Schockanrufe werden immer häufiger mit KI-geklonten Stimmen gemacht. One UI 9 analysiert bei Anrufen, die typische Betrugsmuster enthalten, ob die Stimme künstlich erzeugt ist, und warnt Sie. Die Anrufprüfung nimmt unbekannte Anrufe für Sie an und zeigt das Gespräch als Text.",
+ path:"Telefon-App › ⋮ › Einstellungen › Anrufprüfung (Call screening)",
+ steps:["In der <b>Telefon</b>-App <b>⋮ › Einstellungen</b> öffnen.","<b>Anrufprüfung</b> einschalten. Sie funktioniert auch auf Deutsch.","<b>Anrufer-ID und Spamschutz</b> einschalten.","Optional unter <b>Nummern blockieren</b>: <b>Anrufe von unbekannten Nummern blockieren</b>."],
+ note:"Googles „Betrugserkennung“ (Scam Detection) war laut Samsung zunächst nur für Japan, Kanada und Indien angekündigt. In Deutschland verlassen Sie sich auf Anrufprüfung und Spamschutz. Banken und Polizei fragen nie am Telefon nach PIN oder TAN.",
+ screens:[
+  {t:"Anrufeinstellungen",c:"<b>Anrufprüfung</b> öffnen.",r:[["Anrufprüfung","Aus",null,1],["Anrufer-ID und Spamschutz","Ein"],["Nummern blockieren"],["Anrufhintergrund"]]},
+  {t:"Anrufprüfung",c:"Einschalten und Sprache Deutsch wählen.",r:[["Ein","",1,1],"|",["Sprache","Deutsch"],["Begrüßungstext"]]},
+  {t:"Eingehender Anruf",c:"So warnt One UI 9 bei Verdacht.",r:[["+49 30 1234…","Unbekannt"],"|",["Mögliche KI-Stimme erkannt","Typisches Betrugsmuster",null,1],["Auflegen"]]}
+ ]},
+{id:"ki",p:"p2",t:"Galaxy AI ohne Cloud",
+ why:"Viele Galaxy-AI-Funktionen schicken Texte, Sprache oder Bilder an Server. Mit einem Schalter verarbeitet das S25 Ultra alles nur auf dem Gerät. Einige Funktionen fallen dann weg, Ihre Daten verlassen aber das Handy nicht.",
+ path:"Einstellungen › Galaxy AI",
+ steps:["Öffnen Sie <b>Einstellungen › Galaxy AI</b>.","Schalten Sie ganz unten <b>Daten nur auf dem Gerät verarbeiten</b> ein.","Prüfen Sie einzelne Funktionen wie Notiz-, Schreib- und Anrufassistent und schalten Sie ab, was Sie nicht brauchen."],
+ note:"Die Sicherheitsfunktionen dieser Anleitung (Security Brief, KI-Stimmen-Warnung) laufen ohnehin auf dem Gerät.",
+ screens:[
+  {t:"Galaxy AI",c:"Ganz nach unten scrollen.",r:[["Anrufassistent"],["Schreibassistent"],["Notizassistent"],["Fotoassistent"],"|",["Daten nur auf dem Gerät verarbeiten","",0,1]]},
+  {t:"Galaxy AI",c:"Eingeschaltet: Daten bleiben auf dem S25 Ultra.",r:[["Anrufassistent"],["Schreibassistent"],"|",["Daten nur auf dem Gerät verarbeiten","Ein",1,1]]}
+ ]},
+{id:"ordner",p:"p3",t:"Sicherer Ordner",
+ why:"Ein eigener, verschlüsselter Bereich mit eigener PIN, geschützt durch den Knox-Vault-Chip. Gut für Ausweisfotos, Gesundheitsdaten oder ein zweites Konto einer App.",
+ path:"Einstellungen › Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › Sicherer Ordner",
+ steps:["<b>Sicherer Ordner</b> öffnen und mit dem Samsung Account bestätigen.","Eine <b>andere PIN</b> als die Bildschirmsperre festlegen.","Dateien und Apps über <b>Hinzufügen</b> verschieben.","Optional das Symbol ausblenden. Der Ordner bleibt über die Schnelleinstellungen erreichbar."],
+ note:"Vor einem Gerätewechsel sichern: im Ordner ⋮ › Einstellungen › Sichern und wiederherstellen.",
+ screens:[
+  {t:"Weitere Sicherheitseinstellungen",c:"<b>Sicherer Ordner</b> antippen.",r:[["Sicherer Ordner","",null,1],["Private Share"],["App-Fixierung","",0],["Anmeldedatenspeicher"]]},
+  {t:"Sicherer Ordner",c:"Eigenen <b>Sperrtyp</b> festlegen.",r:[["Sperrtyp","PIN",null,1],["Automatisch sperren","Wenn Bildschirm aus"],["Symbol auf Startbildschirm","",0]]}
+ ]},
+{id:"wartung",p:"p3",t:"Reparatur und Verkauf",
+ why:"Wer das Handy zur Reparatur gibt, gibt sonst Fotos und Chats aus der Hand. Der Wartungsmodus zeigt dem Techniker ein leeres Profil. Vor dem Verkauf müssen alle Konten vom Gerät, sonst bleibt es für den Käufer gesperrt.",
+ path:"Einstellungen › Akku und Gerätewartung › Wartungsmodus",
+ steps:["Vor der Reparatur <b>Wartungsmodus</b> einschalten. Das Handy startet mit leerem Profil neu.","Danach Wartungsmodus beenden und mit der PIN entsperren.","Vor dem Verkauf: Backup, dann unter <b>Konten und Sicherung</b> Samsung- und Google-Konto entfernen.","<b>Allgemeine Verwaltung › Zurücksetzen › Auf Werkseinstellungen zurücksetzen</b>."],
+ note:"Planen Sie ohnehin ein Zurücksetzen, aktiviert das zugleich die strengere One-UI-9-Sperrregel aus Kapitel 2.",
+ screens:[
+  {t:"Akku und Gerätewartung",c:"<b>Wartungsmodus</b> antippen.",r:[["Akku"],["Speicher"],["Arbeitsspeicher"],"|",["Wartungsmodus","",null,1],["Diagnose"]]},
+  {t:"Wartungsmodus",c:"<b>Einschalten</b>, das Telefon startet neu.",r:[["Protokolle erstellen","",0],"|",["Einschalten","Telefon wird neu gestartet",null,1]]}
+ ]}
+];
+
+var TRICKS=[
+ {t:"Panik-Griff: Biometrie sofort aus",d:"Leiser-Taste und Seitentaste gleichzeitig halten. Das Handy sperrt sich so, dass nur noch die PIN öffnet.",how:["Beide Tasten gemeinsam etwa eine Sekunde drücken.","Üben Sie den Griff ein paarmal, damit er im Ernstfall sitzt, etwa wenn Ihnen jemand das Handy entreißen will oder bei einer Kontrolle."]},
+ {t:"Neustart als Tresor",d:"Nach einem Neustart sind Ihre Daten stärker verschlüsselt, bis Sie einmal die PIN eingeben. Selbst Forensik-Werkzeuge haben es dann viel schwerer.",p:"Einstellungen › Akku und Gerätewartung › Automatische Optimierung › Automatischer Neustart",how:["Automatischen Neustart einschalten, etwa nachts.","Android startet ein gesperrtes Gerät nach drei Tagen ohne Entsperren ohnehin neu.","Vor Reisen oder wenn Sie das Handy abgeben müssen: ausschalten statt nur sperren."]},
+ {t:"Fotos ohne Ihre Adresse teilen",d:"Jedes Foto enthält den Ort, an dem es aufgenommen wurde. Beim Teilen lässt sich das entfernen.",p:"Galerie › Foto › Teilen › Standortdaten entfernen",how:["Im Teilen-Menü oben auf den Hinweis zu Standortdaten tippen und <b>Standortdaten entfernen</b> wählen.","Dauerhaft: Maximale Einschränkungen der Automatischen Sperre entfernen den Standort automatisch."]},
+ {t:"Cloud, die Samsung nicht lesen kann",d:"Erweiterter Datenschutz verschlüsselt Ihre Samsung-Cloud-Daten Ende-zu-Ende. Der Schlüssel liegt nur auf Ihren Geräten.",p:"Einstellungen › [Ihr Name] › Samsung Cloud › Erweiterter Datenschutz",how:["Einschalten und den Wiederherstellungscode sicher notieren.","Wichtig: Verlieren Sie alle Geräte und den Code, kann auch Samsung die Daten nicht wiederherstellen."]},
+ {t:"Versteckte Ortungs-Tags aufspüren",d:"Fremde AirTags oder SmartTags, die jemand in Ihre Tasche gesteckt hat, meldet das S25 Ultra automatisch.",p:"Einstellungen › Sicherheit und Notfall › Unbekannte Tracker-Warnungen",how:["Warnungen einschalten.","Bei Verdacht <b>Manuell scannen</b> wählen und in der Nähe der Tasche oder des Autos suchen."]},
+ {t:"Handy verleihen ohne Einblick",d:"Mit der App-Fixierung bleibt das Gerät in einer einzigen App. Wer zum Telefonieren Ihr Handy borgt, kommt nicht an Fotos oder Chats.",p:"Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › App-Fixierung",how:["Einschalten, ebenso <b>Vor dem Lösen nach PIN fragen</b>.","App öffnen, Übersicht der zuletzt genutzten Apps aufrufen, auf das App-Symbol tippen und <b>Diese App fixieren</b> wählen."]},
+ {t:"Sperrbildschirm verrät nichts mehr",d:"Bankcodes und Chat-Vorschauen stehen sonst lesbar auf dem gesperrten Handy, auch im Always On Display.",p:"Einstellungen › Benachrichtigungen › Sperrbildschirm-Benachrichtigungen",how:["<b>Inhalt ausblenden</b> wählen.","Nach dem Entsperren sehen Sie alles wie gewohnt."]},
+ {t:"Werbe-ID löschen",d:"Apps verknüpfen über die Werbe-ID Ihr Verhalten. Gelöscht gibt es nichts mehr zu verknüpfen.",p:"Einstellungen › Google › Alle Dienste › Werbung › Werbe-ID löschen",how:["<b>Werbe-ID löschen</b> antippen und bestätigen.","Bei Samsung zusätzlich: Einstellungen › Sicherheit und Datenschutz › Datenschutz › Weitere Datenschutzeinstellungen › Anpassungsdienst ausschalten."]},
+ {t:"Fremdes USB-Ladekabel ist kein Risiko mehr",d:"Öffentliche USB-Ladesäulen können Daten abgreifen. Die Automatische Sperre blockiert USB-Befehle, solange Sie Entwickleroptionen nicht brauchen.",p:"Einstellungen › Entwickleroptionen",how:["Falls Entwickleroptionen sichtbar sind: oben ausschalten.","Unterwegs zusätzlich nur das eigene Netzteil verwenden."]},
+ {t:"IMSI-Catcher ausbremsen",d:"Gefälschte Mobilfunkmasten zwingen Handys oft ins veraltete 2G-Netz, um Gespräche abzuhören. Maximale Einschränkungen verbieten 2G.",how:["Siehe Kapitel 3, Automatische Sperre.","Fällt Ihr Handy plötzlich auf „E“ oder „G“ in der Statusleiste zurück, ist das ein Warnzeichen."]},
+ {t:"Code-Wort für die Familie",d:"Keine Einstellung, aber der beste Schutz gegen KI-Stimmen-Betrug: Ein Wort, das nur die Familie kennt.",how:["Vereinbaren Sie ein Code-Wort.","Ruft „Ihr Kind“ in Not an und kennt das Wort nicht: auflegen und die bekannte Nummer zurückrufen."]},
+ {t:"Neue Geräte im Konto sofort sehen",d:"Samsung und Google zeigen, welche Geräte in Ihrem Konto angemeldet sind. Unbekannte sofort entfernen.",p:"Einstellungen › [Ihr Name] › Geräte",how:["Liste prüfen, fremde Einträge entfernen.","Bei Google: Google-Konto verwalten › Sicherheit › Ihre Geräte."]},
+ {t:"IMEI jetzt sichern",d:"Die Polizei braucht die IMEI. Wenn das Handy weg ist, kommt man nur noch schwer daran.",how:["Im Ziffernblock <code>*#06#</code> wählen.","Screenshot machen und an einem sicheren Ort ablegen, nicht nur auf dem Handy selbst."]},
+ {t:"Schalter-Kontrolle per Sicherheitsstatus",d:"Oben in Sicherheit und Datenschutz zeigt One UI einen Ampelstatus. Gelb oder Rot heißt: Etwas ist offen.",p:"Einstellungen › Sicherheit und Datenschutz",how:["Antippen, der Status führt direkt zum Problem.","Einmal im Monat kurz reinschauen, am besten nach dem Sicherheitsupdate."]}
+];
+
+var done=store("s25u-done")||{};
+var holder=document.getElementById("chapters"),toc=document.getElementById("toc"),grid=document.getElementById("checkGrid");
+var LABEL={p1:"Pflicht",p2:"Empfohlen",p3:"Optional"};
+
+CH.forEach(function(ch,idx){
+  var a=document.createElement("article");a.className="ch";a.id=ch.id;
+  a.innerHTML=
+   '<div>'+
+     '<div class="ch-head"><span class="eyebrow">Kapitel '+(idx+1)+'</span><span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span>'+(ch.n?'<span class="badge new">Neu in One UI 9</span>':'')+'</div>'+
+     '<h2>'+ch.t+'</h2><p class="why">'+ch.why+'</p>'+
+     '<div class="path">'+ch.path+'</div>'+
+     '<ol class="steps">'+ch.steps.map(function(s){return "<li>"+s+"</li>";}).join("")+'</ol>'+
+     '<p class="note">'+ch.note+'</p>'+
+     '<label class="done-toggle"><input type="checkbox" id="done-'+ch.id+'" data-id="'+ch.id+'"> Erledigt</label>'+
+   '</div>'+
+   '<div class="phone-col">'+
+     '<div class="phone" aria-hidden="true"><div class="screen"></div></div>'+
+     '<div class="caption" aria-live="polite"></div>'+
+     '<div class="stepper"><button type="button" class="prev" id="prev-'+ch.id+'">Zurück</button><button type="button" class="next primary" id="next-'+ch.id+'">Weiter</button></div>'+
+   '</div>';
+  holder.appendChild(a);
+  var li=document.createElement("li");li.innerHTML='<a href="#'+ch.id+'" data-id="'+ch.id+'"><span class="dot"></span>'+(idx+1)+'. '+ch.t+'</a>';toc.appendChild(li);
+  var cl=document.createElement("label");cl.innerHTML='<input type="checkbox" id="chk-'+ch.id+'" data-id="'+ch.id+'"><span>'+ch.t+' <span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span></span>';grid.appendChild(cl);
+  setupPhone(a,ch);
+});
+
+function setupPhone(a,ch){
+  var scr=a.querySelector(".screen"),cap=a.querySelector(".caption"),prev=a.querySelector(".prev"),next=a.querySelector(".next"),i=0;
+  function row(r){
+    var sub=r[1]?'<span class="sub'+(r[2]===1&&r[1]==="Ein"?" on":"")+'">'+r[1]+'</span>':"";
+    var tog=(r[2]===1||r[2]===0)?'<span class="tog'+(r[2]===1?" on":"")+'"></span>':"";
+    return '<div class="srow'+(r[3]?" hl":"")+'"><span class="tx">'+r[0]+sub+'</span>'+tog+'</div>';
+  }
+  function render(){
+    var s=ch.screens[i],groups=[[]];
+    s.r.forEach(function(r){if(r==="|")groups.push([]);else groups[groups.length-1].push(r);});
+    scr.innerHTML='<div class="sbar"><span>9:41</span><span>5G ▮▮▮ 82%</span></div><div class="stitle">'+s.t+'</div><div class="srows">'+
+      groups.map(function(g){return '<div class="sgroup">'+g.map(row).join("")+'</div>';}).join("")+'</div>';
+    cap.innerHTML='<span class="cnt">Bildschirm '+(i+1)+' von '+ch.screens.length+'</span>'+s.c;
+    prev.disabled=i===0;
+    next.textContent=i===ch.screens.length-1?"Von vorn":"Weiter";
+  }
+  prev.addEventListener("click",function(){if(i>0){i--;render();}});
+  next.addEventListener("click",function(){i=(i+1)%ch.screens.length;render();});
+  render();
+}
+
+/* Tricks */
+var tb=document.getElementById("trickBox");
+TRICKS.forEach(function(t,k){
+  var d=document.createElement("div");d.className="trick";
+  d.innerHTML='<div class="tk-head"><span class="num">Trick '+String(k+1).padStart(2,"0")+'</span></div><h3>'+t.t+'</h3><p>'+t.d+'</p>'+
+    '<details id="trick-'+k+'"><summary>So geht’s</summary><div class="how">'+(t.p?'<div class="path">'+t.p+'</div>':'')+'<ol>'+t.how.map(function(h){return "<li>"+h+"</li>";}).join("")+'</ol></div></details>';
+  tb.appendChild(d);
+});
+var ra=document.getElementById("revealAll");
+ra.addEventListener("click",function(){
+  var ds=tb.querySelectorAll("details"),anyClosed=Array.prototype.some.call(ds,function(x){return !x.open;});
+  ds.forEach(function(x){x.open=anyClosed;});ra.textContent=anyClosed?"Alle Tricks zuklappen":"Alle Tricks aufklappen";
+});
+
+/* Fortschritt */
+function syncProgress(){
+  var n=0;
+  CH.forEach(function(ch){
+    var v=!!done[ch.id];if(v)n++;
+    document.getElementById("done-"+ch.id).checked=v;
+    document.getElementById("chk-"+ch.id).checked=v;
+    toc.querySelector('[data-id="'+ch.id+'"]').classList.toggle("done",v);
+  });
+  var C=263.9;document.getElementById("ringFg").setAttribute("stroke-dashoffset",String(C-C*n/CH.length));
+  document.getElementById("ringTxt").textContent=n+"/"+CH.length;
+  var p1open=CH.filter(function(c){return c.p==="p1"&&!done[c.id];}).length;
+  var t=document.getElementById("progTitle"),s=document.getElementById("progSub");
+  if(n===0){t.textContent="Noch nicht begonnen";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}
+  else if(n===CH.length){t.textContent="Alles erledigt";s.textContent="Jetzt noch die versteckten Tricks durchgehen.";}
+  else if(p1open>0){t.textContent=n+" von "+CH.length+" erledigt";s.textContent="Noch "+p1open+" Pflicht-Kapitel offen.";}
+  else{t.textContent="Pflicht erledigt";s.textContent="Die Grundsicherung steht. Die übrigen Kapitel machen das S25 Ultra noch robuster.";}
+  applyFilter();
+}
+document.addEventListener("change",function(e){
+  var id=e.target&&e.target.dataset&&e.target.dataset.id;if(!id||e.target.type!=="checkbox")return;
+  done[id]=e.target.checked;store("s25u-done",done);syncProgress();
+});
+var filter="all";
+document.querySelectorAll(".filter .chip").forEach(function(b){
+  b.addEventListener("click",function(){filter=b.dataset.f;document.querySelectorAll(".filter .chip").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});applyFilter();});
+});
+function applyFilter(){
+  CH.forEach(function(ch){
+    document.getElementById(ch.id).hidden=(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
+  });
+}
+var rb=document.getElementById("resetBtn"),rc=document.getElementById("resetConfirm");
+rb.addEventListener("click",function(){rc.hidden=false;rb.hidden=true;});
+document.getElementById("resetNo").addEventListener("click",function(){rc.hidden=true;rb.hidden=false;});
+document.getElementById("resetYes").addEventListener("click",function(){done={};store("s25u-done",done);syncProgress();rc.hidden=true;rb.hidden=false;});
+syncProgress();
+
+/* Quiz */
+var Q=[
+ {from:"+44 7700 900123",msg:"Ihr Paket konnte nicht zugestellt werden. Bitte bestätigen Sie Ihre Adresse und zahlen Sie 1,99 € Gebühr: <u>paket-zustellung-info.top/de</u>",a:"b",ex:"Betrug. Ausländische Nummer, fremde Domain, kleine Gebühr als Köder."},
+ {from:"Unbekannte Nummer",msg:"Hallo Mama, mein Handy ist kaputt, das ist meine neue Nummer. Kannst du mir kurz bei einer Überweisung helfen? Ist dringend 🙏",a:"b",ex:"Betrug. Rufen Sie Ihr Kind unter der alten, bekannten Nummer an. Ein Familien-Code-Wort (Trick 11) entlarvt solche Nachrichten sofort."},
+ {from:"MeineBank",msg:"Ihr Bestätigungscode lautet 482913. Geben Sie diesen Code niemals weiter, auch nicht an Mitarbeiter der Bank.",a:"e",ex:"Echt, wenn Sie sich gerade selbst angemeldet haben. Kam der Code ohne eigene Anmeldung, will jemand in Ihr Konto: Passwort ändern."},
+ {from:"Galaxy-Service",msg:"Für Ihr S25 Ultra ist ein dringendes One UI 9 Sicherheitsupdate verfügbar. Jetzt installieren: <u>galaxy-update-de.app/oneui9.apk</u>",a:"b",ex:"Betrug. Updates kommen nur über Einstellungen › Software-Update, nie als APK-Datei per Link. Die Automatische Sperre würde die Installation blockieren."}
+];
+var qb=document.getElementById("quizBox"),answered=0,right=0;
+Q.forEach(function(q,k){
+  var d=document.createElement("div");d.className="sms";
+  d.innerHTML='<div class="from">Von: '+q.from+'</div><div class="bubble">'+q.msg+'</div><div class="acts"><button type="button" id="q'+k+'e" data-v="e">Echt</button><button type="button" id="q'+k+'b" data-v="b">Betrug</button></div><div class="res" hidden></div>';
+  d.querySelectorAll("button").forEach(function(b){
+    b.addEventListener("click",function(){
+      var res=d.querySelector(".res");if(!res.hidden)return;
+      var ok=b.dataset.v===q.a;answered++;if(ok)right++;
+      res.hidden=false;res.className="res "+(ok?"right":"wrong");
+      res.innerHTML="<b>"+(ok?"Richtig. ":"Nicht ganz. ")+"</b>"+q.ex;
+      d.querySelectorAll("button").forEach(function(x){x.disabled=true;x.style.borderColor=x.dataset.v===q.a?"var(--accent)":"var(--line)";});
+      if(answered===Q.length)document.getElementById("quizScore").textContent=right+" von "+Q.length+" richtig erkannt."+(right===Q.length?" Sehr gut.":" Im Zweifel: keinen Link antippen.");
+    });
+  });
+  qb.appendChild(d);
+});
+
+document.querySelectorAll(".copy").forEach(function(b){
+  b.addEventListener("click",function(){
+    function ok(){b.textContent="kopiert";setTimeout(function(){b.textContent="kopieren";},1500);}
+    try{navigator.clipboard.writeText(b.dataset.copy).then(ok,function(){b.textContent=b.dataset.copy;});}catch(e){b.textContent=b.dataset.copy;}
+  });
+});
+})();
+</script>
+
+</body>
+</html>
