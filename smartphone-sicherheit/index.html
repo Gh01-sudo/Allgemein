@@ -225,6 +225,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       </div>
 
       <div id="chapters"></div>
+      <p class="callout" data-kind="ok" id="emptyNote" hidden>Alle Kapitel sind erledigt. Wählen Sie „Alle Kapitel“, um sie wieder anzuzeigen.</p>
 
       <section class="block" id="quiz" aria-labelledby="quizH">
         <div class="eyebrow">Training</div>
@@ -239,11 +240,11 @@ footer p{max-width:80ch;margin:0 0 8px}
         <h2 id="notH">Handy verloren oder gestohlen</h2>
         <p>In dieser Reihenfolge handeln. Am besten jetzt schon die IMEI notieren: Wählen Sie im Telefon-App-Ziffernblock <code>*#06#</code> <button class="copy" data-copy="*#06#">kopieren</button>.</p>
         <ol class="timeline">
-          <li><div></div><div><h3>Gerät orten und sperren</h3><p>Auf einem anderen Gerät <code>smartthingsfind.samsung.com</code> öffnen und mit dem Samsung Account anmelden. Alternativ <code>google.com/android/find</code>. Wählen Sie „Sperren“ und hinterlegen Sie eine Rückrufnummer.</p></div></li>
-          <li><div></div><div><h3>SIM-Karte sperren lassen</h3><p>Rufen Sie die Sperr-Hotline Ihres Mobilfunkanbieters an. Damit kann niemand SMS-Codes für Ihre Konten empfangen. Die zentrale Sperrnummer 116 116 sperrt Bank- und Kreditkarten, falls diese im Handy hinterlegt sind.</p></div></li>
-          <li><div></div><div><h3>Passwörter ändern</h3><p>Zuerst Google- und Samsung-Konto, dann E-Mail, Banking und Messenger. Melden Sie das verlorene Gerät in den Kontoeinstellungen ab.</p></div></li>
-          <li><div></div><div><h3>Anzeige erstatten</h3><p>Bei der Polizei, mit IMEI und Kaufbeleg. Die Anzeige brauchen Sie auch für die Versicherung.</p></div></li>
-          <li><div></div><div><h3>Nur wenn das Gerät nicht zurückkommt: aus der Ferne löschen</h3><p>Über SmartThings Find „Daten löschen“ wählen. Danach lässt sich das Handy nicht mehr orten. Dank Diebstahlschutz und Kontosperre kann ein Dieb es trotzdem nicht neu einrichten.</p></div></li>
+          <li><div><h3>Gerät orten und sperren</h3><p>Auf einem anderen Gerät <code>smartthingsfind.samsung.com</code> öffnen und mit dem Samsung Account anmelden. Alternativ <code>google.com/android/find</code>. Wählen Sie „Sperren“ und hinterlegen Sie eine Rückrufnummer.</p></div></li>
+          <li><div><h3>SIM-Karte sperren lassen</h3><p>Rufen Sie die Sperr-Hotline Ihres Mobilfunkanbieters an. Damit kann niemand SMS-Codes für Ihre Konten empfangen. Die zentrale Sperrnummer 116 116 sperrt Bank- und Kreditkarten, falls diese im Handy hinterlegt sind.</p></div></li>
+          <li><div><h3>Passwörter ändern</h3><p>Zuerst Google- und Samsung-Konto, dann E-Mail, Banking und Messenger. Melden Sie das verlorene Gerät in den Kontoeinstellungen ab.</p></div></li>
+          <li><div><h3>Anzeige erstatten</h3><p>Bei der Polizei, mit IMEI und Kaufbeleg. Die Anzeige brauchen Sie auch für die Versicherung.</p></div></li>
+          <li><div><h3>Nur wenn das Gerät nicht zurückkommt: aus der Ferne löschen</h3><p>Über SmartThings Find „Daten löschen“ wählen. Danach lässt sich das Handy nicht mehr orten. Dank Diebstahlschutz und Kontosperre kann ein Dieb es trotzdem nicht neu einrichten.</p></div></li>
         </ol>
       </section>
 
@@ -483,10 +484,12 @@ document.querySelectorAll(".filter .chip").forEach(function(b){
   b.addEventListener("click",function(){filter=b.dataset.f;document.querySelectorAll(".filter .chip").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});applyFilter();});
 });
 function applyFilter(){
+  var vis=0;
   CH.forEach(function(ch){
-    var el=document.getElementById(ch.id);
-    el.hidden=(filter==="p1"&&ch.p!=="p1")||(filter==="open"&&!!done[ch.id]);
+    var h=(filter==="p1"&&ch.p!=="p1")||(filter==="open"&&!!done[ch.id]);
+    document.getElementById(ch.id).hidden=h;if(!h)vis++;
   });
+  document.getElementById("emptyNote").hidden=vis>0;
 }
 
 var rb=document.getElementById("resetBtn"),rc=document.getElementById("resetConfirm");

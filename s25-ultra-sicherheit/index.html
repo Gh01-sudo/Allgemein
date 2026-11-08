@@ -183,7 +183,7 @@ nav.toc a.done .dot{background:var(--accent);border-color:var(--accent)}
 
 /* Kapitel */
 article.ch{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:28px;padding-block:30px;border-top:1px solid var(--line);scroll-margin-top:72px}
-section.block{scroll-margin-top:72px}
+section.block,section.model{scroll-margin-top:72px}
 article.ch[hidden]{display:none}
 .ch-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
 .badge{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
@@ -219,7 +219,7 @@ article.ch[hidden]{display:none}
 .srow.hl{outline:2px solid var(--scrhl);outline-offset:-2px;border-radius:12px;background:color-mix(in srgb,var(--scrhl) 12%,var(--scrcard))}
 .srow.hl::before{content:"";position:absolute;right:10px;top:50%;width:26px;height:26px;margin-top:-13px;border-radius:50%;border:2px solid var(--scrhl);opacity:.0;animation:tap 1.6s ease-out infinite}
 @keyframes tap{0%{transform:scale(.4);opacity:.9}100%{transform:scale(1.5);opacity:0}}
-@media (prefers-reduced-motion:reduce){.srow.hl::before{animation:none;opacity:.6}.ring .fgc{transition:none}}
+@media (prefers-reduced-motion:reduce){.srow.hl::before{animation:none;opacity:.6}}
 .caption{font-size:14px;text-align:center;max-width:270px;min-height:3.2em;color:var(--ink)}
 .caption .cnt{font-family:var(--f-mono);font-size:12px;color:var(--muted);display:block;font-weight:500}
 .stepper{display:flex;gap:8px}
@@ -496,12 +496,12 @@ footer p{max-width:80ch;margin:0 0 8px}
         <h2 id="notH">S25 Ultra verloren oder gestohlen</h2>
         <p>In dieser Reihenfolge handeln. Notieren Sie die IMEI jetzt schon: Im Ziffernblock der Telefon-App <code>*#06#</code> <button class="copy" data-copy="*#06#">kopieren</button> wählen und einen Screenshot an einem sicheren Ort ablegen.</p>
         <ol class="timeline">
-          <li><div></div><div><h3>Aus der Ferne sperren</h3><p>Auf einem anderen Gerät <code>smartthingsfind.samsung.com</code> öffnen. Ohne Zugang zu Ihren Konten hilft die <b>Remote-Sperre</b> aus dem Diebstahlschutz: <code>android.com/lock</code> öffnen, Telefonnummer eingeben und gegebenenfalls die Sicherheitsfrage beantworten. Das klappt nur, wenn die SIM im Gerät noch aktiv ist. Ein Gerät ohne Netz sperrt sich, sobald es wieder online ist.</p></div></li>
-          <li><div></div><div><h3>Orten</h3><p>Dank Offline-Suche wird das S25 Ultra auch ohne Internet über andere Galaxy- und Android-Geräte in der Nähe gefunden. Gehen Sie nicht selbst hin, sondern geben Sie den Standort an die Polizei.</p></div></li>
-          <li><div></div><div><h3>SIM und eSIM sperren lassen</h3><p>Rufen Sie die Sperr-Hotline Ihres Anbieters an. Bank- und Kreditkarten sperrt der zentrale Sperr-Notruf 116 116 (aus dem Ausland +49 116 116), falls Samsung Wallet oder Google Wallet eingerichtet sind.</p></div></li>
-          <li><div></div><div><h3>Passwörter ändern, Gerät abmelden</h3><p>Zuerst Samsung- und Google-Konto, dann E-Mail, Banking und Messenger. In jedem Konto das verlorene Gerät aus der Geräteliste entfernen.</p></div></li>
-          <li><div></div><div><h3>Anzeige erstatten</h3><p>Bei der Polizei, mit IMEI und Kaufbeleg. Die Anzeige brauchen Sie auch für die Versicherung.</p></div></li>
-          <li><div></div><div><h3>Nur wenn es nicht zurückkommt: löschen</h3><p>In SmartThings Find „Daten löschen“ wählen. Danach lässt sich das Gerät nicht mehr orten. Die Aktivierungssperre bleibt bestehen, ein Dieb kann es nicht neu einrichten.</p></div></li>
+          <li><div><h3>Aus der Ferne sperren</h3><p>Auf einem anderen Gerät <code>smartthingsfind.samsung.com</code> öffnen. Ohne Zugang zu Ihren Konten hilft die <b>Remote-Sperre</b> aus dem Diebstahlschutz: <code>android.com/lock</code> öffnen, Telefonnummer eingeben und gegebenenfalls die Sicherheitsfrage beantworten. Das klappt nur, wenn die SIM im Gerät noch aktiv ist. Ein Gerät ohne Netz sperrt sich, sobald es wieder online ist.</p></div></li>
+          <li><div><h3>Orten</h3><p>Dank Offline-Suche wird das S25 Ultra auch ohne Internet über andere Galaxy- und Android-Geräte in der Nähe gefunden. Gehen Sie nicht selbst hin, sondern geben Sie den Standort an die Polizei.</p></div></li>
+          <li><div><h3>SIM und eSIM sperren lassen</h3><p>Rufen Sie die Sperr-Hotline Ihres Anbieters an. Bank- und Kreditkarten sperrt der zentrale Sperr-Notruf 116 116 (aus dem Ausland +49 116 116), falls Samsung Wallet oder Google Wallet eingerichtet sind.</p></div></li>
+          <li><div><h3>Passwörter ändern, Gerät abmelden</h3><p>Zuerst Samsung- und Google-Konto, dann E-Mail, Banking und Messenger. In jedem Konto das verlorene Gerät aus der Geräteliste entfernen.</p></div></li>
+          <li><div><h3>Anzeige erstatten</h3><p>Bei der Polizei, mit IMEI und Kaufbeleg. Die Anzeige brauchen Sie auch für die Versicherung.</p></div></li>
+          <li><div><h3>Nur wenn es nicht zurückkommt: löschen</h3><p>In SmartThings Find „Daten löschen“ wählen. Danach lässt sich das Gerät nicht mehr orten. Die Aktivierungssperre bleibt bestehen, ein Dieb kann es nicht neu einrichten.</p></div></li>
         </ol>
       </section>
 
@@ -636,7 +636,7 @@ var CH=[
   {t:"Now Brief-Einstellungen",c:"<b>Sicherheit und Datenschutz</b> einschalten.",r:[["Kalender","",1],["Gesundheit","",1],["Sicherheit und Datenschutz","Security Brief",0,1],["Nachrichten","",0]]},
   {t:"Now Bar",c:"So sieht eine Warnung aus.",r:[["Sicherheitswarnung","„Taschenlampe Pro“ greift im Hintergrund auf Kontakte zu",null,1],"|",["App prüfen"],["Später"]]}
  ]},
-{id:"apps",lv:2,p:"p2",t:"Berechtigungen und blauer Standort-Punkt",
+{id:"apps",lv:2,p:"p2",n:1,t:"Berechtigungen und blauer Standort-Punkt",
  why:"Neu in One UI 9: Ein blauer Punkt oben am Bildschirm zeigt, wenn eine App Ihren Standort abfragt. Grüne Punkte stehen wie bisher für Kamera und Mikrofon. Tippen Sie in den Schnelleinstellungen darauf, um zu sehen, welche App es war.",
  path:"Einstellungen › Sicherheit und Datenschutz › Datenschutz › Berechtigungsverwaltung",
  steps:["In der <b>Berechtigungsverwaltung</b> nacheinander <b>Standort</b>, <b>Kamera</b>, <b>Mikrofon</b> und <b>Kontakte</b> prüfen.","Unnötige Zugriffe auf <b>Nicht zulassen</b> oder <b>Nur während der Nutzung</b> setzen.","Bei Apps, die nur ungefähr wissen müssen, wo Sie sind (Wetter, Nachrichten): <b>Genauen Standort verwenden</b> ausschalten.","Wenn der blaue Punkt erscheint, obwohl Sie keine Karten-App nutzen: Schnelleinstellungen herunterziehen und den Punkt antippen."],
@@ -891,14 +891,15 @@ document.querySelectorAll(".filter .chip").forEach(function(b){
   b.addEventListener("click",function(){filter=b.dataset.f;document.querySelectorAll(".filter .chip").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});applyFilter();});
 });
 function applyFilter(){
-  var vis=0;
+  var vis=0,visLv={};
   CH.forEach(function(ch){
     var h=ch.lv>PROFILE||(threat&&META[ch.id][1].indexOf(threat)<0)||(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
-    document.getElementById(ch.id).hidden=h;if(!h)vis++;
+    document.getElementById(ch.id).hidden=h;if(!h){vis++;visLv[ch.lv]=1;}
   });
   var en=document.getElementById("emptyNote");en.hidden=vis>0;
   if(!vis){en.innerHTML='Kein Kapitel dieser Stufe passt zu den gewählten Filtern. <button type="button" class="reveal-all" id="emptyBtn">Filter zurücksetzen</button>';document.getElementById("emptyBtn").onclick=resetFilters;}
-  document.querySelectorAll(".stage,.toc-h").forEach(function(x){x.hidden=+x.dataset.lv>PROFILE;});
+  document.querySelectorAll(".stage").forEach(function(x){x.hidden=!visLv[x.dataset.lv];});
+  document.querySelectorAll(".toc-h").forEach(function(x){x.hidden=+x.dataset.lv>PROFILE;});
   var hid=CH.length-active().length,mn=document.getElementById("moreNote");
   mn.hidden=hid===0;
   if(hid)mn.innerHTML=hid+" weitere Kapitel gehören zu höheren Schutzstufen. <button type=\"button\" class=\"reveal-all\" id=\"moreBtn\">Stufe „"+LVL[PROFILE+1]+"“ anzeigen</button>";
@@ -973,7 +974,7 @@ var Q=[
  {from:"MeineBank",msg:"Ihr Bestätigungscode lautet 482913. Geben Sie diesen Code niemals weiter, auch nicht an Mitarbeiter der Bank.",a:"e",ex:"Echt, wenn Sie sich gerade selbst angemeldet haben. Kam der Code ohne eigene Anmeldung, will jemand in Ihr Konto: Passwort ändern."},
  {from:"Galaxy-Service",msg:"Für Ihr S25 Ultra ist ein dringendes One UI 9 Sicherheitsupdate verfügbar. Jetzt installieren: <u>galaxy-update-de.app/oneui9.apk</u>",a:"b",ex:"Betrug. Updates kommen nur über Einstellungen › Software-Update, nie als APK-Datei per Link. Die Automatische Sperre würde die Installation blockieren."},
  {from:"Aufkleber am Parkautomaten",msg:"Kontaktlos zahlen: QR-Code scannen und Parkgebühr per Karte begleichen: <u>parken-zahlen-de.info</u>",a:"b",ex:"Betrug (Quishing). Kriminelle überkleben echte QR-Codes. Prüfen Sie die Adresse vor dem Öffnen und nutzen Sie die offizielle Park-App Ihrer Stadt."},
- {from:"Google (Benachrichtigung)",msg:"Versuchen Sie, sich anzumelden? Gerät: Windows · Ort: Bukarest. Tippen Sie auf „Ja“, um fortzufahren.",a:"b",ex:"Angriff, wenn Sie sich nicht gerade selbst anmelden. Die Meldung ist echt, der Anmeldeversuch nicht: Jemand kennt Ihr Passwort. „Nein“ wählen und sofort das Passwort ändern."},
+ {from:"Google (Benachrichtigung)",msg:"Versuchen Sie, sich anzumelden? Gerät: Windows · Ort: Bukarest. Tippen Sie auf „Ja“, um fortzufahren. <i>(Sie selbst melden sich gerade nirgends an.)</i>",a:"b",ex:"Betrug, genauer ein Angriff auf Ihr Konto. Die Meldung kommt zwar wirklich von Google, aber der Anmeldeversuch stammt von jemandem, der Ihr Passwort kennt. „Nein“ wählen und sofort das Passwort ändern."},
  {from:"+49 30 … (nach einem Anruf)",msg:"Samsung Kundendienst: Wir haben Schadsoftware auf Ihrem Gerät festgestellt. Installieren Sie die Fernwartungs-App aus dem Link und nennen Sie uns den angezeigten Code.",a:"b",ex:"Betrug. Kein Hersteller meldet sich unaufgefordert. Fernwartungs-Apps geben Fremden die volle Kontrolle über Ihr Handy."},
  {from:"Samsung Account",msg:"Neue Anmeldung bei Ihrem Samsung Account auf einem Galaxy Tab in Berlin. Waren Sie das nicht? Prüfen Sie Ihre Geräte unter Einstellungen › [Ihr Name] › Geräte.",a:"e",ex:"Wahrscheinlich echt: kein Link, nur ein Verweis auf die Einstellungen. Prüfen Sie trotzdem selbst dort und nie über einen Link in einer Nachricht."}
 ];
