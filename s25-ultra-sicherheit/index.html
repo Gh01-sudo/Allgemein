@@ -364,8 +364,8 @@ footer p{max-width:80ch;margin:0 0 8px}
   <section class="model" id="profil" aria-labelledby="profH">
     <div class="model-head"><h2 id="profH">Welches Schutzniveau brauchen Sie?</h2><span class="eyebrow">Bestimmt, welche Kapitel erscheinen</span></div>
     <div class="prof-grid" role="group" aria-label="Schutzstufe wählen">
-      <button type="button" class="prof" data-lv="1" aria-pressed="true"><span class="prof-k">Stufe 1</span><b>Basis</b><span>Für alle. 7 Kapitel, rund 30 Minuten. Schützt vor Diebstahl, Betrug und Schadsoftware.</span></button>
-      <button type="button" class="prof" data-lv="2" aria-pressed="false"><span class="prof-k">Stufe 2</span><b>Erweitert</b><span>Für Banking, Diensthandys und alle, die mehr wollen. 14 Kapitel, rund 90 Minuten.</span></button>
+      <button type="button" class="prof" data-lv="1" aria-pressed="true"><span class="prof-k">Stufe 1</span><b>Basis</b><span>Für alle. 7 Kapitel, rund eine Stunde. Schützt vor Diebstahl, Betrug und Schadsoftware.</span></button>
+      <button type="button" class="prof" data-lv="2" aria-pressed="false"><span class="prof-k">Stufe 2</span><b>Erweitert</b><span>Für Banking, Diensthandys und alle, die mehr wollen. 14 Kapitel, gut zwei Stunden.</span></button>
       <button type="button" class="prof" data-lv="3" aria-pressed="false"><span class="prof-k">Stufe 3</span><b>Profi</b><span>Für Journalismus, Führungsrollen, Aktivismus, Reisen in Risikoländer oder bei Verdacht auf Überwachung. 18 Kapitel.</span></button>
     </div>
     <div class="assist">
@@ -425,6 +425,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       </div>
 
       <div id="chapters"></div>
+      <div class="more" id="emptyNote" hidden></div>
       <div class="more" id="moreNote" hidden></div>
 
       <section class="block" id="grenzen" aria-labelledby="grH">
@@ -850,7 +851,7 @@ function buildJump(){
   active().forEach(function(ch){var o=document.createElement("option");o.value=ch.id;o.textContent=(CH.indexOf(ch)+1)+". "+ch.t;jump.appendChild(o);});
   [["profil","Schutzstufe wählen"],["grenzen","Grenzen des Schutzes"],["architektur","Schutz-Schichten"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
 }
-jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
+jump.addEventListener("change",function(){var el=reveal(jump.value);if(el){el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
 
 /* Fortschritt */
 function syncProgress(){
@@ -869,7 +870,7 @@ function syncProgress(){
   document.getElementById("stBar").style.width=(100*n/TOT)+"%";
   document.getElementById("mbText").textContent=n+"/"+TOT+" · "+LVL[PROFILE];
   var rem=A.filter(function(c){return !done[c.id];}).reduce(function(x,c){return x+META[c.id][0];},0);
-  document.getElementById("stTime").textContent=rem?"Noch ca. "+(rem>=60?Math.floor(rem/60)+" Std. "+(rem%60?rem%60+" Min.":""):rem+" Min.")+" Arbeit in dieser Stufe":"Keine offenen Kapitel in dieser Stufe";
+  document.getElementById("stTime").textContent=rem?"Noch ca. "+(rem>=60?Math.floor(rem/60)+" Std."+(rem%60?" "+rem%60+" Min.":""):rem+" Min.")+" Arbeit in dieser Stufe":"Keine offenen Kapitel in dieser Stufe";
   document.querySelector(".status .eyebrow").textContent="Sicherheitsstatus · Stufe "+LVL[PROFILE];
   var t=document.getElementById("progTitle"),s=document.getElementById("progSub");
   if(n===0){t.textContent="Gefährdet: noch nichts eingerichtet";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}
@@ -890,33 +891,51 @@ document.querySelectorAll(".filter .chip").forEach(function(b){
   b.addEventListener("click",function(){filter=b.dataset.f;document.querySelectorAll(".filter .chip").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});applyFilter();});
 });
 function applyFilter(){
+  var vis=0;
   CH.forEach(function(ch){
-    document.getElementById(ch.id).hidden=ch.lv>PROFILE||(threat&&META[ch.id][1].indexOf(threat)<0)||(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
+    var h=ch.lv>PROFILE||(threat&&META[ch.id][1].indexOf(threat)<0)||(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
+    document.getElementById(ch.id).hidden=h;if(!h)vis++;
   });
+  var en=document.getElementById("emptyNote");en.hidden=vis>0;
+  if(!vis){en.innerHTML='Kein Kapitel dieser Stufe passt zu den gewählten Filtern. <button type="button" class="reveal-all" id="emptyBtn">Filter zurücksetzen</button>';document.getElementById("emptyBtn").onclick=resetFilters;}
   document.querySelectorAll(".stage,.toc-h").forEach(function(x){x.hidden=+x.dataset.lv>PROFILE;});
   var hid=CH.length-active().length,mn=document.getElementById("moreNote");
   mn.hidden=hid===0;
   if(hid)mn.innerHTML=hid+" weitere Kapitel gehören zu höheren Schutzstufen. <button type=\"button\" class=\"reveal-all\" id=\"moreBtn\">Stufe „"+LVL[PROFILE+1]+"“ anzeigen</button>";
   var mb=document.getElementById("moreBtn");if(mb)mb.onclick=function(){setProfile(PROFILE+1);};
 }
+function resetFilters(){
+  filter="all";threat="";
+  document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});
+  document.querySelectorAll(".tchip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.t===""?"true":"false");});
+  applyFilter();
+}
+/* Macht ein Sprungziel sichtbar: hebt bei Bedarf die Schutzstufe an und setzt Filter zurück, die das Kapitel verbergen. */
+function reveal(id){
+  var c=CH.filter(function(x){return x.id===id;})[0];if(c&&c.lv>PROFILE)setProfile(c.lv);
+  var el=id&&document.getElementById(id);if(el&&el.hidden)resetFilters();
+  return el;
+}
+document.addEventListener("click",function(e){
+  var a=e.target.closest&&e.target.closest('a[href^="#"]');if(a&&a.getAttribute("href").length>1)reveal(a.getAttribute("href").slice(1));
+});
 var rb=document.getElementById("resetBtn"),rc=document.getElementById("resetConfirm");
 rb.addEventListener("click",function(){rc.hidden=false;rb.hidden=true;});
 document.getElementById("resetNo").addEventListener("click",function(){rc.hidden=true;rb.hidden=false;});
 document.getElementById("resetYes").addEventListener("click",function(){done={};store("s25u-done",done);syncProgress();rc.hidden=true;rb.hidden=false;});
-syncProgress();
 
 /* Schutzstufe */
 function setProfile(lv){
   PROFILE=lv;store("s25u-profile",lv);
   document.querySelectorAll(".prof").forEach(function(b){b.setAttribute("aria-pressed",+b.dataset.lv===lv?"true":"false");});
   document.querySelectorAll("#mxTable [data-col]").forEach(function(c){c.classList.toggle("cur",+c.dataset.col===lv);});
-  buildJump();syncProgress();
+  buildJump();syncProgress();assess();
 }
 document.querySelectorAll(".prof").forEach(function(b){b.addEventListener("click",function(){setProfile(+b.dataset.lv);});});
 
 /* Bedrohungs-Check */
-var AQ=[["bank","Ich nutze das Handy für Online-Banking oder Bezahlen.",1],["firma","Auf dem Handy sind Firmen- oder Kundendaten.",2],["kids","Andere, etwa Kinder, nutzen mein Handy mit.",1],["reise","Ich reise beruflich über Grenzen, auch in Länder mit Überwachungsrisiko.",2],["public","Ich bin öffentlich bekannt, etwa durch Journalismus, Politik, Führungsrolle oder Aktivismus.",3],["stalk","Ich habe Grund zur Sorge, dass jemand aus meinem Umfeld mich überwacht.",3]];
-var aq=document.getElementById("assistQ"),aState=store("s25u-assist")||{};delete aState.stalk;store("s25u-assist",aState);
+var AQ=[["bank","Ich nutze das Handy für Online-Banking oder Bezahlen.",1],["firma","Auf dem Handy sind Firmen- oder Kundendaten.",2],["kids","Andere, etwa Kinder, nutzen mein Handy mit.",1],["reise","Ich reise beruflich über Grenzen, auch in Länder mit Überwachungsrisiko.",2],["public","Ich bin öffentlich bekannt, etwa durch Journalismus, Politik, Führungsrolle oder Aktivismus.",4],["stalk","Ich habe Grund zur Sorge, dass jemand aus meinem Umfeld mich überwacht.",4]];
+var aq=document.getElementById("assistQ"),aState=store("s25u-assist")||{};if("stalk" in aState){delete aState.stalk;store("s25u-assist",aState);}
 AQ.forEach(function(q){var l=document.createElement("label");l.innerHTML='<input type="checkbox" id="aq-'+q[0]+'"> <span>'+q[1]+'</span>';aq.appendChild(l);
   var i=l.querySelector("input");i.checked=!!aState[q[0]];i.addEventListener("change",function(){aState[q[0]]=i.checked;var keep={};for(var k in aState){if(k!=="stalk")keep[k]=aState[k];}store("s25u-assist",keep);assess();});});
 function assess(){
@@ -924,17 +943,16 @@ function assess(){
   var rec=sc>=4?3:(sc>=2?2:1);
   var r=document.getElementById("assistRes");
   r.innerHTML='Empfehlung: <b>Stufe „'+LVL[rec]+'“</b>'+(rec===PROFILE?' <span class="ok-tag">aktiv</span>':' <button type="button" class="reveal-all" id="takeRec">Übernehmen</button>');
-  var t=document.getElementById("takeRec");if(t)t.onclick=function(){setProfile(rec);assess();};
+  var t=document.getElementById("takeRec");if(t)t.onclick=function(){setProfile(rec);};
   document.getElementById("assistHelp").hidden=!aState.stalk;
 }
 
 /* Härtungsmatrix */
 var MX=[["Automatische Updates","updates",2,2,2,"keiner"],["PIN mit 6+ Ziffern","sperre",2,2,2,"gering"],["Alphanumerisches Passwort statt PIN","sperre",0,1,2,"spürbar"],["Gesichtserkennung aus, nur Fingerabdruck","sperre",0,1,2,"gering"],["Automatische Sperre","autosperre",2,2,2,"keiner"],["Maximale Einschränkungen","autosperre",0,1,2,"deutlich"],["Diebstahlschutz komplett","diebstahl",2,2,2,"gering"],["Passkeys und zweiter Faktor","konten",2,2,2,"gering"],["Automatisches Backup","backup",2,2,2,"keiner"],["Erweiterter Datenschutz (Cloud)","konten",0,2,2,"gering"],["Security Brief","brief",0,2,2,"keiner"],["Privates DNS","netz",0,2,2,"gering"],["Durchgehendes VPN","netz",0,1,2,"spürbar"],["Messenger-PIN und E2E-Backup","kommunikation",1,2,2,"gering"],["Galaxy AI nur auf dem Gerät","ki",0,1,2,"spürbar"],["Stalkerware-Prüfung","audit",0,1,2,"keiner"],["SIM-PIN und eSIM","reise",0,1,2,"gering"],["Erweitertes Schutzprogramm (Google)","kontohaertung",0,0,2,"spürbar"]];
 var MK=['<span class="mk off" role="img" aria-label="nicht nötig"></span>','<span class="mk opt" role="img" aria-label="optional"></span>','<span class="mk on" role="img" aria-label="empfohlen"></span>'];
-var tb2=document.querySelector("#mxTable tbody");
-MX.forEach(function(m){var tr=document.createElement("tr");var no=CH.map(function(c){return c.id;}).indexOf(m[1])+1;
+var tb2=document.querySelector("#mxTable tbody"),IDS=CH.map(function(c){return c.id;});
+MX.forEach(function(m){var tr=document.createElement("tr");var no=IDS.indexOf(m[1])+1;
   tr.innerHTML='<th scope="row"><a href="#'+m[1]+'">'+m[0]+'</a> <span class="mx-ch">Kap. '+no+'</span></th><td data-col="1">'+MK[m[2]]+'</td><td data-col="2">'+MK[m[3]]+'</td><td data-col="3">'+MK[m[4]]+'</td><td class="mx-k k-'+m[5]+'">'+m[5]+'</td>';tb2.appendChild(tr);});
-document.getElementById("mxTable").addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a)return;var id=a.getAttribute("href").slice(1),c=CH.filter(function(x){return x.id===id;})[0];if(c&&c.lv>PROFILE){setProfile(c.lv);}});
 
 /* Statusbericht */
 document.getElementById("exportBtn").addEventListener("click",function(){
@@ -946,7 +964,7 @@ document.getElementById("exportBtn").addEventListener("click",function(){
   try{navigator.clipboard.writeText(txt).then(function(){btn.textContent="Kopiert";setTimeout(function(){btn.textContent="Statusbericht kopieren";},1600);box.hidden=false;},shown);}catch(e){shown();}
 });
 
-setProfile(PROFILE);assess();
+setProfile(PROFILE);
 
 /* Quiz */
 var Q=[
