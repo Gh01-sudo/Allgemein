@@ -63,6 +63,55 @@ header.hero h1 span{color:var(--accent)}
 .st-bar{height:6px;border-radius:3px;background:#2A3133;position:relative;z-index:1;overflow:hidden}
 .st-bar span{display:block;height:100%;width:0;background:var(--lvl);border-radius:3px;transition:width .5s}
 .mbar{display:none}
+.prof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
+.prof{text-align:left;display:flex;flex-direction:column;gap:4px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;font:400 14px/1.45 var(--f-body);min-width:0}
+.prof b{font:700 22px var(--f-display)}
+.prof span:last-child{color:var(--muted)}
+.prof-k{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.prof[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.prof[aria-pressed="true"] .prof-k{color:var(--accent)}
+.assist{margin-top:18px;border-top:1px solid var(--line);padding-top:16px}
+.assist h3{font-size:18px}
+.assist-intro{margin:4px 0 10px;color:var(--muted);font-size:14px}
+.assist-q{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 20px}
+.assist-q label{display:flex;gap:10px;align-items:flex-start;padding:6px 0;cursor:pointer;font-size:15px}
+.assist-q input{width:18px;height:18px;margin-top:3px;accent-color:var(--accent);flex:none}
+.assist-res{margin-top:12px;font-size:16px;display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.assist-res .reveal-all{margin-top:0}
+.ok-tag{font:600 12px var(--f-mono);color:var(--accent);background:var(--accent-soft);padding:2px 8px;border-radius:5px}
+.badge.lvb{background:transparent;border:1px solid var(--accent);color:var(--accent)}
+.more{margin:8px 0 0;padding:16px;border:1px dashed var(--line);border-radius:12px;color:var(--muted);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.more .reveal-all{margin-top:0}
+.mx-wrap{overflow-x:auto;margin-top:16px;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+.mx{border-collapse:collapse;width:100%;min-width:560px;font-size:14px}
+.mx th,.mx td{padding:9px 12px;border-bottom:1px solid var(--line);text-align:center}
+.mx tbody tr:last-child th,.mx tbody tr:last-child td{border-bottom:0}
+.mx thead th{font:600 12px var(--f-mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.mx th[scope="row"],.mx thead th:first-child{text-align:left;font-weight:500}
+.mx th[scope="row"] a{color:var(--ink);text-decoration:none}
+.mx th[scope="row"] a:hover{text-decoration:underline}
+.mx-ch{font:400 11px var(--f-mono);color:var(--muted);white-space:nowrap}
+.mx .cur{background:var(--accent-soft)}
+.mx thead .cur{color:var(--accent)}
+.mk{display:inline-block;width:11px;height:11px;border-radius:50%;vertical-align:middle}.mk.on{background:var(--accent)}.mk.opt{border:2px solid var(--warn);background:linear-gradient(90deg,var(--warn) 50%,transparent 50%)}.mk.off{width:10px;height:2px;border-radius:1px;background:var(--muted)}
+.mx-legend{display:flex;gap:6px 14px;align-items:center;flex-wrap:wrap}
+.mx-legend .mk{margin-right:-8px}
+.mx-k{font-size:13px;color:var(--muted);text-align:left!important}
+.mx-k.k-deutlich{color:var(--bad)} .mx-k.k-spürbar{color:var(--warn)}
+.mx-legend{font-size:13px;color:var(--muted);margin-top:8px}
+.rt-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-top:18px}
+.rt{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.rt h3{font-size:19px}
+.rt-t{font:500 12px var(--f-mono);color:var(--muted)}
+.rt ul{margin:10px 0 0;padding-left:18px;display:grid;gap:5px;font-size:15px}
+.gl{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 28px;margin:16px 0 0;max-width:960px}
+.gl div{padding:10px 0;border-bottom:1px solid var(--line);min-width:0}
+.gl dt{font:600 16px var(--f-display)}
+.gl dd{margin:2px 0 0;color:var(--muted);font-size:15px}
+.exp-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:16px}
+.exp-row .reveal-all,.exp-row .reset{margin-top:0}
+.exp-box{width:100%;max-width:820px;margin-top:12px;font:13px/1.5 var(--f-mono);padding:12px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+.rc{display:inline-flex;gap:8px;margin-top:10px}
 .ch-num{font:700 64px/0.8 var(--f-display);color:var(--line);letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin-bottom:10px}
 .srows,.stitle{animation:scrIn .28s ease-out}
 @keyframes scrIn{from{opacity:.25;transform:translateX(10px)}to{opacity:1;transform:none}}
@@ -224,7 +273,7 @@ footer p{max-width:80ch;margin:0 0 8px}
 .reveal-all{margin-top:14px;font:600 14px var(--f-body);background:transparent;border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
 .src{font-size:13px;color:var(--muted)}
 .src ul{margin:6px 0 0;padding-left:18px}
-@media (max-width:720px){.tricks,.statusbar{grid-template-columns:minmax(0,1fr)}.hero-device{flex-direction:column;align-items:stretch}.hero-device svg{align-self:center}}
+@media (max-width:720px){.tricks,.statusbar,.prof-grid,.assist-q,.rt-grid,.gl{grid-template-columns:minmax(0,1fr)}.hero-device{flex-direction:column;align-items:stretch}.hero-device svg{align-self:center}}
 </style>
 
 <div class="wrap">
@@ -232,7 +281,7 @@ footer p{max-width:80ch;margin:0 0 8px}
     <div>
       <div class="eyebrow">Anleitung · nur Galaxy S25 Ultra · One UI 9 · Android 17</div>
       <h1>S25 Ultra <span>Sicherheits&shy;kompass</span></h1>
-      <p class="lead">Elf Einstellungen und fünfzehn versteckte Tricks, die Ihr Galaxy S25 Ultra unter One UI 9 deutlich sicherer machen. Jedes Kapitel zeigt den Weg durchs Menü als klickbares Handy-Modell. Haken Sie ab, was erledigt ist: Der Fortschritt bleibt in diesem Browser gespeichert.</p>
+      <p class="lead">18 Kapitel in drei Schutzstufen, fünfzehn versteckte Tricks, Härtungsmatrix und Wartungsroutine für das Galaxy S25 Ultra unter One UI 9. Wählen Sie Ihr Schutzniveau, und die Anleitung zeigt genau die Kapitel, die Sie brauchen. Jedes Kapitel zeigt den Weg durchs Menü als klickbares Handy-Modell. Haken Sie ab, was erledigt ist: Der Fortschritt bleibt in diesem Browser gespeichert.</p>
     </div>
     <div class="status" id="status" data-level="red" aria-live="polite">
       <div class="st-top"><span class="eyebrow">Ihr Sicherheitsstatus</span><span class="st-count" id="ringTxt">0<small>/11</small></span></div>
@@ -275,6 +324,22 @@ footer p{max-width:80ch;margin:0 0 8px}
     <div class="callout" data-kind="ok">Noch kein One UI 9? Samsung verteilt das Update seit Herbst 2026 schrittweise nach Region und Anbieter. Suchen Sie unter <b>Einstellungen › Software-Update</b> manuell danach. Bis es kommt, gelten die meisten Kapitel auch für One UI 8.</div>
   </section>
 
+  <section class="model" id="profil" aria-labelledby="profH">
+    <div class="model-head"><h2 id="profH">Welches Schutzniveau brauchen Sie?</h2><span class="eyebrow">Bestimmt, welche Kapitel erscheinen</span></div>
+    <div class="prof-grid" role="group" aria-label="Schutzstufe wählen">
+      <button type="button" class="prof" data-lv="1" aria-pressed="true"><span class="prof-k">Stufe 1</span><b>Basis</b><span>Für alle. 7 Kapitel, rund 30 Minuten. Schützt vor Diebstahl, Betrug und Schadsoftware.</span></button>
+      <button type="button" class="prof" data-lv="2" aria-pressed="false"><span class="prof-k">Stufe 2</span><b>Erweitert</b><span>Für Banking, Diensthandys und alle, die mehr wollen. 14 Kapitel, rund 90 Minuten.</span></button>
+      <button type="button" class="prof" data-lv="3" aria-pressed="false"><span class="prof-k">Stufe 3</span><b>Profi</b><span>Für Journalismus, Führungsrollen, Aktivismus, Reisen in Risikoländer oder bei Verdacht auf Überwachung. 18 Kapitel.</span></button>
+    </div>
+    <div class="assist">
+      <h3>Bedrohungs-Check</h3>
+      <p class="assist-intro">Kreuzen Sie an, was auf Sie zutrifft. Die Auswertung bleibt in diesem Browser.</p>
+      <div class="assist-q" id="assistQ"></div>
+      <div class="assist-res" id="assistRes" aria-live="polite"></div>
+      <div class="callout" id="assistHelp" hidden>Bei Verdacht auf Überwachung durch eine nahestehende Person: Löschen Sie nicht sofort etwas, das kann die Person alarmieren. Lesen Sie zuerst Kapitel 15 und holen Sie sich Rat, am besten von einem anderen Gerät aus. Hilfetelefon Gewalt gegen Frauen 116 016, Opfer-Telefon des Weissen Rings 116 006.</div>
+    </div>
+  </section>
+
   <div class="mbar" id="mbar" data-level="red">
     <div class="mbar-in"><span class="mb-dot" aria-hidden="true"></span><span id="mbText">0/11 erledigt</span>
       <select id="jump" aria-label="Zu Kapitel springen"><option value="">Springen zu …</option></select></div>
@@ -286,9 +351,13 @@ footer p{max-width:80ch;margin:0 0 8px}
       <ol id="toc"></ol>
       <div class="eyebrow" style="margin-top:18px">Außerdem</div>
       <ol>
+        <li><a href="#profil"><span class="dot"></span>Schutzstufe wählen</a></li>
         <li><a href="#tricks"><span class="dot"></span>Versteckte Tricks</a></li>
+        <li><a href="#matrix"><span class="dot"></span>Härtungsmatrix</a></li>
+        <li><a href="#routine"><span class="dot"></span>Wartungsroutine</a></li>
         <li><a href="#quiz"><span class="dot"></span>Phishing-Quiz</a></li>
         <li><a href="#notfall"><span class="dot"></span>Handy weg – was tun?</a></li>
+        <li><a href="#glossar"><span class="dot"></span>Glossar</a></li>
         <li><a href="#checkliste"><span class="dot"></span>Checkliste</a></li>
       </ol>
     </nav>
@@ -307,6 +376,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       </div>
 
       <div id="chapters"></div>
+      <div class="more" id="moreNote" hidden></div>
 
       <section class="block" id="tricks" aria-labelledby="trH">
         <div class="eyebrow">Für Fortgeschrittene</div>
@@ -314,6 +384,25 @@ footer p{max-width:80ch;margin:0 0 8px}
         <p>Funktionen, die tief im Menü stecken oder kaum jemand kennt. Alle sind offizielle Bordmittel, nichts davon braucht Root, Zusatz-Apps oder Garantieverlust.</p>
         <div class="tricks" id="trickBox"></div>
         <button class="reveal-all" id="revealAll" type="button">Alle Tricks aufklappen</button>
+      </section>
+
+      <section class="block" id="matrix" aria-labelledby="mxH">
+        <div class="eyebrow">Überblick</div>
+        <h2 id="mxH">Härtungsmatrix</h2>
+        <p>Welche Einstellung in welcher Stufe gilt und was sie im Alltag kostet. Ihre gewählte Stufe ist hervorgehoben.</p>
+        <div class="mx-wrap"><table class="mx" id="mxTable"><thead><tr><th scope="col">Maßnahme</th><th scope="col" data-col="1">Basis</th><th scope="col" data-col="2">Erweitert</th><th scope="col" data-col="3">Profi</th><th scope="col">Komfortverlust</th></tr></thead><tbody></tbody></table></div>
+        <p class="mx-legend"><span class="mk on"></span> empfohlen <span class="mk opt"></span> optional <span class="mk off"></span> nicht nötig</p>
+      </section>
+
+      <section class="block" id="routine" aria-labelledby="rtH">
+        <div class="eyebrow">Dranbleiben</div>
+        <h2 id="rtH">Wartungsroutine</h2>
+        <p>Sicherheit ist kein einmaliges Einrichten. Tragen Sie sich die Termine in den Kalender ein, am besten direkt nach dem monatlichen Sicherheitsupdate.</p>
+        <div class="rt-grid">
+          <div class="rt"><h3>Monatlich</h3><span class="rt-t">ca. 5 Minuten</span><ul><li>Sicherheitsupdate installieren und Patch-Datum prüfen</li><li>Sicherheitsstatus in Sicherheit und Datenschutz ansehen</li><li>Warnungen im Security Brief durchgehen</li><li>Berechtigungen der letzten 24 Stunden stichprobenartig prüfen</li></ul></div>
+          <div class="rt"><h3>Vierteljährlich</h3><span class="rt-t">ca. 20 Minuten</span><ul><li>Berechtigungsverwaltung komplett durchgehen</li><li>Ungenutzte Apps löschen</li><li>Bedienungshilfen, Geräteadministratoren und Benachrichtigungszugriff prüfen</li><li>Geräteliste von Samsung- und Google-Konto kontrollieren</li><li>Lokales Smart-Switch-Backup erstellen</li></ul></div>
+          <div class="rt"><h3>Jährlich und bei Anlass</h3><span class="rt-t">nach Bedarf</span><ul><li>Wiederherstellungscodes und Backup-Wiederherstellung testen</li><li>Passwörter der wichtigsten Konten prüfen</li><li>IMEI-Notiz und Notfallplan aktualisieren</li><li>Vor Reisen: Kapitel 17</li><li>Vor Reparatur oder Verkauf: Kapitel 14</li></ul></div>
+        </div>
       </section>
 
       <section class="block" id="quiz" aria-labelledby="quizH">
@@ -338,13 +427,33 @@ footer p{max-width:80ch;margin:0 0 8px}
         </ol>
       </section>
 
+      <section class="block" id="glossar" aria-labelledby="glH">
+        <div class="eyebrow">Nachschlagen</div>
+        <h2 id="glH">Glossar</h2>
+        <dl class="gl">
+          <div><dt>AFU / BFU</dt><dd>„After First Unlock“ und „Before First Unlock“. Nach einem Neustart und vor der ersten PIN-Eingabe (BFU) sind die Daten am stärksten verschlüsselt.</dd></div>
+          <div><dt>Aktivierungssperre (FRP)</dt><dd>Nach dem Zurücksetzen verlangt das Gerät das zuletzt angemeldete Google- oder Samsung-Konto. Macht gestohlene Geräte für Diebe wertlos.</dd></div>
+          <div><dt>Arbeitsprofil / MDM</dt><dd>Getrennter Bereich für Firmendaten, verwaltet von der IT über eine Geräteverwaltung (Mobile Device Management).</dd></div>
+          <div><dt>Ende-zu-Ende-Verschlüsselung</dt><dd>Nur Absender und Empfänger können Inhalte lesen, auch der Anbieter nicht.</dd></div>
+          <div><dt>IMSI-Catcher</dt><dd>Gefälschter Mobilfunkmast, der Handys in schwach gesicherte Netze wie 2G zwingt, um Verbindungen abzuhören oder Geräte zu orten.</dd></div>
+          <div><dt>Knox Vault</dt><dd>Isolierter Sicherheitsspeicher im S25 Ultra für PIN, Passwörter, biometrische Daten und Schlüssel.</dd></div>
+          <div><dt>Passkey</dt><dd>Anmeldung ohne Passwort über die Bildschirmsperre. Lässt sich nicht abfischen, weil er an die echte Website gebunden ist.</dd></div>
+          <div><dt>Privates DNS</dt><dd>Verschlüsselte Adressanfragen (DNS over TLS). Andere im Netz sehen nicht mehr, welche Seiten Sie aufrufen.</dd></div>
+          <div><dt>Quishing / Smishing</dt><dd>Phishing per QR-Code bzw. per SMS.</dd></div>
+          <div><dt>SIM-Swapping</dt><dd>Betrüger lassen sich beim Mobilfunkanbieter eine Ersatz-SIM auf Ihre Nummer ausstellen und empfangen so Ihre SMS-Codes.</dd></div>
+          <div><dt>Stalkerware</dt><dd>Spionage-App, die heimlich installiert wird, um Nachrichten, Standort oder Gespräche einer Person zu überwachen.</dd></div>
+          <div><dt>Zwei-Faktor-Anmeldung</dt><dd>Neben dem Passwort ist ein zweiter Nachweis nötig, etwa ein Passkey, eine App-Bestätigung oder ein Sicherheitsschlüssel.</dd></div>
+        </dl>
+      </section>
+
       <section class="block" id="checkliste" aria-labelledby="chkH">
         <div class="eyebrow">Zum Abhaken</div>
         <h2 id="chkH">Ihre Checkliste</h2>
         <p>Dieselben Haken wie in den Kapiteln.</p>
         <div class="check-grid" id="checkGrid"></div>
-        <button class="reset" id="resetBtn" type="button">Alle Haken entfernen</button>
-        <span id="resetConfirm" hidden> <button class="reset" id="resetYes" type="button" style="border-color:var(--bad);color:var(--bad)">Ja, zurücksetzen</button> <button class="reset" id="resetNo" type="button">Abbrechen</button></span>
+        <div class="exp-row"><button class="reveal-all" id="exportBtn" type="button">Statusbericht kopieren</button><button class="reset" id="resetBtn" type="button">Alle Haken entfernen</button></div>
+        <textarea id="exportBox" class="exp-box" rows="10" readonly hidden aria-label="Statusbericht"></textarea>
+        <span id="resetConfirm" class="rc" hidden> <button class="reset" id="resetYes" type="button" style="border-color:var(--bad);color:var(--bad)">Ja, zurücksetzen</button> <button class="reset" id="resetNo" type="button">Abbrechen</button></span>
       </section>
     </main>
   </div>
@@ -370,7 +479,7 @@ function store(k,v){try{if(v===undefined){return JSON.parse(localStorage.getItem
 
 /* Zeile: [Text, Untertext, Schalter(1 an / 0 aus / null), hervorgehoben] ; "|" trennt Gruppen */
 var CH=[
-{id:"updates",p:"p1",t:"One UI 9 und Sicherheitspatch installieren",
+{id:"updates",lv:1,p:"p1",t:"One UI 9 und Sicherheitspatch installieren",
  why:"Das S25 Ultra bekommt bis etwa 2032 Sicherheitsupdates. Sie schützen aber nur, wenn sie auch installiert werden. Mit One UI 9 kamen außerdem viele der Schutzfunktionen dieser Anleitung erst auf das Gerät.",
  path:"Einstellungen › Software-Update › Herunterladen und installieren",
  steps:["Öffnen Sie <b>Einstellungen › Software-Update</b> und tippen Sie auf <b>Herunterladen und installieren</b>.","Schalten Sie <b>Automatisch über WLAN herunterladen</b> ein.","Unter <b>Sicherheit und Datenschutz › Updates</b> zusätzlich das <b>Google Play-Systemupdate</b> prüfen.","Kontrolle: <b>Telefoninfo › Softwareinformationen</b> muss <b>One UI-Version 9</b> und <b>Android-Version 17</b> zeigen."],
@@ -380,7 +489,7 @@ var CH=[
   {t:"Software-Update",c:"Automatisches Laden einschalten.",r:[["Herunterladen und installieren"],["Automatisch über WLAN herunterladen","Ein",1,1],["Letztes Update"]]},
   {t:"Softwareinformationen",c:"Kontrolle nach dem Neustart.",r:[["One UI-Version","9.0",null,1],["Android-Version","17",null,1],["Android-Sicherheitspatch-Ebene","Aktueller Monat"],["Knox-Version"]]}
  ]},
-{id:"sperre",p:"p1",n:1,t:"Starke Sperre und Sofort-Sicherheitssperre",
+{id:"sperre",lv:1,p:"p1",n:1,t:"Starke Sperre und Sofort-Sicherheitssperre",
  why:"Eine sechsstellige PIN oder ein Passwort ist das Schloss zu allem. Neu in One UI 9: Mit einem Tastengriff sperren Sie das Handy so, dass Fingerabdruck und Gesicht abgeschaltet sind. Niemand kann es dann durch Vorhalten vor Ihr Gesicht oder Ihren Finger entsperren.",
  path:"Einstellungen › Sperrbildschirm und AOD › Sperrbildschirmtyp",
  steps:["Unter <b>Sperrbildschirmtyp</b> eine <b>PIN</b> mit mindestens 6 Ziffern oder ein <b>Passwort</b> wählen.","Den Ultraschall-Fingerabdrucksensor mit zwei Fingern einrichten. Gesichtserkennung nur nutzen, wenn Ihnen Bequemlichkeit wichtiger ist.","<b>Sofort-Sicherheitssperre:</b> <b>Leiser-Taste und Seitentaste</b> gleichzeitig gedrückt halten, bis die Sperre erscheint (kurzes Drücken macht nur einen Screenshot). Alternativ in den Schnelleinstellungen auf das Ein/Aus-Symbol tippen.","Danach öffnet nur noch die PIN das Gerät."],
@@ -390,7 +499,7 @@ var CH=[
   {t:"Sperrbildschirmtyp",c:"<b>PIN</b> wählen, mindestens 6 Ziffern.",r:[["Wischen"],["Muster"],["PIN","Empfohlen",null,1],["Passwort"],"|",["Gesichtserkennung"],["Fingerabdrücke"]]},
   {t:"Sichere Sperreinstellungen",c:"Sperre sofort aktivieren und mit Seitentaste sperren.",r:[["Automatisch sperren","Sofort",null,1],["Sperren mit Seitentaste","",1],["Sperrmodus-Option anzeigen","falls noch vorhanden",1],["Automatisch auf Werkseinstellungen zurücksetzen","",0]]}
  ]},
-{id:"autosperre",p:"p1",t:"Automatische Sperre auf Maximum",
+{id:"autosperre",lv:1,p:"p1",t:"Automatische Sperre auf Maximum",
  why:"Die Automatische Sperre (Auto Blocker) blockiert Apps aus fremden Quellen, Befehle über das USB-Kabel, schädliche Bilder in Messengern und inoffizielle Software-Updates. Beim S25 Ultra ist sie ab Werk an, aber nur in der Grundstufe. Schalten Sie sie aus, aktiviert sie sich nach 30 Minuten selbst wieder.",
  path:"Einstellungen › Sicherheit und Datenschutz › Automatische Sperre",
  steps:["Prüfen Sie, dass die <b>Automatische Sperre</b> eingeschaltet ist.","Schalten Sie <b>Maximale Einschränkungen</b> ein.","Damit werden zusätzlich 2G-Netze blockiert, das automatische Verbinden mit ungesicherten WLANs verhindert, Links, Link-Vorschauen und automatische Anhang-Downloads in Nachrichten gesperrt, geteilte Alben blockiert, Geräteadministrator-Apps und Arbeitsprofile deaktiviert und der Standort aus Fotos entfernt, die Sie über Samsung Nachrichten oder die Galerie teilen. Unter One UI 9 überträgt USB dann nur noch Strom."],
@@ -400,7 +509,7 @@ var CH=[
   {t:"Automatische Sperre",c:"<b>Maximale Einschränkungen</b> einschalten.",r:[["Ein","",1],"|",["Maximale Einschränkungen","2G, offene WLANs, Foto-Standort",0,1]]},
   {t:"Automatische Sperre",c:"Fertig. Die Zusatzsperren sind aktiv.",r:[["Ein","",1],"|",["Maximale Einschränkungen","Ein",1,1],"|",["2G-Netze blockiert"],["Ungesicherte WLANs blockiert"],["Links in Nachrichten blockiert"],["Arbeitsprofil blockiert"],["Standort aus Fotos entfernt"]]}
  ]},
-{id:"diebstahl",p:"p1",t:"Diebstahlschutz mit Sicherheitsverzögerung",
+{id:"diebstahl",lv:1,p:"p1",t:"Diebstahlschutz mit Sicherheitsverzögerung",
  why:"Wird Ihnen das Handy aus der Hand gerissen, sperrt es sich selbst. Die Sicherheitsverzögerung (seit One UI 7): Wer Ihre PIN ausgespäht hat, muss eine Stunde warten, bevor er neue Fingerabdrücke anlegen oder Schutzfunktionen abschalten kann. In der Zeit sperren Sie das Gerät aus der Ferne. Sie gilt nur außerhalb Ihrer sicheren Orte, zu Hause bremst sie einen Dieb also nicht.",
  path:"Einstellungen › Sicherheit und Datenschutz › Schutz für verlorene Geräte › Diebstahlschutz",
  steps:["Unter <b>Diebstahlschutz</b> alle Schalter einschalten: <b>Identitätsüberprüfung</b> (Identity Check), <b>Sicherheitsverzögerung</b> (Security Delay), <b>Diebstahlerkennungssperre</b>, <b>Offline-Gerätesperre</b> und <b>Remote-Sperre</b>.","Bei der Identitätsüberprüfung <b>Sichere Orte</b> festlegen, etwa Ihre Wohnung.","Bei der <b>Remote-Sperre</b> jetzt schon eine Sicherheitsfrage einrichten.","Zurück zu <b>Schutz für verlorene Geräte</b>: <b>Find My Mobile</b> (SmartThings Find) mit <b>Offline-Suche</b> sowie Googles <b>Find Hub</b> (früher „Mein Gerät finden“) einschalten."],
@@ -410,7 +519,7 @@ var CH=[
   {t:"Diebstahlschutz",c:"Alle Schalter einschalten, besonders die <b>Sicherheitsverzögerung</b>.",r:[["Identitätsüberprüfung","Biometrie außerhalb sicherer Orte",1],["Sicherheitsverzögerung","1 Stunde, außerhalb sicherer Orte",0,1],["Diebstahlerkennungssperre","",1],["Offline-Gerätesperre","",1],["Remote-Sperre","",1]]},
   {t:"Find My Mobile",c:"<b>Offline-Suche</b> findet das Handy auch ohne Internet.",r:[["Ein","",1],"|",["Remote-Entsperrung","",0],["Letzten Standort senden","",1],["Offline-Suche","",1,1]]}
  ]},
-{id:"konten",p:"p1",t:"Konten, Passkeys und verschlüsseltes Backup",
+{id:"konten",lv:1,p:"p1",t:"Konten, Passkeys und verschlüsseltes Backup",
  why:"Wer Ihr Samsung- oder Google-Passwort kennt, kann das Handy aus der Ferne löschen oder Backups lesen. Ein zweiter Faktor und Passkeys verhindern das.",
  path:"Einstellungen › [Ihr Name] › Sicherheit und Passwort",
  steps:["Oben in den Einstellungen auf Ihren <b>Namen</b> tippen, dann <b>Sicherheit und Passwort</b>.","<b>Bestätigung in zwei Schritten</b> und einen <b>Passkey</b> einrichten.","Für Google: <b>Einstellungen › Google › Google-Konto verwalten › Sicherheit</b>, dort ebenfalls Passkey und Bestätigung in zwei Schritten.","Backup-Codes ausdrucken und getrennt vom Handy aufbewahren."],
@@ -419,26 +528,16 @@ var CH=[
   {t:"Einstellungen",c:"Oben auf Ihren <b>Namen</b> tippen.",r:[["Max Mustermann","Samsung Account",null,1],"|",["Galaxy AI"],["Verbindungen"],["Verbundene Geräte"]]},
   {t:"Sicherheit und Passwort",c:"Zwei Schritte und Passkey aktivieren.",r:[["Passwort ändern"],["Passkeys","1 Passkey",null,1],["Bestätigung in zwei Schritten","Ein",1,1],["Biometrische Authentifizierung","",1]]}
  ]},
-{id:"brief",p:"p2",n:1,t:"Security Brief in der Now Bar",
- why:"One UI 9 überwacht mit KI auf dem Gerät, ob Apps sich wie Schadsoftware verhalten oder im Hintergrund unnötig auf Ihre Daten zugreifen. Die Warnung erscheint in der Now Bar auf dem Sperrbildschirm. Als bösartig eingestufte Apps werden blockiert, bis Sie entscheiden, ob sie gelöscht werden. Zusätzlich melden Datenschutzwarnungen Apps, die im Hintergrund unnötig auf Berechtigungen zugreifen.",
- path:"Now Brief › Einstellungen › Sicherheit und Datenschutz",
- steps:["Auf dem Startbildschirm nach rechts wischen oder die Now Bar antippen, um <b>Now Brief</b> zu öffnen.","In den Now-Brief-Einstellungen (je nach Version über <b>⋮</b>) die Karte <b>Sicherheit und Datenschutz</b> (Security Brief) einschalten.","Erscheint eine Warnung: antippen, App prüfen und im Zweifel deinstallieren."],
- note:"Now Brief braucht einen Samsung Account. Ohne Anmeldung oder mit ausgeschaltetem Now Brief gibt es keine Warnungen. Selbst installierte APK-Dateien können Fehlalarme auslösen.",
+{id:"backup",lv:1,p:"p1",t:"Backup, bevor es zu spät ist",
+ why:"Fernlöschung, die 13-Versuche-Sperrregel oder ein verlorener Wiederherstellungscode können Daten unwiderruflich vernichten. Erst ein funktionierendes Backup macht diese Schutzfunktionen risikolos.",
+ path:"Einstellungen › Konten und Sicherung",
+ steps:["Unter <b>Konten und Sicherung › Daten sichern</b> (Samsung Cloud) die <b>automatische Sicherung</b> einschalten.","Zusätzlich die Google-Sicherung aktivieren: <b>Einstellungen › Google › Sicherung</b>.","Fotos und Videos separat sichern, etwa über Google Fotos oder OneDrive.","Einmal im Quartal ein vollständiges lokales Backup mit <b>Smart Switch</b> auf PC oder externen Speicher anlegen.","Einmal im Jahr testen, ob sich ein Backup tatsächlich wiederherstellen lässt."],
+ note:"Profi-Regel 3-2-1: drei Kopien, auf zwei verschiedenen Medien, eine davon außer Haus. Lokale Backups gehören auf ein verschlüsseltes Laufwerk, etwa mit BitLocker oder FileVault. Pfadnamen der Google-Sicherung können je nach Version abweichen.",
  screens:[
-  {t:"Now Brief",c:"Oben rechts <b>⋮</b> und <b>Einstellungen</b>.",r:[["Wetter heute"],["Termine"],["Einstellungen","",null,1]]},
-  {t:"Now Brief-Einstellungen",c:"<b>Sicherheit und Datenschutz</b> einschalten.",r:[["Kalender","",1],["Gesundheit","",1],["Sicherheit und Datenschutz","Security Brief",0,1],["Nachrichten","",0]]},
-  {t:"Now Bar",c:"So sieht eine Warnung aus.",r:[["Sicherheitswarnung","„Taschenlampe Pro“ greift im Hintergrund auf Kontakte zu",null,1],"|",["App prüfen"],["Später"]]}
+  {t:"Konten und Sicherung",c:"<b>Daten sichern</b> unter Samsung Cloud antippen.",r:[["Konten verwalten"],"|",["Samsung Cloud"],["Daten sichern","Zuletzt: vor 3 Tagen",null,1],["Daten wiederherstellen"],"|",["Smart Switch"]]},
+  {t:"Daten sichern",c:"<b>Automatisch sichern</b> einschalten.",r:[["Automatisch sichern","Täglich bei WLAN und Laden",0,1],"|",["Anrufe und Kontakte","",1],["Nachrichten","",1],["Einstellungen","",1],["Apps","",1]]}
  ]},
-{id:"apps",p:"p2",t:"Berechtigungen und blauer Standort-Punkt",
- why:"Neu in One UI 9: Ein blauer Punkt oben am Bildschirm zeigt, wenn eine App Ihren Standort abfragt. Grüne Punkte stehen wie bisher für Kamera und Mikrofon. Tippen Sie in den Schnelleinstellungen darauf, um zu sehen, welche App es war.",
- path:"Einstellungen › Sicherheit und Datenschutz › Datenschutz › Berechtigungsverwaltung",
- steps:["In der <b>Berechtigungsverwaltung</b> nacheinander <b>Standort</b>, <b>Kamera</b>, <b>Mikrofon</b> und <b>Kontakte</b> prüfen.","Unnötige Zugriffe auf <b>Nicht zulassen</b> oder <b>Nur während der Nutzung</b> setzen.","Bei Apps, die nur ungefähr wissen müssen, wo Sie sind (Wetter, Nachrichten): <b>Genauen Standort verwenden</b> ausschalten.","Wenn der blaue Punkt erscheint, obwohl Sie keine Karten-App nutzen: Schnelleinstellungen herunterziehen und den Punkt antippen."],
- note:"Unter <b>Datenschutz › In den letzten 24 Stunden verwendete Berechtigungen</b> sehen Sie, welche App wann zugegriffen hat. Unter <b>Einstellungen › Apps › ⋮ › Spezieller Zugriff › Unbekannte Apps installieren</b> sollte keine App erlaubt sein.",
- screens:[
-  {t:"Berechtigungsverwaltung",c:"Kategorie <b>Standort</b> wählen.",r:[["Kamera","12 von 48 Apps"],["Mikrofon","9 von 48 Apps"],["Standort","21 von 48 Apps",null,1],["Kontakte"],["Fotos und Videos"]]},
-  {t:"Wetter-App: Standort",c:"<b>Nur während der Nutzung</b>, ungefährer Standort genügt.",r:[["Immer zulassen"],["Nur während der Nutzung zulassen","",null,1],["Jedes Mal fragen"],["Nicht zulassen"],"|",["Genauen Standort verwenden","",0,1]]}
- ]},
-{id:"anrufe",p:"p2",t:"Spamschutz und Schutz vor Schockanrufen",
+{id:"anrufe",lv:1,p:"p2",t:"Spamschutz und Schutz vor Schockanrufen",
  why:"Schockanrufe werden immer häufiger mit KI-geklonten Stimmen gemacht. In Korea erkennt One UI 9 solche Stimmen bei Betrugsanrufen, für Deutschland ist diese Funktion bisher nicht bestätigt. Verlassen Sie sich deshalb auf den Spam-Schutz der Telefon-App, auf Rückrufe unter bekannten Nummern und auf ein Familien-Code-Wort (Trick 11).",
  path:"Telefon-App › ⋮ › Einstellungen › Anrufer-ID und Spam-Schutz",
  steps:["In der <b>Telefon</b>-App <b>⋮ › Einstellungen</b> öffnen.","<b>Anrufer-ID und Spam-Schutz</b> einschalten.","Optional unter <b>Nummern sperren</b>: <b>Anrufe von unbekannten Nummern sperren</b>.","Falls Ihr Gerät die <b>Anrufprüfung</b> (Call screening) anbietet, einschalten. Sie ist bisher nur für die S26-Serie bestätigt."],
@@ -448,16 +547,56 @@ var CH=[
   {t:"Anrufer-ID und Spam-Schutz",c:"Einschalten. Bekannte Spam-Nummern werden markiert.",r:[["Ein","",1,1],"|",["Spam- und Betrugsanrufe sperren","",1]]},
   {t:"Nummern sperren",c:"Bei vielen Spam-Anrufen: unbekannte Nummern sperren.",r:[["Anrufe von unbekannten Nummern sperren","",1,1],"|",["Telefonnummer hinzufügen"]]}
  ]},
-{id:"ki",p:"p2",t:"Galaxy AI ohne Cloud",
+{id:"brief",lv:2,p:"p2",n:1,t:"Security Brief in der Now Bar",
+ why:"One UI 9 überwacht mit KI auf dem Gerät, ob Apps sich wie Schadsoftware verhalten oder im Hintergrund unnötig auf Ihre Daten zugreifen. Die Warnung erscheint in der Now Bar auf dem Sperrbildschirm. Als bösartig eingestufte Apps werden blockiert, bis Sie entscheiden, ob sie gelöscht werden. Zusätzlich melden Datenschutzwarnungen Apps, die im Hintergrund unnötig auf Berechtigungen zugreifen.",
+ path:"Now Brief › Einstellungen › Sicherheit und Datenschutz",
+ steps:["Auf dem Startbildschirm nach rechts wischen oder die Now Bar antippen, um <b>Now Brief</b> zu öffnen.","In den Now-Brief-Einstellungen (je nach Version über <b>⋮</b>) die Karte <b>Sicherheit und Datenschutz</b> (Security Brief) einschalten.","Erscheint eine Warnung: antippen, App prüfen und im Zweifel deinstallieren."],
+ note:"Now Brief braucht einen Samsung Account. Ohne Anmeldung oder mit ausgeschaltetem Now Brief gibt es keine Warnungen. Selbst installierte APK-Dateien können Fehlalarme auslösen.",
+ screens:[
+  {t:"Now Brief",c:"Oben rechts <b>⋮</b> und <b>Einstellungen</b>.",r:[["Wetter heute"],["Termine"],["Einstellungen","",null,1]]},
+  {t:"Now Brief-Einstellungen",c:"<b>Sicherheit und Datenschutz</b> einschalten.",r:[["Kalender","",1],["Gesundheit","",1],["Sicherheit und Datenschutz","Security Brief",0,1],["Nachrichten","",0]]},
+  {t:"Now Bar",c:"So sieht eine Warnung aus.",r:[["Sicherheitswarnung","„Taschenlampe Pro“ greift im Hintergrund auf Kontakte zu",null,1],"|",["App prüfen"],["Später"]]}
+ ]},
+{id:"apps",lv:2,p:"p2",t:"Berechtigungen und blauer Standort-Punkt",
+ why:"Neu in One UI 9: Ein blauer Punkt oben am Bildschirm zeigt, wenn eine App Ihren Standort abfragt. Grüne Punkte stehen wie bisher für Kamera und Mikrofon. Tippen Sie in den Schnelleinstellungen darauf, um zu sehen, welche App es war.",
+ path:"Einstellungen › Sicherheit und Datenschutz › Datenschutz › Berechtigungsverwaltung",
+ steps:["In der <b>Berechtigungsverwaltung</b> nacheinander <b>Standort</b>, <b>Kamera</b>, <b>Mikrofon</b> und <b>Kontakte</b> prüfen.","Unnötige Zugriffe auf <b>Nicht zulassen</b> oder <b>Nur während der Nutzung</b> setzen.","Bei Apps, die nur ungefähr wissen müssen, wo Sie sind (Wetter, Nachrichten): <b>Genauen Standort verwenden</b> ausschalten.","Wenn der blaue Punkt erscheint, obwohl Sie keine Karten-App nutzen: Schnelleinstellungen herunterziehen und den Punkt antippen."],
+ note:"Unter <b>Datenschutz › In den letzten 24 Stunden verwendete Berechtigungen</b> sehen Sie, welche App wann zugegriffen hat. Unter <b>Einstellungen › Apps › ⋮ › Spezieller Zugriff › Unbekannte Apps installieren</b> sollte keine App erlaubt sein.",
+ screens:[
+  {t:"Berechtigungsverwaltung",c:"Kategorie <b>Standort</b> wählen.",r:[["Kamera","12 von 48 Apps"],["Mikrofon","9 von 48 Apps"],["Standort","21 von 48 Apps",null,1],["Kontakte"],["Fotos und Videos"]]},
+  {t:"Wetter-App: Standort",c:"<b>Nur während der Nutzung</b>, ungefährer Standort genügt.",r:[["Immer zulassen"],["Nur während der Nutzung zulassen","",null,1],["Jedes Mal fragen"],["Nicht zulassen"],"|",["Genauen Standort verwenden","",0,1]]}
+ ]},
+{id:"netz",lv:2,p:"p2",t:"WLAN, DNS und VPN absichern",
+ why:"Offene WLANs in Hotel, Bahn und Café lassen sich leicht mitschneiden oder fälschen. Privates DNS verschlüsselt Ihre Adressanfragen, eine zufällige MAC-Adresse verhindert, dass Hotspots Sie wiedererkennen, und ein durchgehendes VPN schützt den gesamten Datenverkehr.",
+ path:"Einstellungen › Verbindungen › Weitere Verbindungseinstellungen › Privates DNS",
+ steps:["<b>Privates DNS</b> auf <b>Hostname des privaten DNS-Anbieters</b> stellen, zum Beispiel <code>dns.quad9.net</code>. Quad9 blockiert zusätzlich bekannte Schadseiten.","Bei jedem gespeicherten WLAN: Zahnrad › <b>MAC-Adressentyp</b> › <b>Zufällige MAC</b>. Neue Netze nutzen das bereits, ältere Einträge oft nicht.","Nicht mehr genutzte Netze entfernen und bei öffentlichen WLANs <b>Automatisch erneut verbinden</b> ausschalten.","Wer ein VPN nutzt: unter <b>Weitere Verbindungseinstellungen › VPN</b> beim Profil das Zahnrad antippen, <b>Durchgehend aktives VPN</b> und <b>Verbindungen ohne VPN blockieren</b> einschalten.","Bluetooth, NFC und UWB in den Schnelleinstellungen ausschalten, wenn sie gerade nicht gebraucht werden."],
+ note:"Privates DNS kann Anmeldeseiten in Hotel-WLANs blockieren. Dann kurz auf „Automatisch“ stellen und danach zurück. Kostenlose VPN-Apps finanzieren sich häufig über Ihre Daten. Bei Diensthandys gibt die IT Netz- und VPN-Einstellungen vor.",
+ screens:[
+  {t:"Weitere Verbindungseinstellungen",c:"<b>Privates DNS</b> antippen.",r:[["Geräte in der Nähe suchen","",0],["Drucken"],["VPN"],["Privates DNS","Automatisch",null,1]]},
+  {t:"Privates DNS",c:"Hostname eintragen und speichern.",r:[["Aus"],["Automatisch"],["Hostname des privaten DNS-Anbieters","dns.quad9.net",null,1]]},
+  {t:"Bahnhof-WLAN",c:"Zufällige MAC und kein automatisches Verbinden.",r:[["Automatisch erneut verbinden","",0,1],["MAC-Adressentyp","Zufällige MAC",null,1],"|",["Vergessen"]]},
+  {t:"VPN-Profil",c:"Kein Datenverkehr am VPN vorbei.",r:[["Durchgehend aktives VPN","",1,1],["Verbindungen ohne VPN blockieren","",1,1]]}
+ ]},
+{id:"kommunikation",lv:2,p:"p2",t:"Messenger absichern: WhatsApp und Signal",
+ why:"Messenger-Konten werden meist über einen abgefangenen SMS-Code übernommen. Danach schreibt der Angreifer in Ihrem Namen an Familie und Kollegen. Eine eigene PIN in der App verhindert das.",
+ path:"WhatsApp › Einstellungen › Konto › Verifizierung in zwei Schritten",
+ steps:["WhatsApp: <b>Konto › Verifizierung in zwei Schritten</b> mit sechsstelliger PIN und E-Mail-Adresse einrichten.","WhatsApp: <b>Konto › Passkeys</b> anlegen.","WhatsApp: <b>Chats › Chat-Backup › Ende-zu-Ende-verschlüsseltes Backup</b> einschalten.","WhatsApp: <b>Datenschutz › Erweitert › IP-Adresse in Anrufen schützen</b> und <b>Datenschutz › Gruppen</b> auf „Meine Kontakte“.","Signal: <b>Konto › Registrierungssperre</b> und <b>Datenschutz › Bildschirmsicherheit</b> einschalten, verschwindende Nachrichten als Standard festlegen.","Bei sensiblen Kontakten die Sicherheitsnummer bzw. den Sicherheitscode einmal persönlich vergleichen."],
+ note:"Die Menünamen der Messenger ändern sich mit App-Updates und wurden nicht für jede Version geprüft. Geben Sie Bestätigungscodes nie weiter, auch nicht an Bekannte, die „aus Versehen“ einen Code an Sie geschickt haben wollen.",
+ screens:[
+  {t:"WhatsApp › Konto",c:"<b>Verifizierung in zwei Schritten</b> einrichten.",r:[["Sicherheitsbenachrichtigungen"],["Passkeys"],["E-Mail-Adresse"],["Verifizierung in zwei Schritten","Aus",null,1]]},
+  {t:"Datenschutz › Erweitert",c:"IP-Adresse schützen und Link-Vorschauen abschalten.",r:[["IP-Adresse in Anrufen schützen","",0,1],["Link-Vorschau deaktivieren","",0]]},
+  {t:"Signal › Konto",c:"<b>Registrierungssperre</b> einschalten.",r:[["Signal-PIN","Gesetzt"],["Registrierungssperre","",0,1]]}
+ ]},
+{id:"ki",lv:2,p:"p2",t:"Galaxy AI ohne Cloud",
  why:"Viele Galaxy-AI-Funktionen schicken Texte, Sprache oder Bilder an Server. Mit einem Schalter verarbeitet das S25 Ultra alles nur auf dem Gerät. Einige Funktionen fallen dann weg, Ihre Daten verlassen aber das Handy nicht.",
  path:"Einstellungen › Galaxy AI",
  steps:["Öffnen Sie <b>Einstellungen › Galaxy AI</b>.","Schalten Sie ganz unten <b>Daten nur auf Gerät verarbeiten</b> ein.","Prüfen Sie einzelne Funktionen wie Notiz-, Schreib- und Anrufassistent und schalten Sie ab, was Sie nicht brauchen."],
- note:"Der Security Brief (Kapitel 6) nutzt KI auf dem Gerät, braucht aber einen Samsung Account und Now Brief. Ob der Schalter in One UI 9 noch an derselben Stelle sitzt, ist nicht offiziell bestätigt.",
+ note:"Der Security Brief (Kapitel 8) nutzt KI auf dem Gerät, braucht aber einen Samsung Account und Now Brief. Ob der Schalter in One UI 9 noch an derselben Stelle sitzt, ist nicht offiziell bestätigt.",
  screens:[
   {t:"Galaxy AI",c:"Ganz nach unten scrollen.",r:[["Anrufassistent"],["Schreibassistent"],["Notizassistent"],["Fotoassistent"],"|",["Daten nur auf Gerät verarbeiten","",0,1]]},
   {t:"Galaxy AI",c:"Eingeschaltet: Daten bleiben auf dem S25 Ultra.",r:[["Anrufassistent"],["Schreibassistent"],"|",["Daten nur auf Gerät verarbeiten","Ein",1,1]]}
  ]},
-{id:"ordner",p:"p3",t:"Sicherer Ordner",
+{id:"ordner",lv:2,p:"p3",t:"Sicherer Ordner",
  why:"Ein eigener, verschlüsselter Bereich mit eigener PIN, abgesichert durch Samsung Knox. Gut für Ausweisfotos, Gesundheitsdaten oder ein zweites Konto einer App.",
  path:"Einstellungen › Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › Sicherer Ordner",
  steps:["<b>Sicherer Ordner</b> öffnen und mit dem Samsung Account bestätigen.","Eine <b>andere PIN</b> als die Bildschirmsperre festlegen.","<b>Mit Samsung-Konto zurücksetzen</b> einschalten, sonst ist der Ordner bei vergessener PIN verloren.","Dateien und Apps über <b>Hinzufügen</b> verschieben.","Optional das Symbol ausblenden. Der Ordner bleibt über die Schnelleinstellungen erreichbar."],
@@ -466,7 +605,7 @@ var CH=[
   {t:"Weitere Sicherheitseinstellungen",c:"<b>Sicherer Ordner</b> antippen.",r:[["Sicherer Ordner","",null,1],["Sicheres WLAN"],["App anheften","",0],["Anmeldedatenspeicher"]]},
   {t:"Sicherer Ordner",c:"Eigenen <b>Sperrtyp</b> festlegen.",r:[["Sperrtyp","PIN",null,1],["Automatisch sperren","Wenn Bildschirm aus"],["Symbol auf Startbildschirm","",0]]}
  ]},
-{id:"wartung",p:"p3",t:"Reparatur und Verkauf",
+{id:"wartung",lv:2,p:"p3",t:"Reparatur und Verkauf",
  why:"Wer das Handy zur Reparatur gibt, gibt sonst Fotos und Chats aus der Hand. Der Wartungsmodus zeigt dem Techniker ein leeres Profil. Vor dem Verkauf müssen alle Konten vom Gerät, sonst bleibt es für den Käufer gesperrt.",
  path:"Einstellungen › Gerätewartung › Wartungsmodus",
  steps:["Vor der Reparatur <b>Wartungsmodus</b> einschalten. Das Handy startet mit leerem Profil neu.","Danach Wartungsmodus beenden und mit der PIN entsperren.","Vor dem Verkauf: Backup, dann unter <b>Konten und Sicherung</b> Samsung- und Google-Konto entfernen.","<b>Allgemeine Verwaltung › Zurücksetzen › Auf Werkseinstellungen zurücksetzen</b>."],
@@ -474,6 +613,43 @@ var CH=[
  screens:[
   {t:"Gerätewartung",c:"<b>Wartungsmodus</b> antippen.",r:[["Akku"],["Speicher"],["Arbeitsspeicher"],"|",["Wartungsmodus","",null,1],["Diagnose"]]},
   {t:"Wartungsmodus",c:"<b>Einschalten</b>, das Telefon startet neu.",r:[["Protokolle erstellen","",0],"|",["Einschalten","Telefon wird neu gestartet",null,1]]}
+ ]},
+{id:"audit",lv:3,p:"p2",t:"Stalkerware und versteckte Zugriffe aufspüren",
+ why:"Spionage-Apps tarnen sich mit harmlosen Namen und missbrauchen Sonderrechte: Bedienungshilfen lesen alles mit, was auf dem Bildschirm steht, Geräteadministrator-Rechte verhindern das Löschen, Benachrichtigungszugriff liest jede Nachricht. Wer diese vier Listen kennt, findet fast jede Spionage-App.",
+ path:"Einstellungen › Apps › ⋮ › Spezieller Zugriff",
+ steps:["<b>Bedienungshilfen › Installierte Apps</b>: Hier dürfen nur Apps stehen, die Sie bewusst eingerichtet haben, etwa ein Passwort-Manager.","<b>Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › Geräteadministrator-Apps</b>: Normal sind nur Samsung-Dienste wie Find My Mobile und gegebenenfalls die Firmenverwaltung.","Unter <b>Spezieller Zugriff</b>: <b>Benachrichtigungszugriff</b>, <b>Über anderen Apps anzeigen</b> und <b>Nutzungsdatenzugriff</b> prüfen.","Die App-Liste unter <b>Einstellungen › Apps</b> nach unbekannten Namen wie „System Service“ oder „Sync Services“ durchsuchen.","Im Play Store: Profilbild › <b>Play Protect</b> › <b>Scannen</b>.","Im Google-Konto <b>Sicherheit › Ihre Geräte</b> sowie in Google Maps die <b>Standortfreigabe</b> kontrollieren."],
+ note:"Wenn Sie befürchten, von einer nahestehenden Person überwacht zu werden: Das Löschen der App kann diese Person alarmieren. Holen Sie sich vorher Rat, am besten von einem anderen Gerät aus. Kostenlose Beratung: Hilfetelefon Gewalt gegen Frauen 116 016 (rund um die Uhr), Opfer-Telefon des Weissen Rings 116 006, Informationen auf stopstalkerware.org.",
+ screens:[
+  {t:"Spezieller Zugriff",c:"Vor allem <b>Benachrichtigungszugriff</b> prüfen.",r:[["Alle Dateien Zugriff"],["Über anderen Apps anzeigen","2 Apps"],["Benachrichtigungszugriff","3 Apps",null,1],["Nutzungsdatenzugriff"],["Unbekannte Apps installieren"]]},
+  {t:"Bedienungshilfen",c:"Ein unbekannter Dienst mit diesem Zugriff ist ein Alarmzeichen.",r:[["Installierte Apps"],"|",["Passwort-Manager","Ein",1],["System Service","Ein · Unbekannt",1,1]]},
+  {t:"Geräteadministrator-Apps",c:"Nur bekannte Einträge dürfen aktiv sein.",r:[["Find My Mobile","",1],["Device Health","Unbekannt",1,1]]}
+ ]},
+{id:"tracking",lv:3,p:"p3",t:"Tracking und Datenabfluss minimieren",
+ why:"Auch ohne Schadsoftware fließen viele Daten ab: Werbe-ID, Standortsuche über WLAN und Bluetooth, Aktivitätsverläufe im Google-Konto und Ortsangaben in Fotos. Jede Einstellung hier verkleinert Ihr Datenprofil.",
+ path:"Einstellungen › Standort › Standortdienste",
+ steps:["Unter <b>Standortdienste</b> die <b>WLAN-Suche</b> und <b>Bluetooth-Suche</b> ausschalten. Die Ortung wird drinnen etwas ungenauer.","In der Kamera-App: Einstellungen › <b>Standort-Tags</b> ausschalten.","Im Google-Konto unter <b>Daten und Datenschutz</b>: <b>Web- & App-Aktivitäten</b> und YouTube-Verlauf auf automatisches Löschen nach 3 Monaten stellen.","Werbe-ID löschen (Trick 08) und im Samsung Account den Anpassungsdienst (Customization Service) ausschalten.","Im Browser Samsung Internet unter Datenschutz <b>Smart Anti-Tracking</b> einschalten."],
+ note:"Diese Pfade sind für One UI 9 nicht offiziell bestätigt. Nutzen Sie bei Abweichungen die Suche in den Einstellungen.",
+ screens:[
+  {t:"Standort",c:"<b>Standortdienste</b> öffnen.",r:[["Ein","",1],"|",["App-Berechtigungen"],["Standortdienste","",null,1]]},
+  {t:"Standortdienste",c:"Suche über WLAN und Bluetooth ausschalten.",r:[["Google-Standortgenauigkeit","",1],["WLAN-Suche","",0,1],["Bluetooth-Suche","",0,1]]}
+ ]},
+{id:"reise",lv:3,p:"p2",t:"Reisen, Grenzen und Kontrollen",
+ why:"Bei Grenzkontrollen, Demonstrationen oder im Hotel gelten andere Risiken: Ein Finger oder ein Gesicht lässt sich erzwingen, eine gestohlene SIM-Karte empfängt Ihre SMS-Codes, und ein ausgeschaltetes Handy ist besser geschützt als ein nur gesperrtes.",
+ path:"Einstellungen › Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › SIM-Kartensperre einrichten",
+ steps:["<b>SIM-Kartensperre</b> einschalten. Dann kann niemand Ihre SIM in ein anderes Gerät stecken und Codes empfangen. PUK vorher heraussuchen.","Wenn möglich eine <b>eSIM</b> statt einer Plastik-SIM nutzen. Sie lässt sich nicht herausnehmen.","Vor Kontrollen: Sofort-Sicherheitssperre (Kapitel 2) oder das Gerät ganz ausschalten. Nach dem Neustart sind die Daten am stärksten verschlüsselt.","Was nicht mitreisen muss, vorher sichern und vom Gerät löschen. Sensible Dokumente in den Sicheren Ordner verschieben.","Sperrbildschirm ohne Benachrichtigungsinhalte (Trick 07) und Hotel-WLAN nur mit VPN nutzen.","<b>Notfall-SOS</b> und <b>Medizinische Informationen</b> einrichten, damit Helfer sie ohne Entsperren sehen."],
+ note:"In manchen Ländern kann es zur Einreiseverweigerung führen, wenn Sie das Entsperren verweigern. Informieren Sie sich vor der Reise beim Auswärtigen Amt über die Rechtslage am Ziel. Der deutsche Menüname für Notfall-SOS ist für One UI 9 nicht bestätigt.",
+ screens:[
+  {t:"Weitere Sicherheitseinstellungen",c:"<b>SIM-Kartensperre einrichten</b> antippen.",r:[["Sicherer Ordner"],["SIM-Kartensperre einrichten","",null,1],["App anheften","",0],["Geräteadministrator-Apps"]]},
+  {t:"SIM-Kartensperre",c:"SIM-PIN anfordern lassen.",r:[["SIM-Karte sperren","PIN beim Start erforderlich",0,1],["SIM-PIN ändern"]]}
+ ]},
+{id:"kontohaertung",lv:3,p:"p2",t:"Konten auf Profi-Niveau",
+ why:"Für Menschen mit hohem Risiko bietet Google für Konten das Erweiterte Schutzprogramm (Advanced Protection Program): Die Anmeldung ist nur noch mit Passkey oder Sicherheitsschlüssel möglich, und die Kontowiederherstellung wird streng geprüft. Außerdem schützt ein Kundenkennwort beim Mobilfunkanbieter vor SIM-Swapping.",
+ path:"Einstellungen › Google › Google-Konto verwalten › Sicherheit",
+ steps:["Den Google-<b>Sicherheitscheck</b> unter <code>myaccount.google.com/security-checkup</code> komplett durcharbeiten.","Für das <b>Erweiterte Schutzprogramm</b> unter <code>landing.google.com/advancedprotection</code> registrieren, mit dem Passkey des S25 Ultra und einem Hardware-Sicherheitsschlüssel als Reserve.","Telefonnummer und E-Mail für die Wiederherstellung prüfen. Angreifer ändern sie als Erstes.","Unter <code>account.samsung.com</code> die Geräteliste und angemeldete Sitzungen kontrollieren.","Einen Passwort-Manager nutzen und für jedes Konto ein eigenes Passwort vergeben.","Beim Mobilfunkanbieter ein Kundenkennwort setzen, ohne das niemand am Telefon eine neue SIM bestellen kann."],
+ note:"Das Erweiterte Schutzprogramm schränkt den Zugriff mancher Drittanbieter-Apps auf Gmail und Drive ein. Bei Firmenkonten (Google Workspace) entscheidet die Administration.",
+ screens:[
+  {t:"Google-Konto: Sicherheit",c:"Mit dem <b>Sicherheitscheck</b> beginnen.",r:[["Sicherheitscheck","2 Empfehlungen",null,1],"|",["Passkeys und Sicherheitsschlüssel"],["Bestätigung in zwei Schritten","Ein"],["Ihre Geräte","3 Geräte"]]},
+  {t:"Wiederherstellung",c:"Beide Angaben aktuell halten.",r:[["Telefonnummer zur Wiederherstellung","+49 …",null,1],["E-Mail-Adresse zur Wiederherstellung","",null,1]]}
  ]}
 ];
 
@@ -497,14 +673,16 @@ var TRICKS=[
 
 var done=store("s25u-done")||{};
 var holder=document.getElementById("chapters"),toc=document.getElementById("toc"),grid=document.getElementById("checkGrid");
-var LABEL={p1:"Pflicht",p2:"Empfohlen",p3:"Optional"};
+var LABEL={p1:"Pflicht",p2:"Empfohlen",p3:"Optional"},LVL={1:"Basis",2:"Erweitert",3:"Profi"};
+var PROFILE=+(store("s25u-profile")||1);if(!(PROFILE>=1&&PROFILE<=3))PROFILE=1;
+function active(){return CH.filter(function(c){return c.lv<=PROFILE;});}
 
 CH.forEach(function(ch,idx){
   var a=document.createElement("article");a.className="ch";a.id=ch.id;
   a.innerHTML=
    '<div>'+
      '<div class="ch-num" aria-hidden="true">'+String(idx+1).padStart(2,"0")+'</div>'+
-     '<div class="ch-head"><span class="eyebrow">Kapitel '+(idx+1)+'</span><span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span>'+(ch.n?'<span class="badge new">Neu in One UI 9</span>':'')+'</div>'+
+     '<div class="ch-head"><span class="eyebrow">Kapitel '+(idx+1)+'</span><span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span><span class="badge lvb">'+LVL[ch.lv]+'</span>'+(ch.n?'<span class="badge new">Neu in One UI 9</span>':'')+'</div>'+
      '<h2>'+ch.t+'</h2><p class="why">'+ch.why+'</p>'+
      '<div class="path">'+ch.path+'</div>'+
      '<ol class="steps">'+ch.steps.map(function(s){return "<li>"+s+"</li>";}).join("")+'</ol>'+
@@ -559,28 +737,33 @@ ra.addEventListener("click",function(){
 
 /* Kapitelsprung (mobil) */
 var jump=document.getElementById("jump");
-CH.forEach(function(ch,idx){var o=document.createElement("option");o.value=ch.id;o.textContent=(idx+1)+". "+ch.t;jump.appendChild(o);});
-[["tricks","Versteckte Tricks"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
+function buildJump(){
+  jump.innerHTML='<option value="">Springen zu …</option>';
+  active().forEach(function(ch){var o=document.createElement("option");o.value=ch.id;o.textContent=(CH.indexOf(ch)+1)+". "+ch.t;jump.appendChild(o);});
+  [["profil","Schutzstufe wählen"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
+}
 jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
 
 /* Fortschritt */
 function syncProgress(){
-  var n=0;
+  var A=active(),n=0;
   CH.forEach(function(ch){
-    var v=!!done[ch.id];if(v)n++;
+    var v=!!done[ch.id],on=ch.lv<=PROFILE;if(v&&on)n++;
     document.getElementById("done-"+ch.id).checked=v;
-    document.getElementById("chk-"+ch.id).checked=v;
-    toc.querySelector('[data-id="'+ch.id+'"]').classList.toggle("done",v);
+    var c=document.getElementById("chk-"+ch.id);c.checked=v;c.parentNode.hidden=!on;
+    var a=toc.querySelector('[data-id="'+ch.id+'"]');a.classList.toggle("done",v);a.parentNode.hidden=!on;
   });
-  var p1open=CH.filter(function(c){return c.p==="p1"&&!done[c.id];}).length;
-  var lvl=p1open>0?"red":(n===CH.length?"green":"yellow");
+  var p1open=A.filter(function(c){return c.p==="p1"&&!done[c.id];}).length;
+  var TOT=A.length;
+  var lvl=p1open>0?"red":(n===TOT?"green":"yellow");
   document.getElementById("status").dataset.level=lvl;document.getElementById("mbar").dataset.level=lvl;
-  document.getElementById("ringTxt").innerHTML=n+"<small>/"+CH.length+"</small>";
-  document.getElementById("stBar").style.width=(100*n/CH.length)+"%";
-  document.getElementById("mbText").textContent=n+"/"+CH.length+" erledigt";
+  document.getElementById("ringTxt").innerHTML=n+"<small>/"+TOT+"</small>";
+  document.getElementById("stBar").style.width=(100*n/TOT)+"%";
+  document.getElementById("mbText").textContent=n+"/"+TOT+" · "+LVL[PROFILE];
+  document.querySelector(".status .eyebrow").textContent="Sicherheitsstatus · Stufe "+LVL[PROFILE];
   var t=document.getElementById("progTitle"),s=document.getElementById("progSub");
   if(n===0){t.textContent="Gefährdet: noch nichts eingerichtet";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}
-  else if(n===CH.length){t.textContent="Bestens geschützt";s.textContent="Jetzt noch die versteckten Tricks durchgehen.";}
+  else if(n===TOT){t.textContent=PROFILE===3?"Profi-Niveau erreicht":"Stufe „"+LVL[PROFILE]+"“ vollständig";s.textContent=PROFILE<3?"Für mehr Schutz die nächste Stufe wählen. Und: die Wartungsroutine einhalten.":"Halten Sie die Wartungsroutine ein, sonst veraltet der Schutz.";}
   else if(p1open>0){t.textContent="Pflicht-Schutz unvollständig";s.textContent="Noch "+p1open+" Pflicht-Kapitel offen.";}
   else{t.textContent="Grundschutz steht";s.textContent="Die Grundsicherung steht. Die übrigen Kapitel machen das S25 Ultra noch robuster.";}
   applyFilter();
@@ -595,8 +778,12 @@ document.querySelectorAll(".filter .chip").forEach(function(b){
 });
 function applyFilter(){
   CH.forEach(function(ch){
-    document.getElementById(ch.id).hidden=(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
+    document.getElementById(ch.id).hidden=ch.lv>PROFILE||(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
   });
+  var hid=CH.length-active().length,mn=document.getElementById("moreNote");
+  mn.hidden=hid===0;
+  if(hid)mn.innerHTML=hid+" weitere Kapitel gehören zu höheren Schutzstufen. <button type=\"button\" class=\"reveal-all\" id=\"moreBtn\">Stufe „"+LVL[PROFILE+1]+"“ anzeigen</button>";
+  var mb=document.getElementById("moreBtn");if(mb)mb.onclick=function(){setProfile(PROFILE+1);};
 }
 var rb=document.getElementById("resetBtn"),rc=document.getElementById("resetConfirm");
 rb.addEventListener("click",function(){rc.hidden=false;rb.hidden=true;});
@@ -604,12 +791,59 @@ document.getElementById("resetNo").addEventListener("click",function(){rc.hidden
 document.getElementById("resetYes").addEventListener("click",function(){done={};store("s25u-done",done);syncProgress();rc.hidden=true;rb.hidden=false;});
 syncProgress();
 
+/* Schutzstufe */
+function setProfile(lv){
+  PROFILE=lv;store("s25u-profile",lv);
+  document.querySelectorAll(".prof").forEach(function(b){b.setAttribute("aria-pressed",+b.dataset.lv===lv?"true":"false");});
+  document.querySelectorAll("#mxTable [data-col]").forEach(function(c){c.classList.toggle("cur",+c.dataset.col===lv);});
+  buildJump();syncProgress();
+}
+document.querySelectorAll(".prof").forEach(function(b){b.addEventListener("click",function(){setProfile(+b.dataset.lv);});});
+
+/* Bedrohungs-Check */
+var AQ=[["bank","Ich nutze das Handy für Online-Banking oder Bezahlen.",1],["firma","Auf dem Handy sind Firmen- oder Kundendaten.",2],["kids","Andere, etwa Kinder, nutzen mein Handy mit.",1],["reise","Ich reise beruflich über Grenzen, auch in Länder mit Überwachungsrisiko.",2],["public","Ich bin öffentlich bekannt, etwa durch Journalismus, Politik, Führungsrolle oder Aktivismus.",3],["stalk","Ich habe Grund zur Sorge, dass jemand aus meinem Umfeld mich überwacht.",3]];
+var aq=document.getElementById("assistQ"),aState=store("s25u-assist")||{};
+AQ.forEach(function(q){var l=document.createElement("label");l.innerHTML='<input type="checkbox" id="aq-'+q[0]+'"> <span>'+q[1]+'</span>';aq.appendChild(l);
+  var i=l.querySelector("input");i.checked=!!aState[q[0]];i.addEventListener("change",function(){aState[q[0]]=i.checked;store("s25u-assist",aState);assess();});});
+function assess(){
+  var sc=0;AQ.forEach(function(q){if(aState[q[0]])sc+=q[2];});
+  var rec=sc>=4?3:(sc>=2?2:1);
+  var r=document.getElementById("assistRes");
+  r.innerHTML='Empfehlung: <b>Stufe „'+LVL[rec]+'“</b>'+(rec===PROFILE?' <span class="ok-tag">aktiv</span>':' <button type="button" class="reveal-all" id="takeRec">Übernehmen</button>');
+  var t=document.getElementById("takeRec");if(t)t.onclick=function(){setProfile(rec);assess();};
+  document.getElementById("assistHelp").hidden=!aState.stalk;
+}
+
+/* Härtungsmatrix */
+var MX=[["Automatische Updates","updates",2,2,2,"keiner"],["PIN mit 6+ Ziffern","sperre",2,2,2,"gering"],["Alphanumerisches Passwort statt PIN","sperre",0,1,2,"spürbar"],["Gesichtserkennung aus, nur Fingerabdruck","sperre",0,1,2,"gering"],["Automatische Sperre","autosperre",2,2,2,"keiner"],["Maximale Einschränkungen","autosperre",0,1,2,"deutlich"],["Diebstahlschutz komplett","diebstahl",2,2,2,"gering"],["Passkeys und zweiter Faktor","konten",2,2,2,"gering"],["Automatisches Backup","backup",2,2,2,"keiner"],["Erweiterter Datenschutz (Cloud)","konten",0,2,2,"gering"],["Security Brief","brief",0,2,2,"keiner"],["Privates DNS","netz",0,2,2,"gering"],["Durchgehendes VPN","netz",0,1,2,"spürbar"],["Messenger-PIN und E2E-Backup","kommunikation",1,2,2,"gering"],["Galaxy AI nur auf dem Gerät","ki",0,1,2,"spürbar"],["Stalkerware-Prüfung","audit",0,1,2,"keiner"],["SIM-PIN und eSIM","reise",0,1,2,"gering"],["Erweitertes Schutzprogramm (Google)","kontohaertung",0,0,2,"spürbar"]];
+var MK=['<span class="mk off" role="img" aria-label="nicht nötig"></span>','<span class="mk opt" role="img" aria-label="optional"></span>','<span class="mk on" role="img" aria-label="empfohlen"></span>'];
+var tb2=document.querySelector("#mxTable tbody");
+MX.forEach(function(m){var tr=document.createElement("tr");var no=CH.map(function(c){return c.id;}).indexOf(m[1])+1;
+  tr.innerHTML='<th scope="row"><a href="#'+m[1]+'">'+m[0]+'</a> <span class="mx-ch">Kap. '+no+'</span></th><td data-col="1">'+MK[m[2]]+'</td><td data-col="2">'+MK[m[3]]+'</td><td data-col="3">'+MK[m[4]]+'</td><td class="mx-k k-'+m[5]+'">'+m[5]+'</td>';tb2.appendChild(tr);});
+document.getElementById("mxTable").addEventListener("click",function(e){var a=e.target.closest&&e.target.closest("a");if(!a)return;var id=a.getAttribute("href").slice(1),c=CH.filter(function(x){return x.id===id;})[0];if(c&&c.lv>PROFILE){setProfile(c.lv);}});
+
+/* Statusbericht */
+document.getElementById("exportBtn").addEventListener("click",function(){
+  var A=active(),d=new Date(),L=["S25 Ultra Sicherheitskompass – Statusbericht","Stand: "+d.toLocaleDateString("de-DE")+" · Schutzstufe: "+LVL[PROFILE],""];
+  A.forEach(function(c){L.push((done[c.id]?"[x] ":"[ ] ")+(CH.indexOf(c)+1)+". "+c.t+" ("+LABEL[c.p]+")");});
+  var n=A.filter(function(c){return done[c.id];}).length;L.push("","Erledigt: "+n+" von "+A.length);
+  var txt=L.join("\n"),box=document.getElementById("exportBox"),btn=this;box.value=txt;
+  function shown(){box.hidden=false;box.focus();box.select();}
+  try{navigator.clipboard.writeText(txt).then(function(){btn.textContent="Kopiert";setTimeout(function(){btn.textContent="Statusbericht kopieren";},1600);box.hidden=false;},shown);}catch(e){shown();}
+});
+
+setProfile(PROFILE);assess();
+
 /* Quiz */
 var Q=[
  {from:"+44 7700 900123",msg:"Ihr Paket konnte nicht zugestellt werden. Bitte bestätigen Sie Ihre Adresse und zahlen Sie 1,99 € Gebühr: <u>paket-zustellung-info.top/de</u>",a:"b",ex:"Betrug. Ausländische Nummer, fremde Domain, kleine Gebühr als Köder."},
  {from:"Unbekannte Nummer",msg:"Hallo Mama, mein Handy ist kaputt, das ist meine neue Nummer. Kannst du mir kurz bei einer Überweisung helfen? Ist dringend 🙏",a:"b",ex:"Betrug. Rufen Sie Ihr Kind unter der alten, bekannten Nummer an. Ein Familien-Code-Wort (Trick 11) entlarvt solche Nachrichten sofort."},
  {from:"MeineBank",msg:"Ihr Bestätigungscode lautet 482913. Geben Sie diesen Code niemals weiter, auch nicht an Mitarbeiter der Bank.",a:"e",ex:"Echt, wenn Sie sich gerade selbst angemeldet haben. Kam der Code ohne eigene Anmeldung, will jemand in Ihr Konto: Passwort ändern."},
- {from:"Galaxy-Service",msg:"Für Ihr S25 Ultra ist ein dringendes One UI 9 Sicherheitsupdate verfügbar. Jetzt installieren: <u>galaxy-update-de.app/oneui9.apk</u>",a:"b",ex:"Betrug. Updates kommen nur über Einstellungen › Software-Update, nie als APK-Datei per Link. Die Automatische Sperre würde die Installation blockieren."}
+ {from:"Galaxy-Service",msg:"Für Ihr S25 Ultra ist ein dringendes One UI 9 Sicherheitsupdate verfügbar. Jetzt installieren: <u>galaxy-update-de.app/oneui9.apk</u>",a:"b",ex:"Betrug. Updates kommen nur über Einstellungen › Software-Update, nie als APK-Datei per Link. Die Automatische Sperre würde die Installation blockieren."},
+ {from:"Aufkleber am Parkautomaten",msg:"Kontaktlos zahlen: QR-Code scannen und Parkgebühr per Karte begleichen: <u>parken-zahlen-de.info</u>",a:"b",ex:"Betrug (Quishing). Kriminelle überkleben echte QR-Codes. Prüfen Sie die Adresse vor dem Öffnen und nutzen Sie die offizielle Park-App Ihrer Stadt."},
+ {from:"Google (Benachrichtigung)",msg:"Versuchen Sie, sich anzumelden? Gerät: Windows · Ort: Bukarest. Tippen Sie auf „Ja“, um fortzufahren.",a:"b",ex:"Angriff, wenn Sie sich nicht gerade selbst anmelden. Die Meldung ist echt, der Anmeldeversuch nicht: Jemand kennt Ihr Passwort. „Nein“ wählen und sofort das Passwort ändern."},
+ {from:"+49 30 … (nach einem Anruf)",msg:"Samsung Kundendienst: Wir haben Schadsoftware auf Ihrem Gerät festgestellt. Installieren Sie die Fernwartungs-App aus dem Link und nennen Sie uns den angezeigten Code.",a:"b",ex:"Betrug. Kein Hersteller meldet sich unaufgefordert. Fernwartungs-Apps geben Fremden die volle Kontrolle über Ihr Handy."},
+ {from:"Samsung Account",msg:"Neue Anmeldung bei Ihrem Samsung Account auf einem Galaxy Tab in Berlin. Waren Sie das nicht? Prüfen Sie Ihre Geräte unter Einstellungen › [Ihr Name] › Geräte.",a:"e",ex:"Wahrscheinlich echt: kein Link, nur ein Verweis auf die Einstellungen. Prüfen Sie trotzdem selbst dort und nie über einen Link in einer Nachricht."}
 ];
 var qb=document.getElementById("quizBox"),answered=0,right=0;
 Q.forEach(function(q,k){

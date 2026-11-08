@@ -1,13 +1,20 @@
 # S25 Ultra Sicherheitskompass
 
-Interaktive, bebilderte Sicherheitsanleitung ausschließlich für das Samsung Galaxy S25 Ultra mit One UI 9 (Android 17).
+Interaktive, bebilderte Sicherheitsanleitung auf Profi-Niveau, ausschließlich für das Samsung Galaxy S25 Ultra mit One UI 9 (Android 17).
 
 **Öffnen:** `index.html` im Browser öffnen oder die Datei weitergeben.
 
-Inhalt:
-- 11 Kapitel mit klickbarem Handy-Modell, davon 3 zu Neuerungen in One UI 9
-  (Sofort-Sicherheitssperre, Security Brief, blauer Standort-Punkt); per Faktencheck korrigiert, siehe reports/
-- 15 versteckte Tricks (nur offizielle Bordmittel, kein Root)
-- Fortschritt und Checkliste, Phishing-Quiz, Notfallplan
+## Inhalt
+- **Drei Schutzstufen** (Basis, Erweitert, Profi) mit Bedrohungs-Check, der eine Stufe empfiehlt
+- **18 Kapitel** mit klickbarem Handy-Modell:
+  Basis: Updates, Sperre, Automatische Sperre, Diebstahlschutz, Konten, Backup, Anrufschutz ·
+  Erweitert: Security Brief, Berechtigungen, WLAN/DNS/VPN, Messenger, Galaxy AI, Sicherer Ordner, Reparatur/Verkauf ·
+  Profi: Stalkerware-Prüfung, Tracking, Reisen/Grenzen, Konten auf Profi-Niveau
+- **Härtungsmatrix** (Maßnahme × Stufe × Komfortverlust)
+- **Wartungsroutine** (monatlich, vierteljährlich, jährlich)
+- 15 versteckte Tricks, Phishing-Quiz mit 8 Fällen, Notfallplan, Glossar
+- Fortschritt und Ampel-Sicherheitsstatus je Stufe, Statusbericht zum Kopieren
 
-Stand: November 2026. Deutsche Menünamen neuer One-UI-9-Funktionen sind teils nicht offiziell bestätigt.
+Stand: November 2026. Faktencheck siehe `reports/S25 Ultra One UI 9 Sicherheit.md`.
+Deutsche Menünamen sind überwiegend für One UI 7 offiziell belegt; Pfade der neuen Profi-Kapitel
+(Messenger, Tracking, Notfall-SOS) sind nicht für jede Version geprüft.
