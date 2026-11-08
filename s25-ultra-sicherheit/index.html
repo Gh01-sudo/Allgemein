@@ -44,13 +44,29 @@ header.hero{padding-block:40px 28px;display:grid;grid-template-columns:minmax(0,
 header.hero h1{font-size:clamp(34px,5.5vw,58px);font-weight:700;letter-spacing:-.02em}
 header.hero h1 span{color:var(--accent)}
 .lead{max-width:60ch;color:var(--muted);font-size:17px;margin:14px 0 0}
-.progress-card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;gap:18px;align-items:center}
-.ring{width:92px;height:92px;flex:none}
-.ring circle{fill:none;stroke-width:9}
-.ring .bgc{stroke:var(--line)} .ring .fgc{stroke:var(--accent);stroke-linecap:round;transition:stroke-dashoffset .5s}
-.ring text{fill:var(--ink);font-family:var(--f-display);font-weight:700;font-size:22px}
-.progress-card p{margin:4px 0 0;color:var(--muted);font-size:14px}
-.progress-card strong{font-family:var(--f-display);font-size:19px}
+.status{--lvl:var(--bad);background:var(--bezel);color:#EDF2F1;border-radius:30px;padding:22px 22px 20px;display:grid;gap:14px;box-shadow:0 24px 50px -30px rgba(0,0,0,.6);position:relative;overflow:hidden}
+.status::after{content:"";position:absolute;inset:auto -30% -60% -30%;height:120%;background:radial-gradient(closest-side,color-mix(in srgb,var(--lvl) 38%,transparent),transparent);pointer-events:none;transition:background .5s}
+.status[data-level="yellow"]{--lvl:#E9A23B} .status[data-level="green"]{--lvl:#4CC38A}
+.status[data-level="red"]{--lvl:#E5534B}
+.st-top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;position:relative;z-index:1}
+.st-top .eyebrow{color:#9FB2AE}
+.st-count{font:700 34px var(--f-display);font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.st-count small{font-size:16px;color:#9FB2AE;font-weight:600}
+.st-lights{display:flex;gap:10px;position:relative;z-index:1}
+.st-lights span{width:16px;height:16px;border-radius:50%;background:#2A3133;transition:background .4s,box-shadow .4s}
+.status[data-level="red"] .l.r{background:#E5534B;box-shadow:0 0 14px #E5534B}
+.status[data-level="yellow"] .l.y{background:#E9A23B;box-shadow:0 0 14px #E9A23B}
+.status[data-level="green"] .l.g{background:#4CC38A;box-shadow:0 0 14px #4CC38A}
+.st-msg{position:relative;z-index:1}
+.st-msg strong{font-family:var(--f-display);font-size:22px;display:block;line-height:1.2}
+.st-msg p{margin:4px 0 0;color:#B9C7C4;font-size:14px}
+.st-bar{height:6px;border-radius:3px;background:#2A3133;position:relative;z-index:1;overflow:hidden}
+.st-bar span{display:block;height:100%;width:0;background:var(--lvl);border-radius:3px;transition:width .5s}
+.mbar{display:none}
+.ch-num{font:700 64px/0.8 var(--f-display);color:var(--line);letter-spacing:-.04em;font-variant-numeric:tabular-nums;margin-bottom:10px}
+.srows,.stitle{animation:scrIn .28s ease-out}
+@keyframes scrIn{from{opacity:.25;transform:translateX(10px)}to{opacity:1;transform:none}}
+@media (prefers-reduced-motion:reduce){.srows,.stitle{animation:none}.st-bar span,.status::after{transition:none}}
 
 /* Modell-Check */
 .model{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:36px}
@@ -84,7 +100,8 @@ nav.toc a.done .dot{background:var(--accent);border-color:var(--accent)}
 .tip-search svg{flex:none;margin-top:2px}
 
 /* Kapitel */
-article.ch{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:28px;padding-block:30px;border-top:1px solid var(--line);scroll-margin-top:16px}
+article.ch{display:grid;grid-template-columns:minmax(0,1fr) 290px;gap:28px;padding-block:30px;border-top:1px solid var(--line);scroll-margin-top:72px}
+section.block{scroll-margin-top:72px}
 article.ch[hidden]{display:none}
 .ch-head{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-bottom:8px}
 .badge{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:3px 8px;border-radius:5px}
@@ -163,6 +180,14 @@ footer p{max-width:80ch;margin:0 0 8px}
 
 @media (max-width:980px){
   .main{grid-template-columns:minmax(0,1fr)} nav.toc{display:none}
+  .mbar{display:block;position:sticky;top:env(safe-area-inset-top,0px);z-index:20;margin-inline:calc(-1 * max(16px,env(safe-area-inset-left,0px)));padding:10px max(16px,env(safe-area-inset-right,0px)) 10px max(16px,env(safe-area-inset-left,0px));background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+  .mbar-in{display:flex;gap:10px;align-items:center}
+  .mb-dot{width:10px;height:10px;border-radius:50%;flex:none;background:var(--bad)}
+  .mbar[data-level="yellow"] .mb-dot{background:var(--warn)} .mbar[data-level="green"] .mb-dot{background:var(--ok)}
+  .mbar-in span#mbText{font:600 14px var(--f-body);white-space:nowrap;font-variant-numeric:tabular-nums}
+  .mbar select{flex:1;min-width:0;font:500 14px var(--f-body);padding:7px 8px;border-radius:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink)}
+  .ch-num{font-size:48px}
   header.hero{grid-template-columns:minmax(0,1fr)}
 }
 @media (max-width:720px){
@@ -209,13 +234,11 @@ footer p{max-width:80ch;margin:0 0 8px}
       <h1>S25 Ultra <span>Sicherheits&shy;kompass</span></h1>
       <p class="lead">Elf Einstellungen und fünfzehn versteckte Tricks, die Ihr Galaxy S25 Ultra unter One UI 9 deutlich sicherer machen. Jedes Kapitel zeigt den Weg durchs Menü als klickbares Handy-Modell. Haken Sie ab, was erledigt ist: Der Fortschritt bleibt in diesem Browser gespeichert.</p>
     </div>
-    <div class="progress-card" aria-live="polite">
-      <svg class="ring" viewBox="0 0 100 100" aria-hidden="true">
-        <circle class="bgc" cx="50" cy="50" r="42"></circle>
-        <circle class="fgc" id="ringFg" cx="50" cy="50" r="42" stroke-dasharray="263.9" stroke-dashoffset="263.9" transform="rotate(-90 50 50)"></circle>
-        <text id="ringTxt" x="50" y="58" text-anchor="middle">0/11</text>
-      </svg>
-      <div><strong id="progTitle">Noch nicht begonnen</strong><p id="progSub">Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.</p></div>
+    <div class="status" id="status" data-level="red" aria-live="polite">
+      <div class="st-top"><span class="eyebrow">Ihr Sicherheitsstatus</span><span class="st-count" id="ringTxt">0<small>/11</small></span></div>
+      <div class="st-lights" aria-hidden="true"><span class="l r"></span><span class="l y"></span><span class="l g"></span></div>
+      <div class="st-msg"><strong id="progTitle">Noch nicht begonnen</strong><p id="progSub">Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.</p></div>
+      <div class="st-bar" aria-hidden="true"><span id="stBar"></span></div>
     </div>
   </header>
 
@@ -251,6 +274,11 @@ footer p{max-width:80ch;margin:0 0 8px}
     </div>
     <div class="callout" data-kind="ok">Noch kein One UI 9? Samsung verteilt das Update seit Herbst 2026 schrittweise nach Region und Anbieter. Suchen Sie unter <b>Einstellungen › Software-Update</b> manuell danach. Bis es kommt, gelten die meisten Kapitel auch für One UI 8.</div>
   </section>
+
+  <div class="mbar" id="mbar" data-level="red">
+    <div class="mbar-in"><span class="mb-dot" aria-hidden="true"></span><span id="mbText">0/11 erledigt</span>
+      <select id="jump" aria-label="Zu Kapitel springen"><option value="">Springen zu …</option></select></div>
+  </div>
 
   <div class="main">
     <nav class="toc" aria-label="Kapitel">
@@ -475,6 +503,7 @@ CH.forEach(function(ch,idx){
   var a=document.createElement("article");a.className="ch";a.id=ch.id;
   a.innerHTML=
    '<div>'+
+     '<div class="ch-num" aria-hidden="true">'+String(idx+1).padStart(2,"0")+'</div>'+
      '<div class="ch-head"><span class="eyebrow">Kapitel '+(idx+1)+'</span><span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span>'+(ch.n?'<span class="badge new">Neu in One UI 9</span>':'')+'</div>'+
      '<h2>'+ch.t+'</h2><p class="why">'+ch.why+'</p>'+
      '<div class="path">'+ch.path+'</div>'+
@@ -528,6 +557,12 @@ ra.addEventListener("click",function(){
   ds.forEach(function(x){x.open=anyClosed;});ra.textContent=anyClosed?"Alle Tricks zuklappen":"Alle Tricks aufklappen";
 });
 
+/* Kapitelsprung (mobil) */
+var jump=document.getElementById("jump");
+CH.forEach(function(ch,idx){var o=document.createElement("option");o.value=ch.id;o.textContent=(idx+1)+". "+ch.t;jump.appendChild(o);});
+[["tricks","Versteckte Tricks"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
+jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
+
 /* Fortschritt */
 function syncProgress(){
   var n=0;
@@ -537,14 +572,17 @@ function syncProgress(){
     document.getElementById("chk-"+ch.id).checked=v;
     toc.querySelector('[data-id="'+ch.id+'"]').classList.toggle("done",v);
   });
-  var C=263.9;document.getElementById("ringFg").setAttribute("stroke-dashoffset",String(C-C*n/CH.length));
-  document.getElementById("ringTxt").textContent=n+"/"+CH.length;
   var p1open=CH.filter(function(c){return c.p==="p1"&&!done[c.id];}).length;
+  var lvl=p1open>0?"red":(n===CH.length?"green":"yellow");
+  document.getElementById("status").dataset.level=lvl;document.getElementById("mbar").dataset.level=lvl;
+  document.getElementById("ringTxt").innerHTML=n+"<small>/"+CH.length+"</small>";
+  document.getElementById("stBar").style.width=(100*n/CH.length)+"%";
+  document.getElementById("mbText").textContent=n+"/"+CH.length+" erledigt";
   var t=document.getElementById("progTitle"),s=document.getElementById("progSub");
-  if(n===0){t.textContent="Noch nicht begonnen";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}
-  else if(n===CH.length){t.textContent="Alles erledigt";s.textContent="Jetzt noch die versteckten Tricks durchgehen.";}
-  else if(p1open>0){t.textContent=n+" von "+CH.length+" erledigt";s.textContent="Noch "+p1open+" Pflicht-Kapitel offen.";}
-  else{t.textContent="Pflicht erledigt";s.textContent="Die Grundsicherung steht. Die übrigen Kapitel machen das S25 Ultra noch robuster.";}
+  if(n===0){t.textContent="Gefährdet: noch nichts eingerichtet";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}
+  else if(n===CH.length){t.textContent="Bestens geschützt";s.textContent="Jetzt noch die versteckten Tricks durchgehen.";}
+  else if(p1open>0){t.textContent="Pflicht-Schutz unvollständig";s.textContent="Noch "+p1open+" Pflicht-Kapitel offen.";}
+  else{t.textContent="Grundschutz steht";s.textContent="Die Grundsicherung steht. Die übrigen Kapitel machen das S25 Ultra noch robuster.";}
   applyFilter();
 }
 document.addEventListener("change",function(e){
