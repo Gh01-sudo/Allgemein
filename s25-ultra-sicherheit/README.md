@@ -23,3 +23,4 @@ Deutsche Menünamen sind überwiegend für One UI 7 offiziell belegt; Pfade der 
 
 Datenschutz: Die Repo-Fassung lädt keine externen Schriften (keine Verbindung zu Google beim Öffnen) und nutzt Systemschriften.
 Red-Team-Bericht: `reports/Red Team S25 Ultra Anleitung.md`
+Faktencheck aller Angaben: `reports/Faktencheck S25 Ultra Anleitung.md`
