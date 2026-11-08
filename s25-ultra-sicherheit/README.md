@@ -20,3 +20,6 @@ Interaktive, bebilderte Sicherheitsanleitung auf Profi-Niveau, ausschließlich f
 Stand: November 2026. Faktencheck siehe `reports/S25 Ultra One UI 9 Sicherheit.md`.
 Deutsche Menünamen sind überwiegend für One UI 7 offiziell belegt; Pfade der neuen Profi-Kapitel
 (Messenger, Tracking, Notfall-SOS) sind nicht für jede Version geprüft.
+
+Datenschutz: Die Repo-Fassung lädt keine externen Schriften (keine Verbindung zu Google beim Öffnen) und nutzt Systemschriften.
+Red-Team-Bericht: `reports/Red Team S25 Ultra Anleitung.md`

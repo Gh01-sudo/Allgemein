@@ -8,8 +8,6 @@
 <body>
 <title>S25 Ultra Sicherheitskompass</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Familjen+Grotesk:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
 <style>
 /* Layout: Leitfaden mit Kapitelnavigation links, Text + interaktivem Handy-Modell je Kapitel */
 :root{
@@ -63,6 +61,14 @@ header.hero h1 span{color:var(--accent)}
 .st-bar{height:6px;border-radius:3px;background:#2A3133;position:relative;z-index:1;overflow:hidden}
 .st-bar span{display:block;height:100%;width:0;background:var(--lvl);border-radius:3px;transition:width .5s}
 .mbar{display:none}
+.limits{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.lim{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px;min-width:0}
+.lim h3{font-size:18px;margin-top:6px}
+.lim p{margin:6px 0 0;font-size:15px;color:var(--muted)}
+.lim p b{color:var(--ink)}
+.lim-r{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;padding:2px 8px;border-radius:5px;background:var(--warn-soft);color:var(--warn)}
+.lim-r.hi{background:color-mix(in srgb,var(--bad) 16%,transparent);color:var(--bad)}
+.lim-r.lo{background:var(--accent-soft);color:var(--accent)}
 .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 2px;font-size:13px}
 .m-time{display:inline-flex;gap:5px;align-items:center;font:500 12px var(--f-mono);color:var(--muted);margin-right:8px}
 .m-lab{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
@@ -302,6 +308,7 @@ footer p{max-width:80ch;margin:0 0 8px}
 .src ul{margin:6px 0 0;padding-left:18px}
 .layer .ly-c a{font-weight:600}
 @media (max-width:720px){.layer{grid-template-columns:minmax(0,1fr);gap:4px}.ly-c{justify-content:flex-start}.ly-you{text-align:left}.tfilter{margin-top:-8px}}
+@media (max-width:720px){.limits{grid-template-columns:minmax(0,1fr)}}
 @media (max-width:720px){.tricks,.statusbar,.prof-grid,.assist-q,.rt-grid,.gl{grid-template-columns:minmax(0,1fr)}.hero-device{flex-direction:column;align-items:stretch}.hero-device svg{align-self:center}}
 </style>
 
@@ -366,7 +373,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       <p class="assist-intro">Kreuzen Sie an, was auf Sie zutrifft. Die Auswertung bleibt in diesem Browser.</p>
       <div class="assist-q" id="assistQ"></div>
       <div class="assist-res" id="assistRes" aria-live="polite"></div>
-      <div class="callout" id="assistHelp" hidden>Bei Verdacht auf Überwachung durch eine nahestehende Person: Löschen Sie nicht sofort etwas, das kann die Person alarmieren. Lesen Sie zuerst Kapitel 15 und holen Sie sich Rat, am besten von einem anderen Gerät aus. Hilfetelefon Gewalt gegen Frauen 116 016, Opfer-Telefon des Weissen Rings 116 006.</div>
+      <div class="callout" id="assistHelp" hidden>Diese Antwort wird nicht gespeichert und ist nach dem Schließen der Seite weg. Wenn jemand Zugriff auf Ihr Handy hat, kann er aber den Browserverlauf sehen. Öffnen Sie diese Seite im Zweifel auf einem anderen Gerät oder in einem privaten Tab. Löschen Sie nicht sofort etwas, das kann die Person alarmieren. Lesen Sie zuerst Kapitel 15 und holen Sie sich Rat, am besten von einem anderen Gerät aus. Hilfetelefon Gewalt gegen Frauen 116 016, Opfer-Telefon des Weissen Rings 116 006.</div>
     </div>
   </section>
 
@@ -383,6 +390,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       <ol>
         <li><a href="#profil"><span class="dot"></span>Schutzstufe wählen</a></li>
         <li><a href="#architektur"><span class="dot"></span>Schutz-Schichten</a></li>
+        <li><a href="#grenzen"><span class="dot"></span>Grenzen des Schutzes</a></li>
         <li><a href="#tricks"><span class="dot"></span>Versteckte Tricks</a></li>
         <li><a href="#matrix"><span class="dot"></span>Härtungsmatrix</a></li>
         <li><a href="#routine"><span class="dot"></span>Wartungsroutine</a></li>
@@ -418,6 +426,20 @@ footer p{max-width:80ch;margin:0 0 8px}
 
       <div id="chapters"></div>
       <div class="more" id="moreNote" hidden></div>
+
+      <section class="block" id="grenzen" aria-labelledby="grH">
+        <div class="eyebrow">Red Team</div>
+        <h2 id="grH">Wo diese Anleitung an Grenzen stößt</h2>
+        <p>Wir haben die Anleitung aus Angreifersicht geprüft. Diese Risiken bleiben auch bei vollständiger Umsetzung. Wer zu einer dieser Gruppen gehört, braucht zusätzlich professionelle Unterstützung.</p>
+        <div class="limits">
+          <div class="lim"><span class="lim-r hi">Restrisiko hoch</span><h3>Staatliche Spionage-Software</h3><p>Angriffe über unbekannte Lücken (Zero-Click), etwa per manipulierter Nachricht, umgehen jede Einstellung. <b>Was hilft:</b> Updates sofort, Maximale Einschränkungen, das Handy täglich neu starten. Viele solcher Implantate überstehen keinen Neustart. Die NSA empfiehlt in ihren Mobile Device Best Practices mindestens einen wöchentlichen Neustart. Bei konkretem Verdacht: Hilfe bei Fachstellen wie dem Security Lab von Amnesty International oder Access Now.</p></div>
+          <div class="lim"><span class="lim-r">Restrisiko mittel</span><h3>Forensik am entsperrten Gerät</h3><p>Wird ein Handy im Zustand nach der ersten Entsperrung beschlagnahmt, können professionelle Werkzeuge mehr auslesen als bei einem frisch gestarteten Gerät. <b>Was hilft:</b> Ausschalten vor Kontrollen, Inaktivitäts-Neustart, ein langes alphanumerisches Passwort.</p></div>
+          <div class="lim"><span class="lim-r">Restrisiko mittel</span><h3>Social Engineering beim Anbieter</h3><p>SIM-Swapping und Kontowiederherstellung laufen über Menschen in Callcentern, nicht über Ihr Handy. <b>Was hilft:</b> Kundenkennwort beim Mobilfunkanbieter, keine SMS als zweiter Faktor (Kapitel 18).</p></div>
+          <div class="lim"><span class="lim-r">Restrisiko mittel</span><h3>Andere Geräte im selben Konto</h3><p>Ein schlecht geschützter Laptop oder ein altes Tablet im selben Google- oder Samsung-Konto ist eine Hintertür zu Ihren Daten. <b>Was hilft:</b> Geräteliste prüfen, Altgeräte abmelden, Konten mit Passkeys absichern.</p></div>
+          <div class="lim"><span class="lim-r lo">Restrisiko gering</span><h3>Menschen mit Ihrer PIN</h3><p>Partner, Familie oder Kollegen, die Ihre PIN kennen, umgehen fast alles. Die Sicherheitsverzögerung greift zu Hause nicht. <b>Was hilft:</b> PIN niemandem verraten, nach Trennungen oder Verdacht sofort ändern, Kapitel 15 durchgehen.</p></div>
+          <div class="lim"><span class="lim-r lo">Restrisiko gering</span><h3>Veraltete Anleitung</h3><p>Menünamen und Funktionen ändern sich mit jedem Update. Diese Seite hat den Stand November 2026, viele deutsche Menünamen sind nur für One UI 7 offiziell belegt. <b>Was hilft:</b> Bei Abweichungen die Suche in den Einstellungen nutzen, im Zweifel den Samsung-Support.</p></div>
+        </div>
+      </section>
 
       <section class="block" id="architektur" aria-labelledby="arH">
         <div class="eyebrow">Hintergrund</div>
@@ -567,7 +589,7 @@ var CH=[
 {id:"diebstahl",lv:1,p:"p1",t:"Diebstahlschutz mit Sicherheitsverzögerung",
  why:"Wird Ihnen das Handy aus der Hand gerissen, sperrt es sich selbst. Die Sicherheitsverzögerung (seit One UI 7): Wer Ihre PIN ausgespäht hat, muss eine Stunde warten, bevor er neue Fingerabdrücke anlegen oder Schutzfunktionen abschalten kann. In der Zeit sperren Sie das Gerät aus der Ferne. Sie gilt nur außerhalb Ihrer sicheren Orte, zu Hause bremst sie einen Dieb also nicht.",
  path:"Einstellungen › Sicherheit und Datenschutz › Schutz für verlorene Geräte › Diebstahlschutz",
- steps:["Unter <b>Diebstahlschutz</b> alle Schalter einschalten: <b>Identitätsüberprüfung</b> (Identity Check), <b>Sicherheitsverzögerung</b> (Security Delay), <b>Diebstahlerkennungssperre</b>, <b>Offline-Gerätesperre</b> und <b>Remote-Sperre</b>.","Bei der Identitätsüberprüfung <b>Sichere Orte</b> festlegen, etwa Ihre Wohnung.","Bei der <b>Remote-Sperre</b> jetzt schon eine Sicherheitsfrage einrichten.","Zurück zu <b>Schutz für verlorene Geräte</b>: <b>Find My Mobile</b> (SmartThings Find) mit <b>Offline-Suche</b> sowie Googles <b>Find Hub</b> (früher „Mein Gerät finden“) einschalten."],
+ steps:["Unter <b>Diebstahlschutz</b> alle Schalter einschalten: <b>Identitätsüberprüfung</b> (Identity Check), <b>Sicherheitsverzögerung</b> (Security Delay), <b>Diebstahlerkennungssperre</b>, <b>Offline-Gerätesperre</b> und <b>Remote-Sperre</b>.","Bei der Identitätsüberprüfung <b>Sichere Orte</b> festlegen, etwa Ihre Wohnung.","Bei der <b>Remote-Sperre</b> jetzt schon eine Sicherheitsfrage einrichten.","Unter <b>Sperrbildschirm › Sichere Sperreinstellungen</b> die Option <b>Netzwerk und Sicherheit sperren</b> einschalten, falls vorhanden. Dann kann ein Dieb auf dem gesperrten Handy weder den Flugmodus einschalten noch die Ortung stoppen.","<b>Smart Lock</b> bzw. <b>Entsperrung verlängern</b> (Extend Unlock) unter den sicheren Sperreinstellungen ausschalten oder auf die Wohnung beschränken. Sonst bleibt das Handy entsperrt, solange etwa die Uhr in der Nähe ist.","Gegen den häufigsten Ablauf, PIN in der Bar ausspähen und dann das Handy stehlen: PIN in der Öffentlichkeit verdeckt eingeben und dort den Fingerabdruck nutzen. Außerdem SIM-PIN setzen (Kapitel 17) und Benachrichtigungsinhalte auf dem Sperrbildschirm ausblenden (Trick 07), damit SMS-Codes nicht lesbar sind.","Zurück zu <b>Schutz für verlorene Geräte</b>: <b>Find My Mobile</b> (SmartThings Find) mit <b>Offline-Suche</b> sowie Googles <b>Find Hub</b> (früher „Mein Gerät finden“) einschalten."],
  note:"Voraussetzung ist ein Samsung Account und eingeschaltetes Find My Mobile. Samsung schaltet nicht alle Schalter automatisch ein. Die Diebstahlerkennungssperre greift nur, wenn das Handy beim Entreißen entsperrt war.",
  screens:[
   {t:"Schutz für verlorene Geräte",c:"<b>Diebstahlschutz</b> öffnen.",r:[["Diebstahlschutz","",null,1],"|",["Find My Mobile","Samsung",1],["Find Hub","Google",1]]},
@@ -672,12 +694,12 @@ var CH=[
 {id:"audit",lv:3,p:"p2",t:"Stalkerware und versteckte Zugriffe aufspüren",
  why:"Spionage-Apps tarnen sich mit harmlosen Namen und missbrauchen Sonderrechte: Bedienungshilfen lesen alles mit, was auf dem Bildschirm steht, Geräteadministrator-Rechte verhindern das Löschen, Benachrichtigungszugriff liest jede Nachricht. Wer diese vier Listen kennt, findet fast jede Spionage-App.",
  path:"Einstellungen › Apps › ⋮ › Spezieller Zugriff",
- steps:["<b>Bedienungshilfen › Installierte Apps</b>: Hier dürfen nur Apps stehen, die Sie bewusst eingerichtet haben, etwa ein Passwort-Manager.","<b>Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › Geräteadministrator-Apps</b>: Normal sind nur Samsung-Dienste wie Find My Mobile und gegebenenfalls die Firmenverwaltung.","Unter <b>Spezieller Zugriff</b>: <b>Benachrichtigungszugriff</b>, <b>Über anderen Apps anzeigen</b> und <b>Nutzungsdatenzugriff</b> prüfen.","Die App-Liste unter <b>Einstellungen › Apps</b> nach unbekannten Namen wie „System Service“ oder „Sync Services“ durchsuchen.","Im Play Store: Profilbild › <b>Play Protect</b> › <b>Scannen</b>.","Im Google-Konto <b>Sicherheit › Ihre Geräte</b> sowie in Google Maps die <b>Standortfreigabe</b> kontrollieren."],
+ steps:["<b>Bedienungshilfen › Installierte Apps</b>: Hier dürfen nur Apps stehen, die Sie bewusst eingerichtet haben, etwa ein Passwort-Manager.","<b>Sicherheit und Datenschutz › Weitere Sicherheitseinstellungen › Geräteadministrator-Apps</b>: Normal sind Find My Mobile, Googles Find Hub und gegebenenfalls die Firmenverwaltung. Diese nicht deaktivieren, sonst funktioniert die Ortung nicht mehr.","Unter <b>Spezieller Zugriff</b>: <b>Benachrichtigungszugriff</b>, <b>Über anderen Apps anzeigen</b> und <b>Nutzungsdatenzugriff</b> prüfen.","Die App-Liste unter <b>Einstellungen › Apps</b> nach Apps durchsuchen, die Sie nicht selbst installiert haben. Vorsicht: Viele echte Systemdienste haben ebenfalls technisch klingende Namen. Deaktivieren Sie nichts nur wegen des Namens, sondern prüfen Sie unter App-Info › Details im Store, woher die App stammt.","Im Play Store: Profilbild › <b>Play Protect</b> › <b>Scannen</b>.","Im Google-Konto <b>Sicherheit › Ihre Geräte</b> sowie in Google Maps die <b>Standortfreigabe</b> kontrollieren."],
  note:"Wenn Sie befürchten, von einer nahestehenden Person überwacht zu werden: Das Löschen der App kann diese Person alarmieren. Holen Sie sich vorher Rat, am besten von einem anderen Gerät aus. Kostenlose Beratung: Hilfetelefon Gewalt gegen Frauen 116 016 (rund um die Uhr), Opfer-Telefon des Weissen Rings 116 006, Informationen auf stopstalkerware.org.",
  screens:[
   {t:"Spezieller Zugriff",c:"Vor allem <b>Benachrichtigungszugriff</b> prüfen.",r:[["Alle Dateien Zugriff"],["Über anderen Apps anzeigen","2 Apps"],["Benachrichtigungszugriff","3 Apps",null,1],["Nutzungsdatenzugriff"],["Unbekannte Apps installieren"]]},
-  {t:"Bedienungshilfen",c:"Ein unbekannter Dienst mit diesem Zugriff ist ein Alarmzeichen.",r:[["Installierte Apps"],"|",["Passwort-Manager","Ein",1],["System Service","Ein · Unbekannt",1,1]]},
-  {t:"Geräteadministrator-Apps",c:"Nur bekannte Einträge dürfen aktiv sein.",r:[["Find My Mobile","",1],["Device Health","Unbekannt",1,1]]}
+  {t:"Bedienungshilfen",c:"Ein unbekannter Dienst mit diesem Zugriff ist ein Alarmzeichen.",r:[["Installierte Apps"],"|",["Passwort-Manager","Ein",1],["Handy Monitor Pro","Ein · Unbekannt",1,1]]},
+  {t:"Geräteadministrator-Apps",c:"Nur bekannte Einträge dürfen aktiv sein.",r:[["Find My Mobile","",1],["Find Hub","Google",1],["Phone Tracker Plus","Unbekannt",1,1]]}
  ]},
 {id:"tracking",lv:3,p:"p3",t:"Tracking und Datenabfluss minimieren",
  why:"Auch ohne Schadsoftware fließen viele Daten ab: Werbe-ID, Standortsuche über WLAN und Bluetooth, Aktivitätsverläufe im Google-Konto und Ortsangaben in Fotos. Jede Einstellung hier verkleinert Ihr Datenprofil.",
@@ -735,7 +757,7 @@ var META={
  sperre:[5,["diebstahl","ueberwachung"],"Jede zusätzliche Ziffer verzehnfacht die möglichen Kombinationen: Eine 8-stellige PIN hat 100-mal so viele wie eine 6-stellige. Weil der Fingerabdruck den Alltag übernimmt und die PIN nur etwa alle 72 Stunden nötig ist, kostet eine lange PIN kaum Komfort."],
  autosperre:[3,["malware","ueberwachung"],"Schalten Sie Maximale Einschränkungen gezielt vor Reisen, Messen oder Großveranstaltungen ein, wo fremde WLANs und Ladesäulen lauern, und danach bei Bedarf wieder aus. Die normale Stufe bleibt immer an."],
  diebstahl:[10,["diebstahl"],"Testen Sie die Remote-Sperre einmal mit einem zweiten Gerät unter android.com/lock, solange nichts passiert ist. Setzen Sie sichere Orte sparsam: die Wohnung ja, Büro und Fitnessstudio nein."],
- konten:[15,["betrug","diebstahl"],"Hinterlegen Sie einen Hardware-Sicherheitsschlüssel (FIDO2, mit NFC oder USB-C) als zweiten Passkey. Das S25 Ultra liest ihn per NFC. Danach können Sie SMS als Anmeldeweg entfernen, der am leichtesten abzufangen ist."],
+ konten:[15,["betrug","diebstahl"],"Hinterlegen Sie einen Hardware-Sicherheitsschlüssel (FIDO2, mit NFC oder USB-C) als zweiten Passkey. Das S25 Ultra liest ihn per NFC. Danach können Sie SMS als Anmeldeweg entfernen, der am leichtesten abzufangen ist. Vorher Backup-Codes ausdrucken und den zweiten Schlüssel testen, sonst sperren Sie sich selbst aus."],
  backup:[15,["datenverlust"],"Nur ein getestetes Backup ist ein Backup. Stellen Sie es einmal im Jahr probeweise auf einem alten Handy wieder her. Prüfen Sie dabei, ob Fotos, Chats und Zwei-Faktor-Apps wirklich zurückkommen."],
  anrufe:[5,["betrug"],"Anrufernummern lassen sich fälschen (Call-ID-Spoofing), auch die echte Nummer Ihrer Bank. Legen Sie bei jeder Geldforderung auf und wählen Sie die Nummer selbst, von der Bankkarte und nicht aus der Anrufliste."],
  brief:[3,["malware"],"Prüfen Sie eine Warnung, bevor Sie handeln: App-Name im Play Store suchen, Entwickler und Bewertungen vergleichen. Stammt die App nicht aus einem Store, ist Deinstallieren fast immer richtig."],
@@ -825,7 +847,7 @@ var jump=document.getElementById("jump");
 function buildJump(){
   jump.innerHTML='<option value="">Springen zu …</option>';
   active().forEach(function(ch){var o=document.createElement("option");o.value=ch.id;o.textContent=(CH.indexOf(ch)+1)+". "+ch.t;jump.appendChild(o);});
-  [["profil","Schutzstufe wählen"],["architektur","Schutz-Schichten"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
+  [["profil","Schutzstufe wählen"],["grenzen","Grenzen des Schutzes"],["architektur","Schutz-Schichten"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
 }
 jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
 
@@ -893,9 +915,9 @@ document.querySelectorAll(".prof").forEach(function(b){b.addEventListener("click
 
 /* Bedrohungs-Check */
 var AQ=[["bank","Ich nutze das Handy für Online-Banking oder Bezahlen.",1],["firma","Auf dem Handy sind Firmen- oder Kundendaten.",2],["kids","Andere, etwa Kinder, nutzen mein Handy mit.",1],["reise","Ich reise beruflich über Grenzen, auch in Länder mit Überwachungsrisiko.",2],["public","Ich bin öffentlich bekannt, etwa durch Journalismus, Politik, Führungsrolle oder Aktivismus.",3],["stalk","Ich habe Grund zur Sorge, dass jemand aus meinem Umfeld mich überwacht.",3]];
-var aq=document.getElementById("assistQ"),aState=store("s25u-assist")||{};
+var aq=document.getElementById("assistQ"),aState=store("s25u-assist")||{};delete aState.stalk;store("s25u-assist",aState);
 AQ.forEach(function(q){var l=document.createElement("label");l.innerHTML='<input type="checkbox" id="aq-'+q[0]+'"> <span>'+q[1]+'</span>';aq.appendChild(l);
-  var i=l.querySelector("input");i.checked=!!aState[q[0]];i.addEventListener("change",function(){aState[q[0]]=i.checked;store("s25u-assist",aState);assess();});});
+  var i=l.querySelector("input");i.checked=!!aState[q[0]];i.addEventListener("change",function(){aState[q[0]]=i.checked;var keep={};for(var k in aState){if(k!=="stalk")keep[k]=aState[k];}store("s25u-assist",keep);assess();});});
 function assess(){
   var sc=0;AQ.forEach(function(q){if(aState[q[0]])sc+=q[2];});
   var rec=sc>=4?3:(sc>=2?2:1);
