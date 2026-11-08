@@ -10,6 +10,8 @@ Interaktive, bebilderte Sicherheitsanleitung auf Profi-Niveau, ausschließlich f
   Basis: Updates, Sperre, Automatische Sperre, Diebstahlschutz, Konten, Backup, Anrufschutz ·
   Erweitert: Security Brief, Berechtigungen, WLAN/DNS/VPN, Messenger, Galaxy AI, Sicherer Ordner, Reparatur/Verkauf ·
   Profi: Stalkerware-Prüfung, Tracking, Reisen/Grenzen, Konten auf Profi-Niveau
+- **Profi-Tipp, Zeitbedarf und Bedrohungen** in jedem Kapitel, Filter „Schutz vor …“
+- **Schutz-Schichten**: Sicherheitsarchitektur des S25 Ultra von Hardware bis Mensch
 - **Härtungsmatrix** (Maßnahme × Stufe × Komfortverlust)
 - **Wartungsroutine** (monatlich, vierteljährlich, jährlich)
 - 15 versteckte Tricks, Phishing-Quiz mit 8 Fällen, Notfallplan, Glossar

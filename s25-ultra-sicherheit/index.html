@@ -63,6 +63,33 @@ header.hero h1 span{color:var(--accent)}
 .st-bar{height:6px;border-radius:3px;background:#2A3133;position:relative;z-index:1;overflow:hidden}
 .st-bar span{display:block;height:100%;width:0;background:var(--lvl);border-radius:3px;transition:width .5s}
 .mbar{display:none}
+.meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:10px 0 2px;font-size:13px}
+.m-time{display:inline-flex;gap:5px;align-items:center;font:500 12px var(--f-mono);color:var(--muted);margin-right:8px}
+.m-lab{font:500 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.m-th{padding:2px 9px;border-radius:999px;background:var(--bg);border:1px solid var(--line);font-size:12.5px;font-weight:500}
+.tfilter{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:-12px 0 22px}
+.tfilter .chip{font-size:13px;padding:5px 11px}
+.tfilter .m-lab{margin-right:4px}
+.ch .note b{color:var(--ink)}
+.protip{margin:0 0 18px;background:var(--bezel);color:#E8EEED;border-radius:14px;padding:14px 16px;max-width:64ch}
+.pt-k{font:600 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:#7FD8CB;margin-bottom:4px}
+.protip p{margin:0;font-size:15px;line-height:1.55}
+.stage{padding-block:34px 10px;border-top:2px solid var(--ink)}
+.stage-k{font:600 12px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--accent)}
+.stage h2{font-size:clamp(30px,4vw,44px);letter-spacing:-.02em;margin-top:2px}
+.stage p{color:var(--muted);max-width:60ch;margin:6px 0 0}
+.stage + article.ch{border-top:0}
+nav.toc .toc-h{font:600 11px var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);padding:12px 8px 2px}
+.st-time{position:relative;z-index:1;font:500 12px var(--f-mono);color:#9FB2AE;margin-top:-6px}
+.layers{display:grid;gap:6px;margin-top:20px}
+.layer{display:grid;grid-template-columns:170px minmax(0,1fr) 190px;gap:16px;align-items:center;padding:14px 16px;border-radius:12px;background:color-mix(in srgb,var(--accent) var(--d),var(--surface));color:var(--ink)}
+.layer:nth-child(-n+3){color:var(--surface)}
+.layer .ly-b span{color:color-mix(in srgb,currentColor 80%,transparent)}
+.layer a{color:inherit}
+.ly-n{font:700 17px var(--f-display)}
+.ly-b{min-width:0}.ly-b b{display:block;font-weight:600;font-size:15px}.ly-b span{font-size:14px}
+.ly-c{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:center;font-size:13px;justify-content:flex-end}
+.ly-you{font:600 11px var(--f-mono);letter-spacing:.04em;text-transform:uppercase;width:100%;text-align:right}
 .prof-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:16px}
 .prof{text-align:left;display:flex;flex-direction:column;gap:4px;padding:16px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);color:var(--ink);cursor:pointer;font:400 14px/1.45 var(--f-body);min-width:0}
 .prof b{font:700 22px var(--f-display)}
@@ -273,6 +300,8 @@ footer p{max-width:80ch;margin:0 0 8px}
 .reveal-all{margin-top:14px;font:600 14px var(--f-body);background:transparent;border:1px solid var(--line);color:var(--ink);padding:8px 14px;border-radius:8px;cursor:pointer}
 .src{font-size:13px;color:var(--muted)}
 .src ul{margin:6px 0 0;padding-left:18px}
+.layer .ly-c a{font-weight:600}
+@media (max-width:720px){.layer{grid-template-columns:minmax(0,1fr);gap:4px}.ly-c{justify-content:flex-start}.ly-you{text-align:left}.tfilter{margin-top:-8px}}
 @media (max-width:720px){.tricks,.statusbar,.prof-grid,.assist-q,.rt-grid,.gl{grid-template-columns:minmax(0,1fr)}.hero-device{flex-direction:column;align-items:stretch}.hero-device svg{align-self:center}}
 </style>
 
@@ -288,6 +317,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       <div class="st-lights" aria-hidden="true"><span class="l r"></span><span class="l y"></span><span class="l g"></span></div>
       <div class="st-msg"><strong id="progTitle">Noch nicht begonnen</strong><p id="progSub">Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.</p></div>
       <div class="st-bar" aria-hidden="true"><span id="stBar"></span></div>
+      <div class="st-time" id="stTime"></div>
     </div>
   </header>
 
@@ -352,6 +382,7 @@ footer p{max-width:80ch;margin:0 0 8px}
       <div class="eyebrow" style="margin-top:18px">Außerdem</div>
       <ol>
         <li><a href="#profil"><span class="dot"></span>Schutzstufe wählen</a></li>
+        <li><a href="#architektur"><span class="dot"></span>Schutz-Schichten</a></li>
         <li><a href="#tricks"><span class="dot"></span>Versteckte Tricks</a></li>
         <li><a href="#matrix"><span class="dot"></span>Härtungsmatrix</a></li>
         <li><a href="#routine"><span class="dot"></span>Wartungsroutine</a></li>
@@ -369,6 +400,16 @@ footer p{max-width:80ch;margin:0 0 8px}
         <button class="chip" data-f="new" aria-pressed="false">Neu in One UI 9</button>
         <button class="chip" data-f="open" aria-pressed="false">Noch offen</button>
       </div>
+      <div class="tfilter" role="group" aria-label="Nach Bedrohung filtern">
+        <span class="m-lab">Schutz vor</span>
+        <button class="chip tchip" data-t="" aria-pressed="true">Allem</button>
+        <button class="chip tchip" data-t="diebstahl" aria-pressed="false">Diebstahl</button>
+        <button class="chip tchip" data-t="betrug" aria-pressed="false">Betrug</button>
+        <button class="chip tchip" data-t="malware" aria-pressed="false">Schadsoftware</button>
+        <button class="chip tchip" data-t="ueberwachung" aria-pressed="false">Überwachung</button>
+        <button class="chip tchip" data-t="tracking" aria-pressed="false">Tracking</button>
+        <button class="chip tchip" data-t="datenverlust" aria-pressed="false">Datenverlust</button>
+      </div>
 
       <div class="tip-search">
         <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M15.5 15.5 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>
@@ -377,6 +418,20 @@ footer p{max-width:80ch;margin:0 0 8px}
 
       <div id="chapters"></div>
       <div class="more" id="moreNote" hidden></div>
+
+      <section class="block" id="architektur" aria-labelledby="arH">
+        <div class="eyebrow">Hintergrund</div>
+        <h2 id="arH">So ist das S25 Ultra geschützt</h2>
+        <p>Sicherheit funktioniert in Schichten. Die unteren liefert Samsung fest eingebaut, die oberen müssen Sie selbst einstellen. Ein Angreifer sucht immer die schwächste Schicht, und das ist fast nie die Hardware.</p>
+        <div class="layers">
+          <div class="layer" style="--d:92%"><div class="ly-n">Mensch</div><div class="ly-b"><b>Phishing, Schockanrufe, falsche Supporter</b><span>Die häufigste Schwachstelle. Kein Filter erkennt jeden Betrug.</span></div><div class="ly-c"><span class="ly-you hi">Ihr Einfluss: hoch</span><a href="#anrufe">Kap. 7</a> <a href="#quiz">Quiz</a></div></div>
+          <div class="layer" style="--d:76%"><div class="ly-n">Konten</div><div class="ly-b"><b>Passkeys, zweiter Faktor, Diebstahlschutz</b><span>Wer Ihr Konto hat, kann das Gerät aus der Ferne sperren, löschen und Backups lesen.</span></div><div class="ly-c"><span class="ly-you hi">Ihr Einfluss: hoch</span><a href="#konten">Kap. 5</a> <a href="#diebstahl">Kap. 4</a></div></div>
+          <div class="layer" style="--d:60%"><div class="ly-n">Apps und Netz</div><div class="ly-b"><b>Automatische Sperre, Play Protect, Security Brief, Berechtigungen, privates DNS</b><span>Hält Schadsoftware fern und begrenzt, was erlaubte Apps sehen dürfen.</span></div><div class="ly-c"><span class="ly-you mid">Ihr Einfluss: mittel</span><a href="#autosperre">Kap. 3</a> <a href="#apps">Kap. 9</a></div></div>
+          <div class="layer" style="--d:44%"><div class="ly-n">Betriebssystem</div><div class="ly-b"><b>App-Sandbox, monatliche Patches, Kernel-Schutz von Knox</b><span>Jede App läuft abgeschottet. Patches schließen Lücken, durch die Angreifer ausbrechen könnten.</span></div><div class="ly-c"><span class="ly-you mid">Ihr Einfluss: Updates</span><a href="#updates">Kap. 1</a></div></div>
+          <div class="layer" style="--d:28%"><div class="ly-n">Start und Verschlüsselung</div><div class="ly-b"><b>Secure Boot, Datenverschlüsselung</b><span>Beim Start wird jede Systemstufe auf Manipulation geprüft. Nach einem Neustart sind die Daten bis zur ersten PIN-Eingabe am stärksten geschützt.</span></div><div class="ly-c"><span class="ly-you lo">Ihr Einfluss: PIN-Stärke</span><a href="#sperre">Kap. 2</a></div></div>
+          <div class="layer" style="--d:14%"><div class="ly-n">Hardware</div><div class="ly-b"><b>Knox Vault</b><span>Ein abgeschotteter Prozessor mit eigenem Speicher verwahrt PIN, biometrische Daten und Schlüssel. Er begrenzt Rateversuche, auch wenn das restliche System kompromittiert wäre.</span></div><div class="ly-c"><span class="ly-you lo">Ihr Einfluss: keiner nötig</span></div></div>
+        </div>
+      </section>
 
       <section class="block" id="tricks" aria-labelledby="trH">
         <div class="eyebrow">Für Fortgeschrittene</div>
@@ -674,6 +729,28 @@ var TRICKS=[
 var done=store("s25u-done")||{};
 var holder=document.getElementById("chapters"),toc=document.getElementById("toc"),grid=document.getElementById("checkGrid");
 var LABEL={p1:"Pflicht",p2:"Empfohlen",p3:"Optional"},LVL={1:"Basis",2:"Erweitert",3:"Profi"};
+var TH={diebstahl:"Diebstahl",betrug:"Betrug",malware:"Schadsoftware",ueberwachung:"Überwachung",datenverlust:"Datenverlust",tracking:"Tracking"};
+var META={
+ updates:[5,["malware"],"Gleichen Sie den Patch mit dem Sicherheitsbulletin auf security.samsungmobile.com ab. Dort steht jeden Monat, welche Lücken geschlossen wurden. Steht „Critical“ dabei, installieren Sie sofort statt auf das nächtliche Auto-Update zu warten."],
+ sperre:[5,["diebstahl","ueberwachung"],"Jede zusätzliche Ziffer verzehnfacht die möglichen Kombinationen: Eine 8-stellige PIN hat 100-mal so viele wie eine 6-stellige. Weil der Fingerabdruck den Alltag übernimmt und die PIN nur etwa alle 72 Stunden nötig ist, kostet eine lange PIN kaum Komfort."],
+ autosperre:[3,["malware","ueberwachung"],"Schalten Sie Maximale Einschränkungen gezielt vor Reisen, Messen oder Großveranstaltungen ein, wo fremde WLANs und Ladesäulen lauern, und danach bei Bedarf wieder aus. Die normale Stufe bleibt immer an."],
+ diebstahl:[10,["diebstahl"],"Testen Sie die Remote-Sperre einmal mit einem zweiten Gerät unter android.com/lock, solange nichts passiert ist. Setzen Sie sichere Orte sparsam: die Wohnung ja, Büro und Fitnessstudio nein."],
+ konten:[15,["betrug","diebstahl"],"Hinterlegen Sie einen Hardware-Sicherheitsschlüssel (FIDO2, mit NFC oder USB-C) als zweiten Passkey. Das S25 Ultra liest ihn per NFC. Danach können Sie SMS als Anmeldeweg entfernen, der am leichtesten abzufangen ist."],
+ backup:[15,["datenverlust"],"Nur ein getestetes Backup ist ein Backup. Stellen Sie es einmal im Jahr probeweise auf einem alten Handy wieder her. Prüfen Sie dabei, ob Fotos, Chats und Zwei-Faktor-Apps wirklich zurückkommen."],
+ anrufe:[5,["betrug"],"Anrufernummern lassen sich fälschen (Call-ID-Spoofing), auch die echte Nummer Ihrer Bank. Legen Sie bei jeder Geldforderung auf und wählen Sie die Nummer selbst, von der Bankkarte und nicht aus der Anrufliste."],
+ brief:[3,["malware"],"Prüfen Sie eine Warnung, bevor Sie handeln: App-Name im Play Store suchen, Entwickler und Bewertungen vergleichen. Stammt die App nicht aus einem Store, ist Deinstallieren fast immer richtig."],
+ apps:[15,["tracking","ueberwachung"],"Android entzieht unbenutzten Apps nach einigen Monaten automatisch die Berechtigungen. Prüfen Sie in den App-Infos, dass diese Option für selten genutzte Apps eingeschaltet ist. Der Name variiert je nach Version, etwa „App-Aktivität pausieren, wenn nicht verwendet“."],
+ netz:[15,["ueberwachung","tracking"],"Ob Quad9 wirklich greift, zeigt die Seite on.quad9.net im Browser. Erscheint dort „No“, nutzt das Gerät noch einen anderen DNS-Server, oft weil ein VPN eigene Einstellungen mitbringt."],
+ kommunikation:[15,["betrug","ueberwachung"],"Teilen Sie in Signal einen Benutzernamen statt Ihrer Telefonnummer und stellen Sie unter Datenschutz › Telefonnummer ein, dass niemand Sie über die Nummer finden kann. So bleibt Ihre Nummer auch in großen Gruppen privat."],
+ ki:[5,["tracking"],"Mit Galaxy AI generativ bearbeitete Fotos erhalten ein sichtbares Wasserzeichen und einen Hinweis in den Metadaten. Bewahren Sie bei Beweisfotos, etwa von Unfällen oder Schäden, immer das unbearbeitete Original auf."],
+ ordner:[10,["diebstahl","ueberwachung"],"Blenden Sie den Sicheren Ordner über die Schnelleinstellungen aus. Dann ist er nicht nur unsichtbar, sondern bis zum Wiedereinblenden vollständig gesperrt."],
+ wartung:[10,["datenverlust","diebstahl"],"Achten Sie beim Zurücksetzen auf die Abfrage, ob eSIMs gelöscht werden sollen. Wer das Handy verkauft, löscht sie. Wer es nur neu einrichtet, behält sie, sonst brauchen Sie vom Anbieter einen neuen eSIM-Code."],
+ audit:[20,["ueberwachung","malware"],"Datenverbrauch verrät Spionage-Apps: Unter Verbindungen › Datennutzung zeigt eine unbekannte App mit hohem Hintergrundverbrauch, dass sie Daten verschickt. Machen Sie einen Screenshot davon, bevor Sie etwas ändern. Er kann als Beweis dienen."],
+ tracking:[15,["tracking"],"Schalten Sie unter myadcenter.google.com die personalisierte Werbung ganz aus. Das wirkt für alle Geräte Ihres Google-Kontos auf einmal, nicht nur auf dem S25 Ultra."],
+ reise:[20,["ueberwachung","diebstahl"],"Schalten Sie das Handy vor dem Grenzübertritt ganz aus, statt es nur zu sperren. Danach ist die Verschlüsselung im stärksten Zustand und auch der Fingerabdruck ist gesperrt. Profis reisen in Risikoländer mit einem separaten Reisegerät mit möglichst wenig Daten."],
+ kontohaertung:[30,["betrug","diebstahl"],"Regeln Sie den Ernstfall: Mit dem Kontoinaktivitäts-Manager von Google legen Sie fest, wer nach längerer Inaktivität Zugriff erhält. Drucken Sie das Notfallkit Ihres Passwort-Managers aus und verwahren Sie es getrennt vom Handy."]
+};
+var STG={1:["Basis","Pflichtprogramm für jedes S25 Ultra. Schützt vor den häufigsten Angriffen: Diebstahl, Betrug und Schadsoftware."],2:["Erweitert","Für Banking, Diensthandys und alle, die mehr wollen: Netzwerk, Messenger, Datenschutz und Gerätepflege."],3:["Profi","Für erhöhtes Risiko: gezielte Überwachung, Reisen in Risikoländer und Konten, die besonders begehrt sind."]};
 var PROFILE=+(store("s25u-profile")||1);if(!(PROFILE>=1&&PROFILE<=3))PROFILE=1;
 function active(){return CH.filter(function(c){return c.lv<=PROFILE;});}
 
@@ -683,10 +760,13 @@ CH.forEach(function(ch,idx){
    '<div>'+
      '<div class="ch-num" aria-hidden="true">'+String(idx+1).padStart(2,"0")+'</div>'+
      '<div class="ch-head"><span class="eyebrow">Kapitel '+(idx+1)+'</span><span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span><span class="badge lvb">'+LVL[ch.lv]+'</span>'+(ch.n?'<span class="badge new">Neu in One UI 9</span>':'')+'</div>'+
-     '<h2>'+ch.t+'</h2><p class="why">'+ch.why+'</p>'+
+     '<h2>'+ch.t+'</h2>'+
+     '<div class="meta"><span class="m-time"><svg width="14" height="14" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"></circle><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"></path></svg>ca. '+META[ch.id][0]+' Min.</span><span class="m-lab">Schutz vor</span>'+META[ch.id][1].map(function(t){return '<span class="m-th">'+TH[t]+'</span>';}).join("")+'</div>'+
+     '<p class="why">'+ch.why+'</p>'+
      '<div class="path">'+ch.path+'</div>'+
      '<ol class="steps">'+ch.steps.map(function(s){return "<li>"+s+"</li>";}).join("")+'</ol>'+
-     '<p class="note">'+ch.note+'</p>'+
+     '<p class="note"><b>Hinweis:</b> '+ch.note+'</p>'+
+     '<aside class="protip"><div class="pt-k">Profi-Tipp</div><p>'+META[ch.id][2]+'</p></aside>'+
      '<label class="done-toggle"><input type="checkbox" id="done-'+ch.id+'" data-id="'+ch.id+'"> Erledigt</label>'+
    '</div>'+
    '<div class="phone-col">'+
@@ -694,6 +774,11 @@ CH.forEach(function(ch,idx){
      '<div class="caption" aria-live="polite"></div>'+
      '<div class="stepper"><button type="button" class="prev" id="prev-'+ch.id+'">Zurück</button><button type="button" class="next primary" id="next-'+ch.id+'">Weiter</button></div>'+
    '</div>';
+  if(idx===0||CH[idx-1].lv!==ch.lv){
+    var sd=document.createElement("div");sd.className="stage";sd.dataset.lv=ch.lv;
+    sd.innerHTML='<span class="stage-k">Stufe '+ch.lv+'</span><h2>'+STG[ch.lv][0]+'</h2><p>'+STG[ch.lv][1]+'</p>';holder.appendChild(sd);
+    var th=document.createElement("li");th.className="toc-h";th.dataset.lv=ch.lv;th.textContent="Stufe "+ch.lv+" · "+STG[ch.lv][0];toc.appendChild(th);
+  }
   holder.appendChild(a);
   var li=document.createElement("li");li.innerHTML='<a href="#'+ch.id+'" data-id="'+ch.id+'"><span class="dot"></span>'+(idx+1)+'. '+ch.t+'</a>';toc.appendChild(li);
   var cl=document.createElement("label");cl.innerHTML='<input type="checkbox" id="chk-'+ch.id+'" data-id="'+ch.id+'"><span>'+ch.t+' <span class="badge '+ch.p+'">'+LABEL[ch.p]+'</span></span>';grid.appendChild(cl);
@@ -740,7 +825,7 @@ var jump=document.getElementById("jump");
 function buildJump(){
   jump.innerHTML='<option value="">Springen zu …</option>';
   active().forEach(function(ch){var o=document.createElement("option");o.value=ch.id;o.textContent=(CH.indexOf(ch)+1)+". "+ch.t;jump.appendChild(o);});
-  [["profil","Schutzstufe wählen"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
+  [["profil","Schutzstufe wählen"],["architektur","Schutz-Schichten"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
 }
 jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
 
@@ -760,6 +845,8 @@ function syncProgress(){
   document.getElementById("ringTxt").innerHTML=n+"<small>/"+TOT+"</small>";
   document.getElementById("stBar").style.width=(100*n/TOT)+"%";
   document.getElementById("mbText").textContent=n+"/"+TOT+" · "+LVL[PROFILE];
+  var rem=A.filter(function(c){return !done[c.id];}).reduce(function(x,c){return x+META[c.id][0];},0);
+  document.getElementById("stTime").textContent=rem?"Noch ca. "+(rem>=60?Math.floor(rem/60)+" Std. "+(rem%60?rem%60+" Min.":""):rem+" Min.")+" Arbeit in dieser Stufe":"Keine offenen Kapitel in dieser Stufe";
   document.querySelector(".status .eyebrow").textContent="Sicherheitsstatus · Stufe "+LVL[PROFILE];
   var t=document.getElementById("progTitle"),s=document.getElementById("progSub");
   if(n===0){t.textContent="Gefährdet: noch nichts eingerichtet";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}
@@ -772,14 +859,18 @@ document.addEventListener("change",function(e){
   var id=e.target&&e.target.dataset&&e.target.dataset.id;if(!id||e.target.type!=="checkbox")return;
   done[id]=e.target.checked;store("s25u-done",done);syncProgress();
 });
-var filter="all";
+var filter="all",threat="";
+document.querySelectorAll(".tchip").forEach(function(b){
+  b.addEventListener("click",function(){threat=b.dataset.t;document.querySelectorAll(".tchip").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});applyFilter();});
+});
 document.querySelectorAll(".filter .chip").forEach(function(b){
   b.addEventListener("click",function(){filter=b.dataset.f;document.querySelectorAll(".filter .chip").forEach(function(x){x.setAttribute("aria-pressed",x===b?"true":"false");});applyFilter();});
 });
 function applyFilter(){
   CH.forEach(function(ch){
-    document.getElementById(ch.id).hidden=ch.lv>PROFILE||(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
+    document.getElementById(ch.id).hidden=ch.lv>PROFILE||(threat&&META[ch.id][1].indexOf(threat)<0)||(filter==="p1"&&ch.p!=="p1")||(filter==="new"&&!ch.n)||(filter==="open"&&!!done[ch.id]);
   });
+  document.querySelectorAll(".stage,.toc-h").forEach(function(x){x.hidden=+x.dataset.lv>PROFILE;});
   var hid=CH.length-active().length,mn=document.getElementById("moreNote");
   mn.hidden=hid===0;
   if(hid)mn.innerHTML=hid+" weitere Kapitel gehören zu höheren Schutzstufen. <button type=\"button\" class=\"reveal-all\" id=\"moreBtn\">Stufe „"+LVL[PROFILE+1]+"“ anzeigen</button>";
