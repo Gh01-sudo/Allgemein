@@ -478,7 +478,7 @@ const CATS=[
  {k:"case",label:"Gehäuse",code:"Gehäuse"}
 ];
 const CAT_LABEL=Object.fromEntries(CATS.map(c=>[c.k,c.label]));
-const FILL_ORDER=["cpu","gpu","board","ram","cooler","ssd","case","psu"];
+const FILL_ORDER=["cpu","gpu","board","ram","ssd","case","cooler","psu"];
 const FORM_FIT={ATX:["ATX","mATX","ITX"],mATX:["mATX","ITX"],ITX:["ITX"]};
 const WEIGHTS={
  gaming:{cpu:.18,board:.10,ram:.14,cooler:.03,gpu:.36,ssd:.07,case:.05,psu:.07},
@@ -489,7 +489,7 @@ const PROFILE_NAME={gaming:"Gaming",office:"Büro & Alltag",creator:"Kreativ & W
 const PRESETS=[
  {id:"mine",params:{mix:60,res:3,fps:60,ram:32,storage:1000,quiet:80,size:"ATX"},name:"Deine Konfiguration",hint:"4K-Gaming + Kreativ",profile:"creator",budget:null,user:{cpu:"r9-9900x",cooler:"tr-pa120se",board:"msi-b650-gp",ram:"gs-2x16-6000",gpu:"rx9070xt",ssd:"wd-sn7100-1",psu:"cor-rm850e","case":"bq-sb802"}},
  {id:"office",params:{mix:30,res:0,fps:60,ram:16,storage:1000,quiet:70,size:"mATX"},name:"Büro & Zuhause",hint:"ohne Grafikkarte",profile:"office",budget:null,user:{cpu:"r5-8600g"}},
- {id:"fhd",params:{mix:10,res:0,fps:144,ram:32,storage:1000,quiet:40,size:"ATX"},name:"Einstieg Full HD",hint:"Budget 1.600 €",profile:"gaming",budget:1600,user:{gpu:"rtx5060"}},
+ {id:"fhd",params:{mix:10,res:0,fps:120,ram:32,storage:1000,quiet:40,size:"ATX"},name:"Einstieg Full HD",hint:"Budget 1.600 €",profile:"gaming",budget:1600,user:{gpu:"rtx5060"}},
  {id:"wqhd",params:{mix:20,res:1,fps:144,ram:32,storage:2000,quiet:50,size:"ATX"},name:"Gaming WQHD",hint:"9800X3D + 9070 XT",profile:"gaming",budget:null,user:{cpu:"r7-9800x3d",gpu:"rx9070xt"}},
  {id:"4k",params:{mix:20,res:3,fps:90,ram:32,storage:2000,quiet:50,size:"ATX"},name:"4K-Enthusiast",hint:"RTX 5090",profile:"gaming",budget:null,user:{cpu:"r7-9850x3d",gpu:"rtx5090"}},
  {id:"ws",params:{mix:90,res:1,fps:60,ram:96,storage:4000,quiet:60,size:"ATX"},name:"Workstation",hint:"16 Kerne, 96 GB",profile:"creator",budget:null,user:{cpu:"r9-9950x",ram:"gs-2x48-6000"}},
@@ -626,14 +626,19 @@ function prefer(cat,pool,parts,T){
   const f=pred=>{const r=pool.filter(pred);return r.length?r:pool;};
   const pr=state.profile,pa=P();
   if(cat==="cpu"&&pr==="office")return f(p=>p.igpu);
+  if(cat==="cpu")return f(p=>!(p.ig>=12));
   if(cat==="gpu"){
     if(pr==="office")return (parts.cpu&&parts.cpu.igpu)?f(p=>p.none):f(p=>!p.none&&p.tier<=2);
-    if(mixW()>=0.6)return f(p=>!p.none&&p.brand==="NVIDIA");
-    return f(p=>!p.none);
+    let g=f(p=>!p.none);
+    const minV=P().res>=3?16:P().res>=1?12:0;
+    if(minV){const v=g.filter(p=>p.vram>=minV);if(v.length)g=v;}
+    if(mixW()>=0.6){const n=g.filter(p=>p.brand==="NVIDIA");if(n.length)g=n;}
+    return g;
   }
   if(cat==="ram"){
     let r=pool.filter(p=>p.cap===pa.ram);if(!r.length)r=pool.filter(p=>p.cap>=pa.ram);if(!r.length)r=pool;
-    if(pr!=="office"){const fast=r.filter(p=>p.speed>=6000&&p.cl<=30);if(fast.length)r=fast;}
+    if(parts.cpu&&parts.cpu.socket==="LGA1851"){const fast=r.filter(p=>p.speed>=6400);if(fast.length)r=fast;}
+    else if(pr!=="office"){const fast=r.filter(p=>p.speed>=6000&&p.cl<=30);if(fast.length)r=fast;}
     return r;
   }
   if(cat==="ssd"){let r=pool.filter(p=>p.cap===pa.storage);if(!r.length)r=pool.filter(p=>p.cap>=pa.storage);return r.length?r:pool;}
@@ -659,14 +664,24 @@ function pickCase(pool){
   const want=1+P().quiet/50;
   return pool.slice().sort((a,b)=>Math.abs((a.silent||1)-want)-Math.abs((b.silent||1)-want)||a.price-b.price)[0];
 }
-function pickCpu(pool,alloc){
-  const needG=Math.min(P().fps/CPU_FPS,100),needM=35+mixW()*60;
+function platformCost(cpu){
+  if(state.picks.board&&state.picks.board.src==="user")return 0;
+  const size=P().size;let b=DB.board.filter(x=>x.socket===cpu.socket&&x.form===size);
+  if(!b.length)b=DB.board.filter(x=>x.socket===cpu.socket&&FORM_FIT[size].includes(x.form));
+  /* LGA1700 ist eine Plattform ohne Aufrüstpfad: kleiner Malus, damit AM5/LGA1851 bei Gleichstand gewinnen */
+  return b.length?Math.min(...b.map(x=>x.price))+(cpu.socket==="LGA1700"?40:0):Infinity;
+}
+function pickCpu(pool,alloc,parts){
+  const gp=parts.gpu&&!parts.gpu.none?parts.gpu:null;
+  const needG=Math.min(Math.max(P().fps,gp?gp.g*RES[P().res].f:0)/CPU_FPS*1.3*(1-0.25*mixW()),100),needM=20+mixW()*70;
+  pool=pool.filter(p=>isFinite(platformCost(p))).length?pool.filter(p=>isFinite(platformCost(p))):pool;
   const ok=pool.filter(p=>p.g>=needG&&p.m>=needM);
   const within=alloc!=null?pool.filter(p=>p.price<=alloc*1.15):pool;
   const both=ok.filter(p=>within.includes(p));
-  const byVal=(a,b)=>value("cpu",b)-value("cpu",a);
+  const cost=p=>p.price+platformCost(p);
+  const byVal=(a,b)=>cost(a)-cost(b)||cpuBlend(b)-cpuBlend(a);
   if(both.length)return both.slice().sort(byVal)[0];
-  if(alloc!=null&&within.length)return within.slice().sort((a,b)=>cpuBlend(b)-cpuBlend(a))[0];
+  if(alloc!=null)return within.length?within.slice().sort((a,b)=>cpuBlend(b)-cpuBlend(a))[0]:pool.slice().sort((a,b)=>a.price-b.price)[0];
   if(ok.length)return ok.slice().sort((a,b)=>a.price-b.price)[0];
   return pool.slice().sort((a,b)=>cpuBlend(b)-cpuBlend(a))[0];
 }
@@ -676,7 +691,7 @@ function pickGpu(pool,alloc){
   const within=alloc!=null?pool.filter(p=>p.price<=alloc*1.15):pool;
   const both=ok.filter(p=>within.includes(p));
   if(both.length)return both.slice().sort((a,b)=>a.price-b.price)[0];
-  if(alloc!=null&&within.length)return within.slice().sort((a,b)=>effG(b)-effG(a))[0];
+  if(alloc!=null)return within.length?within.slice().sort((a,b)=>effG(b)-effG(a))[0]:pool.slice().sort((a,b)=>a.price-b.price)[0];
   if(ok.length)return ok.slice().sort((a,b)=>a.price-b.price)[0];
   return pool.slice().sort((a,b)=>effG(b)-effG(a))[0];
 }
@@ -691,7 +706,7 @@ function choose(cat,picks,T,alloc){
   if(cat==="psu")return pickPsu(pool,parts,T);
   if(pool.length===1)return pool[0];
   if(cat==="case")return pickCase(pool);
-  if(cat==="cpu"&&state.profile!=="office")return pickCpu(pool,alloc);
+  if(cat==="cpu"&&state.profile!=="office")return pickCpu(pool,alloc,parts);
   if(cat==="gpu"&&state.profile!=="office")return pickGpu(pool,alloc);
   if(cat==="ram"||cat==="ssd")return pool.slice().sort((a,b)=>a.price-b.price)[0];
   if(alloc!=null){
@@ -716,9 +731,21 @@ function fillMissing(base){
       const wsum=rest.reduce((s2,c)=>s2+w[c],0);
       alloc=Math.max(0,remaining*w[cat]/wsum);
     }
-    const ch=choose(cat,p,T,alloc);
+    let ctx=p;
+    if(cat==="gpu"&&state.profile!=="office"&&p.cpu&&p.cpu.src==="auto"){ctx=Object.assign({},p);delete ctx.cpu;}
+    const ch=choose(cat,ctx,T,alloc);
     if(ch){p[cat]={id:ch.id,src:"auto"};if(remaining!=null)remaining-=ch.price;}
   });
+  /* Zweiter Durchgang: Prozessor auf die nun bekannte Grafikkarte abstimmen (gleiche Plattform), danach Kühler und Netzteil neu */
+  if(p.cpu&&p.cpu.src==="auto"&&p.gpu&&state.profile!=="office"){
+    const old=get("cpu",p.cpu.id);const rest=Object.assign({},p);delete rest.cpu;
+    for(const c of ["cooler","psu"]){if(rest[c]&&rest[c].src==="auto")delete rest[c];}
+    const ch=choose("cpu",rest,T,state.budget?old.price:null);
+    if(ch&&ch.id!==old.id&&ch.socket===old.socket){
+      p.cpu={id:ch.id,src:"auto"};
+      for(const c of ["cooler","psu"]){if(p[c]&&p[c].src==="auto"){delete p[c];const c2=choose(c,p,T,null);if(c2)p[c]={id:c2.id,src:"auto"};}}
+    }
+  }
   return p;
 }
 let prevIds={};
@@ -933,7 +960,7 @@ function renderDash(parts,issues){
   const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
   const noise=noiseInfo(parts);
   const fpsCls=fps>=p.fps?"ok":fps>=p.fps*0.8?"warn":"bad";
-  const budgetLine=state.budget?(total>state.budget?`<span class="pill bad">${eur(total-state.budget)} über Budget</span>`:`<span class="pill ok">${eur(state.budget-total)} unter Budget</span>`):`<small>kein Budget gesetzt</small>`;
+  const budgetLine=state.budget?(total>state.budget?`<span class="pill bad">${eur(total-state.budget)} über Budget</span><small>RAM, SSD, Auflösung oder Bildrate senken</small>`:`<span class="pill ok">${eur(state.budget-total)} unter Budget</span>`):`<small>kein Budget gesetzt</small>`;
   $("#dKpis").innerHTML=`
    <div class="kpi"><span class="eyebrow">Gesamtpreis</span><b>${eur(total)}</b>${budgetLine}</div>
    <div class="kpi"><span class="eyebrow">Bildrate ${esc(RES[p.res].label)}</span><b>${fps||"–"} FPS</b><span class="pill ${fpsCls}">Ziel ${p.fps} FPS</span></div>

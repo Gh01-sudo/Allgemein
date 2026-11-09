@@ -115,3 +115,14 @@ Alle Punkte der Korrekturliste wurden in `pc-konfigurator/index.html` übernomme
 - Neu aufgenommen: Ryzen 9 9950X3D2, Ryzen 5 7500X3D, Core Ultra 5 250K Plus, RX 9070 GRE.
 - Neue Regel: Hinweis auf BIOS mit AGESA 1.2 bei Ryzen 9000 auf A620/B650. SN7100 als „SanDisk Optimus GX 7100 (ex WD Black SN7100)“ benannt.
 - Nicht umgesetzt: Prüfung der Zahl der GPU-Stromstecker (Netzteile im Katalog haben genug Anschlüsse), MacBook Pro „PROLED XDR“ (zu neu, kein deutscher Preis).
+
+## Plausibilitäts-Audit der automatischen Zusammenstellung (9.11.2026)
+
+108 Regler-Kombinationen (Gaming/Kreativ 0/50/100 × Full HD/WQHD/4K × 60/144 FPS × ohne Budget/1.500/2.500 € × ITX/ATX) automatisch durchgespielt. Gefundene und behobene Fehler:
+- ITX-Regler ergab ATX-Gehäuse, weil der Kühler (360er-AiO) vor dem Gehäuse gewählt wurde. Reihenfolge jetzt: Gehäuse vor Kühler.
+- Budget wurde ignoriert, wenn keine Grafikkarte ins Teilbudget passte (Folge: RTX 5090 bei 1.500 € Budget). Jetzt wird dann die günstigste passende Karte genommen.
+- Prozessor ohne Rücksicht auf Plattformkosten (z. B. Z890-ITX-Board für 390 €) und ohne Blick auf die Grafikkarte (z. B. 9850X3D mit Arc B580, 7500X3D mit RTX 5090). Jetzt: günstigster Prozessor inkl. Mainboard, der die Ziel-Bildrate bzw. die Grafikkarte mit 30 % Reserve bedient; zweiter Durchgang nach der GPU-Wahl.
+- Ein zuerst gewählter, schwächerer Prozessor blockierte über die Flaschenhals-Warnung stärkere Grafikkarten. GPU-Wahl ignoriert jetzt den automatisch gewählten Prozessor.
+- Ab WQHD werden Karten mit mindestens 12 GB, in 4K mit 16 GB Grafikspeicher bevorzugt; Kreativ-Schwerpunkt bevorzugt NVIDIA (CUDA).
+- Core Ultra (LGA1851) bekommt DDR5-6400, Ryzen DDR5-6000 CL30. APUs (8500G/8600G) werden mit dedizierter Grafikkarte nicht mehr gewählt. LGA1700 erhält einen kleinen Malus (kein Aufrüstpfad).
+- Ergebnis: keine Konflikte mehr; Warnungen nur noch bei RTX 5090 in ITX-Gehäusen (größtes SFX-Netzteil 1.000 W statt empfohlener 1.050–1.200 W), was korrekt angezeigt wird.
