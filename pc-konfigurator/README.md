@@ -15,6 +15,12 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Vorlagen:** Deine Konfiguration (4K-Gaming + Kreativ), Büro, Einstieg Full HD, Gaming WQHD, 4K-Enthusiast, Workstation, Kompakt-ITX
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
+## Dashboard
+Zweiter Reiter „Dashboard“ mit allen Auswertungen auf einen Blick: Kennzahlen (Preis, Bildrate, Multi-Core, Strom, Lautstärke, Kompatibilität),
+**Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße (die betroffenen Bauteile werden
+automatisch neu gewählt, mit „Rückgängig“), Bildrate je Auflösung mit CPU-Grenze, Kostenverteilung, Upgrade-Stufen für GPU/CPU,
+Stromkosten pro Jahr und ein **Laptop-Vergleich** (14", 16", 18", MacBook Pro) mit dem Gerät, das der Desktop-Leistung am nächsten kommt.
+
 ## Preise
 Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
@@ -22,3 +28,5 @@ Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und l
 
 ## Einkaufsliste
 `einkaufsliste.html`: abhakbarer Bestellzettel für die Vorlage „Deine Konfiguration“ mit Modellnummern, Bestpreisen und Shop-Links (Stand 9. November 2026).
+
+Red-Team-Prüfung aller Preise, Specs und Regeln: `reports/Red Team PC-Werkbank.md` (Korrekturen sind eingearbeitet).

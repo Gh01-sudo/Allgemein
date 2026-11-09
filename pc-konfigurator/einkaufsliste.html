@@ -68,7 +68,7 @@ h1{font-size:clamp(28px,4.4vw,40px)}
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Bestellzettel · Preise Stand 9. November 2026</div>
+    <div class="eyebrow">Bestellzettel · Preise Stand 9. November 2026, Red-Team-geprüft</div>
     <h1>Einkaufsliste 4K-Kreativ-PC</h1>
     <p class="lead">Ryzen 9 9900X, Radeon RX 9070 XT, 32 GB DDR5 und ein gedämmtes Gehäuse für 4K-Gaming, Foto, Blender und lokale KI. Hake jedes Teil ab, sobald es bestellt ist.</p>
   </header>
@@ -88,7 +88,7 @@ h1{font-size:clamp(28px,4.4vw,40px)}
     <ul>
       <li><b>Tagespreis prüfen:</b> Grafikkarten und Arbeitsspeicher ändern ihren Preis gerade täglich. Die Beträge sind die günstigsten Angebote, die zwischen Mitte Oktober und 9. November gefunden wurden.</li>
       <li><b>Versand:</b> Mehrere Teile beim selben Händler sparen Versandkosten. Vergleiche den Gesamtpreis inklusive Versand.</li>
-      <li><b>Nach dem Zusammenbau:</b> Zuerst das neueste BIOS einspielen, dann im BIOS das EXPO-Profil für DDR5-6000 aktivieren.</li>
+      <li><b>BIOS zuerst:</b> Das B650-Board braucht für den Ryzen 9000 ein BIOS mit AGESA 1.2 oder neuer. Bei älterer Lagerware vor dem Einbau per Flash-BIOS-Taste aktualisieren. <b>Nach dem Zusammenbau:</b> Das neueste BIOS einspielen, dann im BIOS das EXPO-Profil für DDR5-6000 aktivieren.</li>
       <li><b>Später aufrüsten:</b> Auf 64 GB wechselst du mit einem 2×32-GB-Kit, nicht mit zwei zusätzlichen Riegeln.</li>
     </ul>
   </section>
@@ -99,7 +99,7 @@ h1{font-size:clamp(28px,4.4vw,40px)}
 (function(){
 "use strict";
 const ITEMS=[
- {id:"cpu",cat:"Prozessor",name:"AMD Ryzen 9 9900X (boxed, ohne Kühler)",sku:"100-100000662WOF · 12 Kerne / 24 Threads · AM5",price:311,when:"Geizhals, 8.11.",
+ {id:"cpu",cat:"Prozessor",name:"AMD Ryzen 9 9900X (boxed, ohne Kühler)",sku:"100-100000662WOF · 12 Kerne / 24 Threads · AM5",price:303,when:"Geizhals, 9.11.",
   links:[["Geizhals","https://geizhals.de/amd-ryzen-9-9900x-100-100000662wof-a3202550.html"],["billiger.de","https://www.billiger.de/baseproducts/116161-amd-ryzen-9-9900x"]]},
  {id:"cooler",cat:"CPU-Kühler",name:"Thermalright Peerless Assassin 120 SE",sku:"schwarz, ohne ARGB · 155 mm hoch",price:34,when:"heise, 9.11.",tip:"Nicht die teurere „V2“ nehmen, die einfache SE reicht.",
   links:[["Geizhals","https://geizhals.de/thermalright-peerless-assassin-120-se-a2647175.html"],["heise","https://preisvergleich.heise.de/thermalright-peerless-assassin-120-se-a2647175.html"]]},
@@ -107,13 +107,13 @@ const ITEMS=[
   links:[["günstiger.de","https://www.guenstiger.de/Produkt/MSI/B650_Gaming_Plus_WiFi.html"],["Geizhals","https://geizhals.de/msi-b650-gaming-plus-wifi-7e26-001r-a2975546.html"]]},
  {id:"ram",cat:"Arbeitsspeicher",name:"32 GB DDR5-6000 CL30 (2×16 GB), z. B. Patriot Viper Venom",sku:"2 Riegel · AMD EXPO · CL30",price:520,when:"Marktpreis Nov.",tip:"Genau DDR5-6000, CL30, EXPO und 2 Riegel. Die Marke ist zweitrangig.",
   links:[["Geizhals-Suche","https://geizhals.de/?fs=DDR5-6000+CL30+32GB+Kit"],["Preisverlauf","https://dropreference.com/en/blog/news/increase-price-ddr5-ram"]]},
- {id:"gpu",cat:"Grafikkarte",name:"AMD Radeon RX 9070 XT 16 GB (günstigstes Partnermodell)",sku:"bis 330 mm Länge · 2–3× 8-Pin",price:899,when:"Notebooksbilliger, 2.11.",tip:"Alternative: Sapphire Pulse (11348-03-20G) für ca. 960–999 €, leise und solide.",
+ {id:"gpu",cat:"Grafikkarte",name:"AMD Radeon RX 9070 XT 16 GB (günstigstes Partnermodell)",sku:"bis 330 mm Länge · 2–3× 8-Pin",price:896,when:"Geizhals, 9.11.",tip:"Alternative: Sapphire Pulse (11348-03-20G) für ca. 960–999 €, leise und solide.",
   links:[["Geizhals-Suche","https://geizhals.de/?fs=RX+9070+XT"],["Sapphire Pulse","https://geizhals.de/sapphire-pulse-radeon-rx-9070-xt-11348-03-20g-a3429991.html"]]},
- {id:"ssd",cat:"SSD",name:"WD Black SN7100 1 TB",sku:"WDS100T4X0E · NVMe PCIe 4.0 · 7.250 MB/s",price:160,when:"heise/Geizhals, Nov.",
+ {id:"ssd",cat:"SSD",name:"SanDisk Optimus GX 7100 1 TB (ex WD Black SN7100)",sku:"WDS100T4X0E · NVMe PCIe 4.0 · 7.250 MB/s",price:160,when:"heise/Geizhals, Nov.",
   links:[["heise","https://preisvergleich.heise.de/western-digital-wd-black-sn7100-nvme-ssd-1tb-wds100t4x0e-00cja0-a3372709.html"],["Geizhals","https://geizhals.de/western-digital-wd-black-sn7100-nvme-ssd-1tb-wds100t4x0e-00cja0-a3372709.html"]]},
  {id:"psu",cat:"Netzteil",name:"Corsair RM850e (2025), 850 W, ATX 3.1",sku:"CP-9020296-EU · 80 PLUS Gold",price:105,when:"Geizhals, Okt.",tip:"Auf die 2025er Version (CP-9020296) achten, nicht die ältere von 2023.",
   links:[["Geizhals","https://geizhals.de/corsair-rme-series-2025-rm850e-850w-atx-3-1-cp-9020296-eu-a3385902.html"]]},
- {id:"case",cat:"Gehäuse",name:"be quiet! Silent Base 802, schwarz, gedämmt",sku:"BG039 · ohne Glasfenster · ATX",price:118,when:"Mindfactory, 25.9.",tip:"BG039 ist die gedämmte Variante ohne Glas, also die leiseste.",
+ {id:"case",cat:"Gehäuse",name:"be quiet! Silent Base 802, schwarz, gedämmt",sku:"BG039 · ohne Glasfenster · ATX",price:155,when:"geschätzt, 118 € nicht mehr belegt",tip:"BG039 ist die gedämmte Variante ohne Glas, also die leiseste. Für Grafikkarten über 287 mm den HDD-Käfig ausbauen.",
   links:[["Geizhals","https://geizhals.de/be-quiet-silent-base-802-schwarz-a2365173.html"]]},
  {id:"win",cat:"Betriebssystem",name:"Windows 11 Pro, offizielle Lizenz",sku:"z. B. Microsoft Store, digitale Lizenz",price:260,when:"geschätzt",
   links:[["Microsoft Store","https://www.microsoft.com/de-de/windows/get-windows-11"]]}
