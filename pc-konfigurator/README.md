@@ -15,6 +15,12 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Vorlagen:** Deine Konfiguration (4K-Gaming + Kreativ), Büro, Einstieg Full HD, Gaming WQHD, 4K-Enthusiast, Workstation, Kompakt-ITX
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
+## Mehr auf einen Blick
+- **Steckbrief** an jedem Bauteil (aufklappbar): alle technischen Daten, Stärken, Schwächen, Hinweise und Preisstand.
+- **Reiter „Übersicht“:** Kennzahlen, Schema des PCs (inkl. Radiator-Position), gesammelte Stärken und Schwachstellen, Upgrade-Pfad nach Nutzen pro Euro, Teileliste mit Preisstand.
+- **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
+- Auslaufmodelle sind markiert und werden nicht mehr automatisch gewählt.
+
 ## Bessere Komponenten
 - **„Besser“-Tipp an jedem Bauteil:** das günstigste passende Upgrade mit Aufpreis und Vorteil (z. B. „+9 FPS in 4K“, „80 PLUS Titanium“, „+32 GB“), per Klick übernehmbar.
 - **„Bessere Wahl“ im Auswahlfenster:** bis zu drei Stufen nach Aufpreis, jede besser als die günstigere davor; nur Teile, die ohne Konflikt zum eigenen System passen.

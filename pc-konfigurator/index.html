@@ -232,6 +232,55 @@ button,input,select{font:inherit;color:inherit}
 .better-h{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;padding:2px 4px 6px}
 .better-opt{background:var(--surface)}
 .better-opt:hover{background:var(--surface)}
+
+/* Steckbrief */
+.brief{margin-top:4px}
+.brief>summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);list-style:none;display:inline-flex;gap:6px;align-items:center}
+.brief>summary::-webkit-details-marker{display:none}
+.brief>summary::before{content:"▸";transition:transform .15s}
+.brief[open]>summary::before{transform:rotate(90deg)}
+.brief-body{margin-top:8px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px 18px;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+@media (max-width:640px){.brief-body{grid-template-columns:minmax(0,1fr)}}
+.kvt{width:100%;border-collapse:collapse;font-size:12.5px}
+.kvt td{padding:3px 0;border-top:1px solid var(--line);vertical-align:top}
+.kvt tr:first-child td{border-top:0}
+.kvt td:first-child{color:var(--muted);padding-right:10px;white-space:nowrap}
+.kvt td:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.pc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.pc li{display:grid;grid-template-columns:16px minmax(0,1fr);gap:4px}
+.pc .p::before{content:"+";color:var(--ok);font-weight:700}
+.pc .c::before{content:"−";color:var(--bad);font-weight:700}
+.pc .n::before{content:"i";color:var(--muted);font-weight:700;font-family:var(--f-mono)}
+.brief h4{margin:0 0 4px;font-size:11px;font-family:var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+/* Vergleich */
+.tabs{overflow-x:auto;scrollbar-width:thin}
+@media (max-width:560px){.tabs button{padding:8px 10px;font-size:15px;white-space:nowrap}}
+.cat-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cat-chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.vtable{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+.vtable th,.vtable td{padding:7px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:middle}
+.vtable th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0;cursor:pointer;white-space:nowrap;user-select:none}
+.vtable th[aria-sort="ascending"]::after{content:" ▲"}.vtable th[aria-sort="descending"]::after{content:" ▼"}
+.vtable td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vtable tr.cur td{background:var(--accent-soft)}
+.vtable tr.bad td{opacity:.55}
+.vtable .best{color:var(--ok);font-weight:700}
+.scatter{width:100%;height:auto;display:block}
+.scatter text{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.scatter .ax{stroke:var(--line)}
+.scatter .lbl{fill:var(--ink);font-size:10.5px}
+/* Übersicht */
+.ov{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}
+@media (max-width:1000px){.ov{grid-template-columns:minmax(0,1fr)}}
+.schema{width:100%;height:auto;display:block}
+.schema .box{fill:var(--sunk);stroke:var(--line);stroke-width:1.5}
+.schema .part{stroke-width:1.5}
+.schema text{font-family:var(--f-body);font-size:11px;fill:var(--ink)}
+.schema text.sub{fill:var(--muted);font-size:9.5px;font-family:var(--f-mono)}
+.plist3{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.plist3 li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:6px}
+.plist3.p li::before{content:"+";color:var(--ok);font-weight:700}
+.plist3.c li::before{content:"!";color:var(--warn);font-weight:700}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -247,6 +296,8 @@ button,input,select{font:inherit;color:inherit}
   <nav class="tabs" role="tablist" aria-label="Ansicht">
     <button type="button" role="tab" id="tab-konfig" aria-controls="viewKonfig" data-view="konfig">Konfigurator</button>
     <button type="button" role="tab" id="tab-dash" aria-controls="viewDash" data-view="dash">Dashboard</button>
+    <button type="button" role="tab" id="tab-ov" aria-controls="viewOv" data-view="ov">Übersicht</button>
+    <button type="button" role="tab" id="tab-cmp" aria-controls="viewCmp" data-view="cmp">Vergleich</button>
   </nav>
 
   <div class="view" id="viewDash" role="tabpanel" aria-labelledby="tab-dash" hidden>
@@ -283,6 +334,29 @@ button,input,select{font:inherit;color:inherit}
         <div id="dPower"></div>
       </section>
     </div>
+  </div>
+
+  <div class="view" id="viewOv" role="tabpanel" aria-labelledby="tab-ov" hidden>
+    <div class="kpis" id="oKpis"></div>
+    <div class="ov">
+      <section class="card" aria-label="Schema"><h2>Dein PC im Schema <span class="eyebrow" id="oCase"></span></h2><div id="oSchema"></div></section>
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+        <section class="card" aria-label="Stärken"><h2>Stärken</h2><ul class="plist3 p" id="oPros"></ul></section>
+        <section class="card" aria-label="Schwachstellen"><h2>Schwachstellen und Hinweise</h2><ul class="plist3 c" id="oCons"></ul></section>
+      </div>
+    </div>
+    <section class="card" aria-label="Upgrade-Pfad"><h2>Upgrade-Pfad <span class="eyebrow">sortiert nach Nutzen pro Euro</span></h2><div id="oPath"></div></section>
+    <section class="card" aria-label="Teileliste"><h2>Alle Teile <span class="eyebrow" id="oSum"></span></h2><div class="scroll" id="oTable"></div></section>
+  </div>
+
+  <div class="view" id="viewCmp" role="tabpanel" aria-labelledby="tab-cmp" hidden>
+    <section class="card" aria-label="Kategorie">
+      <h2>Vergleich <span class="eyebrow">alle Teile einer Kategorie, sortierbar</span></h2>
+      <div class="cat-chips" id="cChips"></div>
+      <label class="switch" style="font-weight:500"><input type="checkbox" id="cOnlyOk"> Nur Teile zeigen, die zu meinem System passen</label>
+    </section>
+    <section class="card" aria-label="Preis-Leistung" id="cScatterCard"><h2>Preis-Leistung <span class="eyebrow" id="cScatterSub"></span></h2><div id="cScatter"></div></section>
+    <section class="card" aria-label="Tabelle"><div class="scroll" id="cTable"></div><p class="subline" id="cNote"></p></section>
   </div>
 
   <div class="view" id="viewKonfig" role="tabpanel" aria-labelledby="tab-konfig">
@@ -368,62 +442,67 @@ cpu:[
  {id:"u7-265k",name:"Intel Core Ultra 7 265K",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:true,ig:8,box:false,g:80,m:86,tier:4,price:313,chk:true},
  {id:"u7-265kf",name:"Intel Core Ultra 7 265KF",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:false,box:false,g:80,m:86,tier:4,price:262,chk:true},
  {id:"r7-9850x3d",name:"AMD Ryzen 7 9850X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:104,m:56,tier:5,price:435,chk:true},
+ {id:"r9-9900x3d",name:"AMD Ryzen 9 9900X3D",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.5,power:162,cool:150,igpu:true,ig:6,box:false,g:98,m:78,tier:5,price:457,chk:true},
  {id:"r9-9950x",name:"AMD Ryzen 9 9950X",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:84,m:100,tier:5,price:449,chk:true},
  {id:"r9-9950x3d",name:"AMD Ryzen 9 9950X3D",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:102,m:102,tier:5,price:575,chk:true},
  {id:"r9-9950x3d2",name:"AMD Ryzen 9 9950X3D2",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.6,power:270,cool:230,igpu:true,ig:6,box:false,g:103,m:104,tier:5,price:779,chk:true},
  {id:"u9-285k",name:"Intel Core Ultra 9 285K",brand:"Intel",socket:"LGA1851",cores:24,threads:24,boost:5.7,power:250,cool:220,igpu:true,ig:8,box:false,g:83,m:102,tier:5,price:530,chk:true}
 ],
 board:[
- {id:"asr-a620m",name:"ASRock A620M-HDV/M.2+",socket:"AM5",chipset:"A620",form:"mATX",ramType:"DDR5",slots:2,maxRam:96,m2:1,gen5m2:false,wifi:false,maxCpuPower:120,tier:1,price:80},
+ {id:"asr-a620m",name:"ASRock A620M-HDV/M.2+",socket:"AM5",chipset:"A620",form:"mATX",ramType:"DDR5",slots:2,maxRam:96,m2:1,gen5m2:false,wifi:false,maxCpuPower:120,tier:1,price:95,chk:true},
  {id:"asr-b650m-pro",name:"ASRock B650M Pro RS WiFi",socket:"AM5",chipset:"B650",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:true,wifi:true,tier:2,price:176,chk:true},
- {id:"msi-b650-gp",name:"MSI B650 Gaming Plus WiFi",socket:"AM5",chipset:"B650",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:2,price:131,chk:true},
+ {id:"msi-b650-gp",name:"MSI B650 Gaming Plus WiFi",socket:"AM5",chipset:"B650",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:2,price:131,chk:true,eol:true},
  {id:"gb-b850m-gx",name:"Gigabyte B850M Gaming X WiFi6E",socket:"AM5",chipset:"B850",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:true,wifi:true,tier:2,price:155},
- {id:"gb-b850-elite",name:"Gigabyte B850 Aorus Elite WiFi7",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:232,chk:true},
- {id:"msi-b850-tomahawk",name:"MSI MAG B850 Tomahawk Max WiFi",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:230},
+ {id:"msi-b850-gp6e",name:"MSI B850 Gaming Plus WiFi6E",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:true,wifi:true,tier:2,price:152,chk:true},
+ {id:"asr-b850i-lightning",name:"ASRock B850I Lightning WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:3,price:187,chk:true},
+ {id:"gb-x870e-elite",name:"Gigabyte X870E Aorus Elite WiFi7",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:270,chk:true},
+ {id:"gb-b850-elite",name:"Gigabyte B850 Aorus Elite WiFi7",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:189,chk:true},
+ {id:"msi-b850-tomahawk",name:"MSI MAG B850 Tomahawk Max WiFi",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:3,price:265,chk:true},
  {id:"msi-x870-tomahawk",name:"MSI MAG X870 Tomahawk WiFi",socket:"AM5",chipset:"X870",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:300,chk:true},
- {id:"asus-b850i",name:"ASUS ROG Strix B850-I Gaming WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:310},
+ {id:"asus-b850i",name:"ASUS ROG Strix B850-I Gaming WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:298,chk:true},
  {id:"msi-x870e-carbon",name:"MSI MPG X870E Carbon WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:5,price:443,chk:true},
  {id:"asus-x870e-hero",name:"ASUS ROG Crosshair X870E Hero",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:525,chk:true},
  {id:"asus-x870e-e",name:"ASUS ROG Strix X870E-E Gaming WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:470},
- {id:"msi-b760m-a",name:"MSI PRO B760M-A WiFi (DDR5)",socket:"LGA1700",chipset:"B760",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:1,price:125},
- {id:"gb-b760-gx",name:"Gigabyte B760 Gaming X AX (DDR5)",socket:"LGA1700",chipset:"B760",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:false,wifi:true,tier:2,price:150},
- {id:"msi-b860m-a",name:"MSI PRO B860M-A WiFi",socket:"LGA1851",chipset:"B860",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:false,wifi:true,tier:2,price:145},
- {id:"asus-b860-tuf",name:"ASUS TUF Gaming B860-Plus WiFi",socket:"LGA1851",chipset:"B860",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:190},
+ {id:"msi-b760m-a",name:"MSI PRO B760M-A WiFi (DDR5)",socket:"LGA1700",chipset:"B760",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:1,price:125,eol:true},
+ {id:"gb-b760-gx",name:"Gigabyte B760 Gaming X AX (DDR5)",socket:"LGA1700",chipset:"B760",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:false,wifi:true,tier:2,price:150,eol:true},
+ {id:"msi-b860m-a",name:"MSI PRO B860M-A WiFi",socket:"LGA1851",chipset:"B860",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:false,wifi:true,tier:2,price:227,chk:true},
+ {id:"asus-b860-tuf",name:"ASUS TUF Gaming B860-Plus WiFi",socket:"LGA1851",chipset:"B860",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:170,chk:true},
  {id:"msi-z890-tomahawk",name:"MSI MAG Z890 Tomahawk WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:328,chk:true},
- {id:"asus-z890i",name:"ASUS ROG Strix Z890-I Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:390},
- {id:"asus-z890e",name:"ASUS ROG Strix Z890-E Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:480}
+ {id:"asus-z890i",name:"ASUS ROG Strix Z890-I Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:464,chk:true},
+ {id:"asus-z890e",name:"ASUS ROG Strix Z890-E Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:329,chk:true}
 ],
 ram:[
  {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:40,tier:1,price:305},
- {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:480},
+ {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:629,chk:true},
  {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:3,price:525,chk:true},
- {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:600},
+ {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:729,chk:true},
  {id:"gs-2x16-6000c28",name:"G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:5,price:886},
  {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:880},
  {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:1190,chk:true},
  {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",cap:96,modules:2,speed:6000,cl:30,tier:5,price:1750},
- {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:2700}
+ {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:3499,chk:true}
 ],
 cooler:[
  {id:"boxed",name:"Boxed-Kühler (liegt der CPU bei)",kind:"boxed",h:60,cap:90,sockets:ALL_SOCKETS,tier:0,price:0},
  {id:"tr-ax120",name:"Thermalright Assassin X 120 Refined SE",kind:"air",h:148,cap:150,sockets:ALL_SOCKETS,tier:1,price:20},
- {id:"ar-f36",name:"Arctic Freezer 36",kind:"air",h:159,cap:180,sockets:ALL_SOCKETS,tier:1,price:30},
+ {id:"ar-f36",name:"Arctic Freezer 36",kind:"air",h:159,cap:180,sockets:ALL_SOCKETS,tier:1,price:22,chk:true},
  {id:"tr-axp90",name:"Thermalright AXP90-X47 Full Copper",kind:"air",h:47,cap:95,sockets:ALL_SOCKETS,tier:2,price:35},
  {id:"tr-pa120se",name:"Thermalright Peerless Assassin 120 SE",kind:"air",h:155,cap:220,sockets:ALL_SOCKETS,tier:2,price:34,chk:true},
- {id:"nc-l12s",name:"Noctua NH-L12S",kind:"air",h:70,cap:110,sockets:ALL_SOCKETS,tier:3,price:60},
- {id:"ar-lf3-240",name:"Arctic Liquid Freezer III Pro 240",kind:"aio",rad:240,h:0,cap:250,sockets:ALL_SOCKETS,tier:3,price:85},
- {id:"bq-drp5",name:"be quiet! Dark Rock Pro 5",kind:"air",h:168,cap:270,sockets:ALL_SOCKETS,tier:4,price:95},
- {id:"ar-lf3-360",name:"Arctic Liquid Freezer III Pro 360",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:4,price:80,chk:true},
+ {id:"nc-l12s",name:"Noctua NH-L12S",kind:"air",h:70,cap:110,sockets:ALL_SOCKETS,tier:3,price:67,chk:true},
+ {id:"ar-lf3-240",name:"Arctic Liquid Freezer III Pro 240",kind:"aio",rad:240,h:0,cap:250,sockets:ALL_SOCKETS,tier:3,price:57,chk:true},
+ {id:"bq-drp5",name:"be quiet! Dark Rock Pro 5",kind:"air",h:168,cap:270,sockets:ALL_SOCKETS,tier:4,price:80,chk:true},
+ {id:"ar-lf3-360",name:"Arctic Liquid Freezer III Pro 360",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:4,price:70,chk:true},
  {id:"ar-lf3-420",name:"Arctic Liquid Freezer III Pro 420",kind:"aio",rad:420,h:0,cap:330,sockets:ALL_SOCKETS,tier:4,price:77,chk:true},
+ {id:"bq-drp6",name:"be quiet! Dark Rock Pro 6",kind:"air",h:169,cap:280,sockets:ALL_SOCKETS,tier:4,price:84,chk:true},
  {id:"nc-d15g2",name:"Noctua NH-D15 G2",kind:"air",h:168,cap:280,sockets:ALL_SOCKETS,tier:5,price:150},
  {id:"nzxt-elite-360",name:"NZXT Kraken Elite 360 (LCD)",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:5,price:260}
 ],
 gpu:[
  {id:"none",name:"Keine Grafikkarte",none:true,brand:"",vram:0,power:0,len:0,rec:0,conn:"",g:0,tier:0,price:0},
- {id:"arc-b570",name:"Intel Arc B570 10 GB",brand:"Intel",vram:10,power:150,len:230,rec:450,conn:"8-Pin",g:35,tier:1,price:270},
+ {id:"arc-b570",name:"Intel Arc B570 10 GB",brand:"Intel",vram:10,power:150,len:230,rec:450,conn:"8-Pin",g:35,tier:1,price:270,chk:true},
  {id:"rtx5050",name:"NVIDIA GeForce RTX 5050 8 GB",brand:"NVIDIA",vram:8,power:130,len:200,rec:450,conn:"8-Pin",g:39,tier:1,price:384,chk:true},
- {id:"arc-b580",name:"Intel Arc B580 12 GB",brand:"Intel",vram:12,power:190,len:250,rec:550,conn:"8-Pin",g:39,tier:1,price:320},
- {id:"rx9060xt-8",name:"AMD Radeon RX 9060 XT 8 GB",brand:"AMD",vram:8,power:160,len:240,rec:450,conn:"8-Pin",g:56,tier:1,price:450},
+ {id:"arc-b580",name:"Intel Arc B580 12 GB",brand:"Intel",vram:12,power:190,len:250,rec:550,conn:"8-Pin",g:39,tier:1,price:397,chk:true},
+ {id:"rx9060xt-8",name:"AMD Radeon RX 9060 XT 8 GB",brand:"AMD",vram:8,power:160,len:240,rec:450,conn:"8-Pin",g:56,tier:1,price:446,chk:true},
  {id:"rtx5060",name:"NVIDIA GeForce RTX 5060 8 GB",brand:"NVIDIA",vram:8,power:145,len:230,rec:550,conn:"8-Pin",g:50,tier:1,price:459,chk:true},
  {id:"rtx5060ti-8",name:"NVIDIA GeForce RTX 5060 Ti 8 GB",brand:"NVIDIA",vram:8,power:180,len:240,rec:600,conn:"8-Pin",g:58,tier:2,price:514,chk:true},
  {id:"rx9060xt-16",name:"AMD Radeon RX 9060 XT 16 GB",brand:"AMD",vram:16,power:180,len:250,rec:500,conn:"8-Pin",g:58,tier:2,price:606,chk:true},
@@ -438,49 +517,51 @@ gpu:[
 ],
 ssd:[
  {id:"kingston-nv3-1",name:"Kingston NV3 1 TB",cap:1000,gen:4,read:6000,tier:1,price:125,chk:true},
- {id:"wd-sn7100-1",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 1 TB",cap:1000,gen:4,read:7250,tier:2,price:160,chk:true},
- {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:170},
- {id:"wd-sn7100-2",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 2 TB",cap:2000,gen:4,read:7250,tier:3,price:280,chk:true},
+ {id:"wd-sn7100-1",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 1 TB",cap:1000,gen:4,read:7250,tier:2,price:236,chk:true},
+ {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:189,chk:true},
+ {id:"wd-sn7100-2",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 2 TB",cap:2000,gen:4,read:7250,tier:3,price:446,chk:true},
  {id:"s990evo-2",name:"Samsung 990 EVO Plus 2 TB",cap:2000,gen:4,read:7250,tier:3,price:330},
- {id:"sn8100-2",name:"SanDisk WD_Black SN8100 2 TB",cap:2000,gen:5,read:14900,tier:5,price:400},
+ {id:"sn8100-2",name:"SanDisk WD_Black SN8100 2 TB",cap:2000,gen:5,read:14900,tier:5,price:420,chk:true},
  {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:400,chk:true},
- {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:445,chk:true},
+ {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:539,chk:true},
  {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:700,chk:true},
  {id:"s9100-4",name:"Samsung 9100 Pro 4 TB",cap:4000,gen:5,read:14800,tier:5,price:870,chk:true}
 ],
 psu:[
- {id:"cm-mwe-650",name:"Cooler Master MWE Gold 650 V2",watt:650,eff:"Gold",form:"ATX",atx3:false,tier:1,price:70},
- {id:"bq-pp12-550",name:"be quiet! Pure Power 12 550 W",watt:550,eff:"Gold",form:"ATX",atx3:true,tier:1,price:75},
- {id:"bq-pp12-650",name:"be quiet! Pure Power 12 650 W",watt:650,eff:"Gold",form:"ATX",atx3:true,tier:2,price:85},
- {id:"bq-pp12-750",name:"be quiet! Pure Power 12 750 W",watt:750,eff:"Gold",form:"ATX",atx3:true,tier:2,price:80,chk:true},
+ {id:"cm-mwe-650",name:"Cooler Master MWE Gold 650 V2",watt:650,eff:"Gold",form:"ATX",atx3:false,tier:1,price:88,chk:true,eol:true},
+ {id:"bq-pp12-550",name:"be quiet! Pure Power 12 550 W",watt:550,eff:"Gold",form:"ATX",atx3:true,tier:1,price:65,chk:true},
+ {id:"bq-pp12-650",name:"be quiet! Pure Power 12 650 W",watt:650,eff:"Gold",form:"ATX",atx3:true,tier:2,price:70,chk:true},
+ {id:"bq-pp12-750",name:"be quiet! Pure Power 12 750 W",watt:750,eff:"Gold",form:"ATX",atx3:true,tier:2,price:96,chk:true},
+ {id:"sea-coregx-850",name:"Seasonic Core GX-850 (ATX 3.1)",watt:850,eff:"Gold",form:"ATX",atx3:true,tier:3,price:100,chk:true},
  {id:"cor-rm850e",name:"Corsair RM850e (2025)",watt:850,eff:"Gold",form:"ATX",atx3:true,tier:3,price:105,chk:true},
- {id:"cor-sf750",name:"Corsair SF750",watt:750,eff:"Platinum",form:"SFX",atx3:true,tier:4,price:165},
+ {id:"cor-sf750",name:"Corsair SF750",watt:750,eff:"Platinum",form:"SFX",atx3:true,tier:4,price:165,chk:true},
  {id:"bq-sp12-1000",name:"be quiet! Straight Power 12 1000 W",watt:1000,eff:"Platinum",form:"ATX",atx3:true,tier:4,price:200},
- {id:"cor-sf1000",name:"Corsair SF1000",watt:1000,eff:"Platinum",form:"SFX",atx3:true,tier:5,price:220},
+ {id:"cor-sf1000",name:"Corsair SF1000",watt:1000,eff:"Platinum",form:"SFX",atx3:true,tier:5,price:194,chk:true},
  {id:"cor-rm1000x",name:"Corsair RM1000x (2024)",watt:1000,eff:"Gold",form:"ATX",atx3:true,tier:4,price:171,chk:true},
  {id:"bq-dp14-1000",name:"be quiet! Dark Power 14 1000 W",watt:1000,eff:"Titanium",form:"ATX",atx3:true,tier:5,price:228,chk:true},
  {id:"sea-gx1200",name:"Seasonic Vertex GX-1200",watt:1200,eff:"Gold",form:"ATX",atx3:true,tier:4,price:240},
- {id:"cor-hx1500i",name:"Corsair HX1500i",watt:1500,eff:"Platinum",form:"ATX",atx3:true,tier:5,price:330}
+ {id:"cor-hx1500i",name:"Corsair HX1500i",watt:1500,eff:"Platinum",form:"ATX",atx3:true,tier:5,price:278,chk:true}
 ],
 "case":[
  {id:"fd-pop-air",silent:1,name:"Fractal Design Pop Air",form:"ATX",gpu:405,cooler:170,rads:[240,280,360],psu:["ATX"],tier:1,price:80},
- {id:"ll-a3",silent:1,name:"Lian Li A3-mATX",form:"mATX",gpu:415,cooler:165,rads:[240,280,360],psu:["ATX","SFX"],tier:2,price:85},
- {id:"montech-903",silent:1,name:"Montech AIR 903 MAX",form:"ATX",gpu:400,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:95},
- {id:"ll-lancool217",silent:2,name:"Lian Li Lancool 217",form:"ATX",gpu:410,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:115},
- {id:"cm-nr200p",silent:1,name:"Cooler Master NR200P V2",form:"ITX",gpu:336,cooler:155,rads:[240,280],psu:["SFX"],tier:3,price:110},
+ {id:"ll-a3",silent:1,name:"Lian Li A3-mATX",form:"mATX",gpu:415,cooler:165,rads:[240,280,360],psu:["ATX","SFX"],tier:2,price:69,chk:true},
+ {id:"montech-903",silent:1,name:"Montech AIR 903 MAX",form:"ATX",gpu:400,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:54,chk:true},
+ {id:"ll-lancool217",silent:2,name:"Lian Li Lancool 217",form:"ATX",gpu:410,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:100,chk:true},
+ {id:"cm-nr200p",silent:1,name:"Cooler Master NR200P V2",form:"ITX",gpu:336,cooler:155,rads:[240,280],psu:["SFX"],tier:3,price:110,eol:true},
+ {id:"bq-pb501",silent:3,name:"be quiet! Pure Base 501 (gedämmt)",form:"ATX",gpu:368,cooler:178,rads:[240,280,360],psu:["ATX"],tier:2,price:60,chk:true},
  {id:"fd-north",silent:2,name:"Fractal Design North",form:"ATX",gpu:355,cooler:170,rads:[240,280,360],psu:["ATX"],tier:3,price:142,chk:true},
- {id:"ll-o11-evo",silent:1,name:"Lian Li O11 Dynamic EVO",form:"ATX",gpu:426,cooler:167,rads:[240,280,360],psu:["ATX"],tier:4,price:165},
- {id:"bq-sb802",silent:3,name:"be quiet! Silent Base 802 (gedämmt)",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:155},
+ {id:"ll-o11-evo",silent:1,name:"Lian Li O11 Dynamic EVO RGB",form:"ATX",gpu:426,cooler:167,rads:[240,280,360],psu:["ATX"],tier:4,price:167,chk:true},
+ {id:"bq-sb802",silent:3,name:"be quiet! Silent Base 802 (gedämmt)",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:140,chk:true,radFrontOnly:[420],gpuFrontRad:369,gpuCage:287},
  {id:"fd-define7",silent:3,name:"Fractal Design Define 7 (gedämmt)",form:"ATX",gpu:445,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:175},
- {id:"fd-terra",silent:1,name:"Fractal Design Terra",form:"ITX",gpu:322,cooler:77,rads:[],psu:["SFX"],tier:4,price:190}
+ {id:"fd-terra",silent:1,name:"Fractal Design Terra",form:"ITX",gpu:322,cooler:77,rads:[],psu:["SFX"],tier:4,price:170,chk:true}
 ]};
 
 /* Vergleichs-Laptops: g = Gaming-Leistung auf derselben Skala wie Desktop-GPUs (RX 9070 XT = 92), m = Multi-Core (Ryzen 9 9950X = 100) */
 const LAPTOPS=[
  {id:"g14",cls:"14 Zoll, mobil",name:"ASUS ROG Zephyrus G14 (2026)",cpu:"Intel Core Ultra 9 386H",gpu:"RTX 5070 Ti Laptop 12 GB",ram:"32 GB",ssd:"1 TB",display:"14\" 3K OLED",kg:1.6,g:63,m:62,watt:140,price:3299,priceNote:"Listenpreis laut Notebookcheck",chk:true,link:"https://geizhals.de/?fs=ROG+Zephyrus+G14+2026"},
  {id:"aorus16",cls:"16 Zoll, Allround",name:"Gigabyte Aorus Master 16",cpu:"AMD Ryzen 9 X3D (16 Kerne)",gpu:"RTX 5080 Laptop 16 GB",ram:"32 GB",ssd:"2 TB",display:"16\" 2,5K OLED 240 Hz",kg:2.5,g:72,m:92,watt:250,price:3299,priceNote:"Angebot Alternate laut Notebookcheck, sonst ab ca. 3.330 €",chk:true,link:"https://geizhals.de/?fs=Aorus+Master+16+RTX+5080"},
- {id:"scar18",cls:"18 Zoll, Desktop-Ersatz",name:"ASUS ROG Strix Scar 18 (2026)",cpu:"Intel Core Ultra 9 290HX Plus (24 Kerne)",gpu:"RTX 5090 Laptop 24 GB",ram:"32–64 GB",ssd:"2–4 TB",display:"18\" 4K Mini-LED 240 Hz",kg:3.3,g:80,m:95,watt:330,price:5299,priceNote:"Startpreis Scar 18 (2026) in Spanien; deutscher Preis nicht belegt",chk:false,link:"https://geizhals.de/?fs=RTX+5090+Laptop+18"},
- {id:"mbp16",cls:"16 Zoll, Kreativ",name:"Apple MacBook Pro 16 M5 Max",cpu:"M5 Max, 18 Kerne",gpu:"32-Kern-GPU (integriert)",ram:"36 GB",ssd:"2 TB",display:"16,2\" Mini-LED XDR",kg:2.1,g:null,m:98,watt:140,price:4163,priceNote:"Geizhals-Bestpreis (36 GB / 2 TB); UVP 4.499 €",chk:true,link:"https://geizhals.de/?fs=MacBook+Pro+16+M5+Max"}
+ {id:"scar18",cls:"18 Zoll, Desktop-Ersatz",name:"ASUS ROG Strix Scar 18 (2026)",cpu:"Intel Core Ultra 9 290HX Plus (24 Kerne)",gpu:"RTX 5090 Laptop 24 GB",ram:"64 GB",ssd:"4 TB",display:"18\" 4K Mini-LED 240 Hz",kg:3.3,g:80,m:95,watt:330,price:6598,priceNote:"ab-Preis Deutschland (64 GB / 4 TB)",chk:true,link:"https://geizhals.de/?fs=RTX+5090+Laptop+18"},
+ {id:"mbp16",cls:"16 Zoll, Kreativ",name:"Apple MacBook Pro 16 M5 Max",cpu:"M5 Max, 18 Kerne",gpu:"32-Kern-GPU (integriert)",ram:"36 GB",ssd:"2 TB",display:"16,2\" Mini-LED XDR",kg:2.1,g:null,m:98,watt:140,price:4099,priceNote:"Bestpreis (36 GB / 2 TB); UVP 4.499 €",chk:true,link:"https://geizhals.de/?fs=MacBook+Pro+16+M5+Max"}
 ];
 
 const CATS=[
@@ -509,7 +590,7 @@ const PRESETS=[
  {id:"wqhd",params:{mix:20,res:1,fps:144,ram:32,storage:2000,quiet:50,size:"ATX"},name:"Gaming WQHD",hint:"9800X3D + 9070 XT",profile:"gaming",budget:null,user:{cpu:"r7-9800x3d",gpu:"rx9070xt"}},
  {id:"4k",params:{mix:20,res:3,fps:90,ram:32,storage:2000,quiet:50,size:"ATX"},name:"4K-Enthusiast",hint:"RTX 5090",profile:"gaming",budget:null,user:{cpu:"r7-9850x3d",gpu:"rtx5090"}},
  {id:"ws",params:{mix:90,res:1,fps:60,ram:96,storage:4000,quiet:60,size:"ATX"},name:"Workstation",hint:"16 Kerne, 96 GB",profile:"creator",budget:null,user:{cpu:"r9-9950x",ram:"gs-2x48-6000"}},
- {id:"itx",params:{mix:20,res:1,fps:120,ram:32,storage:2000,quiet:40,size:"ITX"},name:"Kompakt-ITX",hint:"NR200P + RTX 5070",profile:"gaming",budget:null,user:{"case":"cm-nr200p",gpu:"rtx5070"}}
+ {id:"itx",params:{mix:20,res:1,fps:120,ram:32,storage:2000,quiet:40,size:"ITX"},name:"Kompakt-ITX",hint:"Terra + RTX 5070",profile:"gaming",budget:null,user:{"case":"fd-terra",gpu:"rtx5070"}}
 ];
 
 const BY={};for(const c in DB){BY[c]={};for(const p of DB[c])BY[c][p.id]=p;}
@@ -533,7 +614,7 @@ function load(){
     for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
     const params=Object.assign({},DEF_PARAMS);
     if(s.params)for(const k in DEF_PARAMS){if(typeof s.params[k]===typeof DEF_PARAMS[k])params[k]=s.params[k];}
-    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks,params,view:s.view==="dash"?"dash":"konfig"};
+    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks,params,view:["dash","ov","cmp"].includes(s.view)?s.view:"konfig"};
     return true;
   }catch(e){return false;}
 }
@@ -569,6 +650,10 @@ function checkAll(parts,profile){
     if(cooler.kind==="aio"&&!cs.rads.includes(cooler.rad))add("error",["cooler","case"],cs.rads.length?`Gehäuse nimmt Radiatoren mit ${cs.rads.join(" / ")} mm auf, nicht ${cooler.rad} mm.`:`Gehäuse hat keinen Platz für einen Radiator.`);
     if(cooler.kind!=="aio"&&cooler.h>cs.cooler)add("error",["cooler","case"],`Kühler ist ${cooler.h} mm hoch, das Gehäuse erlaubt ${cs.cooler} mm.`);
   }
+  if(cs&&cs.radFrontOnly&&cooler&&cooler.kind==="aio"&&cs.radFrontOnly.includes(cooler.rad)){
+    add("info",["cooler","case"],`${cooler.rad}er-Radiator passt nur vorne: HDD-Käfig ausbauen, Grafikkarte dann max. ${cs.gpuFrontRad} mm.`);
+    if(hasGpu&&gpu.len>cs.gpuFrontRad)add("error",["gpu","cooler","case"],`Mit ${cooler.rad}er-Radiator vorne passen nur ${cs.gpuFrontRad} mm Grafikkarte, diese ist ca. ${gpu.len} mm lang.`);
+  }else if(cs&&cs.gpuCage&&hasGpu&&gpu.len>cs.gpuCage)add("info",["gpu","case"],`Grafikkarte länger als ${cs.gpuCage} mm: HDD-Käfig im Gehäuse ausbauen.`);
   if(psu&&cs){
     if(psu.form==="ATX"&&!cs.psu.includes("ATX"))add("error",["psu","case"],`Gehäuse nimmt nur SFX-Netzteile auf.`);
     if(psu.form==="SFX"&&!cs.psu.includes("SFX"))add("info",["psu","case"],`SFX-Netzteil im ATX-Gehäuse: Adapterblech nötig (liegt meist bei).`);
@@ -646,7 +731,7 @@ function prefer(cat,pool,parts,T){
   if(cat==="gpu"){
     if(pr==="office")return (parts.cpu&&parts.cpu.igpu)?f(p=>p.none):f(p=>!p.none&&p.tier<=2);
     let g=f(p=>!p.none);
-    const minV=P().res>=3?16:P().res>=1?12:0;
+    const minV=(P().res>=3||mixW()>=0.6)?16:P().res>=1?12:0;
     if(minV){const v=g.filter(p=>p.vram>=minV);if(v.length)g=v;}
     if(mixW()>=0.6){const n=g.filter(p=>p.brand==="NVIDIA");if(n.length)g=n;}
     return g;
@@ -670,7 +755,7 @@ function pickCooler(pool,parts,T){
   return c.slice().sort((a,b)=>a.price-b.price)[0];
 }
 function pickPsu(pool,parts,T){
-  const rec=recPsu(parts),want=rec*(1+P().quiet/100*0.2);
+  const rec=recPsu(parts),want=Math.min(rec*(1+P().quiet/100*0.2),rec+100);
   let c=pool.filter(p=>p.watt>=want);if(!c.length)c=pool.filter(p=>p.watt>=rec);
   if(!c.length)return pool.slice().sort((a,b)=>b.watt-a.watt)[0];
   if(parts.gpu&&parts.gpu.conn==="12V-2x6"){const a=c.filter(p=>p.atx3);if(a.length)c=a;}
@@ -682,8 +767,8 @@ function pickCase(pool){
 }
 function platformCost(cpu){
   if(state.picks.board&&state.picks.board.src==="user")return 0;
-  const size=P().size;let b=DB.board.filter(x=>x.socket===cpu.socket&&x.form===size);
-  if(!b.length)b=DB.board.filter(x=>x.socket===cpu.socket&&FORM_FIT[size].includes(x.form));
+  const size=P().size;let b=DB.board.filter(x=>!x.eol&&x.socket===cpu.socket&&x.form===size);
+  if(!b.length)b=DB.board.filter(x=>!x.eol&&x.socket===cpu.socket&&FORM_FIT[size].includes(x.form));
   /* LGA1700 ist eine Plattform ohne Aufrüstpfad: kleiner Malus, damit AM5/LGA1851 bei Gleichstand gewinnen */
   return b.length?Math.min(...b.map(x=>x.price))+(cpu.socket==="LGA1700"?40:0):Infinity;
 }
@@ -691,6 +776,10 @@ function pickCpu(pool,alloc,parts){
   const gp=parts.gpu&&!parts.gpu.none?parts.gpu:null;
   const needG=Math.min(Math.max(P().fps,gp?gp.g*RES[P().res].f:0)/CPU_FPS*1.3*(1-0.25*mixW()),100),needM=20+mixW()*70;
   pool=pool.filter(p=>isFinite(platformCost(p))).length?pool.filter(p=>isFinite(platformCost(p))):pool;
+  /* Kleine Gehäuse: nur CPUs, die ein passender flacher Kühler noch schafft */
+  if(P().size==="ITX"){const cs=state.picks["case"]&&get("case",state.picks["case"].id);const maxH=cs?cs.cooler:155;
+    const capMax=Math.max(...DB.cooler.filter(c=>c.kind==="air"&&c.h<=maxH).map(c=>c.cap),0);
+    const cool=pool.filter(p=>p.cool<=capMax);if(cool.length)pool=cool;}
   const ok=pool.filter(p=>p.g>=needG&&p.m>=needM);
   const within=alloc!=null?pool.filter(p=>p.price<=alloc*1.15):pool;
   const both=ok.filter(p=>within.includes(p));
@@ -717,6 +806,7 @@ function choose(cat,picks,T,alloc){
   const noErr=ev.filter(e=>!e.iss.some(i=>i.level==="error"));
   const clean=noErr.filter(e=>!e.iss.some(i=>i.level==="warn"));
   let pool=(clean.length?clean:noErr.length?noErr:ev).map(e=>e.p);
+  {const live=pool.filter(p=>!p.eol);if(live.length)pool=live;}
   pool=prefer(cat,pool,parts,T);
   if(cat==="cooler")return pickCooler(pool,parts,T);
   if(cat==="psu")return pickPsu(pool,parts,T);
@@ -833,7 +923,7 @@ function benefitText(cat,cur,p,parts){
 function betterOptions(cat,cur,ctx,max){
   if(!cur||cur.none||cur.kind==="boxed")return [];
   const base=betterMetric(cat,cur,ctx);let best=base;const front=[];
-  const list=DB[cat].filter(p=>p.id!==cur.id&&!p.none&&p.kind!=="boxed")
+  const list=DB[cat].filter(p=>p.id!==cur.id&&!p.none&&p.kind!=="boxed"&&!p.eol)
     .filter(p=>{const iss=issuesFor(cat,p,ctx,state.profile);return !iss.some(i=>i.level==="error"||i.level==="warn");})
     .filter(p=>{
       if(cat==="psu")return p.watt>=cur.watt&&(p.form===cur.form||!(ctx["case"]&&ctx["case"].psu.includes(cur.form)));
@@ -867,8 +957,8 @@ function renderSlots(parts,issues){
     if(pick.src==="auto")acts.push(`<button type="button" class="btn" data-act="keep" data-cat="${c.k}" title="Als eigene Wahl festhalten, damit es nicht mehr automatisch getauscht wird">Behalten</button>`);
     else acts.push(`<button type="button" class="btn ghost" data-act="remove" data-cat="${c.k}" aria-label="${esc(c.label)} entfernen">Entfernen</button>`);
     return `<div class="slot">${cat}
-      <div class="slot-main"><div class="slot-name">${esc(p.name)} ${tag} ${tierDots(p.tier)}</div>
-        <div class="slot-spec">${esc(spec(c.k,p))}</div>${msgs}${upgradeTip(c.k,p,parts)}${priceLink(p)}</div>
+      <div class="slot-main"><div class="slot-name">${esc(p.name)} ${tag}${p.eol?' <span class="tag" style="background:var(--warn-soft);color:var(--warn)">kaum noch lieferbar</span>':""} ${tierDots(p.tier)}</div>
+        <div class="slot-spec">${esc(spec(c.k,p))}</div>${msgs}${upgradeTip(c.k,p,parts)}${priceLink(p)}${briefHtml(c.k,p,parts)}</div>
       <div class="slot-side"><span class="price">${p.price?eur(p.price):"0 €"}</span><div class="actions">${acts.join("")}</div></div></div>`;
   }).join("");
   $("#slots").innerHTML=html;
@@ -948,6 +1038,8 @@ function render(){
     SLIDERS.forEach(d=>{const el=$("#sl-"+d.k);if(el&&document.activeElement!==el)el.value=sliderPos(d.k);const o=$("#out-"+d.k);if(o)o.textContent=sliderText(d.k);});
     renderDash(parts,issues);
   }
+  if(state.view==="ov")renderOverview(parts,issues);
+  if(state.view==="cmp")renderCompare(parts);
 }
 
 
@@ -1124,11 +1216,255 @@ function renderSteps(parts){
     <p class="subline">FPS-Änderung bei deiner Auflösung. Beim Prozessor zählt die Mischung aus Spiele- und Multi-Core-Leistung nach dem Gaming/Kreativ-Regler.</p>`:`<p class="subline">Wähle Grafikkarte und Prozessor, um Alternativen zu sehen.</p>`;
 }
 function renderView(){
-  const d=state.view==="dash";
-  $("#viewDash").hidden=!d;$("#viewKonfig").hidden=d;
-  $("#tab-dash").setAttribute("aria-selected",String(d));$("#tab-konfig").setAttribute("aria-selected",String(!d));
+  const map={konfig:"viewKonfig",dash:"viewDash",ov:"viewOv",cmp:"viewCmp"},tabs={konfig:"tab-konfig",dash:"tab-dash",ov:"tab-ov",cmp:"tab-cmp"};
+  for(const k in map){$("#"+map[k]).hidden=state.view!==k;$("#"+tabs[k]).setAttribute("aria-selected",String(state.view===k));}
 }
 
+
+/* ---------- Steckbrief, Vergleich, Übersicht ---------- */
+const openBriefs=new Set();
+const fmtW=v=>v+" W",fmtMm=v=>v+" mm";
+function specRows(cat,p){
+  const yn=b=>b?"ja":"nein";
+  switch(cat){
+    case "cpu":return [["Sockel",p.socket],["Kerne / Threads",p.cores+" / "+p.threads],["Boost-Takt",p.boost.toLocaleString("de-DE")+" GHz"],["Integrierte Grafik",p.igpu?"ja":"nein"],["Kühler im Karton",yn(p.box)],["Volllast (ca.)",fmtW(p.power)],["Nötige Kühlleistung",fmtW(p.cool)],["Spiele-Index (9800X3D = 100)",p.g],["Multi-Core (9950X = 100)",p.m]];
+    case "gpu":return p.none?[["Bildausgabe","über Prozessor-Grafik"]]:[["Hersteller",p.brand],["Grafikspeicher",p.vram+" GB"],["Leistungsaufnahme",fmtW(p.power)],["Typische Länge",fmtMm(p.len)],["Stromanschluss",p.conn],["Empf. Netzteil",fmtW(p.rec)],["Gaming-Index (RTX 5080 = 105)",p.g],["Bildrate "+RES[P().res].label+" (Schätzung)",Math.round(p.g*RES[P().res].f)+" FPS"]];
+    case "board":return [["Sockel",p.socket],["Chipsatz",p.chipset],["Formfaktor",p.form],["RAM-Steckplätze",p.slots+"× "+p.ramType],["Max. RAM",p.maxRam+" GB"],["M.2-Plätze",p.m2],["PCIe-5.0-M.2",yn(p.gen5m2)],["WLAN",yn(p.wifi)]];
+    case "ram":return [["Kapazität",p.cap+" GB"],["Module",p.modules+"× "+(p.cap/p.modules)+" GB"],["Takt","DDR5-"+p.speed],["Latenz","CL"+p.cl],["Preis pro GB",eur(p.price/p.cap)]];
+    case "cooler":return [["Bauart",p.kind==="aio"?"AiO-Wasserkühlung":p.kind==="boxed"?"Boxed":"Luftkühler"],[p.kind==="aio"?"Radiator":"Höhe",p.kind==="aio"?fmtMm(p.rad):fmtMm(p.h)],["Kühlleistung (Schätzung)","ca. "+fmtW(p.cap)],["Sockel",p.sockets.join(", ")]];
+    case "ssd":return [["Kapazität",fmtCap(p.cap)],["Schnittstelle","NVMe PCIe "+p.gen+".0"],["Lesen","bis "+p.read.toLocaleString("de-DE")+" MB/s"],["Preis pro TB",eur(p.price/(p.cap/1000))]];
+    case "psu":return [["Leistung",fmtW(p.watt)],["Effizienz","80 PLUS "+p.eff],["Bauform",p.form],["ATX 3.1 / 12V-2x6",yn(p.atx3)]];
+    case "case":return [["Max. Mainboard",p.form],["Max. Grafikkarte",fmtMm(p.gpu)],["Max. Kühlerhöhe",fmtMm(p.cooler)],["Radiatoren",p.rads.length?p.rads.join(" / ")+" mm":"keine"],["Netzteil",p.psu.join(" / ")],["Dämmung",["","offen/Mesh","teils leise","gedämmt"][p.silent||1]]];
+  }
+  return [];
+}
+function prosCons(cat,p,parts){
+  const P2=[],C=[],N=[];
+  switch(cat){
+    case "cpu":
+      if(/X3D/.test(p.name))P2.push("3D-V-Cache: eine der schnellsten Spiele-CPUs");
+      if(p.cores>=12)P2.push(`${p.cores} Kerne für Rendern, Kompilieren, Video`);
+      if(p.igpu)P2.push("Integrierte Grafik als Notfall-Bildausgabe");else C.push("Keine integrierte Grafik: ohne Grafikkarte kein Bild");
+      if(p.socket==="AM5")P2.push("AM5: weitere Ryzen-Generationen angekündigt");
+      if(p.socket==="LGA1700")C.push("LGA1700: Plattform ohne Aufrüstpfad");
+      if(p.socket==="LGA1851")N.push("Intels nächste Generation nutzt voraussichtlich einen neuen Sockel");
+      if(p.power>=200)C.push(`Bis ${p.power} W: starke Kühlung nötig`);
+      if(p.box)P2.push("Kühler im Lieferumfang");else N.push("Kühler separat kaufen");
+      if(p.ig>=12)N.push("APU: mit separater Grafikkarte nur PCIe 4.0 x8 und kleiner Cache");
+      break;
+    case "gpu":
+      if(p.none){C.push("Für aktuelle Spiele zu schwach");break;}
+      if(p.vram>=16)P2.push(`${p.vram} GB Speicher: genug für 4K und lokale KI`);
+      if(p.vram<=8)C.push("8 GB Speicher: in WQHD/4K oft zu wenig");
+      if(p.brand==="NVIDIA")P2.push("DLSS 4 mit Frame Generation, CUDA für Blender und KI");
+      if(p.brand==="AMD"){P2.push("FSR 4, viel Leistung pro Euro");C.push("Schwächer in CUDA-Software (Blender, KI)");}
+      if(p.brand==="Intel")C.push("Treiber in älteren Spielen weniger ausgereift");
+      if(p.power>=350)C.push(`${p.power} W: großes Netzteil und gute Belüftung nötig`);
+      if(p.conn==="12V-2x6")N.push("12V-2x6-Stecker bis zum Anschlag einstecken, nicht knicken");
+      {const list=DB.gpu.filter(x=>!x.none),val=x=>x.g*x.g/x.price,sorted=list.map(val).sort((a,b)=>a-b),med=sorted[Math.floor(sorted.length/2)];
+       if(val(p)>=med*1.1)P2.push("Überdurchschnittliches Preis-Leistungs-Verhältnis");else if(val(p)<med*0.75)C.push("Teuer für die gebotene Leistung");}
+      if(parts["case"]&&parts["case"].gpuCage&&p.len>parts["case"].gpuCage)N.push(`Länger als ${parts["case"].gpuCage} mm: im Gehäuse den HDD-Käfig ausbauen`);
+      break;
+    case "board":
+      if(p.gen5m2)P2.push("PCIe-5.0-M.2 für schnellste SSDs");else N.push("Kein PCIe-5.0-M.2");
+      if(p.m2>=4)P2.push(`${p.m2} M.2-Plätze`);
+      if(p.wifi)P2.push("WLAN und Bluetooth eingebaut");else C.push("Kein WLAN");
+      if(p.slots===2)C.push("Nur 2 RAM-Steckplätze");
+      if(p.chipset==="A620")C.push("Einfache Spannungsversorgung, nur für sparsame CPUs");
+      if(p.chipset==="B850"||p.chipset==="X870"||p.chipset==="X870E")P2.push("Unterstützt Ryzen 9000 ab Werk");
+      if(p.chipset==="B650"||p.chipset==="A620")N.push("Für Ryzen 9000 BIOS mit AGESA 1.2+ nötig");
+      if(p.form==="ITX")C.push("Mini-ITX: wenig Erweiterung");
+      break;
+    case "ram":
+      if(p.speed===6000&&p.cl<=30)P2.push("DDR5-6000 CL"+p.cl+": Sweet Spot für Ryzen");
+      if(p.speed>=6400)P2.push("Hoher Takt, ideal für Intel Core Ultra");
+      if(p.cap>=64)P2.push(p.cap+" GB für große Projekte und KI-Modelle");
+      if(p.cap<=16)C.push("16 GB: für aktuelle Spiele knapp");
+      if(p.modules===2)P2.push("2 Module: volles Tempo, später tauschbar");
+      if(p.cl>=40)C.push("Hohe Latenz (CL"+p.cl+")");
+      N.push("Im BIOS EXPO/XMP aktivieren, sonst läuft der RAM langsamer");
+      break;
+    case "cooler":
+      if(parts.cpu&&p.kind!=="boxed"){const r=p.cap/parts.cpu.cool;if(r>=1.3)P2.push(`${Math.round((r-1)*100)} % Reserve für ${parts.cpu.name.replace(/^(AMD|Intel) /,"")}: leise unter Last`);else if(r<1)C.push("Zu schwach für den Prozessor");}
+      if(p.kind==="aio"&&parts["case"]&&parts["case"].radFrontOnly&&parts["case"].radFrontOnly.includes(p.rad))N.push(`Im ${parts["case"].name.replace(/ \(.*\)/,"")} nur vorne montierbar`);
+      if(p.kind==="aio"){P2.push("Wärme geht direkt aus dem Gehäuse");C.push("Pumpe kann leise hörbar sein, begrenzte Lebensdauer");}
+      if(p.kind==="air"){P2.push("Wartungsfrei und langlebig");if(p.h>=160)N.push("Hoher Kühler: RAM-Freiraum und Gehäusebreite prüfen");}
+      if(p.kind==="boxed")C.push("Unter Last laut");
+      break;
+    case "ssd":
+      if(p.gen===5){P2.push("PCIe 5.0: sehr schnell");C.push("Wird warm, Kühlkörper nutzen");if(parts.board&&!parts.board.gen5m2)C.push("Board ohne PCIe-5.0-M.2: halbe Geschwindigkeit");}
+      if(p.cap>=2000)P2.push(fmtCap(p.cap)+" Platz für Spiele und Modelle");else C.push("1 TB füllt sich mit modernen Spielen schnell");
+      if(p.read<6500)N.push("Einfacheres Modell, im Alltag kaum spürbar");
+      break;
+    case "psu":
+      if(EFF_RANK[p.eff]>=2)P2.push("80 PLUS "+p.eff+": sehr effizient, kühler und leiser");
+      if(p.atx3)P2.push("ATX 3.1 mit nativem 12V-2x6");else N.push("Für 12V-2x6-Karten Adapter nötig");
+      if(parts.cpu||parts.gpu){const l=estLoad(parts)/p.watt;if(l<=0.6)P2.push(`Nur ${Math.round(l*100)} % Auslastung: Lüfter bleibt ruhig`);else if(l>0.8)C.push(`${Math.round(l*100)} % Auslastung: wenig Reserve`);}
+      if(p.form==="SFX"){P2.push("Kompakt für kleine Gehäuse");C.push("Kleiner Lüfter, unter Last hörbarer");}
+      break;
+    case "case":
+      if((p.silent||1)===3){P2.push("Gedämmt: sehr leise");C.push("Weniger Luftstrom als Mesh-Gehäuse");}
+      if((p.silent||1)===1)P2.push("Viel Luftstrom");
+      if(p.gpu>=400)P2.push(`Grafikkarten bis ${p.gpu} mm`);
+      if(p.rads.includes(420))P2.push("Platz für 420er-Radiator");else if(!p.rads.length)C.push("Kein Radiator möglich");
+      if(p.form==="ITX")N.push("Klein: Teile-Maße genau prüfen");
+      if(p.gpuCage)N.push(`Mit HDD-Käfig nur ${p.gpuCage} mm Grafikkartenlänge`);
+      if(p.radFrontOnly)N.push(`${p.radFrontOnly.join("/")}er-Radiator nur vorne; dann GPU max. ${p.gpuFrontRad} mm`);
+      break;
+  }
+  return {P:P2,C,N};
+}
+function briefHtml(cat,p,parts){
+  const rows=specRows(cat,p),pc=prosCons(cat,p,parts),key=cat+":"+p.id;
+  const src=p.chk?"Preis geprüft am 9.11.2026 (Geizhals-Daten bzw. Preisvergleich)":"Preis ist eine Schätzung, vor dem Kauf prüfen";
+  return `<details class="brief" data-brief="${esc(key)}"${openBriefs.has(key)?" open":""}><summary>Steckbrief</summary><div class="brief-body">
+    <div><h4>Technische Daten</h4><table class="kvt">${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(String(r[1]))}</td></tr>`).join("")}<tr><td>Preis</td><td>${eur(p.price)}</td></tr><tr><td>Klasse</td><td>${p.tier||"–"} von 5</td></tr></table></div>
+    <div><h4>Stärken und Schwächen</h4><ul class="pc">${pc.P.map(x=>`<li class="p"><span>${esc(x)}</span></li>`).join("")}${pc.C.map(x=>`<li class="c"><span>${esc(x)}</span></li>`).join("")}${pc.N.map(x=>`<li class="n"><span>${esc(x)}</span></li>`).join("")}</ul>
+    <p class="subline" style="margin:8px 0 0">${esc(src)}</p></div></div></details>`;
+}
+document.addEventListener("toggle",e=>{const d=e.target;if(d&&d.dataset&&d.dataset.brief){if(d.open)openBriefs.add(d.dataset.brief);else openBriefs.delete(d.dataset.brief);}},true);
+
+/* Vergleich */
+let cmpCat="gpu",cmpSort={k:"perf",dir:-1};
+function perfOf(cat,p){
+  switch(cat){case "cpu":return Math.round(cpuBlend(p));case "gpu":return p.none?0:p.g;case "ram":return p.cap;case "ssd":return p.cap/1000;case "cooler":return p.cap;case "psu":return p.watt;case "board":return betterMetric("board",p,{});case "case":return (p.silent||1);}
+  return p.tier;
+}
+const PERF_LABEL={cpu:"Leistung (Mix)",gpu:"Gaming-Index",ram:"GB",ssd:"TB",cooler:"Kühlung W",psu:"Watt",board:"Ausstattung",case:"Dämmung"};
+function cmpCols(cat){
+  const c=[["name","Teil",p=>p.name,"t"],["tier","Klasse",p=>p.tier||0,"n"]];
+  const extra={
+    cpu:[["cores","Kerne",p=>p.cores,"n"],["g","Spiele",p=>p.g,"n"],["m","Multi-Core",p=>p.m,"n"],["power","Watt",p=>p.power,"n"],["socket","Sockel",p=>p.socket,"t"]],
+    gpu:[["vram","VRAM",p=>p.vram||0,"n"],["g","Index",p=>p.g,"n"],["fps","FPS "+RES[P().res].label,p=>Math.round((p.g||0)*RES[P().res].f),"n"],["power","Watt",p=>p.power,"n"],["len","Länge",p=>p.len,"n"]],
+    board:[["socket","Sockel",p=>p.socket,"t"],["chipset","Chipsatz",p=>p.chipset,"t"],["form","Form",p=>p.form,"t"],["m2","M.2",p=>p.m2,"n"],["gen5","PCIe 5 M.2",p=>p.gen5m2?"ja":"–","t"],["wifi","WLAN",p=>p.wifi?"ja":"–","t"]],
+    ram:[["cap","GB",p=>p.cap,"n"],["speed","Takt",p=>p.speed,"n"],["cl","CL",p=>p.cl,"n"],["ppg","€/GB",p=>Math.round(p.price/p.cap*10)/10,"n"]],
+    cooler:[["kind","Bauart",p=>p.kind==="aio"?"AiO "+p.rad:p.kind==="boxed"?"Boxed":"Luft","t"],["h","Höhe",p=>p.h||"–","n"],["cap","Kühlung W",p=>p.cap,"n"]],
+    ssd:[["cap","TB",p=>p.cap/1000,"n"],["gen","PCIe",p=>p.gen,"n"],["read","MB/s",p=>p.read,"n"],["ppt","€/TB",p=>Math.round(p.price/(p.cap/1000)),"n"]],
+    psu:[["watt","Watt",p=>p.watt,"n"],["eff","80 PLUS",p=>p.eff,"t"],["form","Form",p=>p.form,"t"],["atx3","ATX 3.1",p=>p.atx3?"ja":"–","t"]],
+    "case":[["form","Mainboard",p=>p.form,"t"],["gpu","GPU max",p=>p.gpu,"n"],["cooler","Kühler max",p=>p.cooler,"n"],["rad","Radiator",p=>p.rads.length?Math.max(...p.rads):0,"n"],["silent","Dämmung",p=>["","offen","teils","gedämmt"][p.silent||1],"t"]]
+  }[cat]||[];
+  const tail=[["price","Preis",p=>p.price,"n"]];
+  if(cat==="cpu"||cat==="gpu")tail.push(["ppp","€ je Punkt",p=>perfOf(cat,p)?Math.round(p.price/perfOf(cat,p)*10)/10:0,"n"]);
+  return c.concat(extra,tail);
+}
+function renderCompare(parts){
+  $("#cChips").innerHTML=CATS.map(c=>`<button type="button" class="chip" data-cmpcat="${c.k}" aria-pressed="${c.k===cmpCat}">${esc(c.label)}</button>`).join("");
+  const cat=cmpCat,cols=cmpCols(cat),cur=state.picks[cat]&&state.picks[cat].id;
+  const ctx=Object.assign({},parts);delete ctx[cat];
+  const onlyOk=$("#cOnlyOk").checked;
+  let rows=DB[cat].filter(p=>!p.none&&p.kind!=="boxed").map(p=>{const iss=issuesFor(cat,p,ctx,state.profile);return {p,err:iss.find(i=>i.level==="error")};});
+  if(onlyOk)rows=rows.filter(r=>!r.err||r.p.id===cur);
+  const col=cols.find(c=>c[0]===cmpSort.k)||cols.find(c=>c[0]==="price");
+  rows.sort((a,b)=>{const va=col[2](a.p),vb=col[2](b.p);return (typeof va==="number"?va-vb:String(va).localeCompare(String(vb)))*cmpSort.dir;});
+  const numCols=cols.filter(c=>c[3]==="n"&&c[0]!=="tier").map(c=>c[0]);
+  const best={};numCols.forEach(k=>{const c=cols.find(x=>x[0]===k);const vals=rows.map(r=>c[2](r.p)).filter(v=>typeof v==="number"&&v>0);if(!vals.length)return;best[k]=(k==="price"||k==="ppp"||k==="ppg"||k==="ppt"||k==="power"||k==="cl")?Math.min(...vals):Math.max(...vals);});
+  $("#cTable").innerHTML=`<table class="vtable"><thead><tr>${cols.map(c=>`<th data-sort="${c[0]}" aria-sort="${cmpSort.k===c[0]?(cmpSort.dir>0?"ascending":"descending"):"none"}" scope="col">${esc(c[1])}</th>`).join("")}<th scope="col">Passt</th><th></th></tr></thead><tbody>
+   ${rows.map(r=>`<tr class="${r.p.id===cur?"cur":""}${r.err?" bad":""}">${cols.map(c=>{const v=c[2](r.p);const shown=c[0]==="price"?eur(v):c[0]==="name"?esc(v)+(r.p.chk?' <span class="tag rec">geprüft</span>':""):c[0]==="tier"?tierDots(v):esc(String(v));return `<td class="${c[3]==="n"&&c[0]!=="tier"?"n":""}${best[c[0]]!=null&&v===best[c[0]]?" best":""}">${shown}</td>`;}).join("")}
+   <td>${r.p.id===cur?'<span class="tag user">Deine Wahl</span>':r.err?`<span class="sev error" title="${esc(r.err.msg)}">nein</span>`:'<span class="sev ok">ja</span>'}</td>
+   <td>${r.p.id!==cur&&!r.err?`<button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(r.p.id)}">Übernehmen</button>`:""}</td></tr>`).join("")}</tbody></table>`;
+  $("#cNote").textContent=`${rows.length} Teile. Grün = Bestwert der Spalte. Spaltenkopf anklicken zum Sortieren. „Passt“ prüft gegen deine übrigen Teile.`;
+  // Streudiagramm
+  const show=cat==="gpu"||cat==="cpu"||cat==="ssd"||cat==="ram";
+  $("#cScatterCard").hidden=!show;
+  if(show){
+    const pts=rows.map(r=>({p:r.p,x:r.p.price,y:perfOf(cat,r.p),err:!!r.err}));
+    $("#cScatterSub").textContent=`${PERF_LABEL[cat]} gegen Preis · deine Wahl hervorgehoben`;
+    $("#cScatter").innerHTML=scatterSvg(pts,cur,cat);
+  }
+}
+function niceTicks(max,n){const raw=max/n,mag=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=raw);const t=[];for(let v=0;v<=max+1e-9;v+=step)t.push(Math.round(v*100)/100);return t;}
+function scatterSvg(pts,cur,cat){
+  const W=760,H=330,L=56,R=16,T=14,B=40;
+  const logX=cat==="gpu"&&Math.max(...pts.map(p=>p.x))>3*Math.min(...pts.map(p=>p.x))*2;
+  const xs=pts.map(p=>p.x),ys=pts.map(p=>p.y);
+  const xMin=logX?Math.pow(10,Math.floor(Math.log10(Math.min(...xs))*4)/4):0,xMax=Math.max(...xs)*1.05,yMax=Math.max(...ys)*1.1;
+  const fx=v=>logX?L+(Math.log10(v)-Math.log10(xMin))/(Math.log10(xMax)-Math.log10(xMin))*(W-L-R):L+v/xMax*(W-L-R);
+  const fy=v=>H-B-v/yMax*(H-T-B);
+  const yt=niceTicks(yMax,5).filter(v=>v<=yMax);
+  const xt=logX?[200,300,500,1000,2000,5000,10000].filter(v=>v>=xMin&&v<=xMax):niceTicks(xMax,6).filter(v=>v<=xMax);
+  const col=p=>p.brand==="NVIDIA"?"var(--c5)":p.brand==="AMD"?"var(--c3)":p.brand==="Intel"?"var(--c1)":"var(--c4)";
+  const curP=pts.find(p=>p.p.id===cur);
+  // effizienteste Punkte beschriften
+  const eff=pts.filter(p=>!p.err).map(p=>({p,v:p.y/p.x})).sort((a,b)=>b.v-a.v).slice(0,2).map(o=>o.p.p.id);
+  const short=n=>n.replace(/^(AMD|Intel|NVIDIA) (Radeon |GeForce |Core |Ryzen )?/,"").replace(/ \d+ GB$/,"").slice(0,22);
+  let s=`<svg class="scatter" viewBox="0 0 ${W} ${H}" role="img" aria-label="Preis-Leistungs-Diagramm">`;
+  yt.forEach(v=>{s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${fy(v)}" y2="${fy(v)}"/><text x="${L-6}" y="${fy(v)+3}" text-anchor="end">${v}</text>`;});
+  xt.forEach(v=>{s+=`<line class="ax" x1="${fx(v)}" x2="${fx(v)}" y1="${T}" y2="${H-B}" stroke-dasharray="2 3"/><text x="${fx(v)}" y="${H-B+14}" text-anchor="middle">${v>=1000?(v/1000).toLocaleString("de-DE")+" T€":v+" €"}</text>`;});
+  s+=`<text x="${(W+L)/2}" y="${H-6}" text-anchor="middle">Preis${logX?" (logarithmisch)":""}</text><text x="12" y="${(H-B+T)/2}" transform="rotate(-90 12 ${(H-B+T)/2})" text-anchor="middle">${esc(PERF_LABEL[cat])}</text>`;
+  pts.forEach(p=>{const isC=p.p.id===cur;s+=`<circle cx="${fx(p.x)}" cy="${fy(p.y)}" r="${isC?7:5}" fill="${col(p.p)}" fill-opacity="${p.err?0.3:0.85}" stroke="${isC?"var(--ink)":"var(--surface)"}" stroke-width="${isC?2.5:1}"><title>${esc(p.p.name)}: ${eur(p.x)}, ${p.y}</title></circle>`;});
+  pts.filter(p=>p.p.id===cur||eff.includes(p.p.id)).forEach(p=>{const x=fx(p.x),right=x<W-170;s+=`<text class="lbl" x="${right?x+10:x-10}" y="${fy(p.y)-8}" text-anchor="${right?"start":"end"}">${esc(short(p.p.name))}${p.p.id===cur?" (deine Wahl)":eff.includes(p.p.id)?" · bestes P/L":""}</text>`;});
+  s+=`</svg>`;
+  const leg=(cat==="gpu"||cat==="cpu")?`<div class="legend">${cat==="gpu"?'<span><i style="background:var(--c5)"></i>NVIDIA</span>':""}<span><i style="background:var(--c3)"></i>AMD</span><span><i style="background:var(--c1)"></i>Intel</span><span>blasse Punkte passen nicht zu deinem System</span></div>`:`<div class="legend"><span>blasse Punkte passen nicht zu deinem System</span></div>`;
+  return s+leg;
+}
+document.addEventListener("click",e=>{
+  const c=e.target.closest("[data-cmpcat]");if(c){cmpCat=c.dataset.cmpcat;cmpSort={k:"perf",dir:-1};const cols=cmpCols(cmpCat);cmpSort.k=(cols.find(x=>["g","m","cap","watt"].includes(x[0]))||cols[cols.length-1])[0];render();return;}
+  const h=e.target.closest("th[data-sort]");if(h){const k=h.dataset.sort;cmpSort=cmpSort.k===k?{k,dir:-cmpSort.dir}:{k,dir:k==="name"?1:-1};render();}
+});
+
+/* Übersicht */
+function renderOverview(parts,issues){
+  let total=0;for(const c in parts)total+=parts[c].price;
+  const p=P(),fps=parts.gpu||parts.cpu?buildFps(parts,p.res):0,loadW=estLoad(parts),noise=noiseInfo(parts);
+  const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
+  $("#oKpis").innerHTML=`
+   <div class="kpi"><span class="eyebrow">Hardware</span><b>${eur(total)}</b><small>mit Windows ca. ${eur(total+260)}</small></div>
+   <div class="kpi"><span class="eyebrow">Bildrate</span><b>${RES.map((r,i)=>i===p.res?fps:null).filter(x=>x!=null)[0]||"–"} FPS</b><small>${esc(RES[p.res].label)} · ${RES.map((r,i)=>r.label+" "+buildFps(parts,i)).filter((x,i)=>i!==p.res).join(" · ")}</small></div>
+   <div class="kpi"><span class="eyebrow">Multi-Core</span><b>${parts.cpu?parts.cpu.m:"–"}</b><small>${parts.cpu?parts.cpu.cores+" Kerne":""}</small></div>
+   <div class="kpi"><span class="eyebrow">Strom</span><b>ca. ${loadW} W</b><small>${parts.psu?Math.round(loadW/parts.psu.watt*100)+" % von "+parts.psu.watt+" W":""}</small></div>
+   <div class="kpi"><span class="eyebrow">Lautstärke</span><b>${esc(noise.label)}</b><small>${esc(noise.why.join(", ")||"ausgewogen")}</small></div>
+   <div class="kpi"><span class="eyebrow">Prüfung</span><b>${errs?errs+" Konflikt"+(errs>1?"e":""):warns?warns+" Warnung"+(warns>1?"en":""):"passt"}</b><span class="pill ${errs?"bad":warns?"warn":"ok"}">${errs?"bitte lösen":warns?"prüfen":"alles kompatibel"}</span></div>`;
+  $("#oCase").textContent=parts["case"]?parts["case"].name:"";
+  $("#oSchema").innerHTML=schemaSvg(parts);
+  // Stärken / Schwächen gesammelt
+  const pros=[],cons=[];
+  CATS.forEach(c=>{const pt=parts[c.k];if(!pt)return;const pc=prosCons(c.k,pt,parts);pc.P.slice(0,2).forEach(x=>pros.push(`<b>${esc(c.label)}:</b> ${esc(x)}`));pc.C.slice(0,1).forEach(x=>cons.push(`<b>${esc(c.label)}:</b> ${esc(x)}`));pc.N.slice(0,1).forEach(x=>cons.push(`<b>${esc(c.label)}:</b> ${esc(x)}`));});
+  issues.filter(i=>i.level!=="info").forEach(i=>cons.unshift(`<b>${SEV_LABEL[i.level]}:</b> ${esc(i.msg)}`));
+  $("#oPros").innerHTML=pros.map(x=>`<li><span>${x}</span></li>`).join("")||"<li><span>Noch keine Teile gewählt.</span></li>";
+  $("#oCons").innerHTML=cons.map(x=>`<li><span>${x}</span></li>`).join("")||"<li><span>Keine.</span></li>";
+  // Upgrade-Pfad: bester Nutzen je Euro
+  const steps=[];
+  CATS.forEach(c=>{const pt=parts[c.k];if(!pt)return;const ctx=Object.assign({},parts);delete ctx[c.k];const o=betterOptions(c.k,pt,ctx,1)[0];if(!o)return;
+    const d=o.price-pt.price;let gain=null;
+    if(c.k==="gpu")gain=(buildFps(Object.assign({},parts,{gpu:o}),p.res)-buildFps(parts,p.res))/Math.max(1,buildFps(parts,p.res))*100;
+    else if(c.k==="cpu")gain=(cpuBlend(o)/cpuBlend(pt)-1)*100;
+    steps.push({c,pt,o,d,gain,score:gain!=null?gain/Math.max(20,d):-1});});
+  steps.sort((a,b)=>(b.score-a.score)||(a.d-b.d));
+  $("#oPath").innerHTML=steps.length?`<div class="up"><span class="h">Schritt</span><span class="h">Aufpreis</span><span class="h">Nutzen</span><span></span>${steps.map((x,i)=>`<span>${i+1}. ${esc(x.c.label)}: <b>${esc(x.o.name)}</b><br><small class="subline">${esc(benefitText(x.c.k,x.pt,x.o,parts))}</small></span><span class="delta-neg">${x.d>0?"+":""}${eur(x.d)}</span><span class="delta-pos">${x.gain!=null?"+"+Math.round(x.gain)+" % Leistung":"Ausstattung"}</span><button type="button" class="btn" data-act="take" data-cat="${x.c.k}" data-id="${esc(x.o.id)}">Übernehmen</button>`).join("")}</div><p class="subline">Leistungs-Upgrades (Grafikkarte: FPS bei deiner Auflösung, Prozessor: Mix nach Gaming/Kreativ-Regler) stehen nach Nutzen pro Euro vorn, Ausstattungs-Upgrades folgen nach Aufpreis.</p>`:`<p class="subline">Keine sinnvollen Upgrades gefunden.</p>`;
+  // Tabelle
+  $("#oSum").textContent=eur(total);
+  $("#oTable").innerHTML=`<table class="ctable"><thead><tr><th>Bauteil</th><th>Modell</th><th>Eckdaten</th><th>Preisstand</th><th style="text-align:right">Preis</th></tr></thead><tbody>${CATS.map(c=>{const pt=parts[c.k];if(!pt)return `<tr><td>${esc(c.label)}</td><td colspan="4" class="subline">nicht gewählt</td></tr>`;return `<tr><td>${esc(c.label)}</td><td><b>${esc(pt.name)}</b></td><td><small class="subline">${esc(spec(c.k,pt))}</small></td><td>${pt.chk?'<span class="tag rec">geprüft 9.11.</span>':'<span class="subline">Schätzung</span>'}</td><td class="num">${eur(pt.price)}</td></tr>`;}).join("")}<tr><td colspan="4"><b>Summe Hardware</b></td><td class="num"><b>${eur(total)}</b></td></tr></tbody></table>`;
+}
+function schemaSvg(parts){
+  const W=520,H=420,cs=parts["case"],b=parts.board,cpu=parts.cpu,cool=parts.cooler,gpu=parts.gpu,ram=parts.ram,ssd=parts.ssd,psu=parts.psu;
+  const sh=(n,len)=>n?(n.length>len?n.slice(0,len-1)+"…":n):"";
+  let s=`<svg class="schema" viewBox="0 0 ${W} ${H}" role="img" aria-label="Schema des PCs">`;
+  s+=`<rect class="box" x="10" y="10" width="${W-20}" height="${H-20}" rx="12"/>`;
+  // Radiator oben bei AiO
+  const front=cool&&cool.kind==="aio"&&cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cool.rad);
+  if(cool&&cool.kind==="aio"&&!front){s+=`<rect class="part" x="70" y="22" width="${Math.min(380,cool.rad*0.9)}" height="22" rx="4" fill="var(--c2)" fill-opacity=".25" stroke="var(--c2)"/><text x="78" y="37">Radiator ${cool.rad} mm (oben)</text>`;}
+  if(front){s+=`<rect class="part" x="${W-58}" y="40" width="26" height="250" rx="4" fill="var(--c2)" fill-opacity=".25" stroke="var(--c2)"/><text x="${W-62}" y="36" text-anchor="end">Radiator ${cool.rad} mm (vorne)</text>`;}
+  // Mainboard
+  s+=`<rect class="part" x="40" y="56" width="300" height="250" rx="6" fill="var(--c4)" fill-opacity=".12" stroke="var(--c4)"/><text x="50" y="74">${esc(sh(b&&b.name,40)||"Mainboard")}</text><text class="sub" x="50" y="88">${b?esc(b.chipset+" · "+b.form+" · "+b.m2+"× M.2"):""}</text>`;
+  // CPU + Kühler
+  s+=`<rect class="part" x="70" y="100" width="110" height="80" rx="6" fill="var(--c1)" fill-opacity=".18" stroke="var(--c1)"/><text x="78" y="120">${esc(sh(cpu&&cpu.name.replace(/^(AMD|Intel) /,""),17)||"Prozessor")}</text><text class="sub" x="78" y="134">${cpu?cpu.cores+" Kerne":""}</text><text class="sub" x="78" y="166">${cool?esc(sh(cool.name.replace(/^(Arctic|Thermalright|Noctua|be quiet!) /,""),20)):""}</text>`;
+  // RAM
+  const n=ram?ram.modules:0;for(let i=0;i<4;i++){s+=`<rect class="part" x="${200+i*16}" y="100" width="10" height="90" rx="2" fill="${i<n?"var(--c2)":"var(--sunk)"}" fill-opacity="${i<n?.5:1}" stroke="${i<n?"var(--c2)":"var(--line)"}"/>`;}
+  s+=`<text x="270" y="118">RAM</text><text class="sub" x="270" y="132">${ram?ram.cap+" GB":""}</text><text class="sub" x="270" y="145">${ram?"DDR5-"+ram.speed:""}</text>`;
+  // SSD
+  s+=`<rect class="part" x="70" y="196" width="120" height="18" rx="3" fill="var(--c5)" fill-opacity=".3" stroke="var(--c5)"/><text class="sub" x="76" y="209">${ssd?esc(fmtCap(ssd.cap)+" M.2 PCIe "+ssd.gen+".0"):"SSD"}</text>`;
+  // GPU
+  const gl=gpu&&!gpu.none?Math.min(420,Math.max(200,gpu.len*1.15)):0;
+  if(gl){s+=`<rect class="part" x="40" y="228" width="${gl}" height="52" rx="6" fill="var(--c3)" fill-opacity=".22" stroke="var(--c3)"/><text x="50" y="250">${esc(sh(gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""),30))}</text><text class="sub" x="50" y="266">${gpu.vram} GB · ${gpu.power} W · ${gpu.len} mm</text>`;}
+  else s+=`<text class="sub" x="50" y="256">keine Grafikkarte (iGPU)</text>`;
+  // Netzteil
+  s+=`<rect class="part" x="40" y="${H-96}" width="180" height="62" rx="6" fill="var(--c7)" fill-opacity=".22" stroke="var(--c7)"/><text x="50" y="${H-74}">${esc(sh(psu&&psu.name,26)||"Netzteil")}</text><text class="sub" x="50" y="${H-58}">${psu?psu.watt+" W · 80+ "+psu.eff:""}</text>`;
+  // Lüfter / Gehäuse-Infos rechts
+  s+=`<g><text x="${W-150}" y="${H-80}">${esc(sh(cs&&cs.name,22)||"Gehäuse")}</text><text class="sub" x="${W-150}" y="${H-64}">${cs?"GPU ≤ "+cs.gpu+" mm":""}</text><text class="sub" x="${W-150}" y="${H-50}">${cs?(["","offen","teils leise","gedämmt"][cs.silent||1]):""}</text></g>`;
+  // Luftstrom-Pfeile
+  if(!front)s+=`<g stroke="var(--muted)" stroke-width="1.5" fill="none" opacity=".7"><path d="M ${W-30} 300 L ${W-30} 120"/><path d="M ${W-36} 128 L ${W-30} 116 L ${W-24} 128"/></g><text class="sub" x="${W-40}" y="316" text-anchor="end">Luftstrom</text>`;
+  return s+`</svg><p class="subline">Schematische Darstellung, nicht maßstabsgetreu. Grafikkartenlänge relativ dargestellt.</p>`;
+}
 /* ---------- Auswahl-Schublade ---------- */
 let pickerCat=null,lastFocus=null;
 function openPicker(cat){
@@ -1174,7 +1510,7 @@ function renderPicker(){
     const first=r.iss.find(i=>i.level==="error")||r.iss.find(i=>i.level==="warn");
     const st=r.lvl==="ok"?`<span class="status ok">✓ Passt zu deinen Teilen</span>`:`<span class="status ${r.lvl}"><span class="sev ${r.lvl}">${SEV_LABEL[r.lvl]}</span>${esc(first.msg)}</span>`;
     return `<button type="button" class="opt${r.lvl==="error"?" dim":""}" data-act="choose" data-id="${esc(p.id)}" aria-current="${p.id===cur}">
-      <span class="slot-main"><span class="slot-name">${esc(p.name)} ${p===rec?'<span class="tag rec">Empfohlen</span>':""} ${tierDots(p.tier)}</span>
+      <span class="slot-main"><span class="slot-name">${esc(p.name)} ${p===rec?'<span class="tag rec">Empfohlen</span>':""}${p.eol?'<span class="tag" style="background:var(--warn-soft);color:var(--warn)">ausgelaufen</span>':""} ${tierDots(p.tier)}</span>
       <span class="slot-spec">${esc(spec(cat,p))}</span></span>
       <span class="opt-price"><span class="price">${p.price?eur(p.price):"0 €"}</span></span>
       ${st}</button>`;
@@ -1241,6 +1577,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidde
 $("#pSearch").addEventListener("input",renderPicker);
 $("#pSort").addEventListener("change",renderPicker);
 $("#pCompat").addEventListener("change",renderPicker);
+$("#cOnlyOk").addEventListener("change",()=>render());
 $("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
 let bt=null;
 $("#budget").addEventListener("input",e=>{
