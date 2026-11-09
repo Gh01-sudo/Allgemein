@@ -12,10 +12,10 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
   Kühlleistung, Netzteil-Leistung und Bauform (SFX/ATX), 12V-2x6, iGPU-Pflicht ohne Grafikkarte,
   CPU-Flaschenhals, VRAM- und RAM-Empfehlungen
 - **Leistungsbild** (Gaming-Klasse, Multi-Core) und **Strombilanz** mit empfohlener Netzteilgröße
-- **Vorlagen:** Büro, Einstieg Full HD, Gaming WQHD, 4K-Enthusiast, Workstation, Kompakt-ITX
+- **Vorlagen:** Deine Konfiguration (4K-Gaming + Kreativ), Büro, Einstieg Full HD, Gaming WQHD, 4K-Enthusiast, Workstation, Kompakt-ITX
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
 ## Preise
-Geschätzte Straßenpreise in Deutschland, Stand November 2026 – keine Live-Daten. RAM und SSDs sind seit
+Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.

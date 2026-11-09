@@ -168,7 +168,7 @@ button,input,select{font:inherit;color:inherit}
 <div class="wrap">
   <header class="head">
     <div>
-      <div class="eyebrow">PC-Konfigurator · Richtpreise Deutschland, Stand November 2026</div>
+      <div class="eyebrow">PC-Konfigurator · Preise Deutschland, Stand 9. November 2026</div>
       <h1>PC-Werkbank</h1>
       <p>Wähle die Teile, die dir wichtig sind. Die Werkbank ergänzt den Rest passend dazu und prüft Sockel, Speicher, Maße, Kühlung und Netzteil.</p>
     </div>
@@ -202,7 +202,7 @@ button,input,select{font:inherit;color:inherit}
     <aside class="summary" id="summary" aria-label="Zusammenfassung"></aside>
   </main>
 
-  <p class="note"><b>Zu den Preisen:</b> Alle Beträge sind geschätzte Straßenpreise in Deutschland (Stand November 2026), keine Live-Daten. Arbeitsspeicher und SSDs sind seit Ende 2025 wegen knapper DRAM- und NAND-Produktion deutlich teurer geworden und schwanken weiter stark. Vor dem Kauf über „Preis prüfen“ die aktuellen Angebote vergleichen. Leistungswerte sind relative Richtwerte (Gaming: RTX 5080 ≈ 105) und ersetzen keine Benchmarks.</p>
+  <p class="note"><b>Zu den Preisen:</b> Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert (günstigste Angebote in Deutschland). Alle anderen Preise sind Schätzungen, hochgerechnet aus der aktuellen Marktlage. Grafikkarten, Arbeitsspeicher und SSDs sind wegen knapper Speicherproduktion stark überteuert und schwanken täglich. Vor dem Kauf über „Preis prüfen“ die aktuellen Angebote vergleichen. Leistungswerte sind relative Richtwerte (Gaming: RTX 5080 ≈ 105) und ersetzen keine Benchmarks.</p>
 </div>
 
 <div class="picker" id="picker" hidden>
@@ -248,7 +248,7 @@ cpu:[
  {id:"u5-245k",name:"Intel Core Ultra 5 245K",brand:"Intel",socket:"LGA1851",cores:14,threads:14,boost:5.2,power:159,cool:150,igpu:true,ig:8,box:false,g:75,m:68,tier:3,price:235},
  {id:"u5-245kf",name:"Intel Core Ultra 5 245KF",brand:"Intel",socket:"LGA1851",cores:14,threads:14,boost:5.2,power:159,cool:150,igpu:false,box:false,g:75,m:68,tier:3,price:215},
  {id:"r7-9800x3d",name:"AMD Ryzen 7 9800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.2,power:162,cool:140,igpu:true,ig:6,box:false,g:100,m:72,tier:4,price:450},
- {id:"r9-9900x",name:"AMD Ryzen 9 9900X",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:82,m:85,tier:4,price:370},
+ {id:"r9-9900x",name:"AMD Ryzen 9 9900X",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:82,m:85,tier:4,price:315,chk:true},
  {id:"u7-265k",name:"Intel Core Ultra 7 265K",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:true,ig:8,box:false,g:80,m:88,tier:4,price:285},
  {id:"u7-265kf",name:"Intel Core Ultra 7 265KF",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:false,box:false,g:80,m:88,tier:4,price:265},
  {id:"r7-9850x3d",name:"AMD Ryzen 7 9850X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:104,m:75,tier:5,price:499},
@@ -275,14 +275,14 @@ board:[
  {id:"asus-z890e",name:"ASUS ROG Strix Z890-E Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:480}
 ],
 ram:[
- {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:40,tier:1,price:115},
- {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:230},
- {id:"gs-2x16-6000",name:"G.Skill Flare X5 32 GB DDR5-6000",type:"DDR5",cap:32,modules:2,speed:6000,cl:30,tier:3,price:270},
- {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:320},
- {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:400},
- {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:560},
- {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",cap:96,modules:2,speed:6000,cl:30,tier:5,price:820},
- {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:1350}
+ {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:40,tier:1,price:230},
+ {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:470},
+ {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000",type:"DDR5",cap:32,modules:2,speed:6000,cl:30,tier:3,price:520,chk:true},
+ {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:600},
+ {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:760},
+ {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:1000},
+ {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",cap:96,modules:2,speed:6000,cl:30,tier:5,price:1500},
+ {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:2300}
 ],
 cooler:[
  {id:"boxed",name:"Boxed-Kühler (liegt der CPU bei)",kind:"boxed",h:60,cap:90,sockets:ALL_SOCKETS,tier:0,price:0},
@@ -300,28 +300,29 @@ cooler:[
 gpu:[
  {id:"none",name:"Keine Grafikkarte",none:true,brand:"",vram:0,power:0,len:0,rec:0,conn:"",g:0,tier:0,price:0},
  {id:"arc-b570",name:"Intel Arc B570 10 GB",brand:"Intel",vram:10,power:150,len:230,rec:450,conn:"8-Pin",g:45,tier:1,price:220},
- {id:"rtx5050",name:"NVIDIA GeForce RTX 5050 8 GB",brand:"NVIDIA",vram:8,power:130,len:200,rec:450,conn:"8-Pin",g:42,tier:1,price:250},
+ {id:"rtx5050",name:"NVIDIA GeForce RTX 5050 8 GB",brand:"NVIDIA",vram:8,power:130,len:200,rec:450,conn:"8-Pin",g:42,tier:1,price:320},
  {id:"arc-b580",name:"Intel Arc B580 12 GB",brand:"Intel",vram:12,power:190,len:250,rec:550,conn:"8-Pin",g:52,tier:1,price:270},
- {id:"rx9060xt-8",name:"AMD Radeon RX 9060 XT 8 GB",brand:"AMD",vram:8,power:160,len:240,rec:450,conn:"8-Pin",g:56,tier:1,price:290},
- {id:"rtx5060",name:"NVIDIA GeForce RTX 5060 8 GB",brand:"NVIDIA",vram:8,power:145,len:230,rec:550,conn:"8-Pin",g:50,tier:1,price:300},
- {id:"rx9060xt-16",name:"AMD Radeon RX 9060 XT 16 GB",brand:"AMD",vram:16,power:180,len:250,rec:500,conn:"8-Pin",g:58,tier:2,price:380},
- {id:"rtx5060ti-16",name:"NVIDIA GeForce RTX 5060 Ti 16 GB",brand:"NVIDIA",vram:16,power:180,len:240,rec:600,conn:"8-Pin",g:60,tier:2,price:450},
- {id:"rtx5070",name:"NVIDIA GeForce RTX 5070 12 GB",brand:"NVIDIA",vram:12,power:250,len:270,rec:650,conn:"12V-2x6",g:75,tier:3,price:580},
- {id:"rx9070",name:"AMD Radeon RX 9070 16 GB",brand:"AMD",vram:16,power:220,len:290,rec:650,conn:"8-Pin",g:84,tier:3,price:600},
- {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:92,tier:4,price:700},
- {id:"rtx5070ti",name:"NVIDIA GeForce RTX 5070 Ti 16 GB",brand:"NVIDIA",vram:16,power:300,len:305,rec:750,conn:"12V-2x6",g:93,tier:4,price:850},
- {id:"rtx5080",name:"NVIDIA GeForce RTX 5080 16 GB",brand:"NVIDIA",vram:16,power:360,len:315,rec:850,conn:"12V-2x6",g:105,tier:5,price:1200},
- {id:"rtx5090",name:"NVIDIA GeForce RTX 5090 32 GB",brand:"NVIDIA",vram:32,power:575,len:335,rec:1000,conn:"12V-2x6",g:150,tier:5,price:2900}
+ {id:"rx9060xt-8",name:"AMD Radeon RX 9060 XT 8 GB",brand:"AMD",vram:8,power:160,len:240,rec:450,conn:"8-Pin",g:56,tier:1,price:360},
+ {id:"rtx5060",name:"NVIDIA GeForce RTX 5060 8 GB",brand:"NVIDIA",vram:8,power:145,len:230,rec:550,conn:"8-Pin",g:50,tier:1,price:380},
+ {id:"rx9060xt-16",name:"AMD Radeon RX 9060 XT 16 GB",brand:"AMD",vram:16,power:180,len:250,rec:500,conn:"8-Pin",g:58,tier:2,price:480},
+ {id:"rtx5060ti-16",name:"NVIDIA GeForce RTX 5060 Ti 16 GB",brand:"NVIDIA",vram:16,power:180,len:240,rec:600,conn:"8-Pin",g:60,tier:2,price:600},
+ {id:"rtx5070",name:"NVIDIA GeForce RTX 5070 12 GB",brand:"NVIDIA",vram:12,power:250,len:270,rec:650,conn:"12V-2x6",g:75,tier:3,price:600,chk:true},
+ {id:"rx9070",name:"AMD Radeon RX 9070 16 GB",brand:"AMD",vram:16,power:220,len:290,rec:650,conn:"8-Pin",g:84,tier:3,price:780},
+ {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:92,tier:4,price:899,chk:true},
+ {id:"rtx5070ti",name:"NVIDIA GeForce RTX 5070 Ti 16 GB",brand:"NVIDIA",vram:16,power:300,len:305,rec:750,conn:"12V-2x6",g:93,tier:4,price:1240,chk:true},
+ {id:"rtx5080",name:"NVIDIA GeForce RTX 5080 16 GB",brand:"NVIDIA",vram:16,power:360,len:315,rec:850,conn:"12V-2x6",g:105,tier:5,price:1650},
+ {id:"rtx5090",name:"NVIDIA GeForce RTX 5090 32 GB",brand:"NVIDIA",vram:32,power:575,len:335,rec:1000,conn:"12V-2x6",g:150,tier:5,price:3900}
 ],
 ssd:[
- {id:"kingston-nv3-1",name:"Kingston NV3 1 TB",cap:1000,gen:4,read:6000,tier:1,price:85},
- {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:115},
- {id:"wd-sn7100-2",name:"WD Black SN7100 2 TB",cap:2000,gen:4,read:7250,tier:3,price:190},
- {id:"s990evo-2",name:"Samsung 990 EVO Plus 2 TB",cap:2000,gen:4,read:7250,tier:3,price:200},
- {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:290},
- {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:360},
- {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:470},
- {id:"s9100-4",name:"Samsung 9100 Pro 4 TB",cap:4000,gen:5,read:14800,tier:5,price:560}
+ {id:"kingston-nv3-1",name:"Kingston NV3 1 TB",cap:1000,gen:4,read:6000,tier:1,price:120},
+ {id:"wd-sn7100-1",name:"WD Black SN7100 1 TB",cap:1000,gen:4,read:7250,tier:2,price:150},
+ {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:160},
+ {id:"wd-sn7100-2",name:"WD Black SN7100 2 TB",cap:2000,gen:4,read:7250,tier:3,price:280,chk:true},
+ {id:"s990evo-2",name:"Samsung 990 EVO Plus 2 TB",cap:2000,gen:4,read:7250,tier:3,price:290},
+ {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:400},
+ {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:520},
+ {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:650},
+ {id:"s9100-4",name:"Samsung 9100 Pro 4 TB",cap:4000,gen:5,read:14800,tier:5,price:780}
 ],
 psu:[
  {id:"cm-mwe-650",name:"Cooler Master MWE Gold 650 V2",watt:650,eff:"Gold",form:"ATX",atx3:false,tier:1,price:70},
@@ -367,6 +368,7 @@ const WEIGHTS={
 };
 const PROFILE_NAME={gaming:"Gaming",office:"Büro & Alltag",creator:"Kreativ & Workstation"};
 const PRESETS=[
+ {id:"mine",name:"Deine Konfiguration",hint:"4K-Gaming + Kreativ",profile:"creator",budget:null,user:{cpu:"r9-9900x",cooler:"tr-pa120se",board:"msi-b650-gp",ram:"gs-2x16-6000",gpu:"rx9070xt",ssd:"wd-sn7100-1",psu:"cor-rm850e","case":"bq-sb802"}},
  {id:"office",name:"Büro & Zuhause",hint:"ohne Grafikkarte",profile:"office",budget:null,user:{cpu:"r5-8600g"}},
  {id:"fhd",name:"Einstieg Full HD",hint:"Budget 1.100 €",profile:"gaming",budget:1100,user:{gpu:"rtx5060"}},
  {id:"wqhd",name:"Gaming WQHD",hint:"9800X3D + 9070 XT",profile:"gaming",budget:null,user:{cpu:"r7-9800x3d",gpu:"rx9070xt"}},
@@ -578,7 +580,7 @@ function spec(cat,p){
   return "";
 }
 function tierDots(t){if(!t)return "";let s='<span class="tier" title="Klasse '+t+' von 5" aria-label="Klasse '+t+' von 5">';for(let i=1;i<=5;i++)s+='<i class="'+(i<=t?"on":"")+'"></i>';return s+"</span>";}
-function priceLink(p){if(!p||p.price===0)return "";return `<span class="links"><a href="https://geizhals.de/?fs=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
+function priceLink(p){if(!p||p.price===0)return "";return `<span class="links">${p.chk?'<span class="tag rec">Preis geprüft 9.11.</span> ':""}<a href="https://geizhals.de/?fs=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
 const SEV_LABEL={error:"Konflikt",warn:"Achtung",info:"Hinweis",ok:"Passt"};
 
 function renderSlots(parts,issues){
@@ -733,7 +735,7 @@ function buildText(){
   const parts=resolve(state.picks);let total=0;
   const lines=[`PC-Werkbank – Konfiguration (${PROFILE_NAME[state.profile]})`,""];
   for(const c of CATS){const p=parts[c.k];if(!p)continue;total+=p.price;lines.push(`${c.label}: ${p.name} – ${p.price?eur(p.price):"0 €"}`);}
-  lines.push("",`Summe: ${eur(total)} (Richtpreise, Stand November 2026)`);
+  lines.push("",`Summe: ${eur(total)} (Preise Stand 9. November 2026, teils geschätzt)`);
   if(parts.cpu||parts.gpu)lines.push(`Geschätzte Last: ca. ${estLoad(parts)} W, empfohlenes Netzteil ab ${recPsu(parts)} W`);
   const iss=checkAll(parts,state.profile).filter(i=>i.level!=="info");
   if(iss.length){lines.push("","Zu prüfen:");iss.forEach(i=>lines.push("- "+i.msg));}
@@ -783,7 +785,7 @@ $("#budget").addEventListener("input",e=>{
 });
 $("#presets").innerHTML=PRESETS.map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)} <small>${esc(p.hint)}</small></button>`).join("");
 
-if(!load())applyPreset("wqhd");else recompute();
+if(!load())applyPreset("mine");else recompute();
 })();
 </script>
 
