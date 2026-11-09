@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>PC-Werkbank</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* Layout: Arbeitsfläche mit Bauteil-Steckplätzen links, mitlaufendes Prüfprotokoll (Preis, Leistung, Strom, Kompatibilität) rechts; Teileauswahl als Schublade */
+:root{
+  --bg:#ECEFF3; --surface:#FFFFFF; --sunk:#F4F6F9; --ink:#121821; --muted:#586273; --line:#D3D9E2;
+  --accent:#2446C4; --accent-ink:#FFFFFF; --accent-soft:#E0E6FB;
+  --auto:#0B7480; --auto-soft:#D5EEF0;
+  --ok:#22783A; --ok-soft:#DCEFE1; --warn:#9A5B00; --warn-soft:#F7E9D2; --bad:#B42318; --bad-soft:#F9DEDB;
+  --scrim:rgba(14,20,32,.48);
+  --f-display:"Bahnschrift","DIN Alternate","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1218; --surface:#161B24; --sunk:#11151C; --ink:#E5E9F0; --muted:#97A1B2; --line:#283040;
+  --accent:#8EA5FF; --accent-ink:#0E1218; --accent-soft:#1D2850;
+  --auto:#5FC9D3; --auto-soft:#12343A;
+  --ok:#74C98A; --ok-soft:#173222; --warn:#F0B35A; --warn-soft:#3A2A12; --bad:#F38B80; --bad-soft:#3E1C19;
+  --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1218; --surface:#161B24; --sunk:#11151C; --ink:#E5E9F0; --muted:#97A1B2; --line:#283040;
+  --accent:#8EA5FF; --accent-ink:#0E1218; --accent-soft:#1D2850;
+  --auto:#5FC9D3; --auto-soft:#12343A;
+  --ok:#74C98A; --ok-soft:#173222; --warn:#F0B35A; --warn-soft:#3A2A12; --bad:#F38B80; --bad-soft:#3E1C19;
+  --scrim:rgba(0,0,0,.6); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;margin:0;text-wrap:balance;font-weight:700}
+a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+/* Kopf */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px}
+.head h1{font-size:clamp(30px,4.6vw,46px);letter-spacing:-.01em}
+.head p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+
+/* Steuerleiste */
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctl-label{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--sunk)}
+.seg button{border:0;background:transparent;padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink)}
+.budget-in{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--sunk);padding:0 10px}
+.budget-in input{border:0;background:transparent;width:8.5em;padding:7px 4px;font-family:var(--f-mono)}
+.budget-in input:focus{outline:none}
+.budget-in:focus-within{outline:3px solid var(--accent);outline-offset:1px}
+.switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;font-size:14px}
+.switch input{appearance:none;width:38px;height:22px;border-radius:11px;background:var(--line);position:relative;cursor:pointer;flex:none;margin:0;transition:background .15s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform .15s}
+.switch input:checked{background:var(--auto)}
+.switch input:checked::after{transform:translateX(16px)}
+.presets{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13.5px;font-weight:600;display:inline-flex;gap:6px;align-items:baseline}
+.chip small{font-weight:400;color:var(--muted);font-size:12px}
+.chip:hover{border-color:var(--accent)}
+
+/* Raster */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:18px;align-items:start}
+@media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Steckplätze */
+.slots{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.slot{display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:6px 16px;padding:14px 16px;align-items:center}
+.slot+.slot{border-top:1px solid var(--line)}
+.slot-cat{display:flex;flex-direction:column;gap:3px}
+.slot-cat b{font-family:var(--f-display);font-size:15px;font-weight:700}
+.slot-cat .eyebrow{font-size:10.5px}
+.slot-main{min-width:0;display:flex;flex-direction:column;gap:3px}
+.slot-name{font-weight:650;font-size:15.5px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.slot-spec{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.slot-empty{color:var(--muted);font-style:italic}
+.slot-msg{font-size:13px;display:flex;gap:6px;align-items:baseline}
+.slot-msg.error{color:var(--bad)} .slot-msg.warn{color:var(--warn)}
+.slot-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.price{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;white-space:nowrap}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{color:var(--accent-ink);filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--bad);border-color:transparent}
+.tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;font-weight:600;white-space:nowrap}
+.tag.user{background:var(--accent-soft);color:var(--accent)}
+.tag.auto{background:var(--auto-soft);color:var(--auto)}
+.tag.rec{background:var(--ok-soft);color:var(--ok)}
+.tier{display:inline-flex;gap:2px;vertical-align:middle}
+.tier i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.tier i.on{background:var(--muted)}
+.links a{font-size:12.5px;white-space:nowrap}
+@media (max-width:640px){
+  .slot{grid-template-columns:minmax(0,1fr) auto}
+  .slot-cat{grid-column:1/-1;flex-direction:row;align-items:baseline;gap:8px}
+  .slot-side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}
+}
+
+/* Zusammenfassung */
+.summary{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:980px){.summary{position:static}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.total{font-family:var(--f-display);font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.subline{font-size:13px;color:var(--muted)}
+.meter{height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.meter span{display:block;height:100%;background:var(--accent)}
+.meter.ok span{background:var(--ok)} .meter.warn span{background:var(--warn)} .meter.bad span{background:var(--bad)}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:13.5px}
+.kv .num{font-weight:600}
+.perf-label{font-family:var(--f-display);font-size:19px;font-weight:700}
+.issues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.issues li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;font-size:13.5px;align-items:start}
+.sev{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;margin-top:2px;white-space:nowrap}
+.sev.error{background:var(--bad-soft);color:var(--bad)}
+.sev.warn{background:var(--warn-soft);color:var(--warn)}
+.sev.info{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.sev.ok{background:var(--ok-soft);color:var(--ok)}
+.card h2{font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h2 .eyebrow{font-family:var(--f-mono);font-weight:400}
+.row-btns{display:flex;flex-wrap:wrap;gap:8px}
+#copyFallback{width:100%;min-height:150px;font-family:var(--f-mono);font-size:12px;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px}
+.toast{font-size:13px;color:var(--ok);font-weight:600}
+.note{font-size:13px;color:var(--muted);max-width:90ch;line-height:1.55}
+.note b{color:var(--ink)}
+
+/* Auswahl-Schublade */
+.picker{position:fixed;inset:0;z-index:50;background:var(--scrim);display:flex;justify-content:flex-end}
+.panel{background:var(--surface);width:min(620px,100%);height:100%;display:flex;flex-direction:column;border-left:1px solid var(--line);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.panel-head{padding:16px 18px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.panel-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel-title h2{font-size:22px}
+.panel-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.panel-tools input[type=search],.panel-tools select{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:6px 9px;font-size:14px}
+.panel-tools input[type=search]{flex:1 1 180px;min-width:0}
+.panel-tools label{font-size:13.5px;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.panel-note{font-size:12.5px;color:var(--muted);margin:0}
+.plist{overflow-y:auto;flex:1;padding:8px 10px 16px}
+.opt{width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:9px;padding:11px 10px;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px}
+.opt:hover{background:var(--sunk);border-color:var(--line)}
+.opt[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt .slot-name{font-size:15px}
+.opt .status{grid-column:1/-1;font-size:12.5px;display:flex;gap:6px;align-items:baseline}
+.opt .status.ok{color:var(--ok)} .opt .status.warn{color:var(--warn)} .opt .status.error{color:var(--bad)}
+.opt.dim{opacity:.62}
+.opt-price{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.empty-list{padding:20px 10px;color:var(--muted)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div>
+      <div class="eyebrow">PC-Konfigurator · Richtpreise Deutschland, Stand November 2026</div>
+      <h1>PC-Werkbank</h1>
+      <p>Wähle die Teile, die dir wichtig sind. Die Werkbank ergänzt den Rest passend dazu und prüft Sockel, Speicher, Maße, Kühlung und Netzteil.</p>
+    </div>
+  </header>
+
+  <section class="controls" aria-label="Einstellungen">
+    <div class="ctl">
+      <span class="ctl-label" id="profLabel">Einsatz</span>
+      <div class="seg" role="radiogroup" aria-labelledby="profLabel" id="profileSeg">
+        <button type="button" role="radio" data-profile="gaming" id="prof-gaming">Gaming</button>
+        <button type="button" role="radio" data-profile="office" id="prof-office">Büro &amp; Alltag</button>
+        <button type="button" role="radio" data-profile="creator" id="prof-creator">Kreativ &amp; Workstation</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label class="ctl-label" for="budget">Budget</label>
+      <span class="budget-in"><input id="budget" type="number" inputmode="numeric" min="300" step="50" placeholder="ohne Limit"><span class="mono">€</span></span>
+    </div>
+    <div class="ctl">
+      <label class="switch"><input type="checkbox" id="autofill" checked> Fehlende Teile automatisch ergänzen</label>
+    </div>
+  </section>
+
+  <section class="presets" aria-label="Vorlagen">
+    <span class="ctl-label">Vorlagen</span>
+    <div class="presets" id="presets"></div>
+  </section>
+
+  <main class="grid">
+    <section aria-label="Komponenten"><div class="slots" id="slots"></div></section>
+    <aside class="summary" id="summary" aria-label="Zusammenfassung"></aside>
+  </main>
+
+  <p class="note"><b>Zu den Preisen:</b> Alle Beträge sind geschätzte Straßenpreise in Deutschland (Stand November 2026), keine Live-Daten. Arbeitsspeicher und SSDs sind seit Ende 2025 wegen knapper DRAM- und NAND-Produktion deutlich teurer geworden und schwanken weiter stark. Vor dem Kauf über „Preis prüfen“ die aktuellen Angebote vergleichen. Leistungswerte sind relative Richtwerte (Gaming: RTX 5080 ≈ 105) und ersetzen keine Benchmarks.</p>
+</div>
+
+<div class="picker" id="picker" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <div class="panel-head">
+      <div class="panel-title">
+        <h2 id="pickerTitle">Teil wählen</h2>
+        <button type="button" class="btn" data-act="close">Schließen</button>
+      </div>
+      <div class="panel-tools">
+        <input type="search" id="pSearch" placeholder="Suchen, z. B. 9800X3D oder 360" aria-label="Teile durchsuchen">
+        <select id="pSort" aria-label="Sortierung">
+          <option value="rec">Empfehlung zuerst</option>
+          <option value="price">Preis aufsteigend</option>
+          <option value="priceDesc">Preis absteigend</option>
+          <option value="perf">Leistung / Klasse</option>
+        </select>
+        <label><input type="checkbox" id="pCompat" checked> Nur passende</label>
+      </div>
+      <p class="panel-note" id="pNote"></p>
+    </div>
+    <div class="plist" id="plist"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+"use strict";
+/* ---------- Teiledatenbank (Richtpreise EUR, Stand 11/2026) ----------
+   tier: Klasse 1 (Einstieg) bis 5 (Enthusiast). g = relative Gaming-Leistung, m = Multi-Core-Leistung.
+   CPU power = realistische Volllast in W, cool = benötigte Kühlleistung in W. */
+const ALL_SOCKETS=["AM5","LGA1851","LGA1700"];
+const DB={
+cpu:[
+ {id:"r5-8500g",name:"AMD Ryzen 5 8500G",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.0,power:88,cool:80,igpu:true,ig:12,box:true,g:55,m:36,tier:1,price:135},
+ {id:"r5-8600g",name:"AMD Ryzen 5 8600G",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.0,power:88,cool:85,igpu:true,ig:18,box:true,g:62,m:42,tier:1,price:175},
+ {id:"i5-14400f",name:"Intel Core i5-14400F",brand:"Intel",socket:"LGA1700",cores:10,threads:16,boost:4.7,power:148,cool:110,igpu:false,box:true,g:68,m:50,tier:1,price:125},
+ {id:"r5-7600",name:"AMD Ryzen 5 7600",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.1,power:88,cool:85,igpu:true,ig:6,box:true,g:72,m:45,tier:2,price:180},
+ {id:"r5-9600x",name:"AMD Ryzen 5 9600X",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.4,power:88,cool:90,igpu:true,ig:6,box:false,g:77,m:50,tier:2,price:205},
+ {id:"u5-225",name:"Intel Core Ultra 5 225",brand:"Intel",socket:"LGA1851",cores:10,threads:10,boost:4.9,power:121,cool:100,igpu:true,ig:8,box:true,g:66,m:52,tier:2,price:205},
+ {id:"r7-9700x",name:"AMD Ryzen 7 9700X",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.5,power:88,cool:100,igpu:true,ig:6,box:false,g:80,m:66,tier:3,price:285},
+ {id:"r7-7800x3d",name:"AMD Ryzen 7 7800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.0,power:120,cool:110,igpu:true,ig:6,box:false,g:92,m:62,tier:3,price:360},
+ {id:"u5-245k",name:"Intel Core Ultra 5 245K",brand:"Intel",socket:"LGA1851",cores:14,threads:14,boost:5.2,power:159,cool:150,igpu:true,ig:8,box:false,g:75,m:68,tier:3,price:235},
+ {id:"u5-245kf",name:"Intel Core Ultra 5 245KF",brand:"Intel",socket:"LGA1851",cores:14,threads:14,boost:5.2,power:159,cool:150,igpu:false,box:false,g:75,m:68,tier:3,price:215},
+ {id:"r7-9800x3d",name:"AMD Ryzen 7 9800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.2,power:162,cool:140,igpu:true,ig:6,box:false,g:100,m:72,tier:4,price:450},
+ {id:"r9-9900x",name:"AMD Ryzen 9 9900X",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:82,m:85,tier:4,price:370},
+ {id:"u7-265k",name:"Intel Core Ultra 7 265K",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:true,ig:8,box:false,g:80,m:88,tier:4,price:285},
+ {id:"u7-265kf",name:"Intel Core Ultra 7 265KF",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:false,box:false,g:80,m:88,tier:4,price:265},
+ {id:"r7-9850x3d",name:"AMD Ryzen 7 9850X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:104,m:75,tier:5,price:499},
+ {id:"r9-9950x",name:"AMD Ryzen 9 9950X",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:84,m:100,tier:5,price:540},
+ {id:"r9-9950x3d",name:"AMD Ryzen 9 9950X3D",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:102,m:102,tier:5,price:690},
+ {id:"u9-285k",name:"Intel Core Ultra 9 285K",brand:"Intel",socket:"LGA1851",cores:24,threads:24,boost:5.7,power:250,cool:220,igpu:true,ig:8,box:false,g:83,m:100,tier:5,price:560}
+],
+board:[
+ {id:"asr-a620m",name:"ASRock A620M-HDV/M.2+",socket:"AM5",chipset:"A620",form:"mATX",ramType:"DDR5",slots:2,maxRam:96,m2:1,gen5m2:false,wifi:false,maxCpuPower:120,tier:1,price:80},
+ {id:"asr-b650m-pro",name:"ASRock B650M Pro RS WiFi",socket:"AM5",chipset:"B650",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:true,wifi:true,tier:2,price:145},
+ {id:"msi-b650-gp",name:"MSI B650 Gaming Plus WiFi",socket:"AM5",chipset:"B650",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:2,price:150},
+ {id:"gb-b850m-gx",name:"Gigabyte B850M Gaming X WiFi6E",socket:"AM5",chipset:"B850",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:true,wifi:true,tier:2,price:155},
+ {id:"gb-b850-elite",name:"Gigabyte B850 Aorus Elite WiFi7",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:215},
+ {id:"msi-b850-tomahawk",name:"MSI MAG B850 Tomahawk Max WiFi",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:230},
+ {id:"msi-x870-tomahawk",name:"MSI MAG X870 Tomahawk WiFi",socket:"AM5",chipset:"X870",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:285},
+ {id:"asus-b850i",name:"ASUS ROG Strix B850-I Gaming WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:310},
+ {id:"asus-x870e-e",name:"ASUS ROG Strix X870E-E Gaming WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:470},
+ {id:"msi-b760m-a",name:"MSI PRO B760M-A WiFi (DDR5)",socket:"LGA1700",chipset:"B760",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:1,price:125},
+ {id:"gb-b760-gx",name:"Gigabyte B760 Gaming X AX (DDR5)",socket:"LGA1700",chipset:"B760",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:false,wifi:true,tier:2,price:150},
+ {id:"msi-b860m-a",name:"MSI PRO B860M-A WiFi",socket:"LGA1851",chipset:"B860",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:false,wifi:true,tier:2,price:145},
+ {id:"asus-b860-tuf",name:"ASUS TUF Gaming B860-Plus WiFi",socket:"LGA1851",chipset:"B860",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:190},
+ {id:"msi-z890-tomahawk",name:"MSI MAG Z890 Tomahawk WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:290},
+ {id:"asus-z890i",name:"ASUS ROG Strix Z890-I Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:390},
+ {id:"asus-z890e",name:"ASUS ROG Strix Z890-E Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:480}
+],
+ram:[
+ {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:40,tier:1,price:115},
+ {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:230},
+ {id:"gs-2x16-6000",name:"G.Skill Flare X5 32 GB DDR5-6000",type:"DDR5",cap:32,modules:2,speed:6000,cl:30,tier:3,price:270},
+ {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:320},
+ {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:400},
+ {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:560},
+ {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",cap:96,modules:2,speed:6000,cl:30,tier:5,price:820},
+ {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:1350}
+],
+cooler:[
+ {id:"boxed",name:"Boxed-Kühler (liegt der CPU bei)",kind:"boxed",h:60,cap:90,sockets:ALL_SOCKETS,tier:0,price:0},
+ {id:"tr-ax120",name:"Thermalright Assassin X 120 Refined SE",kind:"air",h:148,cap:150,sockets:ALL_SOCKETS,tier:1,price:20},
+ {id:"ar-f36",name:"Arctic Freezer 36",kind:"air",h:159,cap:180,sockets:ALL_SOCKETS,tier:1,price:30},
+ {id:"tr-axp90",name:"Thermalright AXP90-X47 Full Copper",kind:"air",h:47,cap:95,sockets:ALL_SOCKETS,tier:2,price:35},
+ {id:"tr-pa120se",name:"Thermalright Peerless Assassin 120 SE",kind:"air",h:155,cap:220,sockets:ALL_SOCKETS,tier:2,price:38},
+ {id:"nc-l12s",name:"Noctua NH-L12S",kind:"air",h:70,cap:110,sockets:ALL_SOCKETS,tier:3,price:60},
+ {id:"ar-lf3-240",name:"Arctic Liquid Freezer III Pro 240",kind:"aio",rad:240,h:0,cap:250,sockets:ALL_SOCKETS,tier:3,price:85},
+ {id:"bq-drp5",name:"be quiet! Dark Rock Pro 5",kind:"air",h:168,cap:270,sockets:ALL_SOCKETS,tier:4,price:95},
+ {id:"ar-lf3-360",name:"Arctic Liquid Freezer III Pro 360",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:4,price:110},
+ {id:"nc-d15g2",name:"Noctua NH-D15 G2",kind:"air",h:168,cap:280,sockets:ALL_SOCKETS,tier:5,price:150},
+ {id:"nzxt-elite-360",name:"NZXT Kraken Elite 360 (LCD)",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:5,price:260}
+],
+gpu:[
+ {id:"none",name:"Keine Grafikkarte",none:true,brand:"",vram:0,power:0,len:0,rec:0,conn:"",g:0,tier:0,price:0},
+ {id:"arc-b570",name:"Intel Arc B570 10 GB",brand:"Intel",vram:10,power:150,len:230,rec:450,conn:"8-Pin",g:45,tier:1,price:220},
+ {id:"rtx5050",name:"NVIDIA GeForce RTX 5050 8 GB",brand:"NVIDIA",vram:8,power:130,len:200,rec:450,conn:"8-Pin",g:42,tier:1,price:250},
+ {id:"arc-b580",name:"Intel Arc B580 12 GB",brand:"Intel",vram:12,power:190,len:250,rec:550,conn:"8-Pin",g:52,tier:1,price:270},
+ {id:"rx9060xt-8",name:"AMD Radeon RX 9060 XT 8 GB",brand:"AMD",vram:8,power:160,len:240,rec:450,conn:"8-Pin",g:56,tier:1,price:290},
+ {id:"rtx5060",name:"NVIDIA GeForce RTX 5060 8 GB",brand:"NVIDIA",vram:8,power:145,len:230,rec:550,conn:"8-Pin",g:50,tier:1,price:300},
+ {id:"rx9060xt-16",name:"AMD Radeon RX 9060 XT 16 GB",brand:"AMD",vram:16,power:180,len:250,rec:500,conn:"8-Pin",g:58,tier:2,price:380},
+ {id:"rtx5060ti-16",name:"NVIDIA GeForce RTX 5060 Ti 16 GB",brand:"NVIDIA",vram:16,power:180,len:240,rec:600,conn:"8-Pin",g:60,tier:2,price:450},
+ {id:"rtx5070",name:"NVIDIA GeForce RTX 5070 12 GB",brand:"NVIDIA",vram:12,power:250,len:270,rec:650,conn:"12V-2x6",g:75,tier:3,price:580},
+ {id:"rx9070",name:"AMD Radeon RX 9070 16 GB",brand:"AMD",vram:16,power:220,len:290,rec:650,conn:"8-Pin",g:84,tier:3,price:600},
+ {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:92,tier:4,price:700},
+ {id:"rtx5070ti",name:"NVIDIA GeForce RTX 5070 Ti 16 GB",brand:"NVIDIA",vram:16,power:300,len:305,rec:750,conn:"12V-2x6",g:93,tier:4,price:850},
+ {id:"rtx5080",name:"NVIDIA GeForce RTX 5080 16 GB",brand:"NVIDIA",vram:16,power:360,len:315,rec:850,conn:"12V-2x6",g:105,tier:5,price:1200},
+ {id:"rtx5090",name:"NVIDIA GeForce RTX 5090 32 GB",brand:"NVIDIA",vram:32,power:575,len:335,rec:1000,conn:"12V-2x6",g:150,tier:5,price:2900}
+],
+ssd:[
+ {id:"kingston-nv3-1",name:"Kingston NV3 1 TB",cap:1000,gen:4,read:6000,tier:1,price:85},
+ {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:115},
+ {id:"wd-sn7100-2",name:"WD Black SN7100 2 TB",cap:2000,gen:4,read:7250,tier:3,price:190},
+ {id:"s990evo-2",name:"Samsung 990 EVO Plus 2 TB",cap:2000,gen:4,read:7250,tier:3,price:200},
+ {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:290},
+ {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:360},
+ {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:470},
+ {id:"s9100-4",name:"Samsung 9100 Pro 4 TB",cap:4000,gen:5,read:14800,tier:5,price:560}
+],
+psu:[
+ {id:"cm-mwe-650",name:"Cooler Master MWE Gold 650 V2",watt:650,eff:"Gold",form:"ATX",atx3:false,tier:1,price:70},
+ {id:"bq-pp12-550",name:"be quiet! Pure Power 12 550 W",watt:550,eff:"Gold",form:"ATX",atx3:true,tier:1,price:75},
+ {id:"bq-pp12-650",name:"be quiet! Pure Power 12 650 W",watt:650,eff:"Gold",form:"ATX",atx3:true,tier:2,price:85},
+ {id:"bq-pp12-750",name:"be quiet! Pure Power 12 750 W",watt:750,eff:"Gold",form:"ATX",atx3:true,tier:2,price:100},
+ {id:"cor-rm850e",name:"Corsair RM850e",watt:850,eff:"Gold",form:"ATX",atx3:true,tier:3,price:125},
+ {id:"cor-sf750",name:"Corsair SF750",watt:750,eff:"Platinum",form:"SFX",atx3:true,tier:4,price:165},
+ {id:"bq-sp12-1000",name:"be quiet! Straight Power 12 1000 W",watt:1000,eff:"Platinum",form:"ATX",atx3:true,tier:4,price:200},
+ {id:"cor-sf1000",name:"Corsair SF1000",watt:1000,eff:"Platinum",form:"SFX",atx3:true,tier:5,price:220},
+ {id:"sea-gx1200",name:"Seasonic Vertex GX-1200",watt:1200,eff:"Gold",form:"ATX",atx3:true,tier:4,price:240},
+ {id:"cor-hx1500i",name:"Corsair HX1500i",watt:1500,eff:"Platinum",form:"ATX",atx3:true,tier:5,price:330}
+],
+"case":[
+ {id:"fd-pop-air",name:"Fractal Design Pop Air",form:"ATX",gpu:405,cooler:170,rads:[240,280,360],psu:["ATX"],tier:1,price:80},
+ {id:"ll-a3",name:"Lian Li A3-mATX",form:"mATX",gpu:415,cooler:165,rads:[240,280,360],psu:["ATX","SFX"],tier:2,price:85},
+ {id:"montech-903",name:"Montech AIR 903 MAX",form:"ATX",gpu:400,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:95},
+ {id:"ll-lancool217",name:"Lian Li Lancool 217",form:"ATX",gpu:410,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:115},
+ {id:"cm-nr200p",name:"Cooler Master NR200P V2",form:"ITX",gpu:336,cooler:155,rads:[240,280],psu:["SFX"],tier:3,price:110},
+ {id:"fd-north",name:"Fractal Design North",form:"ATX",gpu:355,cooler:170,rads:[240,280,360],psu:["ATX"],tier:3,price:150},
+ {id:"ll-o11-evo",name:"Lian Li O11 Dynamic EVO",form:"ATX",gpu:426,cooler:167,rads:[240,280,360],psu:["ATX"],tier:4,price:165},
+ {id:"bq-sb802",name:"be quiet! Silent Base 802",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:185},
+ {id:"fd-terra",name:"Fractal Design Terra",form:"ITX",gpu:322,cooler:77,rads:[],psu:["SFX"],tier:4,price:190}
+]};
+
+const CATS=[
+ {k:"cpu",label:"Prozessor",code:"CPU"},
+ {k:"cooler",label:"CPU-Kühler",code:"Kühlung"},
+ {k:"board",label:"Mainboard",code:"Board"},
+ {k:"ram",label:"Arbeitsspeicher",code:"RAM"},
+ {k:"gpu",label:"Grafikkarte",code:"GPU"},
+ {k:"ssd",label:"SSD",code:"Speicher"},
+ {k:"psu",label:"Netzteil",code:"Strom"},
+ {k:"case",label:"Gehäuse",code:"Gehäuse"}
+];
+const CAT_LABEL=Object.fromEntries(CATS.map(c=>[c.k,c.label]));
+const FILL_ORDER=["cpu","board","ram","cooler","gpu","ssd","case","psu"];
+const FORM_FIT={ATX:["ATX","mATX","ITX"],mATX:["mATX","ITX"],ITX:["ITX"]};
+const WEIGHTS={
+ gaming:{cpu:.18,board:.10,ram:.14,cooler:.03,gpu:.36,ssd:.07,case:.05,psu:.07},
+ office:{cpu:.25,board:.15,ram:.20,cooler:.03,gpu:.05,ssd:.14,case:.09,psu:.09},
+ creator:{cpu:.28,board:.12,ram:.18,cooler:.05,gpu:.20,ssd:.09,case:.04,psu:.04}
+};
+const PROFILE_NAME={gaming:"Gaming",office:"Büro & Alltag",creator:"Kreativ & Workstation"};
+const PRESETS=[
+ {id:"office",name:"Büro & Zuhause",hint:"ohne Grafikkarte",profile:"office",budget:null,user:{cpu:"r5-8600g"}},
+ {id:"fhd",name:"Einstieg Full HD",hint:"Budget 1.100 €",profile:"gaming",budget:1100,user:{gpu:"rtx5060"}},
+ {id:"wqhd",name:"Gaming WQHD",hint:"9800X3D + 9070 XT",profile:"gaming",budget:null,user:{cpu:"r7-9800x3d",gpu:"rx9070xt"}},
+ {id:"4k",name:"4K-Enthusiast",hint:"RTX 5090",profile:"gaming",budget:null,user:{cpu:"r7-9850x3d",gpu:"rtx5090"}},
+ {id:"ws",name:"Workstation",hint:"16 Kerne, 96 GB",profile:"creator",budget:null,user:{cpu:"r9-9950x",ram:"gs-2x48-6000"}},
+ {id:"itx",name:"Kompakt-ITX",hint:"NR200P + RTX 5070",profile:"gaming",budget:null,user:{"case":"cm-nr200p",gpu:"rtx5070"}}
+];
+
+const BY={};for(const c in DB){BY[c]={};for(const p of DB[c])BY[c][p.id]=p;}
+const get=(cat,id)=>BY[cat]&&BY[cat][id];
+const eurFmt=new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+const eur=n=>eurFmt.format(n);
+const esc=s=>String(s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const $=s=>document.querySelector(s);
+
+/* ---------- Zustand ---------- */
+const KEY="pcwerkbank.v1";
+let state={profile:"gaming",budget:null,auto:true,picks:{}};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function load(){
+  try{
+    const s=JSON.parse(localStorage.getItem(KEY)||"null");
+    if(!s||!s.picks)return false;
+    const picks={};
+    for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
+    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks};
+    return true;
+  }catch(e){return false;}
+}
+const resolve=picks=>{const o={};for(const c in picks){if(picks[c])o[c]=get(c,picks[c].id);}return o;};
+const userOnly=()=>{const o={};for(const c in state.picks)if(state.picks[c].src==="user")o[c]=state.picks[c];return o;};
+
+/* ---------- Strombedarf ---------- */
+function estLoad(parts){return (parts.cpu?parts.cpu.power:0)+(parts.gpu&&!parts.gpu.none?parts.gpu.power:0)+75;}
+function recPsu(parts){
+  const byLoad=Math.ceil(estLoad(parts)*1.3/50)*50;
+  return Math.max(byLoad,parts.gpu&&!parts.gpu.none?parts.gpu.rec:0,450);
+}
+
+/* ---------- Kompatibilitätsprüfung ---------- */
+function checkAll(parts,profile){
+  const I=[];const add=(level,cats,msg)=>I.push({level,cats,msg});
+  const {cpu,board,ram,gpu,ssd,psu,cooler}=parts;const cs=parts["case"];
+  const hasGpu=gpu&&!gpu.none;
+  if(cpu&&board&&cpu.socket!==board.socket)add("error",["cpu","board"],`Sockel passt nicht: ${cpu.name} braucht ${cpu.socket}, das Mainboard hat ${board.socket}.`);
+  if(board&&ram){
+    if(ram.type!==board.ramType)add("error",["ram","board"],`Das Mainboard nimmt nur ${board.ramType} auf.`);
+    if(ram.modules>board.slots)add("error",["ram","board"],`${ram.modules} Module, aber nur ${board.slots} Steckplätze auf dem Mainboard.`);
+    if(ram.cap>board.maxRam)add("error",["ram","board"],`Das Mainboard unterstützt höchstens ${board.maxRam} GB.`);
+  }
+  if(board&&cs&&!FORM_FIT[cs.form].includes(board.form))add("error",["board","case"],`${board.form}-Mainboard passt nicht ins Gehäuse (nimmt höchstens ${cs.form} auf).`);
+  if(hasGpu&&cs&&gpu.len>cs.gpu)add("error",["gpu","case"],`Grafikkarte ist ca. ${gpu.len} mm lang, ins Gehäuse passen ${cs.gpu} mm.`);
+  if(cooler&&cpu){
+    if(cooler.kind==="boxed"&&!cpu.box)add("error",["cooler","cpu"],`${cpu.name} wird ohne Kühler verkauft.`);
+    else if(!cooler.sockets.includes(cpu.socket))add("error",["cooler","cpu"],`Kühler hat keine Halterung für ${cpu.socket}.`);
+    else if(cooler.cap<cpu.cool)add("warn",["cooler","cpu"],`Kühler schafft ca. ${cooler.cap} W, die CPU braucht etwa ${cpu.cool} W. Sie taktet dann herunter und wird laut${cooler.h&&cooler.h<80?"; Eco-Modus im BIOS hilft":""}.`);
+  }
+  if(cooler&&cs){
+    if(cooler.kind==="aio"&&!cs.rads.includes(cooler.rad))add("error",["cooler","case"],cs.rads.length?`Gehäuse nimmt Radiatoren mit ${cs.rads.join(" / ")} mm auf, nicht ${cooler.rad} mm.`:`Gehäuse hat keinen Platz für einen Radiator.`);
+    if(cooler.kind!=="aio"&&cooler.h>cs.cooler)add("error",["cooler","case"],`Kühler ist ${cooler.h} mm hoch, das Gehäuse erlaubt ${cs.cooler} mm.`);
+  }
+  if(psu&&cs){
+    if(psu.form==="ATX"&&!cs.psu.includes("ATX"))add("error",["psu","case"],`Gehäuse nimmt nur SFX-Netzteile auf.`);
+    if(psu.form==="SFX"&&!cs.psu.includes("SFX"))add("info",["psu","case"],`SFX-Netzteil im ATX-Gehäuse: Adapterblech nötig (liegt meist bei).`);
+  }
+  if(psu&&(cpu||hasGpu)){
+    const loadW=estLoad(parts),rec=recPsu(parts);
+    if(psu.watt<loadW)add("error",["psu","gpu","cpu"],`Netzteil (${psu.watt} W) liefert weniger als die geschätzte Last von ${loadW} W.`);
+    else if(psu.watt<rec)add("warn",["psu","gpu","cpu"],`Für Lastspitzen sind ${rec} W empfohlen, gewählt sind ${psu.watt} W.`);
+  }
+  if(hasGpu&&psu&&gpu.conn==="12V-2x6"&&!psu.atx3)add("info",["psu","gpu"],`Die Karte nutzt 12V-2x6. Das Netzteil hat keinen nativen Anschluss, der Adapter der Karte wird gebraucht.`);
+  if(gpu&&gpu.none&&cpu&&!cpu.igpu)add("error",["gpu","cpu"],`${cpu.name} hat keine integrierte Grafik. Ohne Grafikkarte gibt es kein Bild.`);
+  if(cpu&&board&&board.maxCpuPower&&cpu.power>board.maxCpuPower)add("warn",["cpu","board"],`Die Spannungsversorgung des ${board.chipset}-Boards ist für ${cpu.power} W knapp; ein B650/B850-Board ist die bessere Wahl.`);
+  if(ssd&&board&&ssd.gen===5&&!board.gen5m2)add("info",["ssd","board"],`Das Board hat keinen PCIe-5.0-M.2-Platz; die SSD läuft mit PCIe-4.0-Tempo.`);
+  if(cpu&&hasGpu&&gpu.g>=90&&cpu.g<78)add("warn",["cpu","gpu"],`Die CPU bremst diese Grafikkarte in Full HD und WQHD spürbar aus.`);
+  if(cpu&&hasGpu&&profile==="gaming"&&gpu.g<=60&&cpu.tier>=5)add("info",["cpu","gpu"],`Viel CPU für wenig GPU: Für Spiele bringt Budget in der Grafikkarte mehr.`);
+  if(hasGpu&&profile==="gaming"&&gpu.vram<=8)add("info",["gpu"],`8 GB Grafikspeicher reichen für Full HD; in WQHD müssen Texturen in neuen Spielen oft herunter.`);
+  if(ram&&profile!=="office"&&ram.cap<32)add("info",["ram"],`Für ${PROFILE_NAME[profile]} sind 32 GB Arbeitsspeicher empfehlenswert.`);
+  if(ram&&profile==="creator"&&ram.cap<64&&cpu&&cpu.m>=85)add("info",["ram"],`Bei ${cpu.cores} Kernen und Video/3D lohnen sich 64 GB oder mehr.`);
+  if(cpu&&ram&&cpu.socket==="LGA1851"&&ram.speed<6400)add("info",["ram","cpu"],`Core Ultra profitiert von DDR5-6400 oder schneller.`);
+  if(cpu&&ram&&cpu.brand==="AMD"&&ram.speed>6000)add("info",["ram","cpu"],`Bei Ryzen ist DDR5-6000 CL30 der Sweet Spot; schneller bringt kaum mehr.`);
+  if(cpu&&cpu.socket==="LGA1700")add("info",["cpu","board"],`Core 14. Generation: vor dem ersten Start BIOS mit Intel-Microcode 0x12B oder neuer einspielen.`);
+  return I;
+}
+function issuesFor(cat,part,parts,profile){
+  const test=Object.assign({},parts,{[cat]:part});
+  return checkAll(test,profile).filter(i=>i.cats.includes(cat));
+}
+
+/* ---------- Ergänzungslogik ---------- */
+function targetTier(picks){
+  if(state.budget){const b=state.budget;return b<900?1:b<1400?2:b<2100?3:b<3200?4:5;}
+  const ts=[];for(const c in picks){if(picks[c].src==="user"){const p=get(c,picks[c].id);if(p&&p.tier>0)ts.push(p.tier);}}
+  if(ts.length)return clamp(Math.round(ts.reduce((a,b)=>a+b,0)/ts.length),1,5);
+  return {gaming:3,office:1,creator:4}[state.profile];
+}
+function catTier(cat,T){
+  const pr=state.profile;
+  switch(cat){
+    case "board":case "case":return clamp(T-1,1,4);
+    case "ram":return pr==="gaming"?Math.min(T,3):T;
+    case "ssd":return pr==="office"?Math.min(T,2):pr==="gaming"?(T>=5?4:Math.min(T,3)):T;
+    case "gpu":return pr==="creator"?Math.max(1,T-1):T;
+    default:return T;
+  }
+}
+function score(cat,p){
+  const pr=state.profile;
+  switch(cat){
+    case "cpu":return pr==="gaming"?p.g:pr==="creator"?p.m+(p.igpu?2:0):(p.g+p.m)/2+(p.ig||0);
+    case "gpu":return p.none?0:(pr==="creator"&&p.brand==="NVIDIA"?p.g*1.25:p.g);
+    case "ram":return p.cap+p.speed/1000;
+    case "ssd":return p.cap/1000+p.tier;
+    case "board":return p.tier+(p.wifi?.3:0);
+    case "cooler":return p.cap;
+    default:return p.tier;
+  }
+}
+function value(cat,p){const k=cat==="cpu"?3:cat==="gpu"?2:1;return Math.pow(score(cat,p),k)/Math.max(p.price,1);}
+function ramTarget(T){
+  const pr=state.profile;
+  if(pr==="office")return T<=1?16:32;
+  if(pr==="gaming")return T<=1?16:32;
+  return T<=2?32:T<=4?64:96;
+}
+function prefer(cat,pool,parts,T){
+  const f=pred=>{const r=pool.filter(pred);return r.length?r:pool;};
+  const pr=state.profile;
+  if(cat==="cpu"&&pr==="office")return f(p=>p.igpu);
+  if(cat==="gpu"){
+    if(pr==="office")return (parts.cpu&&parts.cpu.igpu)?f(p=>p.none):f(p=>!p.none&&p.tier<=2);
+    return f(p=>!p.none);
+  }
+  if(cat==="ram"){const t=ramTarget(T);return f(p=>p.cap===t);}
+  if(cat==="cooler")return (pr==="office"&&parts.cpu&&parts.cpu.box)?f(p=>p.kind==="boxed"):f(p=>p.kind!=="boxed");
+  if(cat==="ssd"&&(pr==="creator"||(pr==="gaming"&&T>=3)))return f(p=>p.cap>=2000);
+  return pool;
+}
+function pickCooler(pool,parts,T){
+  const need=parts.cpu?parts.cpu.cool:120;
+  let c=pool.filter(p=>p.cap>=need*1.1);if(!c.length)c=pool.filter(p=>p.cap>=need);
+  if(!c.length)return pool.slice().sort((a,b)=>b.cap-a.cap)[0];
+  const t=c.filter(p=>p.tier>=T-2||p.kind==="boxed");if(t.length)c=t;
+  return c.slice().sort((a,b)=>a.price-b.price)[0];
+}
+function pickPsu(pool,parts,T){
+  const rec=recPsu(parts);
+  let c=pool.filter(p=>p.watt>=rec);
+  if(!c.length)return pool.slice().sort((a,b)=>b.watt-a.watt)[0];
+  if(parts.gpu&&parts.gpu.conn==="12V-2x6"){const a=c.filter(p=>p.atx3);if(a.length)c=a;}
+  const t=c.filter(p=>p.tier>=T-2);if(t.length)c=t;
+  return c.slice().sort((a,b)=>a.price-b.price)[0];
+}
+function choose(cat,picks,T,alloc){
+  const parts=resolve(picks);
+  const ev=DB[cat].map(p=>({p,iss:issuesFor(cat,p,parts,state.profile)}));
+  const noErr=ev.filter(e=>!e.iss.some(i=>i.level==="error"));
+  const clean=noErr.filter(e=>!e.iss.some(i=>i.level==="warn"));
+  let pool=(clean.length?clean:noErr.length?noErr:ev).map(e=>e.p);
+  pool=prefer(cat,pool,parts,T);
+  if(cat==="cooler")return pickCooler(pool,parts,T);
+  if(cat==="psu")return pickPsu(pool,parts,T);
+  if(pool.length===1)return pool[0];
+  if(alloc!=null){
+    const within=pool.filter(p=>p.price<=alloc);
+    if(within.length)return within.slice().sort((a,b)=>value(cat,b)-value(cat,a)||b.tier-a.tier)[0];
+    return pool.slice().sort((a,b)=>a.price-b.price)[0];
+  }
+  const tc=catTier(cat,T);
+  return pool.slice().sort((a,b)=>Math.abs(a.tier-tc)-Math.abs(b.tier-tc)||value(cat,b)-value(cat,a))[0];
+}
+function fillMissing(base){
+  const p=Object.assign({},base);
+  const T=targetTier(p);
+  let remaining=null;
+  if(state.budget){remaining=state.budget;for(const c in p)remaining-=get(c,p[c].id).price;}
+  const missing=FILL_ORDER.filter(c=>!p[c]);
+  missing.forEach((cat,idx)=>{
+    let alloc=null;
+    if(remaining!=null){
+      const w=WEIGHTS[state.profile];const rest=missing.slice(idx);
+      const wsum=rest.reduce((s,c)=>s+w[c],0);
+      alloc=Math.max(0,remaining*w[cat]/wsum);
+    }
+    const ch=choose(cat,p,T,alloc);
+    if(ch){p[cat]={id:ch.id,src:"auto"};if(remaining!=null)remaining-=ch.price;}
+  });
+  return p;
+}
+function recompute(){
+  if(state.auto)state.picks=fillMissing(userOnly());
+  save();render();
+}
+
+/* ---------- Darstellung ---------- */
+function fmtCap(gb){return gb>=1000?(gb/1000).toLocaleString("de-DE")+" TB":gb+" GB";}
+function spec(cat,p){
+  switch(cat){
+    case "cpu":return `${p.cores} Kerne / ${p.threads} Threads · bis ${p.boost.toLocaleString("de-DE",{minimumFractionDigits:1})} GHz · ${p.socket} · ${p.igpu?"mit iGPU":"ohne iGPU"}${p.box?" · Kühler inkl.":""}`;
+    case "cooler":return p.kind==="boxed"?"Serienkühler, nur bei CPUs mit Kühler im Karton":p.kind==="aio"?`AiO-Wasserkühlung · Radiator ${p.rad} mm · bis ca. ${p.cap} W`:`Luftkühler · ${p.h} mm hoch · bis ca. ${p.cap} W`;
+    case "board":return `${p.socket} · ${p.chipset} · ${p.form} · ${p.slots}× DDR5 · ${p.m2}× M.2${p.gen5m2?" (PCIe 5.0)":""}${p.wifi?" · WLAN":""}`;
+    case "ram":return `${p.cap} GB (${p.modules}×${p.cap/p.modules} GB) · DDR5-${p.speed} · CL${p.cl}`;
+    case "gpu":return p.none?"Bild über die Prozessor-Grafik (iGPU)":`${p.vram} GB · ${p.power} W · ${p.len} mm · ${p.conn}`;
+    case "ssd":return `${fmtCap(p.cap)} · NVMe PCIe ${p.gen}.0 · bis ${p.read.toLocaleString("de-DE")} MB/s`;
+    case "psu":return `${p.watt} W · 80 PLUS ${p.eff} · ${p.form}${p.atx3?" · ATX 3.1 mit 12V-2x6":""}`;
+    case "case":return `bis ${p.form} · GPU ≤ ${p.gpu} mm · Kühler ≤ ${p.cooler} mm · ${p.rads.length?"Radiator "+p.rads.join("/")+" mm":"kein Radiator"} · ${p.psu.join("/")}-Netzteil`;
+  }
+  return "";
+}
+function tierDots(t){if(!t)return "";let s='<span class="tier" title="Klasse '+t+' von 5" aria-label="Klasse '+t+' von 5">';for(let i=1;i<=5;i++)s+='<i class="'+(i<=t?"on":"")+'"></i>';return s+"</span>";}
+function priceLink(p){if(!p||p.price===0)return "";return `<span class="links"><a href="https://geizhals.de/?fs=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
+const SEV_LABEL={error:"Konflikt",warn:"Achtung",info:"Hinweis",ok:"Passt"};
+
+function renderSlots(parts,issues){
+  const html=CATS.map(c=>{
+    const pick=state.picks[c.k];const p=pick&&get(c.k,pick.id);
+    const own=issues.filter(i=>i.cats.includes(c.k)&&(i.level==="error"||i.level==="warn"));
+    const cat=`<div class="slot-cat"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></div>`;
+    if(!p){
+      return `<div class="slot">${cat}<div class="slot-main"><span class="slot-empty">Noch nichts gewählt</span></div>
+      <div class="slot-side"><span class="price">–</span><div class="actions"><button type="button" class="btn primary" data-act="pick" data-cat="${c.k}">Auswählen</button></div></div></div>`;
+    }
+    const tag=pick.src==="user"?'<span class="tag user">Deine Wahl</span>':'<span class="tag auto">Ergänzt</span>';
+    const msgs=own.slice(0,2).map(i=>`<div class="slot-msg ${i.level}"><span class="sev ${i.level}">${SEV_LABEL[i.level]}</span><span>${esc(i.msg)}</span></div>`).join("");
+    const acts=[`<button type="button" class="btn" data-act="pick" data-cat="${c.k}">Ändern</button>`];
+    if(pick.src==="auto")acts.push(`<button type="button" class="btn" data-act="keep" data-cat="${c.k}" title="Als eigene Wahl festhalten, damit es nicht mehr automatisch getauscht wird">Behalten</button>`);
+    else acts.push(`<button type="button" class="btn ghost" data-act="remove" data-cat="${c.k}" aria-label="${esc(c.label)} entfernen">Entfernen</button>`);
+    return `<div class="slot">${cat}
+      <div class="slot-main"><div class="slot-name">${esc(p.name)} ${tag} ${tierDots(p.tier)}</div>
+        <div class="slot-spec">${esc(spec(c.k,p))}</div>${msgs}${priceLink(p)}</div>
+      <div class="slot-side"><span class="price">${p.price?eur(p.price):"0 €"}</span><div class="actions">${acts.join("")}</div></div></div>`;
+  }).join("");
+  $("#slots").innerHTML=html;
+}
+function gamingLabel(gpu,cpu){
+  if(!gpu)return null;
+  if(gpu.none){const ig=cpu&&cpu.ig||0;return ig>=15?"Leichte Spiele in Full HD, niedrige Details":"Büro, Video, Web – keine aktuellen Spiele";}
+  const s=gpu.g;
+  return s<45?"Full HD, mittlere Details":s<60?"Full HD, hohe Details":s<80?"WQHD, hohe Details · Full HD Ultra":s<100?"WQHD Ultra · 4K mittel":s<120?"4K, hohe Details":"4K Ultra mit Raytracing";
+}
+function renderSummary(parts,issues){
+  let total=0,autoSum=0,count=0;
+  for(const c in state.picks){const p=get(c,state.picks[c].id);total+=p.price;count++;if(state.picks[c].src==="auto")autoSum+=p.price;}
+  const missing=CATS.filter(c=>!state.picks[c.k]).map(c=>c.label);
+  const b=state.budget;
+  let budgetHtml="";
+  if(b){
+    const pct=Math.min(100,total/b*100);const over=total>b;
+    budgetHtml=`<div class="kv"><span>Budget ${eur(b)}</span><span class="num">${over?"+"+eur(total-b)+" drüber":eur(b-total)+" übrig"}</span></div>
+      <div class="meter ${over?"bad":"ok"}" role="img" aria-label="${Math.round(total/b*100)} Prozent des Budgets"><span style="width:${pct}%"></span></div>`;
+  }
+  const {cpu,gpu,psu}=parts;
+  const gl=gamingLabel(gpu,cpu);
+  let perf="";
+  if(cpu||gpu){
+    perf=`<div class="card"><h2>Leistungsbild <span class="eyebrow">Richtwerte</span></h2>
+      ${gl?`<div class="perf-label">${esc(gl)}</div>`:""}
+      ${gpu&&!gpu.none?`<div class="kv"><span>Grafik (RTX 5080 = 105)</span><span class="num">${gpu.g}</span></div><div class="meter"><span style="width:${Math.min(100,gpu.g/150*100)}%"></span></div>`:""}
+      ${cpu?`<div class="kv"><span>Spiele-CPU</span><span class="num">${cpu.g}</span></div><div class="meter"><span style="width:${Math.min(100,cpu.g/105*100)}%"></span></div>
+      <div class="kv"><span>Multi-Core (Ryzen 9 9950X = 100)</span><span class="num">${cpu.m}</span></div><div class="meter"><span style="width:${Math.min(100,cpu.m/105*100)}%"></span></div>`:""}
+    </div>`;
+  }
+  let power="";
+  if(cpu||(gpu&&!gpu.none)){
+    const loadW=estLoad(parts),rec=recPsu(parts);
+    const pct=psu?Math.min(100,loadW/psu.watt*100):0;
+    const cls=!psu?"":loadW>psu.watt?"bad":psu.watt<rec?"warn":"ok";
+    power=`<div class="card"><h2>Stromversorgung <span class="eyebrow">Volllast</span></h2>
+      <div class="kv"><span>Geschätzte Last</span><span class="num">ca. ${loadW} W</span></div>
+      <div class="kv"><span>Empfohlenes Netzteil</span><span class="num">ab ${rec} W</span></div>
+      ${psu?`<div class="kv"><span>Gewählt</span><span class="num">${psu.watt} W · ${Math.round(loadW/psu.watt*100)} % Auslastung</span></div><div class="meter ${cls}"><span style="width:${pct}%"></span></div>`:""}
+    </div>`;
+  }
+  const order={error:0,warn:1,info:2};
+  const list=issues.slice().sort((a,b)=>order[a.level]-order[b.level]);
+  const errs=list.filter(i=>i.level==="error").length,warns=list.filter(i=>i.level==="warn").length;
+  let items=list.map(i=>`<li><span class="sev ${i.level}">${SEV_LABEL[i.level]}</span><span>${esc(i.msg)}</span></li>`).join("");
+  if(missing.length)items=`<li><span class="sev info">Offen</span><span>Noch nicht gewählt: ${esc(missing.join(", "))}.</span></li>`+items;
+  if(!errs&&!warns&&count)items=`<li><span class="sev ok">Passt</span><span>Alle gewählten Teile passen zusammen.</span></li>`+items;
+  const status=errs?`${errs} Konflikt${errs>1?"e":""}`:warns?`${warns} Hinweis${warns>1?"e":""} zur Abstimmung`:"keine Konflikte";
+  $("#summary").innerHTML=`
+    <div class="card">
+      <span class="eyebrow">Gesamtpreis · ${count} von 8 Teilen</span>
+      <div class="total">${eur(total)}</div>
+      <div class="subline">${autoSum?`davon ${eur(autoSum)} für ergänzte Teile · `:""}${PROFILE_NAME[state.profile]}</div>
+      ${budgetHtml}
+      <div class="row-btns">
+        <button type="button" class="btn primary" data-act="copy">Teileliste kopieren</button>
+        ${!state.auto&&missing.length?`<button type="button" class="btn" data-act="fill">Fehlende ergänzen</button>`:""}
+        <button type="button" class="btn" data-act="reset">Alles leeren</button>
+      </div>
+      <span class="toast" id="toast" role="status" aria-live="polite"></span>
+      <textarea id="copyFallback" hidden readonly aria-label="Teileliste zum Kopieren"></textarea>
+    </div>
+    <div class="card"><h2>Kompatibilität <span class="eyebrow">${esc(status)}</span></h2><ul class="issues">${items}</ul></div>
+    ${perf}${power}`;
+}
+function render(){
+  const parts=resolve(state.picks);
+  const issues=checkAll(parts,state.profile);
+  renderSlots(parts,issues);renderSummary(parts,issues);
+  document.querySelectorAll("#profileSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.profile===state.profile)));
+  const bi=$("#budget");if(document.activeElement!==bi)bi.value=state.budget||"";
+  $("#autofill").checked=state.auto;
+}
+
+/* ---------- Auswahl-Schublade ---------- */
+let pickerCat=null,lastFocus=null;
+function openPicker(cat){
+  pickerCat=cat;lastFocus=document.activeElement;
+  $("#pickerTitle").textContent=CAT_LABEL[cat]+" wählen";
+  $("#pSearch").value="";
+  $("#picker").hidden=false;
+  renderPicker();
+  setTimeout(()=>$("#pSearch").focus(),0);
+}
+function closePicker(){$("#picker").hidden=true;pickerCat=null;if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+function renderPicker(){
+  const cat=pickerCat;if(!cat)return;
+  const ctxPicks=state.auto?userOnly():Object.assign({},state.picks);
+  delete ctxPicks[cat];
+  const ctx=resolve(ctxPicks);
+  const T=targetTier(ctxPicks);
+  const curPick=state.picks[cat];
+  const rec=(curPick&&curPick.src==="auto")?get(cat,curPick.id):choose(cat,ctxPicks,T,null);
+  $("#pNote").textContent=state.auto?"Geprüft gegen deine eigenen Teile. Ergänzte Teile passen sich nach der Auswahl automatisch an.":"Geprüft gegen alle Teile der aktuellen Liste.";
+  const q=$("#pSearch").value.trim().toLowerCase();
+  const onlyOk=$("#pCompat").checked;
+  const sort=$("#pSort").value;
+  const cur=state.picks[cat]&&state.picks[cat].id;
+  let rows=DB[cat].map(p=>{
+    const iss=issuesFor(cat,p,ctx,state.profile);
+    const lvl=iss.some(i=>i.level==="error")?"error":iss.some(i=>i.level==="warn")?"warn":"ok";
+    return {p,iss,lvl};
+  });
+  if(q)rows=rows.filter(r=>(r.p.name+" "+spec(cat,r.p)).toLowerCase().includes(q));
+  const hidden=onlyOk?rows.filter(r=>r.lvl==="error").length:0;
+  if(onlyOk)rows=rows.filter(r=>r.lvl!=="error");
+  const perf=p=>cat==="cpu"?score("cpu",p):cat==="gpu"?p.g:p.tier*1000+score(cat,p);
+  rows.sort((a,b)=>{
+    if(sort==="price")return a.p.price-b.p.price;
+    if(sort==="priceDesc")return b.p.price-a.p.price;
+    if(sort==="perf")return perf(b.p)-perf(a.p);
+    const ra=a.p===rec?0:1,rb=b.p===rec?0:1;const lv={ok:0,warn:1,error:2};
+    return ra-rb||lv[a.lvl]-lv[b.lvl]||a.p.price-b.p.price;
+  });
+  const html=rows.map(r=>{
+    const p=r.p;
+    const first=r.iss.find(i=>i.level==="error")||r.iss.find(i=>i.level==="warn");
+    const st=r.lvl==="ok"?`<span class="status ok">✓ Passt zu deinen Teilen</span>`:`<span class="status ${r.lvl}"><span class="sev ${r.lvl}">${SEV_LABEL[r.lvl]}</span>${esc(first.msg)}</span>`;
+    return `<button type="button" class="opt${r.lvl==="error"?" dim":""}" data-act="choose" data-id="${esc(p.id)}" aria-current="${p.id===cur}">
+      <span class="slot-main"><span class="slot-name">${esc(p.name)} ${p===rec?'<span class="tag rec">Empfohlen</span>':""} ${tierDots(p.tier)}</span>
+      <span class="slot-spec">${esc(spec(cat,p))}</span></span>
+      <span class="opt-price"><span class="price">${p.price?eur(p.price):"0 €"}</span></span>
+      ${st}</button>`;
+  }).join("");
+  $("#plist").innerHTML=(html||`<div class="empty-list">Keine passenden Teile gefunden.</div>`)+
+    (hidden?`<div class="empty-list">${hidden} unpassende Teile ausgeblendet. „Nur passende“ abwählen, um sie zu sehen.</div>`:"");
+}
+
+/* ---------- Teileliste kopieren ---------- */
+function buildText(){
+  const parts=resolve(state.picks);let total=0;
+  const lines=[`PC-Werkbank – Konfiguration (${PROFILE_NAME[state.profile]})`,""];
+  for(const c of CATS){const p=parts[c.k];if(!p)continue;total+=p.price;lines.push(`${c.label}: ${p.name} – ${p.price?eur(p.price):"0 €"}`);}
+  lines.push("",`Summe: ${eur(total)} (Richtpreise, Stand November 2026)`);
+  if(parts.cpu||parts.gpu)lines.push(`Geschätzte Last: ca. ${estLoad(parts)} W, empfohlenes Netzteil ab ${recPsu(parts)} W`);
+  const iss=checkAll(parts,state.profile).filter(i=>i.level!=="info");
+  if(iss.length){lines.push("","Zu prüfen:");iss.forEach(i=>lines.push("- "+i.msg));}
+  return lines.join("\n");
+}
+function copyList(){
+  const txt=buildText();const t=$("#toast");
+  const fallback=()=>{const ta=$("#copyFallback");ta.hidden=false;ta.value=txt;ta.focus();ta.select();t.textContent="Text markiert – mit Strg+C bzw. ⌘+C kopieren.";};
+  try{
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(()=>{t.textContent="Teileliste kopiert.";},fallback);
+    }else fallback();
+  }catch(e){fallback();}
+}
+
+/* ---------- Ereignisse ---------- */
+function applyPreset(id){
+  const pr=PRESETS.find(x=>x.id===id);if(!pr)return;
+  state.profile=pr.profile;state.budget=pr.budget;state.auto=true;state.picks={};
+  for(const c in pr.user)state.picks[c]={id:pr.user[c],src:"user"};
+  recompute();
+}
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act],[data-profile],[data-preset]");if(!el)return;
+  if(el.dataset.profile){state.profile=el.dataset.profile;recompute();return;}
+  if(el.dataset.preset){applyPreset(el.dataset.preset);return;}
+  const act=el.dataset.act,cat=el.dataset.cat;
+  if(act==="pick")openPicker(cat);
+  else if(act==="close")closePicker();
+  else if(act==="choose"){state.picks[pickerCat]={id:el.dataset.id,src:"user"};closePicker();recompute();}
+  else if(act==="keep"){state.picks[cat].src="user";save();render();}
+  else if(act==="remove"){delete state.picks[cat];recompute();}
+  else if(act==="fill"){state.picks=fillMissing(state.picks);save();render();}
+  else if(act==="reset"){state.picks={};state.budget=null;save();render();}
+  else if(act==="copy")copyList();
+});
+$("#picker").addEventListener("click",e=>{if(e.target.id==="picker")closePicker();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidden)closePicker();});
+$("#pSearch").addEventListener("input",renderPicker);
+$("#pSort").addEventListener("change",renderPicker);
+$("#pCompat").addEventListener("change",renderPicker);
+$("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
+let bt=null;
+$("#budget").addEventListener("input",e=>{
+  clearTimeout(bt);
+  bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=300)?v:null;recompute();},450);
+});
+$("#presets").innerHTML=PRESETS.map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)} <small>${esc(p.hint)}</small></button>`).join("");
+
+if(!load())applyPreset("wqhd");else recompute();
+})();
+</script>
+
+</body>
+</html>
