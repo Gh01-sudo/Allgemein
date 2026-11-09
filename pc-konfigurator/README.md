@@ -19,3 +19,6 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
+
+## Einkaufsliste
+`einkaufsliste.html`: abhakbarer Bestellzettel für die Vorlage „Deine Konfiguration“ mit Modellnummern, Bestpreisen und Shop-Links (Stand 9. November 2026).
