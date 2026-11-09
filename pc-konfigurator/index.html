@@ -382,8 +382,8 @@ board:[
  {id:"msi-b850-tomahawk",name:"MSI MAG B850 Tomahawk Max WiFi",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:230},
  {id:"msi-x870-tomahawk",name:"MSI MAG X870 Tomahawk WiFi",socket:"AM5",chipset:"X870",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:300,chk:true},
  {id:"asus-b850i",name:"ASUS ROG Strix B850-I Gaming WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:310},
- {id:"msi-x870e-carbon",name:"MSI MPG X870E Carbon WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:5,price:458},
- {id:"asus-x870e-hero",name:"ASUS ROG Crosshair X870E Hero",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:560},
+ {id:"msi-x870e-carbon",name:"MSI MPG X870E Carbon WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:5,price:443,chk:true},
+ {id:"asus-x870e-hero",name:"ASUS ROG Crosshair X870E Hero",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:525,chk:true},
  {id:"asus-x870e-e",name:"ASUS ROG Strix X870E-E Gaming WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:470},
  {id:"msi-b760m-a",name:"MSI PRO B760M-A WiFi (DDR5)",socket:"LGA1700",chipset:"B760",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:1,price:125},
  {id:"gb-b760-gx",name:"Gigabyte B760 Gaming X AX (DDR5)",socket:"LGA1700",chipset:"B760",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:false,wifi:true,tier:2,price:150},
@@ -396,7 +396,7 @@ board:[
 ram:[
  {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:40,tier:1,price:305},
  {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:480},
- {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000",type:"DDR5",cap:32,modules:2,speed:6000,cl:30,tier:3,price:520,chk:true},
+ {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:3,price:525,chk:true},
  {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:600},
  {id:"gs-2x16-6000c28",name:"G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:5,price:886},
  {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:880},
@@ -414,7 +414,7 @@ cooler:[
  {id:"ar-lf3-240",name:"Arctic Liquid Freezer III Pro 240",kind:"aio",rad:240,h:0,cap:250,sockets:ALL_SOCKETS,tier:3,price:85},
  {id:"bq-drp5",name:"be quiet! Dark Rock Pro 5",kind:"air",h:168,cap:270,sockets:ALL_SOCKETS,tier:4,price:95},
  {id:"ar-lf3-360",name:"Arctic Liquid Freezer III Pro 360",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:4,price:80,chk:true},
- {id:"ar-lf3-420",name:"Arctic Liquid Freezer III Pro 420",kind:"aio",rad:420,h:0,cap:330,sockets:ALL_SOCKETS,tier:4,price:82},
+ {id:"ar-lf3-420",name:"Arctic Liquid Freezer III Pro 420",kind:"aio",rad:420,h:0,cap:330,sockets:ALL_SOCKETS,tier:4,price:77,chk:true},
  {id:"nc-d15g2",name:"Noctua NH-D15 G2",kind:"air",h:168,cap:280,sockets:ALL_SOCKETS,tier:5,price:150},
  {id:"nzxt-elite-360",name:"NZXT Kraken Elite 360 (LCD)",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:5,price:260}
 ],
@@ -442,7 +442,7 @@ ssd:[
  {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:170},
  {id:"wd-sn7100-2",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 2 TB",cap:2000,gen:4,read:7250,tier:3,price:280,chk:true},
  {id:"s990evo-2",name:"Samsung 990 EVO Plus 2 TB",cap:2000,gen:4,read:7250,tier:3,price:330},
- {id:"sn8100-2",name:"SanDisk WD_Black SN8100 2 TB",cap:2000,gen:5,read:14900,tier:5,price:359},
+ {id:"sn8100-2",name:"SanDisk WD_Black SN8100 2 TB",cap:2000,gen:5,read:14900,tier:5,price:400},
  {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:400,chk:true},
  {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:445,chk:true},
  {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:700,chk:true},
@@ -457,8 +457,8 @@ psu:[
  {id:"cor-sf750",name:"Corsair SF750",watt:750,eff:"Platinum",form:"SFX",atx3:true,tier:4,price:165},
  {id:"bq-sp12-1000",name:"be quiet! Straight Power 12 1000 W",watt:1000,eff:"Platinum",form:"ATX",atx3:true,tier:4,price:200},
  {id:"cor-sf1000",name:"Corsair SF1000",watt:1000,eff:"Platinum",form:"SFX",atx3:true,tier:5,price:220},
- {id:"cor-rm1000x",name:"Corsair RM1000x (2024)",watt:1000,eff:"Gold",form:"ATX",atx3:true,tier:4,price:165},
- {id:"bq-dp14-1000",name:"be quiet! Dark Power 14 1000 W",watt:1000,eff:"Titanium",form:"ATX",atx3:true,tier:5,price:260},
+ {id:"cor-rm1000x",name:"Corsair RM1000x (2024)",watt:1000,eff:"Gold",form:"ATX",atx3:true,tier:4,price:171,chk:true},
+ {id:"bq-dp14-1000",name:"be quiet! Dark Power 14 1000 W",watt:1000,eff:"Titanium",form:"ATX",atx3:true,tier:5,price:228,chk:true},
  {id:"sea-gx1200",name:"Seasonic Vertex GX-1200",watt:1200,eff:"Gold",form:"ATX",atx3:true,tier:4,price:240},
  {id:"cor-hx1500i",name:"Corsair HX1500i",watt:1500,eff:"Platinum",form:"ATX",atx3:true,tier:5,price:330}
 ],
@@ -471,7 +471,7 @@ psu:[
  {id:"fd-north",silent:2,name:"Fractal Design North",form:"ATX",gpu:355,cooler:170,rads:[240,280,360],psu:["ATX"],tier:3,price:142,chk:true},
  {id:"ll-o11-evo",silent:1,name:"Lian Li O11 Dynamic EVO",form:"ATX",gpu:426,cooler:167,rads:[240,280,360],psu:["ATX"],tier:4,price:165},
  {id:"bq-sb802",silent:3,name:"be quiet! Silent Base 802 (gedämmt)",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:155},
- {id:"fd-define7",silent:3,name:"Fractal Design Define 7 (gedämmt)",form:"ATX",gpu:440,cooler:185,rads:[240,280,360],psu:["ATX"],tier:4,price:175},
+ {id:"fd-define7",silent:3,name:"Fractal Design Define 7 (gedämmt)",form:"ATX",gpu:445,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:175},
  {id:"fd-terra",silent:1,name:"Fractal Design Terra",form:"ITX",gpu:322,cooler:77,rads:[],psu:["SFX"],tier:4,price:190}
 ]};
 
@@ -800,8 +800,8 @@ function betterMetric(cat,p,parts){
     case "cpu":return cpuBlend(p);
     case "cooler":return p.kind==="boxed"?0:p.cap;
     case "case":return (p.silent||1)*100+p.tier*10+Math.min(p.gpu,450)/100;
-    case "psu":return (EFF_RANK[p.eff]||0)*1000+p.watt/2+(p.atx3?60:0);
-    case "board":return (CHIP_RANK[p.chipset]||1)*100+p.m2*10+(p.gen5m2?15:0)+(p.wifi?5:0);
+    case "psu":{const need=(parts.cpu||parts.gpu)?recPsu(parts)*1.15:p.watt;return (EFF_RANK[p.eff]||0)*1000+Math.min(p.watt,need)/2+(p.atx3?60:0);}
+    case "board":return (CHIP_RANK[p.chipset]||1)*8+p.m2*10+(p.gen5m2?25:0)+(p.wifi?5:0);
     case "ram":{const amd=parts.cpu&&parts.cpu.brand==="AMD";return p.cap*100+(amd?Math.min(p.speed,6000):p.speed)/100-p.cl;}
     case "ssd":return p.cap/10+((p.gen===5&&(!parts.board||parts.board.gen5m2))?150:0);
   }
@@ -821,7 +821,7 @@ function benefitText(cat,cur,p,parts){
     case "case":if((p.silent||1)>(cur.silent||1))t.push((p.silent||1)===3?"gedämmt, deutlich leiser":"leiser");
       if(p.gpu>cur.gpu)t.push(`Grafikkarten bis ${p.gpu} mm`);if(p.rads.length>cur.rads.length||Math.max(0,...p.rads)>Math.max(0,...cur.rads))t.push(`Radiator bis ${Math.max(...p.rads)} mm`);break;
     case "psu":if((EFF_RANK[p.eff]||0)>(EFF_RANK[cur.eff]||0))t.push(`80 PLUS ${p.eff} statt ${cur.eff}: effizienter, kühler, leiser`);
-      if(p.watt>cur.watt)t.push(`+${p.watt-cur.watt} W Reserve`);if(p.atx3&&!cur.atx3)t.push("ATX 3.1 mit 12V-2x6");break;
+      if(p.watt>cur.watt&&(parts.cpu||parts.gpu)&&cur.watt<recPsu(parts)*1.15)t.push(`+${p.watt-cur.watt} W Reserve`);if(p.atx3&&!cur.atx3)t.push("ATX 3.1 mit 12V-2x6");break;
     case "board":if((CHIP_RANK[p.chipset]||0)>(CHIP_RANK[cur.chipset]||0))t.push(`${p.chipset}-Chipsatz`);
       if(p.m2>cur.m2)t.push(`+${p.m2-cur.m2} M.2-Pl${p.m2-cur.m2>1?"ätze":"atz"}`);if(p.gen5m2&&!cur.gen5m2)t.push("PCIe-5.0-M.2");if(p.wifi&&!cur.wifi)t.push("WLAN");break;
     case "ram":if(p.cap>cur.cap)t.push(`+${p.cap-cur.cap} GB`);if(p.speed>cur.speed&&!(parts.cpu&&parts.cpu.brand==="AMD"&&cur.speed>=6000))t.push(`DDR5-${p.speed}`);if(p.speed<cur.speed)t.push(`langsamer: DDR5-${p.speed}`);if(p.cl<cur.cl)t.push(`CL${p.cl} statt CL${cur.cl}`);break;
@@ -838,11 +838,12 @@ function betterOptions(cat,cur,ctx,max){
     .filter(p=>{
       if(cat==="psu")return p.watt>=cur.watt&&(p.form===cur.form||!(ctx["case"]&&ctx["case"].psu.includes(cur.form)));
       if(cat==="board")return p.form===cur.form||(ctx["case"]&&FORM_FIT[ctx["case"].form].includes(p.form)&&FORM_FIT[p.form].includes(cur.form));
-      if(cat==="ram")return p.cap>=cur.cap;
+      if(cat==="ram"){const amd=ctx.cpu&&ctx.cpu.brand==="AMD";return p.cap>=cur.cap&&(amd?Math.min(p.speed,6000)>=Math.min(cur.speed,6000):p.speed>=cur.speed);}
       if(cat==="ssd")return p.cap>=cur.cap;
       return true;})
     .sort((a,b)=>a.price-b.price);
-  for(const p of list){const m=betterMetric(cat,p,ctx);if(m>best+0.5){front.push(p);best=m;}}
+  const minGain=cat==="psu"?20:0.5;
+  for(const p of list){const m=betterMetric(cat,p,ctx);if(m>best+minGain){front.push(p);best=m;}}
   return front.slice(0,max);
 }
 function deltaPrice(d){return d>0?`+${eur(d)}`:d<0?`${eur(d)} (günstiger)`:"gleicher Preis";}

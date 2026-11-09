@@ -126,3 +126,59 @@ Alle Punkte der Korrekturliste wurden in `pc-konfigurator/index.html` übernomme
 - Ab WQHD werden Karten mit mindestens 12 GB, in 4K mit 16 GB Grafikspeicher bevorzugt; Kreativ-Schwerpunkt bevorzugt NVIDIA (CUDA).
 - Core Ultra (LGA1851) bekommt DDR5-6400, Ryzen DDR5-6000 CL30. APUs (8500G/8600G) werden mit dedizierter Grafikkarte nicht mehr gewählt. LGA1700 erhält einen kleinen Malus (kein Aufrüstpfad).
 - Ergebnis: keine Konflikte mehr; Warnungen nur noch bei RTX 5090 in ITX-Gehäusen (größtes SFX-Netzteil 1.000 W statt empfohlener 1.050–1.200 W), was korrekt angezeigt wird.
+
+## Red Team: Premium-Teile (9.11.2026)
+
+Geprüft: die neu aufgenommenen ids `msi-x870e-carbon`, `asus-x870e-hero`, `gs-2x16-6000c28`, `ar-lf3-420`, `sn8100-2`, `cor-rm1000x`, `bq-dp14-1000` und `fd-define7`, die Dämmstufe von `bq-sb802`/`fd-define7` sowie `betterOptions`/`betterMetric`.
+Methode: Live-Daten von hardwaredealz.com (Geizhals-Daten, `updated_at` 09.11.2026 14:36 Uhr) für Mainboards, Netzteile und RAM-Vergleichskits. Herstellerseite von Fractal Design. Geizhals-, heise- und Galaxus-Daten nur über Such-Snippets, weil direkte Abrufe HTTP 403 bzw. 503 lieferten. `betterOptions` wurde in Node mit dem unveränderten Skript der Datei für 17 Szenarien durchgerechnet.
+
+### Zusammenfassung
+
+- **Echter Logikfehler durch neue Daten:** `fd-define7` hat `rads:[240,280,360]`. Laut Fractal Design nimmt das Define 7 oben aber einen 420-mm-Radiator auf. Das Tool meldet deshalb bei `ar-lf3-420` im Define 7 einen falschen **Konflikt** („nimmt Radiatoren mit 240 / 280 / 360 mm auf, nicht 420 mm“), und `betterOptions` blendet den 420er als Upgrade aus.
+- **Preise:** Dark Power 14 1000 W ist 14 % zu teuer eingetragen (227,89 € statt 260 €). Für die SN8100 2 TB liegt das günstigste Live-Angebot bei 400 € (Tool 359 €, −10 %; Quelle ist ein Marktplatz-Vergleich, deshalb mittlere Sicherheit). Carbon (443,37 €), Hero (525,22 €), RM1000x (171,19 €) und LF III Pro 420 (77,05 €) liegen innerhalb von 10 %.
+- **Das CL28-Premium-Kit bringt gegenüber dem bestehenden Kit keine Latenz.** Hinter `gs-2x16-6000` steht das Patriot Viper Venom VVR532G60C28AK. Es hat **CL28** (Tool: `cl:30`) und kostet 524,90 €. Das G.Skill-CL28-Kit für 886 € bringt also bei gleichem Takt und gleicher CL nur RGB. Der Preis von 886 € ist widersprüchlich belegt und deshalb nicht prüfbar.
+- **`betterOptions` ist bei den geprüften Regeln fachlich korrekt:** Gen5-SSDs zählen auf Boards ohne PCIe-5.0-M.2 nicht als Upgrade, RAM über DDR5-6000 zählt bei Ryzen nicht als schneller, und bei Intel wird DDR5-6400 vorgeschlagen. Schwächen: Bei Ryzen wird ausgehend von DDR5-6400 CL32 das 6000-CL30-Kit mit dem widersprüchlichen Text „langsamer: DDR5-6000“ als „Besser“ angezeigt. Board-Upgrades richten sich fast nur nach dem Chipsatzrang (B650 → X870E Carbon für +327 € ohne Bedarfsprüfung). Netzteil-Upgrades gelten schon bei „+150 W Reserve“, auch wenn die Reserve gar nicht gebraucht wird.
+- **Dämmstufe:** Silent Base 802 und Define 7 sind beide ab Werk mit Dämmmatten und geschlossener Front ausgestattet. Die gleiche Einstufung `silent:3` ist sinnvoll.
+
+### Befunde
+
+| Schwere | id | Feld | Wert im Tool | korrekter Wert | Quelle-URL |
+|---|---|---|---|---|---|
+| hoch | fd-define7 | rads | [240,280,360] | [240,280,360,420] (Deckel bis 420 mm, Front bis 360 mm, Boden bis 280 mm) | https://www.fractal-design.com/de/products/cases/define/define-7/schwarz/ |
+| mittel | bq-dp14-1000 | price | 260 | 227,89 (−12 % bzw. Tool +14 %) | https://www.hardwaredealz.com/hardware/psu/be-quiet!-dark-power-14-1000w-atx-31/preisvergleich.31261 |
+| mittel | gs-2x16-6000 (Bestandsteil, beeinflusst Premium-Vergleich) | cl | 30 | 28 (VVR532G60C28AK, CL28-40-40-110, 524,90 €) | https://hardwaredealz.com/hardware/ram/patriot-viper-venom-udimm-32gb-kit/preisvergleich.66347 |
+| mittel | sn8100-2 | price | 359 | ca. 400 (günstigstes von 11 Neuangeboten, live abgerufen; Geizhals-Snippet undatiert 398,90 €) | https://dropreference.com/de/product/0619659220860 |
+| gering | fd-define7 | gpu | 440 | 470 (Open Layout), laut Datenblatt 445 mm mit Frontlüfter. 440 ist konservativ und nicht falsch | https://www.fractal-design.com/de/products/cases/define/define-7/schwarz/ |
+| gering | fd-define7 | form | ATX | E-ATX/ATX/mATX/ITX (das Tool kennt kein E-ATX, ATX ist korrekt) | https://www.fractal-design.com/de/products/cases/define/define-7/schwarz/ |
+| gering | gs-2x16-6000c28 | Nutzen | CL28 als Premium | gleiche CL wie das Patriot-Kit für 524,90 €; ähnliche CL28-Kits: Klevv Fit V 558,78–606,36 € | https://www.hardwaredealz.com/hardware/ram |
+| gering | Logik ram | benefitText | „Besser“ + „langsamer: DDR5-6000“ (Ryzen, von 6400 CL32) | Text für AMD auf „gleich schnell, niedrigere Latenz“ ändern oder den Vorschlag unterdrücken | Simulation (Node) |
+| gering | Logik board/psu | betterMetric | Chipsatzrang ×100 bzw. Watt/2 ohne Bedarf | Board: Bedarf (M.2, USB4) gegen Aufpreis abwägen. Netzteil: Watt nur zählen, wenn unter `rec`+Reserve | Simulation (Node) |
+
+### Bestätigt
+
+- **msi-x870e-carbon:** X870E, ATX, 4 DIMM, max. 256 GB, 4× M.2 (davon 2× PCIe 5.0 x4, 2× PCIe 4.0 x4), WLAN (WiFi 7). Preis ab 443,37 € (Tool 458, +3 %). https://www.hardwaredealz.com/hardware/mainboard/msi-mpg-x870e-carbon-wifi/preisvergleich.22469
+- **asus-x870e-hero:** X870E, ATX, 4 DIMM, max. 256 GB, 5× M.2 (3× PCIe 5.0, 2× PCIe 4.0), WiFi 7. Preis ab 525,22 € (Tool 560, +7 %). https://www.hardwaredealz.com/hardware/mainboard/asus-rog-crosshair-x870e-hero/preisvergleich.22457
+- **cor-rm1000x:** 1000 W, 80 PLUS Gold (Cybenetics sogar ETA-Platinum), ATX 3.1, 12V-2x6 (600 W), ATX. Preis ab 171,19 € (Tool 165, −4 %). https://www.hardwaredealz.com/hardware/psu/corsair-rmx-series-2024-rm1000x-1000w-atx-31/preisvergleich.22070
+- **bq-dp14-1000:** 1000 W, 80 PLUS Titanium / Cybenetics ETA-Titanium, ATX 3.1, 12V-2x6 (600 W), ATX. Nur der Preis weicht ab (siehe oben). Quelle wie oben.
+- **ar-lf3-420:** rad 420, Preis ab 77,05 € (Geizhals 23.10.2026, Tool 82, +6 %). https://geizhals.de/arctic-liquid-freezer-iii-pro-420-acfre00181a-a3525739.html. `cap:330` (+10 % gegenüber dem 360er mit 300) ist als Schätzung plausibel, weil Tests den 420er nur wenige Kelvin vor dem 360er sehen.
+- **sn8100-2:** PCIe 5.0, 14.900 MB/s lesen. https://www.testsieger.de/ssd-festplatten/6CQBCS1EZP632-wd-black-sn8100-2-tb-pcie-5-0x4-nvme-m-2-ssd-lesegeschwindigkeiten-von-bis-zu-14-900-mb-s-schreibgeschwindigkeiten-von-bis-zu-14-000-mb-s-tlc-3d-cba-nand.html
+- **gs-2x16-6000c28:** cap 32, 2 Module, DDR5-6000, CL28 (CL28-36-36-96). Das geht aus dem Produkttitel bei Geizhals hervor (F5-6000J2836G16GX2-TZ5NR).
+- **fd-define7:** Kühlerhöhe 185 mm, ATX-Netzteil (max. 250 mm), gedämmt („industrielle Hochdichte-Schalldämmung“).
+- **silent-Einstufung:** Silent Base 802 (Dämmmatten, wechselbare Front/Deckel geschlossen/Mesh) und Define 7 (Dämmung, geschlossene Front, ModuVent-Deckel) sind gleichwertig gedämmte Silent-Gehäuse. `silent:3` für beide passt. Bei gleichem Rang ergibt `betterMetric` (Differenz nur 0,08 durch die GPU-Länge) korrekt kein gegenseitiges Upgrade; vom Fractal North aus wird das günstigere SB802 vorgeschlagen.
+- **betterOptions-Stichproben (Node-Simulation, Nutzerkonfiguration mit 9900X/B650 Gaming Plus):**
+  - SSD auf dem Gen4-Board: nur Lexar 4 TB (Kapazität), kein Gen5-Laufwerk. Auf dem X870E Carbon erscheint die SN8100 als „PCIe 5.0“-Upgrade.
+  - RAM AMD (6000 CL30): nur Kapazitäts-Upgrades. DDR5-6400 wird nicht als schneller gewertet.
+  - RAM Intel (Z890): DDR5-6400 wird vorgeschlagen.
+  - Netzteil: Upgrades nur mit gleicher oder höherer Wattzahl und passendem Formfaktor.
+  - Wegen der Pareto-Logik erscheint das CL28-Kit für 886 € nie, weil das 48-GB-Kit (880 €) günstiger und „besser“ ist.
+
+### Nicht prüfbar
+
+- **gs-2x16-6000c28, Preis (886 €):** Die Quellen widersprechen sich. heise nennt für die weiße Variante 885–888 €, ein Geizhals.at-Snippet für dieselbe weiße Variante „ab 549,90 €“, Newegg ca. 699 US-$ für die schwarze. Für die schwarze TZ5NR gibt es keinen datierten deutschen Preis.
+- **ar-lf3-420, `cap` 330 W:** Das ist eine Schätzung ohne Herstellerangabe. Plausibel, aber nicht belegbar.
+- **fd-define7, Preis (175 €):** Kein aktueller deutscher Preis gefunden. Die UVP lag 2020 bei 164,99/174,99 €, Galaxus nennt undatiert 170,96 € (Solid weiß). https://www.computerbase.de/2020-02/fractal-design-define-7-test/
+- **bq-sb802, Preis (155 €):** Ein undatiertes Geizhals-Snippet nennt 139,89 € (−10 %). Ohne Datum gibt es keine Korrektur.
+- **sn8100-2, Preis:** Der Wert von 400 € stammt von einem Marktplatz-Vergleich (dropreference), nicht von Geizhals. Die Datierung des Geizhals-Werts (398,90 €) ist unklar.
+
+### Umsetzung Premium-Teile (9.11.2026)
+Alle Punkte übernommen: Define 7 mit 420er-Radiator und 445 mm GPU-Länge; Dark Power 14 auf 228 €, SN8100 2 TB auf 400 €; X870E Carbon 443 €, Crosshair X870E Hero 525 €, RM1000x 171 €, Liquid Freezer III Pro 420 77 € (als geprüft markiert); Patriot Viper Venom als CL28-Kit (VVR532G60C28AK) für 525 € korrigiert, auch in der Einkaufsliste. Logik: RAM-Upgrades dürfen nicht langsamer sein (bei Ryzen bis DDR5-6000 gerechnet), Mainboard-Wertung stärker nach Ausstattung (M.2, PCIe 5.0) statt Chipsatz, Netzteil-Mehrleistung zählt nur, wenn sie gebraucht wird.
