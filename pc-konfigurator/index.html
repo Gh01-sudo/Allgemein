@@ -358,6 +358,19 @@ button,input,select{font:inherit;color:inherit}
 @media (max-width:760px){.tip-box{grid-template-columns:minmax(0,1fr)}}
 .tip-box>div{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--sunk);font-size:13px}
 .tip-box b{display:block;margin-bottom:4px;font-family:var(--f-display)}
+
+.tip-float{position:fixed;z-index:80;max-width:min(320px,calc(100vw - 16px));background:var(--ink);color:var(--bg);font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;pointer-events:none;box-shadow:0 4px 14px var(--scrim)}
+.schema text{pointer-events:none}
+.schema .sp{cursor:pointer;transition:fill-opacity .12s,stroke-width .12s}
+.schema .part.sp:hover,.schema .part.sp:focus-visible{fill-opacity:.5;stroke-width:3;outline:none}
+.schema .box.sp:hover,.schema .box.sp:focus-visible{stroke:var(--accent);stroke-width:2.5;outline:none}
+.schema .sp.err{stroke:var(--bad);stroke-width:3;stroke-dasharray:6 3}
+.scatter .pt{cursor:pointer;transition:r .12s}
+.scatter .pt:hover,.scatter .pt:focus-visible{r:8;stroke:var(--ink);stroke-width:2;outline:none}
+.click{cursor:pointer}
+.bar-row.click:hover .bar-track{border-color:var(--accent)}
+.stack .click:hover{filter:brightness(1.15)}
+.opt .live{grid-column:1/-1;font-size:12.5px;color:var(--muted);font-family:var(--f-mono);font-variant-numeric:tabular-nums}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -1270,15 +1283,15 @@ function renderDash(parts,issues){
   const maxV=Math.max(p.fps,...vals.map(v=>v.gpu),isFinite(ccap)?ccap:0)*1.08||100;
   const pct=v=>Math.min(100,v/maxV*100);
   $("#dFps").innerHTML=vals.map((v,i)=>`<div class="bar-row"><span>${esc(v.r.label)}${i===p.res?" ◂":""}</span>
-     <div class="bar-track" role="img" aria-label="${esc(v.r.label)}: ${v.eff} FPS"><span class="bar-fill${v.eff<v.gpu?" limited":""}" style="width:${pct(v.eff)}%"></span>
-     <span class="vline" style="left:${pct(p.fps)}%" title="Ziel ${p.fps} FPS"></span>${isFinite(ccap)?`<span class="vline cpu" style="left:${pct(ccap)}%" title="CPU-Grenze ${ccap} FPS"></span>`:""}</div>
+     <div class="bar-track" role="img" aria-label="${esc(v.r.label)}: ${v.eff} FPS" data-tip="${esc(v.r.label)} (${esc(v.r.px)}): ${v.eff} FPS, Grafikkarte allein ${v.gpu} FPS${v.eff<v.gpu?", vom Prozessor begrenzt":""} · Ziel ${p.fps} FPS${isFinite(ccap)?`, CPU-Grenze ca. ${ccap} FPS`:""}"><span class="bar-fill${v.eff<v.gpu?" limited":""}" style="width:${pct(v.eff)}%"></span>
+     <span class="vline" style="left:${pct(p.fps)}%"></span>${isFinite(ccap)?`<span class="vline cpu" style="left:${pct(ccap)}%"></span>`:""}</div>
      <span class="num">${v.eff} FPS</span></div>`).join("")+
    `<div class="legend"><span><i style="background:var(--accent)"></i>Bildrate</span><span><i style="background:var(--warn)"></i>durch CPU begrenzt</span><span><i style="background:var(--ink)"></i>Ziel ${p.fps} FPS</span>${isFinite(ccap)?`<span><i style="background:var(--bad)"></i>CPU-Grenze ca. ${ccap} FPS</span>`:""}</div>
    <p class="subline">Grafikkarte allein: ${gfps} FPS in ${esc(RES[p.res].label)}. Mit DLSS/FSR-Upscaling sind meist 30–60 % mehr möglich. Richtwerte, keine Messung.</p>`;
   // Kosten
   const segs=CATS.filter(c=>parts[c.k]&&parts[c.k].price>0).map(c=>({c,v:parts[c.k].price}));
-  $("#dCost").innerHTML=total?`<div class="stack" role="img" aria-label="Kostenverteilung">${segs.map(x=>`<span style="width:${x.v/total*100}%;background:var(${CAT_COLOR[x.c.k]})" title="${esc(x.c.label)}: ${eur(x.v)}"></span>`).join("")}</div>
-    <div class="chart" style="margin-top:12px">${segs.sort((a,b)=>b.v-a.v).map(x=>`<div class="bar-row"><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(${CAT_COLOR[x.c.k]});margin-right:6px"></i>${esc(x.c.label)}</span>
+  $("#dCost").innerHTML=total?`<div class="stack" role="img" aria-label="Kostenverteilung">${segs.map(x=>`<span class="click" data-act="pick" data-cat="${x.c.k}" style="width:${x.v/total*100}%;background:var(${CAT_COLOR[x.c.k]})" data-tip="${esc(x.c.label)}: ${eur(x.v)} (${Math.round(x.v/total*100)} %) – klicken zum Ändern"></span>`).join("")}</div>
+    <div class="chart" style="margin-top:12px">${segs.sort((a,b)=>b.v-a.v).map(x=>`<div class="bar-row click" data-act="pick" data-cat="${x.c.k}" data-tip="${esc(x.c.label)}: ${esc(parts[x.c.k].name)}, ${eur(x.v)} – klicken zum Ändern"><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(${CAT_COLOR[x.c.k]});margin-right:6px"></i>${esc(x.c.label)}</span>
       <div class="bar-track"><span class="bar-fill" style="width:${x.v/segs[0].v*100}%;background:var(${CAT_COLOR[x.c.k]})"></span></div><span class="num">${Math.round(x.v/total*100)} %</span></div>`).join("")}</div>
     <p class="subline">Größter Posten: ${esc(segs[0].c.label)} mit ${eur(segs[0].v)}. Preis pro FPS in ${esc(RES[p.res].label)}: ${fps?eur(total/fps):"–"}.</p>`:`<p class="subline">Noch keine Teile gewählt.</p>`;
   renderLaptops(parts,total);
@@ -1517,11 +1530,11 @@ function scatterSvg(pts,cur,cat){
   // effizienteste Punkte beschriften
   const eff=pts.filter(p=>!p.err).map(p=>({p,v:p.y/p.x})).sort((a,b)=>b.v-a.v).slice(0,2).map(o=>o.p.p.id);
   const short=n=>n.replace(/^(AMD|Intel|NVIDIA) (Radeon |GeForce |Core |Ryzen )?/,"").replace(/ \d+ GB$/,"").slice(0,22);
-  let s=`<svg class="scatter" viewBox="0 0 ${W} ${H}" role="img" aria-label="Preis-Leistungs-Diagramm">`;
+  let s=`<svg class="scatter" viewBox="0 0 ${W} ${H}" role="group" aria-label="Preis-Leistungs-Diagramm">`;
   yt.forEach(v=>{s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${fy(v)}" y2="${fy(v)}"/><text x="${L-6}" y="${fy(v)+3}" text-anchor="end">${v}</text>`;});
   xt.forEach(v=>{s+=`<line class="ax" x1="${fx(v)}" x2="${fx(v)}" y1="${T}" y2="${H-B}" stroke-dasharray="2 3"/><text x="${fx(v)}" y="${H-B+14}" text-anchor="middle">${v>=1000?(v/1000).toLocaleString("de-DE")+" T€":v+" €"}</text>`;});
   s+=`<text x="${(W+L)/2}" y="${H-6}" text-anchor="middle">Preis${logX?" (logarithmisch)":""}</text><text x="12" y="${(H-B+T)/2}" transform="rotate(-90 12 ${(H-B+T)/2})" text-anchor="middle">${esc(PERF_LABEL[cat])}</text>`;
-  pts.forEach(p=>{const isC=p.p.id===cur;s+=`<circle cx="${fx(p.x)}" cy="${fy(p.y)}" r="${isC?7:5}" fill="${col(p.p)}" fill-opacity="${p.err?0.3:0.85}" stroke="${isC?"var(--ink)":"var(--surface)"}" stroke-width="${isC?2.5:1}"><title>${esc(p.p.name)}: ${eur(p.x)}, ${p.y}</title></circle>`;});
+  pts.forEach(p=>{const isC=p.p.id===cur;s+=`<circle cx="${fx(p.x)}" cy="${fy(p.y)}" r="${isC?7:5}" fill="${col(p.p)}" fill-opacity="${p.err?0.3:0.85}" stroke="${isC?"var(--ink)":"var(--surface)"}" stroke-width="${isC?2.5:1}" data-tip="${esc(p.p.name)}: ${eur(p.x)}, ${p.y}${isC?" (deine Wahl)":p.err?" – passt nicht zu deinem System":" – klicken zum Übernehmen"}"${!isC&&!p.err?` class="pt" data-act="take" data-cat="${cat}" data-id="${esc(p.p.id)}" tabindex="0" role="button" aria-label="${esc(p.p.name)} übernehmen"`:""}></circle>`;});
   pts.filter(p=>p.p.id===cur||eff.includes(p.p.id)).forEach(p=>{const x=fx(p.x),right=x<W-170;s+=`<text class="lbl" x="${right?x+10:x-10}" y="${fy(p.y)-8}" text-anchor="${right?"start":"end"}">${esc(short(p.p.name))}${p.p.id===cur?" (deine Wahl)":eff.includes(p.p.id)?" · bestes P/L":""}</text>`;});
   s+=`</svg>`;
   const leg=(cat==="gpu"||cat==="cpu")?`<div class="legend">${cat==="gpu"?'<span><i style="background:var(--c5)"></i>NVIDIA</span>':""}<span><i style="background:var(--c3)"></i>AMD</span><span><i style="background:var(--c1)"></i>Intel</span><span>blasse Punkte passen nicht zu deinem System</span></div>`:`<div class="legend"><span>blasse Punkte passen nicht zu deinem System</span></div>`;
@@ -1545,7 +1558,7 @@ function renderOverview(parts,issues){
    <div class="kpi"><span class="eyebrow">Lautstärke</span><b>${esc(noise.label)}</b><small>${esc(noise.why.join(", ")||"ausgewogen")}</small></div>
    <div class="kpi"><span class="eyebrow">Prüfung</span><b>${errs?errs+" Konflikt"+(errs>1?"e":""):warns?warns+" Warnung"+(warns>1?"en":""):"passt"}</b><span class="pill ${errs?"bad":warns?"warn":"ok"}">${errs?"bitte lösen":warns?"prüfen":"alles kompatibel"}</span></div>`;
   $("#oCase").textContent=parts["case"]?parts["case"].name:"";
-  $("#oSchema").innerHTML=schemaSvg(parts);
+  $("#oSchema").innerHTML=schemaSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)));
   // Stärken / Schwächen gesammelt
   const pros=[],cons=[];
   CATS.forEach(c=>{const pt=parts[c.k];if(!pt)return;const pc=prosCons(c.k,pt,parts);pc.P.slice(0,2).forEach(x=>pros.push(`<b>${esc(c.label)}:</b> ${esc(x)}`));pc.C.slice(0,1).forEach(x=>cons.push(`<b>${esc(c.label)}:</b> ${esc(x)}`));pc.N.slice(0,1).forEach(x=>cons.push(`<b>${esc(c.label)}:</b> ${esc(x)}`));});
@@ -1565,35 +1578,37 @@ function renderOverview(parts,issues){
   $("#oSum").textContent=eur(total);
   $("#oTable").innerHTML=`<table class="ctable"><thead><tr><th>Bauteil</th><th>Modell</th><th>Eckdaten</th><th>Preisstand</th><th style="text-align:right">Preis</th></tr></thead><tbody>${CATS.map(c=>{const pt=parts[c.k];if(!pt)return `<tr><td>${esc(c.label)}</td><td colspan="4" class="subline">nicht gewählt</td></tr>`;return `<tr><td>${esc(c.label)}</td><td><b>${esc(pt.name)}</b></td><td><small class="subline">${esc(spec(c.k,pt))}</small></td><td>${pt.chk?'<span class="tag rec">geprüft 9.11.</span>':'<span class="subline">Schätzung</span>'}</td><td class="num">${eur(pt.price)}</td></tr>`;}).join("")}<tr><td colspan="4"><b>Summe Hardware</b></td><td class="num"><b>${eur(total)}</b></td></tr></tbody></table>`;
 }
-function schemaSvg(parts){
+function schemaSvg(parts,errCats){
   const W=520,H=420,cs=parts["case"],b=parts.board,cpu=parts.cpu,cool=parts.cooler,gpu=parts.gpu,ram=parts.ram,ssd=parts.ssd,psu=parts.psu;
   const sh=(n,len)=>n?(n.length>len?n.slice(0,len-1)+"…":n):"";
-  let s=`<svg class="schema" viewBox="0 0 ${W} ${H}" role="img" aria-label="Schema des PCs">`;
-  s+=`<rect class="box" x="10" y="10" width="${W-20}" height="${H-20}" rx="12"/>`;
+  // Anklickbare Fläche je Bauteil; focus=false für Wiederholungen derselben Kategorie (kein zweiter Tab-Stopp)
+  const hot=(k,cls,focus=true)=>`class="${cls} sp${errCats&&errCats.has(k)?" err":""}" data-act="pick" data-cat="${k}" data-tip="${esc(CAT_LABEL[k])}: klicken zum Ändern"${focus?` tabindex="0" role="button" aria-label="${esc(CAT_LABEL[k])} ändern"`:' aria-hidden="true"'}`;
+  let s=`<svg class="schema" viewBox="0 0 ${W} ${H}" role="group" aria-label="Schema des PCs">`;
+  s+=`<rect ${hot("case","box")} x="10" y="10" width="${W-20}" height="${H-20}" rx="12"/>`;
   // Radiator oben bei AiO
   const front=cool&&cool.kind==="aio"&&cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cool.rad);
-  if(cool&&cool.kind==="aio"&&!front){s+=`<rect class="part" x="70" y="22" width="${Math.min(380,cool.rad*0.9)}" height="22" rx="4" fill="var(--c2)" fill-opacity=".25" stroke="var(--c2)"/><text x="78" y="37">Radiator ${cool.rad} mm (oben)</text>`;}
-  if(front){s+=`<rect class="part" x="${W-58}" y="40" width="26" height="250" rx="4" fill="var(--c2)" fill-opacity=".25" stroke="var(--c2)"/><text x="${W-62}" y="36" text-anchor="end">Radiator ${cool.rad} mm (vorne)</text>`;}
+  if(cool&&cool.kind==="aio"&&!front){s+=`<rect ${hot("cooler","part")} x="70" y="22" width="${Math.min(380,cool.rad*0.9)}" height="22" rx="4" fill="var(--c2)" fill-opacity=".25" stroke="var(--c2)"/><text x="78" y="37">Radiator ${cool.rad} mm (oben)</text>`;}
+  if(front){s+=`<rect ${hot("cooler","part")} x="${W-58}" y="40" width="26" height="250" rx="4" fill="var(--c2)" fill-opacity=".25" stroke="var(--c2)"/><text x="${W-62}" y="36" text-anchor="end">Radiator ${cool.rad} mm (vorne)</text>`;}
   // Mainboard
-  s+=`<rect class="part" x="40" y="56" width="300" height="250" rx="6" fill="var(--c4)" fill-opacity=".12" stroke="var(--c4)"/><text x="50" y="74">${esc(sh(b&&b.name,40)||"Mainboard")}</text><text class="sub" x="50" y="88">${b?esc(b.chipset+" · "+b.form+" · "+b.m2+"× M.2"):""}</text>`;
+  s+=`<rect ${hot("board","part")} x="40" y="56" width="300" height="250" rx="6" fill="var(--c4)" fill-opacity=".12" stroke="var(--c4)"/><text x="50" y="74">${esc(sh(b&&b.name,40)||"Mainboard")}</text><text class="sub" x="50" y="88">${b?esc(b.chipset+" · "+b.form+" · "+b.m2+"× M.2"):""}</text>`;
   // CPU + Kühler
-  s+=`<rect class="part" x="70" y="100" width="110" height="80" rx="6" fill="var(--c1)" fill-opacity=".18" stroke="var(--c1)"/><text x="78" y="120">${esc(sh(cpu&&cpu.name.replace(/^(AMD|Intel) /,""),17)||"Prozessor")}</text><text class="sub" x="78" y="134">${cpu?cpu.cores+" Kerne":""}</text><text class="sub" x="78" y="166">${cool?esc(sh(cool.name.replace(/^(Arctic|Thermalright|Noctua|be quiet!) /,""),20)):""}</text>`;
+  s+=`<rect ${hot("cpu","part")} x="70" y="100" width="110" height="80" rx="6" fill="var(--c1)" fill-opacity=".18" stroke="var(--c1)"/>${cool&&cool.kind!=="aio"?`<rect ${hot("cooler","part")} x="74" y="154" width="102" height="18" rx="3" fill="var(--c2)" fill-opacity=".15" stroke="var(--c2)"/>`:""}<text x="78" y="120">${esc(sh(cpu&&cpu.name.replace(/^(AMD|Intel) /,""),17)||"Prozessor")}</text><text class="sub" x="78" y="134">${cpu?cpu.cores+" Kerne":""}</text><text class="sub" x="78" y="166">${cool?esc(sh(cool.name.replace(/^(Arctic|Thermalright|Noctua|be quiet!) /,""),20)):""}</text>`;
   // RAM
-  const n=ram?ram.modules:0;for(let i=0;i<4;i++){s+=`<rect class="part" x="${200+i*16}" y="100" width="10" height="90" rx="2" fill="${i<n?"var(--c2)":"var(--sunk)"}" fill-opacity="${i<n?.5:1}" stroke="${i<n?"var(--c2)":"var(--line)"}"/>`;}
+  const n=ram?ram.modules:0;for(let i=0;i<4;i++){s+=`<rect ${hot("ram","part",i===0)} x="${200+i*16}" y="100" width="10" height="90" rx="2" fill="${i<n?"var(--c2)":"var(--sunk)"}" fill-opacity="${i<n?.5:1}" stroke="${i<n?"var(--c2)":"var(--line)"}"/>`;}
   s+=`<text x="270" y="118">RAM</text><text class="sub" x="270" y="132">${ram?ram.cap+" GB":""}</text><text class="sub" x="270" y="145">${ram?"DDR5-"+ram.speed:""}</text>`;
   // SSD
-  s+=`<rect class="part" x="70" y="196" width="120" height="18" rx="3" fill="var(--c5)" fill-opacity=".3" stroke="var(--c5)"/><text class="sub" x="76" y="209">${ssd?esc(fmtCap(ssd.cap)+" M.2 PCIe "+ssd.gen+".0"):"SSD"}</text>`;
+  s+=`<rect ${hot("ssd","part")} x="70" y="196" width="120" height="18" rx="3" fill="var(--c5)" fill-opacity=".3" stroke="var(--c5)"/><text class="sub" x="76" y="209">${ssd?esc(fmtCap(ssd.cap)+" M.2 PCIe "+ssd.gen+".0"):"SSD"}</text>`;
   // GPU
   const gl=gpu&&!gpu.none?Math.min(420,Math.max(200,gpu.len*1.15)):0;
-  if(gl){s+=`<rect class="part" x="40" y="228" width="${gl}" height="52" rx="6" fill="var(--c3)" fill-opacity=".22" stroke="var(--c3)"/><text x="50" y="250">${esc(sh(gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""),30))}</text><text class="sub" x="50" y="266">${gpu.vram} GB · ${gpu.power} W · ${gpu.len} mm</text>`;}
+  if(gl){s+=`<rect ${hot("gpu","part")} x="40" y="228" width="${gl}" height="52" rx="6" fill="var(--c3)" fill-opacity=".22" stroke="var(--c3)"/><text x="50" y="250">${esc(sh(gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""),30))}</text><text class="sub" x="50" y="266">${gpu.vram} GB · ${gpu.power} W · ${gpu.len} mm</text>`;}
   else s+=`<text class="sub" x="50" y="256">keine Grafikkarte (iGPU)</text>`;
   // Netzteil
-  s+=`<rect class="part" x="40" y="${H-96}" width="180" height="62" rx="6" fill="var(--c7)" fill-opacity=".22" stroke="var(--c7)"/><text x="50" y="${H-74}">${esc(sh(psu&&psu.name,26)||"Netzteil")}</text><text class="sub" x="50" y="${H-58}">${psu?psu.watt+" W · 80+ "+psu.eff:""}</text>`;
+  s+=`<rect ${hot("psu","part")} x="40" y="${H-96}" width="180" height="62" rx="6" fill="var(--c7)" fill-opacity=".22" stroke="var(--c7)"/><text x="50" y="${H-74}">${esc(sh(psu&&psu.name,26)||"Netzteil")}</text><text class="sub" x="50" y="${H-58}">${psu?psu.watt+" W · 80+ "+psu.eff:""}</text>`;
   // Lüfter / Gehäuse-Infos rechts
   s+=`<g><text x="${W-150}" y="${H-80}">${esc(sh(cs&&cs.name,22)||"Gehäuse")}</text><text class="sub" x="${W-150}" y="${H-64}">${cs?"GPU ≤ "+cs.gpu+" mm":""}</text><text class="sub" x="${W-150}" y="${H-50}">${cs?(["","offen","teils leise","gedämmt"][cs.silent||1]):""}</text></g>`;
   // Luftstrom-Pfeile
   if(!front)s+=`<g stroke="var(--muted)" stroke-width="1.5" fill="none" opacity=".7"><path d="M ${W-30} 300 L ${W-30} 120"/><path d="M ${W-36} 128 L ${W-30} 116 L ${W-24} 128"/></g><text class="sub" x="${W-40}" y="316" text-anchor="end">Luftstrom</text>`;
-  return s+`</svg><p class="subline">Schematische Darstellung, nicht maßstabsgetreu. Grafikkartenlänge relativ dargestellt.</p>`;
+  return s+`</svg><p class="subline">Schematische Darstellung, nicht maßstabsgetreu. Bauteil anklicken, um es zu tauschen; Konflikte sind rot markiert. Grafikkartenlänge relativ dargestellt.</p>`;
 }
 
 /* ---------- Cockpit: Instrumente, Profil, Anwendungen, Vergleiche ---------- */
@@ -1619,7 +1634,7 @@ function renderGauges(parts,total){
   const bu=state.budget?total/state.budget:0;items.push({lbl:"Budget",frac:state.budget?bu:0,val:state.budget?Math.round(bu*100):"–",unit:state.budget?"%":"kein Limit",lv:!state.budget?"":bu>1?"bad":bu>0.95?"warn":"ok",sub:state.budget?`${eur(total)} von ${eur(state.budget)}`:eur(total),ticks:state.budget?[1]:[]});
   items.push({lbl:"Lautstärke",frac:Math.min(1,noise.n/7),val:noise.label,unit:"",lv:noise.cls,sub:noise.why.join(", ")||"ausgewogen"});
   const ppf=fps?total/fps:0;const ref=[20,30,45,70];items.push({lbl:"Preis pro FPS",frac:ppf?Math.min(1,ppf/80):0,val:ppf?Math.round(ppf):"–",unit:"€ je FPS",lv:!ppf?"":ppf<=ref[1]?"ok":ppf<=ref[2]?"warn":"bad",sub:"weniger ist besser"});
-  $("#dGauges").innerHTML=items.map(i=>`<div class="gauge" role="img" aria-label="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)}">${gaugeSvg(i.frac,esc(String(i.val)),esc(i.unit),stateColor(i.lv),i.ticks)}<span class="g-lbl">${esc(i.lbl)}</span><span class="g-sub">${esc(i.sub)}</span></div>`).join("");
+  $("#dGauges").innerHTML=items.map(i=>`<div class="gauge" role="img" aria-label="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)}" data-tip="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)} · ${esc(i.sub)}">${gaugeSvg(i.frac,esc(String(i.val)),esc(i.unit),stateColor(i.lv),i.ticks)}<span class="g-lbl">${esc(i.lbl)}</span><span class="g-sub">${esc(i.sub)}</span></div>`).join("");
 }
 /* Leistungsprofil 0–100 */
 const RADAR_AX=["Gaming","Kreativ","Leise","Effizienz","Zukunft","Preis-Leistung"];
@@ -1643,7 +1658,7 @@ function radarSvg(series){
   RADAR_AX.forEach((ax,i)=>{const [x,y]=pt(i,100),[lx,ly]=pt(i,118);s+=`<line class="r-axis" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/><text x="${lx}" y="${ly+4}" text-anchor="${Math.abs(lx-cx)<8?"middle":lx<cx?"end":"start"}">${esc(ax)}</text>`;});
   [50,100].forEach(l=>{const [x,y]=pt(0,l);s+=`<text class="r-num" x="${x+4}" y="${y+3}">${l}</text>`;});
   series.forEach(se=>{s+=`<polygon points="${se.v.map((v,i)=>pt(i,Math.max(3,v)).join(",")).join(" ")}" fill="${se.color}" fill-opacity="${se.fill}" stroke="${se.color}" stroke-width="2" ${se.dash?'stroke-dasharray="5 4"':""}/>`;
-    se.v.forEach((v,i)=>{const [x,y]=pt(i,Math.max(3,v));s+=`<circle cx="${x}" cy="${y}" r="3" fill="${se.color}"/>`;});});
+    se.v.forEach((v,i)=>{const [x,y]=pt(i,Math.max(3,v));s+=`<circle cx="${x}" cy="${y}" r="4" fill="${se.color}" data-tip="${esc(RADAR_AX[i])}: ${v} von 100${se.dash?" (Vergleich)":" (deine Konfiguration)"}"/>`;});});
   return s+`</svg>`;
 }
 /* Vergleichs-Konfiguration */
@@ -1870,7 +1885,7 @@ function renderPicker(){
   const T=targetTier(ctxPicks);
   const curPick=state.picks[cat];
   const rec=(curPick&&curPick.src==="auto")?get(cat,curPick.id):choose(cat,ctxPicks,T,null);
-  $("#pNote").textContent=state.auto?"Geprüft gegen deine eigenen Teile. Ergänzte Teile passen sich nach der Auswahl automatisch an.":"Geprüft gegen alle Teile der aktuellen Liste.";
+  $("#pNote").textContent=state.auto?"Geprüft gegen deine eigenen Teile. „Wirkung“ zeigt die Änderung gegenüber jetzt; ergänzte Teile passen sich danach automatisch an.":"Geprüft gegen alle Teile der aktuellen Liste.";
   const q=$("#pSearch").value.trim().toLowerCase();
   const onlyOk=$("#pCompat").checked;
   const sort=$("#pSort").value;
@@ -1891,6 +1906,22 @@ function renderPicker(){
     const ra=a.p===rec?0:1,rb=b.p===rec?0:1;const lv={ok:0,warn:1,error:2};
     return ra-rb||lv[a.lvl]-lv[b.lvl]||a.p.price-b.p.price;
   });
+  const liveParts=resolve(state.picks),liveCur=liveParts[cat],liveRes=P().res;
+  const baseFps=liveParts.gpu||liveParts.cpu?buildFps(liveParts,liveRes):0;
+  // Im Automatik-Modus wird ein ergänztes Netzteil nach der Auswahl neu gewählt; die Last gegen das alte wäre irreführend
+  const psuStays=cat==="psu"||!state.auto||(state.picks.psu&&state.picks.psu.src==="user");
+  const dl=(d,txt,moreIsBad)=>`<span class="${!d?"":(d>0)===!moreIsBad?"delta-pos":"delta-neg"}">${d>0?"+":d<0?"−":"±"}${txt}</span>`;
+  const livePreview=p=>{
+    if(p.id===cur)return "";
+    const test=Object.assign({},liveParts,{[cat]:p}),bits=[];
+    const dP=p.price-(liveCur?liveCur.price:0);
+    bits.push(`<b>${dl(dP,eur(Math.abs(dP)),true)}</b>`);
+    if(cat==="gpu"||cat==="cpu"){const f=buildFps(test,liveRes),d=f-baseFps;bits.push(`${esc(RES[liveRes].label)} ${f} FPS${baseFps?` (${dl(d,Math.abs(d))})`:""}`);}
+    if(cat==="cpu"&&liveCur){const d=p.m-liveCur.m;bits.push(`Multi-Core ${p.m} (${dl(d,Math.abs(d))})`);}
+    if((cat==="gpu"||cat==="cpu"||cat==="psu")&&test.psu&&psuStays&&(test.cpu||test.gpu)){const l=Math.round(estLoad(test)/test.psu.watt*100);bits.push(`Netzteil-Last <span class="${l>85?"delta-neg":""}">${l} %</span>`);}
+    if(cat==="cooler"&&liveParts.cpu&&p.kind!=="boxed"){const r=Math.round((p.cap/liveParts.cpu.cool-1)*100);bits.push(`Kühlreserve <span class="${r<0?"delta-neg":"delta-pos"}">${r>=0?"+":"−"}${Math.abs(r)} %</span>`);}
+    return `<span class="live">Wirkung: ${bits.join(" · ")}</span>`;
+  };
   const html=rows.map(r=>{
     const p=r.p;
     const first=r.iss.find(i=>i.level==="error")||r.iss.find(i=>i.level==="warn");
@@ -1899,7 +1930,7 @@ function renderPicker(){
       <span class="slot-main"><span class="slot-name">${esc(p.name)} ${p===rec?'<span class="tag rec">Empfohlen</span>':""}${p.eol?'<span class="tag" style="background:var(--warn-soft);color:var(--warn)">ausgelaufen</span>':""} ${tierDots(p.tier)}</span>
       <span class="slot-spec">${esc(spec(cat,p))}</span></span>
       <span class="opt-price"><span class="price">${p.price?eur(p.price):"0 €"}</span></span>
-      ${st}</button>`;
+      ${st}${livePreview(p)}</button>`;
   }).join("");
   const curP=state.picks[cat]&&get(cat,state.picks[cat].id);
   const fullCtx=resolve(Object.assign({},state.picks));delete fullCtx[cat];
@@ -1966,6 +1997,25 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidde
 $("#pSearch").addEventListener("input",renderPicker);
 $("#pSort").addEventListener("change",renderPicker);
 $("#pCompat").addEventListener("change",renderPicker);
+const tipEl=document.createElement("div");tipEl.className="tip-float";tipEl.hidden=true;tipEl.setAttribute("role","tooltip");document.body.appendChild(tipEl);
+const hideTip=()=>{tipEl.hidden=true;};
+let tipW=0,tipH=0;
+function showTip(t,x,y){
+  // Nur bei neuem Text messen (links oben, damit die Breite nicht vom alten Platz am Rand gestaucht wird); sonst nur verschieben
+  if(tipEl.hidden||tipEl.textContent!==t){tipEl.style.left=tipEl.style.top="0px";tipEl.textContent=t;tipEl.hidden=false;tipW=tipEl.offsetWidth;tipH=tipEl.offsetHeight;}
+  tipEl.style.left=Math.max(8,Math.min(window.innerWidth-tipW-8,x+12))+"px";tipEl.style.top=(y-tipH-12<8?y+18:y-tipH-12)+"px";
+}
+function tipFrom(e){const el=e.target&&e.target.closest&&e.target.closest("[data-tip]");if(el)showTip(el.getAttribute("data-tip"),e.clientX,e.clientY);else hideTip();}
+document.addEventListener("pointermove",tipFrom);
+document.addEventListener("pointerdown",tipFrom);
+document.addEventListener("focusin",e=>{const el=e.target.closest&&e.target.closest("[data-tip]");if(el){const r=el.getBoundingClientRect();showTip(el.getAttribute("data-tip"),r.left+r.width/2,r.top);}});
+document.addEventListener("focusout",hideTip);
+window.addEventListener("scroll",hideTip,true);
+// Maus verlässt das Fenster: es folgt kein pointermove mehr, der den Hinweis schließen würde
+document.addEventListener("pointerout",e=>{if(e.pointerType==="mouse"&&!e.relatedTarget)hideTip();});
+// Klick schließt nur bei Aktionen; reine Hinweise bleiben stehen, sonst verschwinden sie auf Touch-Geräten beim Loslassen sofort wieder
+document.addEventListener("click",e=>{const el=e.target.closest&&e.target.closest("[data-tip]");if(!el||el.closest("[data-act]"))hideTip();});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("svg [data-act][tabindex]")){e.preventDefault();e.target.dispatchEvent(new MouseEvent("click",{bubbles:true}));}});
 $("#cOnlyOk").addEventListener("change",()=>render());
 $("#dCmpSel").addEventListener("change",e=>{cmpSel=e.target.value;render();});
 $("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
