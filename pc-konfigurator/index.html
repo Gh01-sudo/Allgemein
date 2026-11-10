@@ -338,6 +338,26 @@ button,input,select{font:inherit;color:inherit}
 .power-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px}
 @media (max-width:760px){.power-grid{grid-template-columns:minmax(0,1fr)}}
 .verdict-box{border-left:3px solid var(--accent);padding:6px 10px;background:var(--sunk);border-radius:0 8px 8px 0;font-size:14px;margin:0 0 10px}
+
+.dash-tools{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.cpanel>h2{cursor:pointer;user-select:none}
+.cpanel>h2 .tg{margin-left:10px;border:1px solid var(--line);background:var(--sunk);border-radius:6px;width:26px;height:24px;display:inline-grid;place-items:center;font-size:12px;cursor:pointer;color:var(--ink);flex:none}
+.cpanel>h2 .tg::before{content:"▾"}
+.cpanel.collapsed>h2 .tg::before{content:"▸"}
+.cpanel.collapsed>*:not(h2){display:none!important}
+.cpanel.collapsed{padding-bottom:12px}
+.trend-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px}
+@media (max-width:900px){.trend-grid{grid-template-columns:minmax(0,1fr)}}
+.trend svg{width:100%;height:auto;display:block}
+.trend text{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.trend .ax{stroke:var(--line)}
+.pchg{display:grid;grid-template-columns:minmax(0,1.4fr) auto auto auto;gap:6px 12px;font-size:13px;align-items:center}
+.pchg .h{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.pchg .num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tip-box{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:760px){.tip-box{grid-template-columns:minmax(0,1fr)}}
+.tip-box>div{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--sunk);font-size:13px}
+.tip-box b{display:block;margin-bottom:4px;font-family:var(--f-display)}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -362,13 +382,13 @@ button,input,select{font:inherit;color:inherit}
       <div class="gauges" id="dGauges"></div>
       <div class="kpis kpis-slim" id="dKpis"></div>
     </section>
+    <div class="dash-tools"><button type="button" class="btn" data-act="openAll">Alle Abschnitte öffnen</button><button type="button" class="btn" data-act="closeAll">Alle schließen</button></div>
     <div class="dash">
-      <section class="card span5 cpanel" aria-label="Regler">
-        <h2><span class="ph-dot"></span>Regler <span class="eyebrow">ändern die Bauteile</span></h2>
-        <div class="sliders grid2" id="dSliders"></div>
-        <div id="dUndo"></div>
+      <section class="card span12 cpanel" aria-label="Spiele und Anwendungen">
+        <h2><span class="ph-dot"></span>Spiele und Anwendungen <span class="eyebrow">geschätzte Bildraten und Leistungsindizes</span></h2>
+        <div class="scroll" id="dApps"></div>
       </section>
-      <section class="card span7 cpanel" aria-label="Leistungsprofil">
+      <section class="card span12 cpanel" aria-label="Leistungsprofil">
         <h2><span class="ph-dot"></span>Leistungsprofil <span class="eyebrow">0–100 je Achse</span></h2>
         <div class="radar-wrap">
           <div id="dRadar"></div>
@@ -380,21 +400,9 @@ button,input,select{font:inherit;color:inherit}
           </div>
         </div>
       </section>
-      <section class="card span12 cpanel" aria-label="Spiele und Anwendungen">
-        <h2><span class="ph-dot"></span>Spiele und Anwendungen <span class="eyebrow">geschätzte Bildraten und Leistungsindizes</span></h2>
-        <div class="scroll" id="dApps"></div>
-      </section>
       <section class="card span12 cpanel" aria-label="Zwei Konfigurationen">
         <h2><span class="ph-dot"></span>Zwei Konfigurationen nebeneinander <span class="eyebrow" id="dCmpName"></span></h2>
         <div class="scroll" id="dCompare"></div>
-      </section>
-      <section class="card span7 cpanel" aria-label="Bildrate">
-        <h2><span class="ph-dot"></span>Bildrate nach Auflösung <span class="eyebrow">AAA, hohe Details, ohne Upscaling</span></h2>
-        <div class="chart" id="dFps"></div>
-      </section>
-      <section class="card span5 cpanel" aria-label="Kosten">
-        <h2><span class="ph-dot"></span>Kostenverteilung <span class="eyebrow" id="dCostSum"></span></h2>
-        <div id="dCost"></div>
       </section>
       <section class="card span12 cpanel" aria-label="Fertig-PCs">
         <h2><span class="ph-dot"></span>Gegen Fertig-PCs <span class="eyebrow">mit Windows, ohne Monitor</span></h2>
@@ -403,6 +411,27 @@ button,input,select{font:inherit;color:inherit}
       <section class="card span12 cpanel" aria-label="Laptop-Vergleich">
         <h2><span class="ph-dot"></span>Gegen Laptops <span class="eyebrow">Preise Stand Nov. 2026</span></h2>
         <div id="dLaptop"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Sparpotenzial">
+        <h2><span class="ph-dot"></span>Sparen ohne Nachteile <span class="eyebrow">gleichwertige, günstigere Teile</span></h2>
+        <div id="dSave"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Preisentwicklung">
+        <h2><span class="ph-dot"></span>Preisentwicklung <span class="eyebrow">2024 bis November 2026</span></h2>
+        <div id="dTrend"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Regler">
+        <h2><span class="ph-dot"></span>Regler <span class="eyebrow">ändern die Bauteile</span></h2>
+        <div class="sliders grid2" id="dSliders"></div>
+        <div id="dUndo"></div>
+      </section>
+      <section class="card span7 cpanel" aria-label="Bildrate">
+        <h2><span class="ph-dot"></span>Bildrate nach Auflösung <span class="eyebrow">AAA, hohe Details, ohne Upscaling</span></h2>
+        <div class="chart" id="dFps"></div>
+      </section>
+      <section class="card span5 cpanel" aria-label="Kosten">
+        <h2><span class="ph-dot"></span>Kostenverteilung <span class="eyebrow" id="dCostSum"></span></h2>
+        <div id="dCost"></div>
       </section>
       <section class="card span7 cpanel" aria-label="Aktuelle Bauteile">
         <h2><span class="ph-dot"></span>Aktuelle Bauteile <span class="eyebrow" id="dPartsSum"></span></h2>
@@ -631,7 +660,7 @@ psu:[
  {id:"montech-903",silent:1,name:"Montech AIR 903 MAX",form:"ATX",gpu:400,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:54,chk:true},
  {id:"ll-lancool217",silent:2,name:"Lian Li Lancool 217",form:"ATX",gpu:410,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:100,chk:true},
  {id:"cm-nr200p",silent:1,name:"Cooler Master NR200P V2",form:"ITX",gpu:336,cooler:155,rads:[240,280],psu:["SFX"],tier:3,price:110,eol:true},
- {id:"bq-pb501",silent:3,name:"be quiet! Pure Base 501 (gedämmt)",form:"ATX",gpu:368,cooler:178,rads:[240,280,360],psu:["ATX"],tier:2,price:60,chk:true},
+ {id:"bq-pb501",silent:3,name:"be quiet! Pure Base 501 (gedämmt)",form:"ATX",gpu:368,cooler:178,rads:[240,280,360],radFrontOnly:[280,360],gpuFrontRad:300,psu:["ATX"],tier:2,price:60,chk:true},
  {id:"fd-north",silent:2,name:"Fractal Design North",form:"ATX",gpu:355,cooler:170,rads:[240,280,360],psu:["ATX"],tier:3,price:142,chk:true},
  {id:"ll-o11-evo",silent:1,name:"Lian Li O11 Dynamic EVO RGB",form:"ATX",gpu:426,cooler:167,rads:[240,280,360],psu:["ATX"],tier:4,price:167,chk:true},
  {id:"bq-sb802",silent:3,name:"be quiet! Silent Base 802 (gedämmt)",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:140,chk:true,radFrontOnly:[420],gpuFrontRad:369,gpuCage:287},
@@ -644,6 +673,7 @@ const LAPTOPS=[
  {id:"g14",cls:"14 Zoll, mobil",name:"ASUS ROG Zephyrus G14 (2026)",cpu:"Intel Core Ultra 9 386H",gpu:"RTX 5070 Ti Laptop 12 GB",ram:"32 GB",ssd:"1 TB",display:"14\" 3K OLED",kg:1.6,g:63,m:62,watt:140,price:3299,priceNote:"Listenpreis laut Notebookcheck",chk:true,link:"https://geizhals.de/?fs=ROG+Zephyrus+G14+2026"},
  {id:"aorus16",cls:"16 Zoll, Allround",name:"Gigabyte Aorus Master 16",cpu:"AMD Ryzen 9 X3D (16 Kerne)",gpu:"RTX 5080 Laptop 16 GB",ram:"32 GB",ssd:"2 TB",display:"16\" 2,5K OLED 240 Hz",kg:2.5,g:72,m:92,watt:250,price:3299,priceNote:"Angebot Alternate laut Notebookcheck, sonst ab ca. 3.330 €",chk:true,link:"https://geizhals.de/?fs=Aorus+Master+16+RTX+5080"},
  {id:"scar18",cls:"18 Zoll, Desktop-Ersatz",name:"ASUS ROG Strix Scar 18 (2026)",cpu:"Intel Core Ultra 9 290HX Plus (24 Kerne)",gpu:"RTX 5090 Laptop 24 GB",ram:"64 GB",ssd:"4 TB",display:"18\" 4K Mini-LED 240 Hz",kg:3.3,g:80,m:95,watt:330,price:6598,priceNote:"ab-Preis Deutschland (64 GB / 4 TB)",chk:true,link:"https://geizhals.de/?fs=RTX+5090+Laptop+18"},
+ {id:"legionpro7i",cls:"16 Zoll, Allround",name:"Lenovo Legion Pro 7i Gen 10",cpu:"Intel Core Ultra 9 275HX (24 Kerne)",gpu:"RTX 5080 Laptop 16 GB",ram:"32 GB",ssd:"1 TB",display:"16\" OLED 240 Hz",kg:2.7,g:72,m:92,watt:250,price:2599,priceNote:"unter 2.600 € mit Edu-Rabatt (März 2026, Notebookcheck)",chk:false,link:"https://www.notebookcheck.com/Deal-Legion-Pro-7i-OLED-mit-RTX-5070-Ti-oder-RTX-5080-zum-Top-Preis-direkt-von-Lenovo.1250515.0.html"},
  {id:"mbp16",cls:"16 Zoll, Kreativ",name:"Apple MacBook Pro 16 M5 Max",cpu:"M5 Max, 18 Kerne",gpu:"32-Kern-GPU (integriert)",ram:"36 GB",ssd:"2 TB",display:"16,2\" Mini-LED XDR",kg:2.1,g:null,m:98,watt:140,price:4099,priceNote:"Bestpreis (36 GB / 2 TB); UVP 4.499 €",chk:true,link:"https://geizhals.de/?fs=MacBook+Pro+16+M5+Max"}
 ];
 
@@ -677,7 +707,7 @@ const WEIGHTS={
 };
 const PROFILE_NAME={gaming:"Gaming",office:"Büro & Alltag",creator:"Kreativ & Workstation"};
 const PRESETS=[
- {id:"mine",params:{mix:60,res:3,fps:60,ram:32,storage:2000,quiet:80,size:"ATX"},name:"Deine Konfiguration",hint:"4K-Gaming + Kreativ",profile:"creator",budget:null,user:{cpu:"r9-9900x",cooler:"ar-lf3-420",board:"msi-b850-tomahawk",ram:"gs-2x16-6000",gpu:"rtx5070ti",ssd:"s9100-2",psu:"cor-rm850e","case":"bq-sb802"}},
+ {id:"mine",params:{mix:60,res:3,fps:60,ram:32,storage:2000,quiet:80,size:"ATX"},name:"Deine Konfiguration",hint:"4K-Gaming + Kreativ",profile:"creator",budget:null,user:{cpu:"r9-9900x",cooler:"ar-lf3-360",board:"msi-b850-tomahawk",ram:"gs-2x16-6000",gpu:"rtx5070ti",ssd:"s9100-2",psu:"cor-rm850e","case":"bq-sb802"}},
  {id:"office",params:{mix:30,res:0,fps:60,ram:16,storage:1000,quiet:70,size:"mATX"},name:"Büro & Zuhause",hint:"ohne Grafikkarte",profile:"office",budget:null,user:{cpu:"r5-8600g"}},
  {id:"fhd",params:{mix:10,res:0,fps:120,ram:32,storage:1000,quiet:40,size:"ATX"},name:"Einstieg Full HD",hint:"Budget 1.600 €",profile:"gaming",budget:1600,user:{gpu:"rtx5060"}},
  {id:"wqhd",params:{mix:20,res:1,fps:144,ram:32,storage:2000,quiet:50,size:"ATX"},name:"Gaming WQHD",hint:"9800X3D + 9070 XT",profile:"gaming",budget:null,user:{cpu:"r7-9800x3d",gpu:"rx9070xt"}},
@@ -1257,6 +1287,9 @@ function renderDash(parts,issues){
   renderRadarAndCompare(parts);
   renderApps(parts);
   renderPrebuilt(parts,total);
+  renderSave(parts);
+  renderTrend();
+  initCollapse();
   // Strom
   const avgW=Math.round(loadW*0.7),kwh=avgW*p.hours*365/1000,cost=kwh*p.kwh;
   const oh=$("#out-hours");if(oh)oh.textContent=p.hours+" h";const ok2=$("#out-kwh");if(ok2)ok2.textContent=p.kwh.toLocaleString("de-DE",{minimumFractionDigits:2})+" €/kWh";
@@ -1715,6 +1748,109 @@ function renderPrebuilt(parts,total){
    <td class="num">${f?eur(r.price/f):"–"}</td></tr>`;}).join("")}</tbody></table></div>
    <p class="subline">Fertig-PCs enthalten in der Regel Windows. Nur Preise mit „Preis belegt“ zählen für das Fazit. Ihre Netzteile, Gehäuse, Mainboards und Kühler sind oft einfacher als im Selbstbau, und RAM oder SSD sind häufig kleiner. Alle Leistungswerte sind Richtwerte auf derselben Skala.</p>`;
 }
+
+/* ---------- Abschnitte einklappen ---------- */
+const CKEY="pcwerkbank.collapsed";
+function loadCollapsed(){try{return new Set(JSON.parse(localStorage.getItem(CKEY)||"[]"));}catch(e){return new Set();}}
+function saveCollapsed(set){try{localStorage.setItem(CKEY,JSON.stringify([...set]));}catch(e){}}
+function initCollapse(){
+  const set=loadCollapsed();
+  document.querySelectorAll("#viewDash .cpanel").forEach(sec=>{
+    const h=sec.querySelector(":scope>h2");if(!h)return;
+    if(!h.querySelector(".tg")){const b=document.createElement("button");b.type="button";b.className="tg";b.setAttribute("aria-label","Abschnitt ein- oder ausklappen");h.appendChild(b);}
+    const key=sec.getAttribute("aria-label");sec.classList.toggle("collapsed",set.has(key));
+    h.querySelector(".tg").setAttribute("aria-expanded",String(!set.has(key)));
+  });
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("select,input,a,.row-btns,button:not(.tg)"))return;
+  const h=e.target.closest("#viewDash .cpanel>h2");if(!h)return;
+  const sec=h.parentElement,key=sec.getAttribute("aria-label"),set=loadCollapsed();
+  if(set.has(key))set.delete(key);else set.add(key);saveCollapsed(set);initCollapse();
+});
+/* ---------- Sparen ohne Nachteile ---------- */
+function equalOrBetter(cat,cur,p,parts){
+  const ctx=Object.assign({},parts);delete ctx[cat];
+  const m0=betterMetric(cat,cur,ctx),m1=betterMetric(cat,p,ctx);
+  switch(cat){
+    case "cpu":return p.g>=cur.g*0.98&&p.m>=cur.m*0.98&&p.cores>=cur.cores&&p.socket===cur.socket;
+    case "gpu":return !p.none&&p.g>=cur.g*0.98&&p.vram>=cur.vram&&(cur.brand!=="NVIDIA"||p.brand==="NVIDIA");
+    case "ram":return p.cap>=cur.cap&&(Math.min(p.speed,6000)>=Math.min(cur.speed,6000))&&p.cl<=cur.cl;
+    case "ssd":return p.cap>=cur.cap&&p.gen>=cur.gen&&p.read>=cur.read*0.95;
+    case "psu":return p.watt>=cur.watt&&(EFF_RANK[p.eff]||0)>=(EFF_RANK[cur.eff]||0)&&(p.atx3||!cur.atx3)&&p.form===cur.form;
+    case "board":return p.form===cur.form&&p.socket===cur.socket&&(!cur.gen5m2||p.gen5m2)&&(!cur.wifi||p.wifi)&&p.slots>=cur.slots&&p.m2>=Math.min(cur.m2,3);
+    case "cooler":return p.kind!=="boxed"&&p.cap>=Math.max(cur.cap*0.85,(parts.cpu?parts.cpu.cool*1.5:0));
+    case "case":return (p.silent||1)>=(cur.silent||1)&&p.form===cur.form&&p.gpu>=Math.min(cur.gpu,(parts.gpu&&parts.gpu.len||0)+40)&&p.cooler>=(parts.cooler&&parts.cooler.kind==="air"?parts.cooler.h:0);
+  }
+  return m1>=m0;
+}
+function savingsList(parts){
+  const out=[];
+  CATS.forEach(c=>{const cur=parts[c.k];if(!cur||cur.none||cur.kind==="boxed")return;
+    const ctx=Object.assign({},parts);delete ctx[c.k];
+    const cands=DB[c.k].filter(p=>p.id!==cur.id&&!p.eol&&p.price<cur.price-4&&equalOrBetter(c.k,cur,p,parts))
+      .filter(p=>!issuesFor(c.k,p,ctx,state.profile).some(i=>i.level==="error"||i.level==="warn"))
+      .sort((a,b)=>a.price-b.price);
+    if(cands.length)out.push({c,cur,p:cands[0]});});
+  return out;
+}
+function saveNote(cat,cur,p,parts){
+  const n=[];
+  if(cat==="board"){if(p.m2<cur.m2)n.push(`${p.m2} statt ${cur.m2} M.2-Plätze`);if(p.chipset!==cur.chipset)n.push(`${p.chipset} statt ${cur.chipset}`);}
+  if(cat==="cooler"){if(p.cap<cur.cap)n.push(`${p.cap} statt ${cur.cap} W, immer noch ${Math.round((p.cap/(parts.cpu?parts.cpu.cool:p.cap)-1)*100)} % Reserve`);if(p.kind==="aio"&&parts["case"]&&parts["case"].radFrontOnly&&cur.kind==="aio"&&parts["case"].radFrontOnly.includes(cur.rad)&&!parts["case"].radFrontOnly.includes(p.rad))n.push("passt oben ins Gehäuse, kein Front-Einbau nötig");}
+  if(cat==="case"){if(p.gpu<cur.gpu)n.push(`GPU bis ${p.gpu} mm`);if(p.rads.length<cur.rads.length)n.push(`Radiator bis ${Math.max(...p.rads)} mm`);}
+  if(cat==="psu"&&p.name.split(" ")[0]!==cur.name.split(" ")[0])n.push("anderer Hersteller, gleiche Klasse");
+  return n.join(" · ")||"gleichwertig";
+}
+function renderSave(parts){
+  const L=savingsList(parts);const sum=L.reduce((s2,x)=>s2+x.cur.price-x.p.price,0);
+  $("#dSave").innerHTML=L.length?`<p class="verdict-box">Mit gleichwertigen Teilen lassen sich bis zu <b>${eur(sum)}</b> sparen, ohne bei Leistung, Lautstärke oder Ausstattung spürbar nachzugeben.</p>
+   <div class="up"><span class="h">Tausch</span><span class="h">Ersparnis</span><span class="h">Unterschied</span><span></span>${L.map(x=>`<span>${esc(x.c.label)}: ${esc(x.cur.name)} → <b>${esc(x.p.name)}</b></span><span class="delta-pos">−${eur(x.cur.price-x.p.price)}</span><span class="subline">${esc(saveNote(x.c.k,x.cur,x.p,parts))}</span><button type="button" class="btn" data-act="take" data-cat="${x.c.k}" data-id="${esc(x.p.id)}">Übernehmen</button>`).join("")}</div>
+   <p class="subline">Geprüft gegen dein übriges System: keine Konflikte oder Warnungen. Kriterien je Bauteil: gleiche oder bessere Leistung, Kapazität, Effizienz, Dämmung und Ausstattung.</p>`:`<p class="verdict-box">Deine Teile sind bereits die günstigsten gleichwertigen im Katalog.</p>`;
+}
+/* ---------- Preisentwicklung ---------- */
+const TREND=[
+ {k:"ram",label:"32 GB DDR5-6000 CL30",color:"var(--c2)",pts:[["2025-07",90],["2026-01",240],["2026-05",415],["2026-11",525]],src:"PCGH, Geizhals"},
+ {k:"ssd",label:"2-TB-NVMe-SSD (PCIe 4.0)",color:"var(--c5)",pts:[["2025-10",125],["2026-10",340],["2026-11",446]],src:"computingforgeeks, PCGH-Preisvergleich"},
+ {k:"gpu",label:"RTX 5070 Ti",color:"var(--c3)",pts:[["2025-03",879],["2026-11",1279]],src:"NVIDIA-UVP, elitegear/Geizhals"},
+ {k:"cpu",label:"Ryzen 9 9900X",color:"var(--c1)",pts:[["2024-08",539],["2026-11",303]],src:"AMD-UVP, Geizhals"}
+];
+const CHANGES=[
+ ["Arbeitsspeicher 32 GB DDR5-6000","ca. 90 €","525 €"],
+ ["SSD 2 TB PCIe 4.0","ca. 125 €","446 €"],
+ ["RTX 5090","2.099 € (UVP)","7.800 €"],
+ ["RTX 5070 Ti","879 € (UVP)","1.279 €"],
+ ["RX 9070 XT","689 € (UVP)","896 €"],
+ ["Ryzen 9 9900X","539 € (UVP)","303 €"],
+ ["Ryzen 7 9800X3D","529 € (UVP)","398 €"]
+];
+function monthIdx(ym){const [y,m]=ym.split("-").map(Number);return (y-2024)*12+m-1;}
+function renderTrend(){
+  const W=620,H=260,L=46,R=30,T=12,B=34;
+  const x0=monthIdx("2024-07"),x1=monthIdx("2026-12");
+  const fx=m=>L+(Math.max(x0,m)-x0)/(x1-x0)*(W-L-R);
+  // Index: erster Punkt = 100
+  const series=TREND.map(t=>({...t,idx:t.pts.map(([d,v])=>[monthIdx(d),v/t.pts[0][1]*100])}));
+  const yMax=Math.ceil(Math.max(...series.flatMap(s2=>s2.idx.map(p=>p[1])))/100)*100;
+  const fy=v=>H-B-v/yMax*(H-T-B);
+  let s2=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Preisindex seit 2025">`;
+  for(let v=0;v<=yMax;v+=100){s2+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${fy(v)}" y2="${fy(v)}"/><text x="${L-6}" y="${fy(v)+3}" text-anchor="end">${v}</text>`;}
+  ["2024-07","2025-01","2025-07","2026-01","2026-07"].forEach(d=>{const x=fx(monthIdx(d));s2+=`<line class="ax" x1="${x}" x2="${x}" y1="${T}" y2="${H-B}" stroke-dasharray="2 3"/><text x="${x}" y="${H-B+14}" text-anchor="middle">${d.replace("-","/")}</text>`;});
+  s2+=`<line x1="${L}" x2="${W-R}" y1="${fy(100)}" y2="${fy(100)}" stroke="var(--ink)" stroke-width="1" stroke-dasharray="4 3"/>`;
+  series.forEach(se=>{const pts=se.idx.map(([m,v])=>[fx(m),fy(v)]);s2+=`<polyline points="${pts.map(p=>p.join(",")).join(" ")}" fill="none" stroke="${se.color}" stroke-width="2.5"/>`;
+    pts.forEach((p,i)=>{s2+=`<circle cx="${p[0]}" cy="${p[1]}" r="3.5" fill="${se.color}"><title>${esc(se.label)}: ${se.pts[i][1]} € (${se.pts[i][0]})</title></circle>`;});
+    const last=pts[pts.length-1];s2+=`<text x="${last[0]-6}" y="${last[1]-7}" text-anchor="end" style="fill:var(--ink)">${Math.round(se.idx[se.idx.length-1][1])}</text>`;});
+  s2+=`</svg>`;
+  const legend=`<div class="legend">${series.map(se=>`<span><i style="background:${se.color}"></i>${esc(se.label)}</span>`).join("")}<span>Index: erster Datenpunkt = 100</span></div>`;
+  const table=`<div class="pchg"><span class="h">Bauteil</span><span class="h num">Damals</span><span class="h num">Nov. 2026</span><span class="h num">Änderung</span>${CHANGES.map(r=>{const a=parseFloat(r[1].replace(/[^\d,]/g,"").replace(".","").replace(",",".")),b=parseFloat(r[2].replace(/[^\d,]/g,"").replace(".","").replace(",","."));const d=Math.round((b/a-1)*100);return `<span>${esc(r[0])}</span><span class="num">${esc(r[1])}</span><span class="num">${esc(r[2])}</span><span class="num ${d>0?"delta-neg":"delta-pos"}">${d>0?"+":""}${d} %</span>`;}).join("")}</div>`;
+  $("#dTrend").innerHTML=`<div class="trend-grid"><div class="trend">${s2}${legend}</div><div>${table}</div></div>
+   <div class="tip-box">
+     <div><b>Jetzt günstig</b>Prozessoren, Mainboards, Gehäuse, Kühler und Netzteile liegen auf oder unter dem Vorjahresniveau. Hier lohnt sich der Kauf jetzt.</div>
+     <div><b>Teuer wegen Speicherkrise</b>RAM, SSDs und Grafikkarten kosten das 1,5- bis 6-Fache. Marktbeobachter (TrendForce, 3DCenter) erwarten hohe Preise für den Rest von 2026 und eine Entspannung frühestens 2027/2028.</div>
+     <div><b>Kauftipp</b>Wenn du den PC jetzt brauchst: kaufen, nicht auf fallende Preise wetten. Rund um Black Friday (27.11.2026) gezielt RAM-, SSD- und GPU-Angebote vergleichen.</div>
+   </div>
+   <p class="subline">Datenpunkte aus Preisvergleichen und Fachartikeln (PCGH, 3DCenter, elitegear/Geizhals, computingforgeeks, Herstellerpreise). Zwischen den Punkten ist der Verlauf vereinfacht; der SSD-Wert vom Oktober 2026 ist ein US-Preis, umgerechnet.</p>`;
+}
 /* ---------- Auswahl-Schublade ---------- */
 let pickerCat=null,lastFocus=null;
 function openPicker(cat){
@@ -1819,6 +1955,8 @@ document.addEventListener("click",e=>{
   else if(act==="fill"){state.picks=fillMissing(state.picks);save();render();}
   else if(act==="reset"){state.picks={};state.budget=null;save();render();}
   else if(act==="copy")copyList();
+  else if(act==="openAll"){saveCollapsed(new Set());initCollapse();}
+  else if(act==="closeAll"){saveCollapsed(new Set([...document.querySelectorAll("#viewDash .cpanel")].map(x=>x.getAttribute("aria-label"))));initCollapse();}
   else if(act==="saveVar"){saveVariant(el.dataset.slot);cmpSel="var:"+el.dataset.slot;render();}
   else if(act==="take"){state.picks[cat]={id:el.dataset.id,src:"user"};recompute();}
   else if(act==="undo"){if(undoSnap){const s0=JSON.parse(undoSnap);state=s0;undoSnap=null;save();renderSliders();render();$("#dUndo").innerHTML="";}}

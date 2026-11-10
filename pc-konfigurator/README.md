@@ -34,7 +34,10 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen jede Vorlage oder gespeicherte Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
 - **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS.
+- **Sparen ohne Nachteile:** gleichwertige, günstigere Teile mit Ersparnis, nur ohne Konflikte.
+- **Preisentwicklung:** Preisindex seit 2024 für RAM, SSD, Grafikkarte und Prozessor, Tabelle „damals – heute“ und Kauftipp.
 - Bildrate je Auflösung, Kostenverteilung, Upgrade-Stufen und Strom.
+- Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
 Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
