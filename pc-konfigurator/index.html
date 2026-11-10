@@ -593,7 +593,7 @@ gpu:[
  {id:"rtx5070",name:"NVIDIA GeForce RTX 5070 12 GB",brand:"NVIDIA",vram:12,power:250,len:270,rec:650,conn:"12V-2x6",g:75,tier:3,price:858,chk:true},
  {id:"rx9070gre",name:"AMD Radeon RX 9070 GRE 12 GB",brand:"AMD",vram:12,power:220,len:280,rec:650,conn:"8-Pin",g:76,tier:3,price:639,chk:true},
  {id:"rx9070",name:"AMD Radeon RX 9070 16 GB",brand:"AMD",vram:16,power:220,len:290,rec:650,conn:"8-Pin",g:84,tier:3,price:759,chk:true},
- {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:92,tier:4,price:896,chk:true},
+ {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:90,tier:4,price:896,chk:true},
  {id:"rtx5070ti",name:"NVIDIA GeForce RTX 5070 Ti 16 GB",brand:"NVIDIA",vram:16,power:300,len:305,rec:750,conn:"12V-2x6",g:93,tier:4,price:1279,chk:true},
  {id:"rtx5080",name:"NVIDIA GeForce RTX 5080 16 GB",brand:"NVIDIA",vram:16,power:360,len:315,rec:850,conn:"12V-2x6",g:105,tier:5,price:1889,chk:true},
  {id:"rtx5090",name:"NVIDIA GeForce RTX 5090 32 GB",brand:"NVIDIA",vram:32,power:575,len:335,rec:1000,conn:"12V-2x6",g:150,tier:5,price:7800,chk:true}
@@ -649,10 +649,12 @@ const LAPTOPS=[
 
 /* Fertig-PCs: g = Grafikkarte (RTX 5080 = 105), cg/m = Prozessor; Preise inkl. Windows */
 const PREBUILT=[
- {id:"omen35l",name:"HP Omen 35L (GT16-1472ng)",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:100,m:55,price:2549,priceNote:"Angebot Juli 2026 (Cyberport/Computeruniverse), Notebookcheck",link:"https://www.notebookcheck.com/Ryzen-7-9800X3D-GeForce-RTX-5070-Ti-32-GB-RAM-1-TB-SSD-HP-Omen-Gaming-PC-im-Angebot.1333295.0.html",chk:true},
- {id:"legiont7",name:"Lenovo Legion T7 (34IAS10)",cpu:"Core Ultra 7 265KF",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"1 TB",g:105,cg:80,m:86,price:2999,priceNote:"Notebooksbilliger, Sept. 2026 (heise-Preisvergleich)",link:"https://www.notebookcheck.com/GeForce-RTX-5080-Core-Ultra-7-32-GB-RAM-1-TB-SSD-Lenovo-Legion-Gaming-PC-im-Angebot.1397802.0.html",chk:true},
- {id:"dubaro",name:"Dubaro Gaming-PC (Systemintegrator)",cpu:"Ryzen 7 7800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:92,m:42,price:3499,priceNote:"Herstellerseite, Datum unklar",link:"https://dubaro.de/Specials/NVIDIA-RTX-5070Ti-Gaming-PCs/",chk:false},
- {id:"area51",name:"Alienware Area-51",cpu:"Core Ultra 7 265F",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"2 TB",g:105,cg:80,m:86,price:3599,priceNote:"Startpreis März 2025, heute eher höher",link:"https://www.notebookcheck.com/Alienware-Area-51-mit-RTX-5080-1-500W-Netzteil-und-45-leiserem-Kuehlsystem-startet-in-Deutschland-in-den-Verkauf.973806.0.html",chk:false}
+ {id:"legiont7-5070ti",name:"Lenovo Legion T7 (34IAS10, 90Y600AFGF)",cpu:"Core Ultra 7 265K",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:80,m:86,price:2599,priceNote:"notebooksbilliger.de, ab Lager, 10.11.2026; DDR5-5600, 850 W, Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/lenovo-legion-t7-34ias10-90y600afgf-a3775439.html",chk:true},
+ {id:"legion5i-5070ti",name:"Lenovo Legion Tower 5i Gen10 (90YA001XGF)",cpu:"Core Ultra 7 265KF",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:80,m:86,price:2599,priceNote:"notebooksbilliger.de, auf Lager, 10.11.2026; DDR5-5600, 850 W, Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/lenovo-legion-tower-5i-gen10-90ya001xgf-a3510245.html",chk:true},
+ {id:"captiva-9070xt",name:"Captiva Highend Gaming R10-0257",cpu:"Ryzen 7 9800X3D",gpu:"RX 9070 XT 16 GB",ram:"32 GB",ssd:"k. A.",g:90,cg:100,m:55,price:2445,priceNote:"ab 2.445 €, 10.11.2026; SSD, Windows und Lieferbarkeit nicht geprüft",link:"https://preisvergleich.pcgameshardware.de/captiva-highend-gaming-r10-0257-100257-a3868979.html",chk:false},
+ {id:"omen35l",name:"HP Omen 35L (GT16-1472ng)",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:100,m:55,price:3799,priceNote:"Geizhals ab 3.799 € (10.11.2026); 2.549 € war ein Angebot im Juli/Sept.",link:"https://preisvergleich.pcgameshardware.de/?fs=Omen+35L+GT16-1472ng",chk:true},
+ {id:"legiont7-5080",name:"Lenovo Legion T7 (34IAS10, 90Y6001PGF)",cpu:"Core Ultra 7 265KF",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"2 TB",g:105,cg:80,m:86,price:3699,priceNote:"Geizhals/PCGH, 10.11.2026",link:"https://preisvergleich.pcgameshardware.de/?fs=Legion+T7+34IAS10+5080",chk:true},
+ {id:"dubaro",name:"Dubaro Gaming-PC (Systemintegrator)",cpu:"Ryzen 7 7800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"2 TB",g:93,cg:92,m:42,price:3499,priceNote:"dubaro.de, 10.11.2026; ob Windows enthalten ist, nicht geprüft",link:"https://dubaro.de/Specials/NVIDIA-RTX-5070Ti-Gaming-PCs/",chk:false}
 ];
 
 const CATS=[
@@ -1658,20 +1660,20 @@ function appEstimates(parts){
   const gpu=parts.gpu&&!parts.gpu.none?parts.gpu:null,cpu=parts.cpu,ram=parts.ram;
   const gG=gpu?gpu.g:((cpu&&cpu.ig)||0),cG=cpu?cpu.g:0;
   const rtF=gpu?(gpu.brand==="NVIDIA"?1.15:gpu.brand==="AMD"?0.95:0.9):0.5;
-  const fg=gpu?(gpu.brand==="NVIDIA"?1.9:1.7):1;
+  const fg=gpu?1.6:1;
   const games=[
     {name:"eSports",ex:"z. B. Counter-Strike 2, Valorant, LoL",f:(i)=>Math.min(gG*RES[i].f*3.2,cG*5.2)},
     {name:"AAA, hohe Details",ex:"z. B. aktuelle Open-World-Titel",f:(i)=>Math.min(gG*RES[i].f,cG*CPU_FPS)},
     {name:"AAA + Raytracing",ex:"Raytracing hoch, ohne Upscaling",f:(i)=>Math.min(gG*RES[i].f*0.6*rtF,cG*1.9)},
     {name:"AAA + RT + Upscaling",ex:"DLSS/FSR „Qualität“",f:(i)=>Math.min(gG*RES[i].f*0.6*rtF*1.55,cG*1.9)},
-    {name:"… + Frame Generation",ex:gpu&&gpu.brand==="NVIDIA"?"DLSS 4 Frame Gen (2×)":"FSR Frame Gen",f:(i)=>Math.min(gG*RES[i].f*0.6*rtF*1.55,cG*1.9)*fg}
+    {name:"… + Frame Generation",ex:gpu&&gpu.brand==="NVIDIA"?"DLSS 4 Frame Gen 2× (mit 4× bis ca. 2,7-fach)":"FSR Frame Gen 2×",f:(i)=>Math.min(gG*RES[i].f*0.6*rtF*1.55,cG*1.9)*fg}
   ];
   const blender=gpu?Math.round(gpu.g/105*100*(gpu.brand==="NVIDIA"?1:gpu.brand==="AMD"?0.55:0.5)):Math.round((cpu?cpu.m:0)*0.12);
   const video=Math.round(Math.min(100,(cpu?cpu.m:0)*0.6+(gpu?40:15)));
   const compile=cpu?cpu.m:0;
   const photo=Math.round(Math.min(100,(cpu?cpu.g:0)*0.6+(ram?Math.min(ram.cap,64)/64*40:0)));
   const vram=gpu?gpu.vram:0,ramGb=ram?ram.cap:0;
-  const llmFast=vram?Math.floor(vram/0.62):0,llmSlow=Math.floor((vram+ramGb*0.7)/0.62);
+  const llmFast=vram?Math.max(0,Math.floor((vram-1.5)/0.62)):0,llmSlow=Math.max(0,Math.floor((vram-1.5+ramGb*0.7)/0.62));
   const apps=[
     {name:"3D-Rendern (Blender Cycles, GPU)",v:blender,txt:gpu?(gpu.brand==="NVIDIA"?"OptiX, volle Unterstützung":gpu.brand==="AMD"?"HIP, deutlich langsamer als CUDA":"oneAPI, eingeschränkt"):"nur CPU-Rendern",ref:"RTX 5080 = 100"},
     {name:"Video-Export (H.265/AV1)",v:video,txt:"Prozessor-Kerne plus Hardware-Encoder der Grafikkarte",ref:"Index"},
@@ -1700,9 +1702,9 @@ function renderPrebuilt(parts,total){
   const fpsOf=(g,cg)=>Math.round(Math.min(g*RES[P().res].f,cg*CPU_FPS));
   const myFps=fpsOf(dG,dC);
   const rows=[{me:true,name:"Dein Selbstbau",cpu:cpu?cpu.name.replace(/^(AMD|Intel) /,""):"–",gpu:gpu?gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""):"–",ram:parts.ram?parts.ram.cap+" GB":"–",ssd:parts.ssd?fmtCap(parts.ssd.cap):"–",g:dG,cg:dC,m:dM,price:dPrice,priceNote:`${eur(total)} Teile + ca. 260 € Windows`},...PREBUILT];
-  const cheapest=PREBUILT.filter(x=>fpsOf(x.g,x.cg)>=myFps*0.95).sort((a,b)=>a.price-b.price)[0];
+  const cheapest=PREBUILT.filter(x=>x.chk&&fpsOf(x.g,x.cg)>=myFps*0.95).sort((a,b)=>a.price-b.price)[0];
   let verdict="";
-  if(cheapest&&dG){const d=dPrice-cheapest.price;verdict=`<p class="verdict-box">${d>0?`<b>${esc(cheapest.name)}</b> erreicht mindestens 95 % deiner Spieleleistung und ist laut letztem Angebot <b>${eur(d)} günstiger</b>. Dein Selbstbau bietet dafür ${parts["case"]&&parts["case"].silent===3?"ein gedämmtes Gehäuse, ":""}${parts.ssd&&parts.ssd.cap>=2000?"mehr SSD-Speicher, ":""}frei wählbare Markenteile und volle Aufrüstbarkeit. Fertig-PC-Angebote schwanken stark; Preise vor dem Kauf prüfen.`:`Dein Selbstbau ist <b>${eur(-d)} günstiger</b> als der günstigste Fertig-PC mit gleicher Leistung (${esc(cheapest.name)}).`}</p>`;}
+  if(cheapest&&dG){const d=dPrice-cheapest.price;verdict=`<p class="verdict-box">${d>0?`<b>${esc(cheapest.name)}</b> erreicht mindestens 95 % deiner Spieleleistung und ist <b>${eur(d)} günstiger</b> (${esc(cheapest.priceNote.split(";")[0])}). Dein Selbstbau bietet dafür ${parts["case"]&&parts["case"].silent===3?"ein gedämmtes Gehäuse, ":""}${parts.ssd&&parts.ssd.cap>=2000?"mehr SSD-Speicher, ":""}frei wählbare Markenteile und volle Aufrüstbarkeit. Fertig-PC-Angebote schwanken stark; Preise vor dem Kauf prüfen.`:`Dein Selbstbau ist <b>${eur(-d)} günstiger</b> als der günstigste belegte Fertig-PC mit gleicher Leistung (${esc(cheapest.name)}, ${esc(cheapest.priceNote.split(";")[0])}).`}</p>`;}
   const maxF=Math.max(myFps,...PREBUILT.map(x=>fpsOf(x.g,x.cg)))||1;
   $("#dPrebuilt").innerHTML=verdict+`<div class="scroll"><table class="ctable"><thead><tr><th>System</th><th>Ausstattung</th><th>FPS ${esc(RES[P().res].label)}</th><th>Multi-Core</th><th class="num">Preis</th><th class="num">Preis je FPS</th></tr></thead><tbody>
    ${rows.map(r=>{const f=fpsOf(r.g,r.cg);return `<tr class="${r.me?"me":cheapest&&r.id===cheapest.id?"best":""}"><td><b>${esc(r.name)}</b>${r.link?`<br><a href="${r.link}" target="_blank" rel="noopener" style="font-size:12px">Quelle ↗</a>`:""}</td>
@@ -1711,7 +1713,7 @@ function renderPrebuilt(parts,total){
    <td><span class="num">${r.m}</span></td>
    <td class="num"><b>${eur(r.price)}</b><br><small class="subline">${esc(r.priceNote)}</small>${r.chk?'<br><span class="tag rec">Preis belegt</span>':""}</td>
    <td class="num">${f?eur(r.price/f):"–"}</td></tr>`;}).join("")}</tbody></table></div>
-   <p class="subline">Fertig-PCs enthalten Windows. Ihre Netzteile, Gehäuse, Mainboards und Kühler sind oft einfacher als im Selbstbau, und RAM oder SSD sind häufig kleiner. Alle Leistungswerte sind Richtwerte auf derselben Skala.</p>`;
+   <p class="subline">Fertig-PCs enthalten in der Regel Windows. Nur Preise mit „Preis belegt“ zählen für das Fazit. Ihre Netzteile, Gehäuse, Mainboards und Kühler sind oft einfacher als im Selbstbau, und RAM oder SSD sind häufig kleiner. Alle Leistungswerte sind Richtwerte auf derselben Skala.</p>`;
 }
 /* ---------- Auswahl-Schublade ---------- */
 let pickerCat=null,lastFocus=null;

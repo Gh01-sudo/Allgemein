@@ -292,3 +292,51 @@ Methode: Live-Preise von hardwaredealz.com (Geizhals-Daten, `updated_at` 09.11.2
 - Gigabyte B760 Gaming X AX und MSI PRO B760M-A WiFi: nur Einzelangebote. LGA1700-Boards laufen aus.
 - Leistungsangaben `cap` (Kühler) und `g`/`m` neuer Teile: Schätzungen, nicht gemessen.
 - Exakte GPU-Länge der jeweils gekauften RTX-5070-Ti-Variante: Das Tool rechnet pauschal mit 305 mm.
+
+## Red Team: Fertig-PCs und Schätzformeln (10.11.2026)
+
+Geprüft wurden `PREBUILT`, `appEstimates` und das Fazit in `renderPrebuilt`. Preisquelle ist vor allem der PCGH-Preisvergleich (Geizhals-Daten, Stand 10.11.2026, 04:22). Preise inkl. MwSt., ohne Versand.
+
+### 1. Fertig-PCs im Tool
+
+| id | Tool | Befund 10.11.2026 | Quelle | Schwere |
+|---|---|---|---|---|
+| omen35l | 2.549 € (Juli) | **ab 3.799 €** (2 Angebote, Lieferstatus nicht angezeigt). Die 2.549 € sind ein abgelaufenes Angebot; die eingebetteten Geizhals-Preise im Notebookcheck-Artikel vom 26.09.2026 zeigen ebenfalls 3.799 €. Ausstattung stimmt (9800X3D, RTX 5070 Ti, 32 GB DDR5-6000, 1 TB). | https://preisvergleich.pcgameshardware.de/?fs=Omen+35L+GT16-1472ng · https://www.notebookcheck.com/Ryzen-7-X3D-GeForce-RTX-5070-Ti-32-GB-RAM-1-TB-SSD-HP-Omen-Gaming-PC-im-Angebot.1409230.0.html | hoch |
+| legiont7 | 2.999 €, 265KF | Die Variante aus dem Artikel (90Y600AEGF) hat einen **Core Ultra 7 265K**, nicht 265KF. Laut Preisvergleich gibt es **keine Angebote mehr**, sie ist also nicht lieferbar. Am 12.09.2026 lag der Geizhals-Bestpreis schon bei 3.181,82 €, die 2.999 € galten nur bei NBB. Die günstigste lieferbare T7 mit RTX 5080 ist 90Y6001PGF (265KF, 32 GB, 2 TB) **ab 3.698,77 €** (3 Angebote). | https://preisvergleich.pcgameshardware.de/?fs=Legion+T7+34IAS10+5080 · https://www.notebookcheck.com/GeForce-RTX-5080-Core-Ultra-7-32-GB-RAM-1-TB-SSD-Lenovo-Legion-Gaming-PC-im-Angebot.1397802.0.html | hoch |
+| dubaro | 3.499 €, 1 TB | Den Preis von 3.499 € bestätigt die Herstellerseite. Die SSD hat aber **2 TB** (PCIe 4.0), nicht 1 TB. Lieferzeit nicht angegeben. Ob Windows im Preis enthalten ist, ist nicht belegt; das Tool rechnet „inkl. Windows“. Auf derselben Seite steht ein Dubaro-PC mit Ryzen 9 9900X und RTX 5070 Ti (also CPU und GPU wie im Selbstbau) für 3.599 €. | https://dubaro.de/Specials/NVIDIA-RTX-5070Ti-Gaming-PCs/ | mittel |
+| area51 | 3.599 € (März 2025) | **Nicht belegbar.** Beim Desktop (AAT2250: 265K, 64 GB, 2 TB; AAT2265: 9850X3D) listet Geizhals **keine Angebote**. Die Konfiguration im Tool (265F, 32 GB) ließ sich nicht finden. Empfehlung: Eintrag entfernen oder als „nicht lieferbar“ kennzeichnen. | https://preisvergleich.pcgameshardware.de/?fs=Alienware+Area-51+5080 | hoch |
+
+### Neue Kandidaten (lieferbar, belegt)
+
+1. **Lenovo Legion T7 34IAS10 (90Y600AFGF)**: Core Ultra 7 265K, RTX 5070 Ti 16 GB, 32 GB DDR5-5600, 1 TB PCIe 4.0, 850 W, Windows 11 Home. **2.599 €** bei notebooksbilliger.de, „sofort ab Lager“ (Stand 10.11.2026). https://preisvergleich.pcgameshardware.de/lenovo-legion-t7-34ias10-90y600afgf-a3775439.html
+2. **Lenovo Legion Tower 5i Gen10 (90YA001XGF)**: Core Ultra 7 265KF, RTX 5070 Ti 16 GB, 32 GB DDR5-5600, 1 TB, 850 W, Windows 11 Home. **2.599 €** bei notebooksbilliger.de, „auf Lager“. https://preisvergleich.pcgameshardware.de/lenovo-legion-tower-5i-gen10-90ya001xgf-a3510245.html
+3. **Captiva Highend Gaming R10-0257**: Ryzen 7 9800X3D, RX 9070 XT, 32 GB, **ab 2.445,03 €** (6 Angebote). SSD, Windows und Lieferstatus konnten nicht geprüft werden (HTTP 429). Die Variante R10-4339 hat Windows 11 Home, aber nur 16 GB RAM, und kostet ab 2.335,72 €. https://preisvergleich.pcgameshardware.de/captiva-highend-gaming-r10-0257-100257-a3868979.html
+
+Die beiden Lenovo-Seiten zeigen dieselben drei Händlerpreise (2.599 / 2.714,45 / 2.729 €). Das ist plausibel, weil es Schwestermodelle sind, sollte aber vor der Übernahme einmal im Browser geprüft werden.
+
+### 2. Schätzformeln
+
+| Formel | Tool | Befund | Korrektur | Quelle | Schwere |
+|---|---|---|---|---|---|
+| Frame Generation NVIDIA | ×1,9 (Text „2×“) | ComputerBase misst bei DLSS-4-FG 2× 78 → 123,3 FPS, also ×1,58. MFG 3× ergibt ×2,22, MFG 4× ×2,73. | `fg` NVIDIA = 1.6 (2×). Wenn MFG 4× gezeigt werden soll: 2.7, mit eigenem Text. | https://www.computerbase.de/artikel/grafikkarten/nvidia-geforce-rtx-5060-test.92811/seite-6 | mittel |
+| Frame Generation AMD/Intel | ×1,7 | Nicht gemessen. Dass AMD/Intel höher liegen soll als NVIDIA 2×, ist nicht belegt. | Vorläufig 1.6, wie NVIDIA. | – | niedrig |
+| Lokale KI, `llmFast` | VRAM/0,62 → 16 GB ≈ 25 Mrd. | 0,62 GB je Mrd. Parameter gilt nur für die Gewichte. gemma3:27b in q4_K_M ist 17 GB groß und passt nicht in 16 GB; Kontext (KV-Cache) und Desktop kommen noch dazu. | `Math.floor((vram-1.5)/0.62)` ergibt 23 Mrd. bei 16 GB. Für `llmSlow` dasselbe: `(vram-1.5+ramGb*0.7)/0.62`. | https://ollama.com/library/gemma3/tags | mittel |
+| Raytracing-Faktor AMD/NVIDIA | 0,95 / 1,15 | Damit liegt die RTX 5070 Ti im RT-Wert 22 % vor der RX 9070 XT. Laut PCGH baut die 5070 Ti ihren Vorsprung bei RT deutlich aus; laut Hardware Unboxed liegt die 9070 XT mit RT eher auf Höhe der RTX 5070. Das passt größenordnungsmäßig. | keine | https://www.pcgameshardware.de/Radeon-RX-9070-XT-Grafikkarte-281023/Specials/GPU-Duell-vs-Geforce-RTX-5070-Ti-1471688/ · https://tech4gamers.com/?p=305781 | – |
+| GPU-Index 5080/5070 Ti | 105/93 = +13 % | GamersNexus misst in 4K +12 bis 16 %. | keine | https://gamersnexus.net/gpus/do-not-buy-nvidia-rtx-5070-ti-gpu-absurdity-benchmarks-review | – |
+| GPU-Index RX 9070 XT | 92 (−1 %) | TechSpot misst über 55 Spiele −5 % zur 5070 Ti, Hardware Unboxed −1 % in 4K. | optional 90 | https://www.techspot.com/review/2970-amd-radeon-rx-9070-xt-vs-nvidia-geforce-rtx-5070-ti/ | niedrig |
+| Absolute 4K-FPS, eSports-Faktor, Upscaling ×1,55, Blender-Index | – | In dieser Runde keine belastbare Messreihe gefunden (TechPowerUp antwortet mit 403). | nicht bewertet | – | – |
+
+### 3. Aussage „HP Omen 35L ca. 805 € günstiger“
+
+Die Rechnung im Code stimmt mit den Zahlen im Tool: 3.094 € + 260 € = 3.354 €, minus 2.549 € = 805 €. In 4K erreichen beide 65 FPS (Index 93 × 0,7), also 100 %. Die Aussage ist aber **heute falsch**. Der Omen kostet laut Preisvergleich ab 3.799 € und ist damit rund 445 € **teurer** als der Selbstbau. Mit aktuellen Preisen gilt:
+
+- Legion T7 (RTX 5080, 1 TB): nicht lieferbar.
+- Area-51: nicht belegbar.
+- Dubaro: 3.499 €, ohne geklärtes Windows. Damit wäre der Selbstbau etwa 145 € günstiger.
+
+Der neue Kandidat Legion T7 90Y600AFGF (2.599 €, 4K-Schätzung ebenfalls 65 FPS) wäre etwa **755 € günstiger**. Allerdings hat er nur DDR5-5600, 1 TB SSD und ein Lenovo-eigenes Mainboard und Netzteil.
+
+Der Fehler steckt im Verfahren: `renderPrebuilt` wählt „cheapest“ ohne Rücksicht auf `chk`, das Preisdatum oder die Lieferbarkeit. Empfehlung: Nur Einträge mit `chk:true` und einem Preisdatum jünger als 30 Tage berücksichtigen und das Datum im Fazit nennen. Auch die Hardware-Summe von 3.094 € wurde in dieser Runde nicht neu geprüft.
+
+### Umsetzung Fertig-PCs und Schätzformeln (10.11.2026)
+Übernommen: HP Omen 35L auf 3.799 € (2.549 € war ein abgelaufenes Angebot); Legion T7 mit RTX 5080 als 90Y6001PGF für 3.699 € mit 2 TB; Dubaro mit 2 TB und Hinweis zu Windows; Alienware Area-51 entfernt (keine Angebote); neu: Legion T7 90Y600AFGF und Legion Tower 5i Gen10 mit RTX 5070 Ti für je 2.599 €, Captiva R10-0257 mit RX 9070 XT (2.445 €, unbelegt). Das Fazit nutzt nur noch belegte Preise und nennt die Quelle. Frame Generation auf Faktor 1,6 (2×), Hinweis auf MFG 4× bis ca. 2,7; lokale KI rechnet 1,5 GB Reserve ab (16 GB ≈ 23 Mrd. Parameter); RX 9070 XT Gaming-Index 90.

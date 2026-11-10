@@ -33,7 +33,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Leistungsprofil (Netzdiagramm):** Gaming, Kreativ, Leise, Effizienz, Zukunft, Preis-Leistung, mit Vergleichs-Konfiguration als zweiter Fläche.
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen jede Vorlage oder gespeicherte Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
-- **Gegen Fertig-PCs** (HP Omen 35L, Lenovo Legion T7, Dubaro, Alienware Area-51) und **gegen Laptops**, jeweils mit Preis je FPS.
+- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS.
 - Bildrate je Auflösung, Kostenverteilung, Upgrade-Stufen und Strom.
 
 ## Preise
