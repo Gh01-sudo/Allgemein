@@ -27,11 +27,17 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - „Besser“ je Bauteil: Grafikkarte/Prozessor mehr Leistung, Kühler mehr Reserve, Gehäuse leiser/mehr Platz, Netzteil effizienter/mehr Reserve, Mainboard Ausstattung, RAM/SSD Kapazität und Tempo.
 - Neue Premium-Teile: MSI MPG X870E Carbon WiFi, ASUS ROG Crosshair X870E Hero, Trident Z5 Neo 6000 CL28, Liquid Freezer III Pro 420, WD_Black SN8100 2 TB, Corsair RM1000x, be quiet! Dark Power 14 1000 W, Fractal Define 7.
 
-## Dashboard
-Zweiter Reiter „Dashboard“ mit allen Auswertungen auf einen Blick: Kennzahlen (Preis, Bildrate, Multi-Core, Strom, Lautstärke, Kompatibilität),
-**Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße (die betroffenen Bauteile werden
-automatisch neu gewählt, mit „Rückgängig“), Bildrate je Auflösung mit CPU-Grenze, Kostenverteilung, Upgrade-Stufen für GPU/CPU,
-Stromkosten pro Jahr und ein **Laptop-Vergleich** (14", 16", 18", MacBook Pro) mit dem Gerät, das der Desktop-Leistung am nächsten kommt.
+## Dashboard (Cockpit)
+- **Instrumente:** Rundinstrumente für Bildrate gegen Ziel, Netzteil-Last, Kühlreserve, Budget, Lautstärke und Preis pro FPS, darunter Kennzahlen (Preis, Leistungsklasse, Multi-Core, Leistungsaufnahme, Stromkosten pro Jahr, Kompatibilität).
+- **8 Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße; die betroffenen Bauteile werden live neu gewählt, mit „Rückgängig“.
+- **Leistungsprofil (Netzdiagramm):** Gaming, Kreativ, Leise, Effizienz, Zukunft, Preis-Leistung, mit Vergleichs-Konfiguration als zweiter Fläche.
+- **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
+- **Zwei Konfigurationen nebeneinander:** gegen jede Vorlage oder gespeicherte Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
+- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS.
+- **Sparen ohne Nachteile:** gleichwertige, günstigere Teile mit Ersparnis, nur ohne Konflikte.
+- **Preisentwicklung:** Preisindex seit 2024 für RAM, SSD, Grafikkarte und Prozessor, Tabelle „damals – heute“ und Kauftipp.
+- Bildrate je Auflösung, Kostenverteilung, Upgrade-Stufen und Strom.
+- Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
 Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
