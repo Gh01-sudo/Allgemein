@@ -21,6 +21,12 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
 - Auslaufmodelle sind markiert und werden nicht mehr automatisch gewählt.
 
+## Interaktiv
+- **Tooltips** an Instrumenten, Balken, Diagrammpunkten und Schema (Maus, Touch und Tastatur).
+- **Schema anklickbar:** Bauteil im PC-Schema anklicken, um es zu tauschen; Konflikte sind rot markiert.
+- **Diagramme zum Anfassen:** Punkt im Preis-Leistungs-Diagramm übernimmt das Teil, Kosten-Balken öffnen die Auswahl.
+- **Live-Vorschau im Auswahlfenster:** jedes Teil zeigt die Wirkung auf Preis, FPS, Multi-Core, Netzteil-Last oder Kühlreserve.
+
 ## Bessere Komponenten
 - **„Besser“-Tipp an jedem Bauteil:** das günstigste passende Upgrade mit Aufpreis und Vorteil (z. B. „+9 FPS in 4K“, „80 PLUS Titanium“, „+32 GB“), per Klick übernehmbar.
 - **„Bessere Wahl“ im Auswahlfenster:** bis zu drei Stufen nach Aufpreis, jede besser als die günstigere davor; nur Teile, die ohne Konflikt zum eigenen System passen.
@@ -44,7 +50,5 @@ Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, al
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
-## Einkaufsliste
-`einkaufsliste.html`: abhakbarer Bestellzettel für die Vorlage „Deine Konfiguration“ mit Modellnummern, Bestpreisen und Shop-Links (Stand 9. November 2026).
 
 Red-Team-Prüfung aller Preise, Specs und Regeln: `reports/Red Team PC-Werkbank.md` (Korrekturen sind eingearbeitet).
