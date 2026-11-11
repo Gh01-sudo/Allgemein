@@ -340,3 +340,150 @@ Der Fehler steckt im Verfahren: `renderPrebuilt` wählt „cheapest“ ohne Rüc
 
 ### Umsetzung Fertig-PCs und Schätzformeln (10.11.2026)
 Übernommen: HP Omen 35L auf 3.799 € (2.549 € war ein abgelaufenes Angebot); Legion T7 mit RTX 5080 als 90Y6001PGF für 3.699 € mit 2 TB; Dubaro mit 2 TB und Hinweis zu Windows; Alienware Area-51 entfernt (keine Angebote); neu: Legion T7 90Y600AFGF und Legion Tower 5i Gen10 mit RTX 5070 Ti für je 2.599 €, Captiva R10-0257 mit RX 9070 XT (2.445 €, unbelegt). Das Fazit nutzt nur noch belegte Preise und nennt die Quelle. Frame Generation auf Faktor 1,6 (2×), Hinweis auf MFG 4× bis ca. 2,7; lokale KI rechnet 1,5 GB Reserve ab (16 GB ≈ 23 Mrd. Parameter); RX 9070 XT Gaming-Index 90.
+
+## Red Team: Runde 5 – Datenbank und Auswahl (10.11.2026)
+
+Preisstand: **11.11.2026**, ca. 03:00–04:15 Uhr (Erstabruf 10.11., 17:35 Uhr; alle Werte am 11.11. neu abgerufen). Quellen: hardwaredealz.com (Geizhals-Daten, `updated_at` 11.11.2026 02:35) und PCGH-Preisvergleich (Geizhals-Basis). Preise inkl. MwSt., ohne Versand, günstigstes deutsches Angebot. CPU-Preise sind Boxed-Preise. Geprüft wurde die unveränderte Datei über eine Kopie mit Lese-Hook (`redteam5/pw5.html`) in Playwright/Chromium. msi.com, bequiet.com und igorslab.de lieferten HTTP 403; Aussagen dazu stammen aus Suchtreffern und sind so gekennzeichnet.
+
+### Zusammenfassung
+
+- **Nutzerkonfiguration:** alle 8 Teile lieferbar (17–69 Angebote je Teil), Summe heute **3.119 €** (Tool 3.087 €, +1 %). Keine Inkompatibilität gefunden. Die Zusammenstellung ist für 4K-Gaming plus Blender/KI/Foto stimmig; ein klar besseres Teil zum gleichen Geld gibt es nicht. Nicht belegbar bleibt der Platz eines 63 mm dicken 360er-Radiators (mit Lüftern) im Deckel des Silent Base 802.
+- **Datenbank:** 114 Einträge geprüft (alle 19 ohne `chk:true`, davon einer nicht auffindbar, dazu 95 mit `chk:true`). 9 Preise weichen um 10 % oder mehr ab, 6 Teile sind praktisch nicht mehr lieferbar (0–2 Angebote) und noch nicht als `eol` markiert. RTX 50 Super, Arc B770 und RX 9080 sind in keinem der beiden Preisvergleiche gelistet und werden nicht vorgeschlagen.
+- **Automatische Auswahl:** Die Vorlagen sind technisch konfliktfrei. Die Budgetlogik hält das Budget aber nicht ein (bis +45 %) und lässt es an anderer Stelle ungenutzt (543 € Rest bei verfehltem FPS-Ziel). Der Kühler-Rückfall wählt bei „sehr leise“ den billigsten statt den stärksten Kühler.
+- **Upgrade- und Sparvorschläge:** 3 von 7 „Besser“-Tipps für „mine“ sind fachlich fragwürdig (420er-AiO, 4-TB-SSD mit PCIe 4.0, 48-GB-Kit mit nur 1 Angebot).
+- **Fertig-PCs/Laptops:** 9 von 11 Preisen bestätigt. Legion Pro 7i (2.599 €) ist zu diesem Preis nicht erhältlich; Dubaro kostet 3.299 € statt 3.499 €.
+
+### 1. Nutzerkonfiguration „mine“
+
+| Teil | Tool | 11.11.2026 | Angebote | Quelle |
+|---|---|---|---|---|
+| Ryzen 9 9900X (boxed) | 303 | 301,09 | 37 | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-9-9900x-boxed/preisvergleich.21772 |
+| Arctic Liquid Freezer III Pro 360 | 70 | 70,25 | 42 | https://preisvergleich.pcgameshardware.de/?fs=Arctic+Liquid+Freezer+III+Pro+360 |
+| MSI MAG B850 Tomahawk Max WiFi | 265 | 254,90 (hardwaredealz: 264,93) | 30 | https://preisvergleich.pcgameshardware.de/?fs=Tomahawk+Max+WIFI+B850 |
+| Patriot Viper Venom 32 GB DDR5-6000 CL28 (VV532G60C28AK) | 525 | 524,90 (RGB-Variante 544,90) | 17 | https://preisvergleich.pcgameshardware.de/?fs=Patriot+Viper+Venom+32GB+Kit+DDR5-6000+CL28 |
+| RTX 5070 Ti (günstigste: Gigabyte Eagle OC SFF) | 1.279 | 1.311,33 | 17 | https://www.hardwaredealz.com/hardware/gpu/nvidia-geforce-rtx-5070-ti-16gb |
+| Samsung 9100 Pro 2 TB | 400 | 415,99 | 69 | https://preisvergleich.pcgameshardware.de/?fs=Samsung+9100+PRO+2TB |
+| Corsair RM850e (2025) | 105 | 103,90 | 24 | https://www.hardwaredealz.com/hardware/psu (ID 24601) |
+| be quiet! Silent Base 802 | 140 | 136,89 (mit Fenster 138,25) | 30 | https://www.hardwaredealz.com/hardware/case (ID 14085/14084) |
+| **Summe** | **3.087** | **3.119,25** | | |
+
+Kompatibilität:
+
+- **M.2 / Lane-Sharing:** Laut MSI-Übersicht hängen M2_1 und M2_2 beide mit PCIe 5.0 x4 direkt an der CPU, ohne Sharing; PCI_E1 bleibt x16. Nur M2_3 (PCIe 4.0 x2) teilt sich Lanes mit PCI_E3. Die 9100 Pro gehört in M2_1 und kostet der Grafikkarte keine Lanes. Quelle: https://www.msi.com/blog/overview-of-pcie-lane-sharing-on-msi-b850-motherboards (nur über Suchtreffer gelesen, Direktabruf 403); hwcooling nennt 2× PCIe 5.0 x4 und 2× PCIe 4.0 x2: https://hwcooling.net/en/si-mag-b850-tomahawk-max-wifi-cheaper-chipset-but-better-features-review. Das Tool kennt nur `m2:4`, nicht die x2-Anbindung der Plätze 3 und 4.
+- **Radiator oben:** be quiet! nennt für den Deckel 120/240/360 mm, vorn bis 420 mm (https://www.bequiet.com/en/case/2045, Suchtreffer; https://sts-tutorial.com/review/be-quiet-silent-base-802). Die Tool-Regel (`radFrontOnly:[420]`) passt dazu. **Nicht belegt** ist die Bauhöhe: Der Liquid Freezer III Pro hat einen 38-mm-Radiator, mit Lüftern 63 mm. Ein Forenbeitrag nennt ca. 70 mm Abstand im Deckel, ein anderer eine Kollision der Lüfter mit hohem RAM (https://forums.tomshardware.com/threads/arctic-lfii-280-fitting-in-top-mount-of-silent-base-801-802-case.3746328). Vor dem Kauf nachmessen. KitGuru weist darauf hin, dass der geschlossene Dämmdeckel einen Deckel-Radiator ausbremst; dann den Mesh-Deckel verwenden oder vorn montieren.
+- **Grafikkarte:** 305 mm im Tool; Platz 432 mm ohne, 287 mm mit voll bestücktem HDD-Käfig (bestätigt, sts-tutorial). Der Tool-Hinweis „HDD-Käfig ausbauen“ ist richtig; laut Test stören nur die unteren beiden Käfigplätze.
+- **Netzteil:** Last 537 W, Empfehlung 750 W, gewählt 850 W. In Ordnung.
+
+Fachliche Bewertung: RTX 5070 Ti ist wegen CUDA/OptiX und 16 GB die richtige Wahl für Blender und KI; die RX 9070 XT (875,60 €) spart 436 €, verliert aber genau diese Stärken. Die RTX 5080 kostet 489 € mehr für ca. 13 %. Der 9900X ist für GPU-Rendering und 4K ausreichend; der 9800X3D (360 €) brächte in 4K kaum etwas und verliert Multi-Core-Leistung. Der Core Ultra 7 270K Plus (296 €) wäre im CPU-Rendering schneller, braucht aber ein anderes Board und im Tool DDR5-6400 (+204 €) und sitzt auf einem Sockel ohne Aufrüstpfad. Einziger echter Sparpunkt außerhalb der Tool-Liste: Die PCIe-5.0-SSD bringt bei Spielen und Fotoarbeit wenig; eine 990 EVO Plus 2 TB kostet 328,67 € (−87 €). 64 GB RAM wären für Blender/KI wünschenswert, kosten derzeit aber +710 €.
+
+### 2. Befunde Datenbank
+
+| Schwere | id | Feld | Wert im Tool | korrekter Wert | Quelle |
+|---|---|---|---|---|---|
+| hoch | legionpro7i (LAPTOPS) | price / Lieferbarkeit | 2.599 (Edu-Angebot März) | 32-GB-Varianten ohne Angebot; günstigste gelistete RTX-5080-Variante 4.839,46 € (64 GB / 2 TB, 3 Angebote) | https://preisvergleich.pcgameshardware.de/?fs=Legion+Pro+7+16IAX10H+RTX+5080+32GB |
+| hoch | c-2x24-6000 | price / Lieferbarkeit | 880 | 948,99 (+8 %), nur 1 Angebot; alle anderen 48-GB-Vengeance-6000-CL30-Varianten ohne Angebot | https://preisvergleich.pcgameshardware.de/?fs=Corsair+Vengeance+48GB+Kit+DDR5-6000+CL30 |
+| hoch | msi-b860m-a | eol | lieferbar, 227 | 227,37 mit nur 2 Angeboten; wird trotzdem automatisch gewählt (Szenario S6). Als `eol:true` markieren | https://preisvergleich.pcgameshardware.de/?fs=MSI+PRO+B860M-A+WIFI |
+| mittel | kingston-nv3-1 | price (chk) | 125 | 146,99 (+18 %); steckt in 5 automatischen Zusammenstellungen | https://preisvergleich.pcgameshardware.de/?fs=Kingston+NV3+1TB |
+| mittel | k-2x8-5600 | cl / price | CL40, 305 | CL40-Kit (KF556C40BBK2-16) 352,77 (+16 %); CL36-Kit (KF556C36BBEK2-16) 299,00. Vorschlag: `cl:36, price:299` | https://preisvergleich.pcgameshardware.de/?fs=Kingston+FURY+Beast+16GB+Kit+DDR5-5600 |
+| mittel | r7-9850x3d | price (chk) | 435 | 383,48 (−12 %) | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-7-9850x3d-boxed/preisvergleich.33161 |
+| mittel | r7-9800x3d | price (chk) | 398 | 360,08 (−10 %) | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-7-9800x3d-boxed/preisvergleich.23412 |
+| mittel | fd-north | price (chk) | 142 | 122,90 weiß TG / 128,45 schwarz TG (−13 % / −10 %) | https://www.hardwaredealz.com/hardware/case (ID 14512, 14514) |
+| mittel | asr-b650m-pro | price / eol | 176, lieferbar | 206,47 (+17 %), nur 1 Angebot → `eol:true` | https://preisvergleich.pcgameshardware.de/?fs=ASRock+B650M+Pro+RS+WiFi |
+| mittel | msi-z890-tomahawk | price / eol | 328, lieferbar | 330,67, nur 2 Angebote; Nachfolger „WIFI II“ gelistet (noch ohne Angebot) → `eol:true` | https://preisvergleich.pcgameshardware.de/?fs=MSI+MAG+Z890+Tomahawk+WIFI |
+| mittel | asr-a620m | Lieferbarkeit | lieferbar, 95 | 94,90, nur 2 Angebote; ist das Board der Vorlage „Büro & Zuhause“ | https://preisvergleich.pcgameshardware.de/?fs=ASRock+A620M-HDV%2FM.2%2B |
+| mittel | msi-b760m-a (eol) | price | 125 | 200,24, 1 Angebot | https://preisvergleich.pcgameshardware.de/?fs=MSI+PRO+B760M-A+WIFI |
+| mittel | gb-b760-gx (eol) | price | 150 | 421,37, 1 Angebot | https://preisvergleich.pcgameshardware.de/?fs=Gigabyte+B760+Gaming+X+AX |
+| mittel | sea-gx1200 | atx3-Text / Lieferbarkeit | „ATX 3.1 mit 12V-2x6“ | Vertex GX-1200 ist ATX 3.0; 244,05, nur 3 Angebote; wird für die RTX 5090 automatisch gewählt | https://www.hardwaredealz.com/hardware/psu/seasonic-vertex-gx-1200-1200w-atx-30/preisvergleich.4188 |
+| niedrig | r9-9950x | price (chk) | 449 | boxed 479,09 (+7 %), tray 441,79 | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-9-9950x-boxed/preisvergleich.21773 |
+| niedrig | nzxt-elite-360 | price | 260 | 235,90 (−9 %, Modell 2024 ohne RGB) | https://preisvergleich.pcgameshardware.de/?fs=NZXT+Kraken+Elite+360 |
+| niedrig | r5-9600x | price (chk) | 177 | 163,00 (−8 %) | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-5-9600x-boxed/preisvergleich.21762 |
+| niedrig | r7-7800x3d | price (chk) | 298 | 277,70 (−7 %) | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-7-7800x3d-boxed/preisvergleich.1880 |
+| niedrig | asus-b850i | price (chk) | 298 | 277,73 (−7 %) | https://www.hardwaredealz.com/hardware/mainboard/asus-rog-strix-b850-i-gaming-wifi/preisvergleich.24493 |
+| niedrig | asus-x870e-e | price | 470 | 437,41 (−7 %) | https://www.hardwaredealz.com/hardware/mainboard (ID 22461) |
+| niedrig | tr-axp90 | price | 35 | 37,39 (+7 %) | https://preisvergleich.pcgameshardware.de/?fs=Thermalright+AXP90-X47+Full+Copper |
+| niedrig | arc-b570 | price (chk) | 270 | 286,93 (+6 %) | https://www.hardwaredealz.com/hardware/gpu/intel-arc-b570-graphics-10gb |
+| niedrig | dubaro (PREBUILT) | price | 3.499 | 3.299 (−6 %); 7800X3D, RTX 5070 Ti, 32 GB, 2 TB | https://dubaro.de/Specials/NVIDIA-RTX-5070Ti-Gaming-PCs/ |
+| niedrig | rx9070 | price (chk) | 759 | 721,64 (−5 %; am 10.11. noch 819) | https://www.hardwaredealz.com/hardware/gpu/amd-radeon-rx-9070-16gb |
+| niedrig | rtx5080 | price (chk) | 1.889 | 1.799,99 (−5 %) | https://www.hardwaredealz.com/hardware/gpu/nvidia-geforce-rtx-5080-16gb |
+| niedrig | c-2x16-5600 | price (chk) | 629 | 660,09 (+5 %) | https://preisvergleich.pcgameshardware.de/?fs=Crucial+Pro+32GB+Kit+DDR5-5600 |
+| niedrig | r5-8500g | price | 135 | 128,00 (−5 %) | https://www.hardwaredealz.com/hardware/cpu/amd-ryzen-5-8500g-boxed-fan/preisvergleich.2352 |
+| niedrig | s9100-2 / s990pro-4 / c-2x32-6000 / r7-9700x / msi-b850-tomahawk | price | 400 / 700 / 1.190 / 238 / 265 | 415,99 / 669,99 / 1.235,22 / 247,19 / 254,90 (je ±4 %) | PCGH-Preisvergleich, hardwaredealz (wie oben) |
+| niedrig | rtx5070ti / rx9060xt-16 / rx9070xt / rtx5090 / gs-2x16-6000c28 / nc-d15g2 / aorus16 | price | 1.279 / 606 / 896 / 7.800 / 886 / 150 / 3.299 | 1.311,33 / 624,95 / 875,60 / 7.637,38 / 861,98 / 143,90 / 3.399 (je ±2–4 %) | hardwaredealz-GPU-Seiten, PCGH-Preisvergleich |
+| niedrig | captiva-9070xt (PREBUILT) | ssd | „k. A.“ | 1 TB laut Listung; 2.445,03 €, 6 Angebote | https://preisvergleich.pcgameshardware.de/?fs=Captiva+R10-0257 |
+| niedrig | legiont7-5080 (PREBUILT) | Hinweis | – | Listung trägt den Zusatz „EN/ML“ (Tastatur/Sprachversion prüfen); 3.698,77 €, 3 Angebote | https://preisvergleich.pcgameshardware.de/?fs=Legion+T7+34IAS10+90Y6001PGF |
+| niedrig | `priceLink`, `TREND`, `CHANGES` | Text | „Preis geprüft 9.11.“; 525 / 446 / 1.279 / 7.800 / 896 fest im Code | Datum und Werte aus der DB ableiten statt fest eintragen | Code Zeile ca. 1040, 1818–1830 |
+
+Bereits als `eol` markiert und weiterhin ohne Angebot: msi-b650-gp (0 Angebote), cm-nr200p (0), cm-mwe-650 (1 Angebot, 87,50 €).
+
+### 3. Kombinationen (automatische Auswahl)
+
+Alle 7 Vorlagen und 8 Regler-Szenarien liefen ohne Konflikt oder Warnung aus `checkAll`.
+
+| Lauf | Ergebnis (Kern) | Summe / Budget | Beurteilung |
+|---|---|---|---|
+| mine | Nutzerteile | 3.087 / – | stimmig, siehe Abschnitt 1 |
+| office | 8600G, Boxed, A620M, 16 GB, NV3, 550 W, A3-mATX | 828 / – | passt; Board nur noch 2 Angebote |
+| fhd | 7600, B850 Aorus Elite, 32 GB, RTX 5060 (fest) | **1.660 / 1.600** | Budget um 60 € überzogen; 80 statt 120 FPS; 189-€-Board zu teuer für das Budget |
+| wqhd | 9800X3D, PA120 SE, RX 9070 XT, 850 W | 2.572 / – | ausgewogen; 108 statt 144 FPS ohne Hinweis |
+| 4k | 9850X3D, RTX 5090, Vertex GX-1200 | 9.734 / – | passt; Netzteil ist ATX 3.0 und kaum lieferbar |
+| ws | 9950X, LF III Pro 360, X870E, 96 GB, RTX 5070 Ti, 1000 W | 4.628 / – | stimmig |
+| itx | 7600, AXP90-X47, B850I, RTX 5070, SF750, Terra | 2.442 / – | läuft; 90 statt 120 FPS; CPU für die Karte knapp, aber durch 77 mm Kühlerhöhe begründet |
+| S1 Full HD, 16 GB | 7600, RTX 5060 Ti 8 GB | **1.458 / 1.200** | +21 % über Budget |
+| S2 WQHD | 7600, RX 9070 16 GB, 750 W | 1.986 / 2.000 | gut |
+| S3 4K Kreativ, 64 GB, 4 TB, sehr leise | 265KF, **PA120 SE**, B860, RTX 5070 Ti, Pure Base 501 | 3.705 / – | 34-€-Luftkühler mit 220 W für eine 250-W-CPU trotz „sehr leise“; KF-CPU ohne iGPU (kein Quick Sync) |
+| S4 ITX, flüsterleise | 7600, **AXP90-X47**, RX 9070 GRE, Terra | 2.223 / – | lautester Kühler der Liste trotz Regler auf Maximum; NH-L12S (110 W, 70 mm) passt und wäre leiser |
+| S5 3.000 €, 4K, 60 % Kreativ | 250K Plus, DDR5-6400 für 729 €, **RTX 5060 Ti 16 GB** | **2.457 / 3.000** | 543 € ungenutzt, 42 statt 60 FPS; RTX 5070 Ti hätte ins Budget gepasst (2.937 €) |
+| S6 2.500 €, Kreativ, mATX, 64 GB | 270K Plus, LF III 360, B860M-A, 64 GB | **3.083 / 2.500** | +23 % über Budget; Board mit 2 Angeboten |
+| S7 800 €, Full HD | 7600, Arc B570, 16 GB | **1.163 / 800** | +45 %; kein Hinweis, dass 800 € nicht erreichbar sind |
+| S8 4K, 144 FPS, ohne Budget | 7800X3D, Assassin X 120, RTX 5090 | 9.583 / – | technisch in Ordnung |
+
+Logik-Befunde:
+
+1. **Budget wird nicht erzwungen** (hoch): `fillMissing` verteilt Anteile, prüft die Summe am Ende aber nicht. Überschreitung in 4 von 5 Budget-Läufen (+4 % bis +45 %).
+2. **Budget bleibt ungenutzt** (hoch): Der GPU-Anteil (`alloc*1.15`) deckelt die Grafikkarte, auch wenn danach Geld übrig bleibt (S5).
+3. **DDR5-6400-Zwang für LGA1851** (mittel): `prefer("ram")` filtert hart auf ≥ 6400; das kostet 204 € Aufpreis (729 statt 525 €) für wenige Prozent. `platformCost` rechnet diesen Aufpreis nicht mit, deshalb gewinnt Intel den Plattformvergleich zu Unrecht.
+4. **Kühler-Rückfall** (mittel): Erfüllt kein Kühler die Leise-Reserve, nimmt `pickCooler` den billigsten mit `cap ≥ need` (S3, S4). Zusätzlich wird das Gehäuse vor dem Kühler gewählt; das Pure Base 501 sperrt dann die 360er-AiO (Front-Radiator und 305-mm-Karte).
+5. **Kein Hinweis bei verfehltem FPS-Ziel** (niedrig): wqhd 108/144, itx 90/120, fhd 80/120.
+
+### 4. Upgrade- und Sparvorschläge für „mine“
+
+| Vorschlag im Tool | Beurteilung |
+|---|---|
+| Ryzen 9 9950X, +146 € | fachlich richtig; heute +178 € (boxed) |
+| Liquid Freezer III Pro 420, +7 € | **fragwürdig**: 420 mm passt im Silent Base 802 nur vorn (HDD-Käfig raus, GPU max. 369 mm); der Tipp nennt das nicht. Nutzen gering, die 360er hat bereits 185 % der nötigen Kühlleistung |
+| Gigabyte X870E Aorus Elite WiFi7, +5 € | vertretbar (heute +16 € gegenüber 254,90 €); Lane-Sharing dieses Boards nicht geprüft |
+| Corsair Vengeance 48 GB, +355 € | **nicht umsetzbar**: 1 Angebot zu 948,99 € (+424 €) |
+| RTX 5080, +610 € | richtig, heute +489 € für +14 % |
+| Lexar NM790 4 TB, +139 € | **irreführend**: als „Besser“ markiert, ist aber PCIe 4.0 (7.400 statt 14.700 MB/s); der Text nennt nur „+2 TB“ |
+| Straight Power 12 1000 W, +95 € | schwach: „+150 W Reserve“ bei 537 W Last und 850 W Bestand; Platinum allein rechtfertigt 95 € kaum |
+| Sparen: Board → B850 Aorus Elite WiFi7, −76 € | richtig (heute −66 €); 3 statt 4 M.2-Plätze |
+| Sparen: RM850e → Seasonic Core GX-850, −5 € | nur mit der weißen Variante (97,90 €); die schwarze kostet 107,72 € und ist teurer als das RM850e (103,90 €) |
+
+Der Upgrade-Pfad (`#oPath`) enthält dieselben Einträge in der Reihenfolge CPU, GPU, Board, Kühler, Netzteil.
+
+### 5. Fertig-PCs und Laptops
+
+Bestätigt: Legion T7 90Y600AFGF 2.599,00 € (11 Angebote), Legion Tower 5i 90YA001XGF 2.599,00 € (12), Captiva R10-0257 2.445,03 € (6), HP Omen 35L GT16-1472ng 3.799,00 € (2), Legion T7 90Y6001PGF 3.698,77 € (3); ROG Zephyrus G14 (2026) 3.255,99–3.299,00 € (29–33), ROG Strix Scar 18 (2026) 6.598,00 € (32), MacBook Pro 16 M5 Max 36 GB / 2 TB 4.099,00 € (48). Abweichend: Aorus Master 16 Gen 2 (9955HX3D, 32 GB, 2 TB) 3.399,00 € (7), Dubaro 3.299 €, Legion Pro 7i nicht zum Tool-Preis erhältlich (siehe Tabelle).
+
+### Bestätigt
+
+Preise innerhalb ±3 % (11.11.2026): r5-8600g 169, i5-14400f 146,90, r5-7600 171,99, u5-225 176,94, r5-7500x3d 219, u5-250kp 216, u5-245k 185,90, u5-245kf 172,68, u7-270kp 296,17, r9-9900x 301,09, u7-265k 309, u7-265kf 261,90, r9-9900x3d 455,59, r9-9950x3d2 779, u9-285k 528,98; rtx5050 383,90, arc-b580 387,90, rx9060xt-8 446,46, rtx5060 459, rtx5060ti-8 521,90, rtx5060ti-16 799, rtx5070 860,12, rx9070gre 638; gs-2x16-6000 524,90, gs-2x16-6400 729, c-2x64-5600 3.499 (1 Angebot); wd-sn7100-1 235,99, wd-sn7100-2 445,99, s990evo-1 189, s990evo-2 328,67, sn8100-2 411,92, lexar-nm790-4 538,95, s9100-4 859,95; gb-b850m-gx 161,72 (+4 %), msi-b850-gp6e 152,21, asr-b850i-lightning 187,35, gb-x870e-elite 270,76, gb-b850-elite 188,80, msi-x870e-carbon 443,29, asus-x870e-hero 526,97, asus-b860-tuf 169,27, asus-z890i 464,13 (2 Angebote), asus-z890e 329; tr-ax120 18,90, ar-f36 22,14, tr-pa120se 34,29, nc-l12s 66,90, ar-lf3-240 57,44, ar-lf3-360 70,25, ar-lf3-420 76,05, bq-drp5 79,90, bq-drp6 84,42; bq-pp12-550 64,88, bq-pp12-650 69,88, bq-pp12-750 96,02, sea-coregx-850 97,90 (weiß), cor-rm850e 103,90, cor-sf750 156,85 (−5 %), bq-sp12-1000 199,89, cor-sf1000 194,90, cor-rm1000x 165,90, bq-dp14-1000 227,88, cor-hx1500i 278,14; fd-pop-air 77,78, ll-a3 68,69, montech-903 54,17 (4 Angebote), ll-lancool217 99,90, bq-pb501 59,62, ll-o11-evo 166,95, bq-sb802 136,89, fd-define7 169,90, fd-terra 169,90.
+
+### Nicht prüfbar
+
+- **gs-2x48-6000** (G.Skill Trident Z5 Neo 96 GB, 1.750 €): in zwei Suchen kein 96-GB-Kit von G.Skill gefunden. Preis und Lieferbarkeit offen; das Teil ist in der Vorlage „Workstation“ fest gesetzt.
+- **msi-x870-tomahawk**: hardwaredealz zeigt 289 € mit nur 1 Angebot; im PCGH-Preisvergleich nicht gegengeprüft.
+- **Bauhöhe 360er-Radiator im Deckel des Silent Base 802** und RAM-Abstand: keine Herstellerangabe erreichbar.
+- **Lane-Sharing des Gigabyte X870E Aorus Elite WiFi7** (Upgrade-Tipp): nicht geprüft.
+- **Dubaro:** Lieferzeit und Windows-Lizenz weiterhin nicht belegt.
+- **RTX 50 Super:** kein Händlerangebot in beiden Preisvergleichen; Berichte nennen nur Verschiebungen. Nicht als erschienen behandelt.
+- GPU-Längen, Leistungsindizes und Verbrauchswerte wurden in dieser Runde nicht neu vermessen.
+
+### Umsetzung Runde 5 (11.11.2026)
+- **Preise:** alle Korrekturen der Liste übernommen (u. a. 9800X3D 360 €, 9850X3D 383 €, RTX 5070 Ti 1.311 €, RTX 5080 1.800 €, RTX 5090 7.637 €, Kingston NV3 147 €, Fractal North 123 €). Die Preisentwicklung im Dashboard liest ihre aktuellen Werte jetzt aus der Datenbank.
+- **Lieferbarkeit:** MSI PRO B860M-A, ASRock B650M Pro RS, MSI Z890 Tomahawk, ASRock A620M-HDV, Corsair 48-GB-Kit und Seasonic Vertex GX-1200 als Auslaufmodelle markiert; sie werden weder automatisch gewählt noch als Upgrade vorgeschlagen. Laptop Legion Pro 7i entfernt.
+- **Neu:** MSI PRO B860M-P WiFi6E, G.Skill Flare X5 16 GB DDR5-6000 CL30, be quiet! Pure Power 13 M 750 W. Nicht übernommen: Teile mit unbelegten Eckdaten (B850 Gaming Plus MAX, Tomahawk-Varianten, RM850e ThermalProtect).
+- **Budget:** Nach dem Füllen wird das Budget erzwungen (automatisch gewählte Teile schrittweise günstiger, Leistungsteile zuletzt); bleibt Geld übrig und das FPS-Ziel ist verfehlt, wird die stärkste passende Grafikkarte gewählt. Ist das Budget nicht erreichbar, erscheint ein Hinweis.
+- **Weitere Logik:** DDR5-6400 für Core Ultra nur bei höchstens 10 % Aufpreis; Kühler-Rückfall wählt den stärksten statt den billigsten; SSD-Tipps nie mit langsamerer Schnittstelle; kein Kühler-Tipp bei 50 % Reserve; Spar-Schwelle 15 € bzw. 3 %; Netzteil-Reserve-Text nur bei echtem Bedarf; ATX-3.0-Netzteile korrekt beschriftet; Hinweis bei verfehlter Ziel-Bildrate; ITX-Prozessoren nach Kühlgrenze des kleinsten lieferbaren Gehäuses.
+- **Audit danach:** 108 Regler-Kombinationen ohne Konflikt; 6 Warnungen (ITX mit reinem Kreativ-Schwerpunkt: Prozessor bremst die Grafikkarte, weil stärkere Prozessoren dort nicht kühlbar sind). Budget-Überschreitungen nur noch, wo die Vorgaben (32 GB RAM, 2 TB SSD) ein Budget von 1.500 € unerreichbar machen.
+- **Offen:** Bauhöhe des 360er-Radiators im Deckel des Silent Base 802 gegenüber dem RAM ist nicht belegt.

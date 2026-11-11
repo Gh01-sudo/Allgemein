@@ -377,7 +377,7 @@ button,input,select{font:inherit;color:inherit}
 <div class="wrap">
   <header class="head">
     <div>
-      <div class="eyebrow">PC-Konfigurator · Preise Deutschland, Stand 9. November 2026</div>
+      <div class="eyebrow">PC-Konfigurator · Preise Deutschland, Stand 11. November 2026</div>
       <h1>PC-Werkbank</h1>
       <p>Wähle die Teile, die dir wichtig sind. Die Werkbank ergänzt den Rest passend dazu und prüft Sockel, Speicher, Maße, Kühlung und Netzteil.</p>
     </div>
@@ -514,7 +514,7 @@ button,input,select{font:inherit;color:inherit}
   </main>
   </div>
 
-  <p class="note"><b>Zu den Preisen:</b> Teile mit „Preis geprüft“ wurden am 9. November 2026 recherchiert und anschließend von einem unabhängigen Red-Team-Prüfer gegengecheckt (günstigste Angebote in Deutschland, überwiegend Geizhals-Daten). Alle anderen Preise sind Schätzungen. Grafikkarten, Arbeitsspeicher und SSDs sind wegen der Speicherkrise stark überteuert und schwanken täglich; vor dem Kauf über „Preis prüfen“ vergleichen. Leistungswerte sind Richtwerte: Gaming-Index RTX 5080 = 105, Multi-Core-Index Ryzen 9 9950X = 100 (Cinebench-Messreihen). Die Bildraten im Dashboard sind daraus geschätzt und ersetzen keine Benchmarks.</p>
+  <p class="note"><b>Zu den Preisen:</b> Teile mit „Preis geprüft“ wurden zwischen dem 9. und 11. November 2026 recherchiert und anschließend von einem unabhängigen Red-Team-Prüfer gegengecheckt (günstigste Angebote in Deutschland, überwiegend Geizhals-Daten). Alle anderen Preise sind Schätzungen. Grafikkarten, Arbeitsspeicher und SSDs sind wegen der Speicherkrise stark überteuert und schwanken täglich; vor dem Kauf über „Preis prüfen“ vergleichen. Leistungswerte sind Richtwerte: Gaming-Index RTX 5080 = 105, Multi-Core-Index Ryzen 9 9950X = 100 (Cinebench-Messreihen). Die Bildraten im Dashboard sind daraus geschätzt und ersetzen keine Benchmarks.</p>
 </div>
 
 <div class="picker" id="picker" hidden>
@@ -549,61 +549,63 @@ button,input,select{font:inherit;color:inherit}
 const ALL_SOCKETS=["AM5","LGA1851","LGA1700"];
 const DB={
 cpu:[
- {id:"r5-8500g",name:"AMD Ryzen 5 8500G",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.0,power:88,cool:80,igpu:true,ig:12,box:true,g:55,m:36,tier:1,price:135},
+ {id:"r5-8500g",name:"AMD Ryzen 5 8500G",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.0,power:88,cool:80,igpu:true,ig:12,box:true,g:55,m:36,tier:1,price:128,chk:true},
  {id:"r5-8600g",name:"AMD Ryzen 5 8600G",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.0,power:88,cool:85,igpu:true,ig:18,box:true,g:62,m:42,tier:1,price:169,chk:true},
  {id:"i5-14400f",name:"Intel Core i5-14400F",brand:"Intel",socket:"LGA1700",cores:10,threads:16,boost:4.7,power:148,cool:110,igpu:false,box:true,g:68,m:38,tier:1,price:150,chk:true},
  {id:"r5-7600",name:"AMD Ryzen 5 7600",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.1,power:88,cool:85,igpu:true,ig:6,box:true,g:72,m:34,tier:2,price:172,chk:true},
- {id:"r5-9600x",name:"AMD Ryzen 5 9600X",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.4,power:88,cool:90,igpu:true,ig:6,box:false,g:77,m:40,tier:2,price:177,chk:true},
+ {id:"r5-9600x",name:"AMD Ryzen 5 9600X",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:5.4,power:88,cool:90,igpu:true,ig:6,box:false,g:77,m:40,tier:2,price:163,chk:true},
  {id:"u5-225",name:"Intel Core Ultra 5 225",brand:"Intel",socket:"LGA1851",cores:10,threads:10,boost:4.9,power:121,cool:100,igpu:true,ig:8,box:true,g:66,m:52,tier:2,price:177,chk:true},
  {id:"r5-7500x3d",name:"AMD Ryzen 5 7500X3D",brand:"AMD",socket:"AM5",cores:6,threads:12,boost:4.5,power:88,cool:90,igpu:true,ig:6,box:false,g:84,m:33,tier:2,price:222,chk:true},
  {id:"u5-250kp",name:"Intel Core Ultra 5 250K Plus",brand:"Intel",socket:"LGA1851",cores:18,threads:18,boost:5.3,power:159,cool:150,igpu:true,ig:8,box:false,g:78,m:72,tier:3,price:216,chk:true},
- {id:"r7-9700x",name:"AMD Ryzen 7 9700X",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.5,power:88,cool:100,igpu:true,ig:6,box:false,g:80,m:49,tier:3,price:238,chk:true},
- {id:"r7-7800x3d",name:"AMD Ryzen 7 7800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.0,power:120,cool:110,igpu:true,ig:6,box:false,g:92,m:42,tier:3,price:298,chk:true},
+ {id:"r7-9700x",name:"AMD Ryzen 7 9700X",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.5,power:88,cool:100,igpu:true,ig:6,box:false,g:80,m:49,tier:3,price:247,chk:true},
+ {id:"r7-7800x3d",name:"AMD Ryzen 7 7800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.0,power:120,cool:110,igpu:true,ig:6,box:false,g:92,m:42,tier:3,price:278,chk:true},
  {id:"u5-245k",name:"Intel Core Ultra 5 245K",brand:"Intel",socket:"LGA1851",cores:14,threads:14,boost:5.2,power:159,cool:150,igpu:true,ig:8,box:false,g:75,m:59,tier:3,price:190,chk:true},
  {id:"u5-245kf",name:"Intel Core Ultra 5 245KF",brand:"Intel",socket:"LGA1851",cores:14,threads:14,boost:5.2,power:159,cool:150,igpu:false,box:false,g:75,m:59,tier:3,price:173,chk:true},
  {id:"u7-270kp",name:"Intel Core Ultra 7 270K Plus",brand:"Intel",socket:"LGA1851",cores:24,threads:24,boost:5.5,power:250,cool:200,igpu:true,ig:8,box:false,g:84,m:104,tier:4,price:298,chk:true},
- {id:"r7-9800x3d",name:"AMD Ryzen 7 9800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.2,power:162,cool:140,igpu:true,ig:6,box:false,g:100,m:55,tier:4,price:398,chk:true},
- {id:"r9-9900x",name:"AMD Ryzen 9 9900X",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:82,m:77,tier:4,price:303,chk:true},
+ {id:"r7-9800x3d",name:"AMD Ryzen 7 9800X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.2,power:162,cool:140,igpu:true,ig:6,box:false,g:100,m:55,tier:4,price:360,chk:true},
+ {id:"r9-9900x",name:"AMD Ryzen 9 9900X",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:82,m:77,tier:4,price:301,chk:true},
  {id:"u7-265k",name:"Intel Core Ultra 7 265K",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:true,ig:8,box:false,g:80,m:86,tier:4,price:313,chk:true},
  {id:"u7-265kf",name:"Intel Core Ultra 7 265KF",brand:"Intel",socket:"LGA1851",cores:20,threads:20,boost:5.5,power:250,cool:200,igpu:false,box:false,g:80,m:86,tier:4,price:262,chk:true},
- {id:"r7-9850x3d",name:"AMD Ryzen 7 9850X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:104,m:56,tier:5,price:435,chk:true},
+ {id:"r7-9850x3d",name:"AMD Ryzen 7 9850X3D",brand:"AMD",socket:"AM5",cores:8,threads:16,boost:5.6,power:162,cool:150,igpu:true,ig:6,box:false,g:104,m:56,tier:5,price:383,chk:true},
  {id:"r9-9900x3d",name:"AMD Ryzen 9 9900X3D",brand:"AMD",socket:"AM5",cores:12,threads:24,boost:5.5,power:162,cool:150,igpu:true,ig:6,box:false,g:98,m:78,tier:5,price:457,chk:true},
- {id:"r9-9950x",name:"AMD Ryzen 9 9950X",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:84,m:100,tier:5,price:449,chk:true},
+ {id:"r9-9950x",name:"AMD Ryzen 9 9950X",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:84,m:100,tier:5,price:479,chk:true},
  {id:"r9-9950x3d",name:"AMD Ryzen 9 9950X3D",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.7,power:230,cool:200,igpu:true,ig:6,box:false,g:102,m:102,tier:5,price:575,chk:true},
  {id:"r9-9950x3d2",name:"AMD Ryzen 9 9950X3D2",brand:"AMD",socket:"AM5",cores:16,threads:32,boost:5.6,power:270,cool:230,igpu:true,ig:6,box:false,g:103,m:104,tier:5,price:779,chk:true},
  {id:"u9-285k",name:"Intel Core Ultra 9 285K",brand:"Intel",socket:"LGA1851",cores:24,threads:24,boost:5.7,power:250,cool:220,igpu:true,ig:8,box:false,g:83,m:102,tier:5,price:530,chk:true}
 ],
 board:[
- {id:"asr-a620m",name:"ASRock A620M-HDV/M.2+",socket:"AM5",chipset:"A620",form:"mATX",ramType:"DDR5",slots:2,maxRam:96,m2:1,gen5m2:false,wifi:false,maxCpuPower:120,tier:1,price:95,chk:true},
- {id:"asr-b650m-pro",name:"ASRock B650M Pro RS WiFi",socket:"AM5",chipset:"B650",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:true,wifi:true,tier:2,price:176,chk:true},
+ {id:"asr-a620m",name:"ASRock A620M-HDV/M.2+",socket:"AM5",chipset:"A620",form:"mATX",ramType:"DDR5",slots:2,maxRam:96,m2:1,gen5m2:false,wifi:false,maxCpuPower:120,tier:1,price:95,chk:true,eol:true},
+ {id:"asr-b650m-pro",name:"ASRock B650M Pro RS WiFi",socket:"AM5",chipset:"B650",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:true,wifi:true,tier:2,price:206,chk:true,eol:true},
  {id:"msi-b650-gp",name:"MSI B650 Gaming Plus WiFi",socket:"AM5",chipset:"B650",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:2,price:131,chk:true,eol:true},
  {id:"gb-b850m-gx",name:"Gigabyte B850M Gaming X WiFi6E",socket:"AM5",chipset:"B850",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:true,wifi:true,tier:2,price:155},
  {id:"msi-b850-gp6e",name:"MSI B850 Gaming Plus WiFi6E",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:true,wifi:true,tier:2,price:152,chk:true},
  {id:"asr-b850i-lightning",name:"ASRock B850I Lightning WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:3,price:187,chk:true},
  {id:"gb-x870e-elite",name:"Gigabyte X870E Aorus Elite WiFi7",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:270,chk:true},
  {id:"gb-b850-elite",name:"Gigabyte B850 Aorus Elite WiFi7",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:189,chk:true},
- {id:"msi-b850-tomahawk",name:"MSI MAG B850 Tomahawk Max WiFi",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:3,price:265,chk:true},
+ {id:"msi-b850-tomahawk",name:"MSI MAG B850 Tomahawk Max WiFi",socket:"AM5",chipset:"B850",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:3,price:255,chk:true},
  {id:"msi-x870-tomahawk",name:"MSI MAG X870 Tomahawk WiFi",socket:"AM5",chipset:"X870",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:300,chk:true},
- {id:"asus-b850i",name:"ASUS ROG Strix B850-I Gaming WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:298,chk:true},
+ {id:"asus-b850i",name:"ASUS ROG Strix B850-I Gaming WiFi",socket:"AM5",chipset:"B850",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:278,chk:true},
  {id:"msi-x870e-carbon",name:"MSI MPG X870E Carbon WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:5,price:443,chk:true},
  {id:"asus-x870e-hero",name:"ASUS ROG Crosshair X870E Hero",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:525,chk:true},
- {id:"asus-x870e-e",name:"ASUS ROG Strix X870E-E Gaming WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:470},
- {id:"msi-b760m-a",name:"MSI PRO B760M-A WiFi (DDR5)",socket:"LGA1700",chipset:"B760",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:1,price:125,eol:true},
- {id:"gb-b760-gx",name:"Gigabyte B760 Gaming X AX (DDR5)",socket:"LGA1700",chipset:"B760",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:false,wifi:true,tier:2,price:150,eol:true},
- {id:"msi-b860m-a",name:"MSI PRO B860M-A WiFi",socket:"LGA1851",chipset:"B860",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:false,wifi:true,tier:2,price:227,chk:true},
+ {id:"asus-x870e-e",name:"ASUS ROG Strix X870E-E Gaming WiFi",socket:"AM5",chipset:"X870E",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:437,chk:true},
+ {id:"msi-b760m-a",name:"MSI PRO B760M-A WiFi (DDR5)",socket:"LGA1700",chipset:"B760",form:"mATX",ramType:"DDR5",slots:4,maxRam:192,m2:2,gen5m2:false,wifi:true,tier:1,price:200,eol:true,chk:true},
+ {id:"gb-b760-gx",name:"Gigabyte B760 Gaming X AX (DDR5)",socket:"LGA1700",chipset:"B760",form:"ATX",ramType:"DDR5",slots:4,maxRam:192,m2:3,gen5m2:false,wifi:true,tier:2,price:421,eol:true,chk:true},
+ {id:"msi-b860m-a",name:"MSI PRO B860M-A WiFi",socket:"LGA1851",chipset:"B860",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:false,wifi:true,tier:2,price:227,chk:true,eol:true},
+ {id:"msi-b860m-p",name:"MSI PRO B860M-P WiFi6E",socket:"LGA1851",chipset:"B860",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:2,gen5m2:false,wifi:true,tier:2,price:144,chk:true},
  {id:"asus-b860-tuf",name:"ASUS TUF Gaming B860-Plus WiFi",socket:"LGA1851",chipset:"B860",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:170,chk:true},
- {id:"msi-z890-tomahawk",name:"MSI MAG Z890 Tomahawk WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:328,chk:true},
+ {id:"msi-z890-tomahawk",name:"MSI MAG Z890 Tomahawk WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:4,gen5m2:true,wifi:true,tier:4,price:331,chk:true,eol:true},
  {id:"asus-z890i",name:"ASUS ROG Strix Z890-I Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ITX",ramType:"DDR5",slots:2,maxRam:128,m2:2,gen5m2:true,wifi:true,tier:4,price:464,chk:true},
  {id:"asus-z890e",name:"ASUS ROG Strix Z890-E Gaming WiFi",socket:"LGA1851",chipset:"Z890",form:"ATX",ramType:"DDR5",slots:4,maxRam:256,m2:5,gen5m2:true,wifi:true,tier:5,price:329,chk:true}
 ],
 ram:[
- {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:40,tier:1,price:305},
- {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:629,chk:true},
+ {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:36,tier:1,price:299,chk:true},
+ {id:"gs-2x8-6000",name:"G.Skill Flare X5 16 GB DDR5-6000 CL30",type:"DDR5",cap:16,modules:2,speed:6000,cl:30,tier:1,price:299,chk:true},
+ {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:660,chk:true},
  {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:3,price:525,chk:true},
  {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:729,chk:true},
- {id:"gs-2x16-6000c28",name:"G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:5,price:886},
- {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:880},
- {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:1190,chk:true},
+ {id:"gs-2x16-6000c28",name:"G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:5,price:862,chk:true},
+ {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000",type:"DDR5",cap:48,modules:2,speed:6000,cl:30,tier:4,price:949,chk:true,eol:true},
+ {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:1235,chk:true},
  {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",cap:96,modules:2,speed:6000,cl:30,tier:5,price:1750},
  {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:3499,chk:true}
 ],
@@ -611,7 +613,7 @@ cooler:[
  {id:"boxed",name:"Boxed-Kühler (liegt der CPU bei)",kind:"boxed",h:60,cap:90,sockets:ALL_SOCKETS,tier:0,price:0},
  {id:"tr-ax120",name:"Thermalright Assassin X 120 Refined SE",kind:"air",h:148,cap:150,sockets:ALL_SOCKETS,tier:1,price:20},
  {id:"ar-f36",name:"Arctic Freezer 36",kind:"air",h:159,cap:180,sockets:ALL_SOCKETS,tier:1,price:22,chk:true},
- {id:"tr-axp90",name:"Thermalright AXP90-X47 Full Copper",kind:"air",h:47,cap:95,sockets:ALL_SOCKETS,tier:2,price:35},
+ {id:"tr-axp90",name:"Thermalright AXP90-X47 Full Copper",kind:"air",h:47,cap:95,sockets:ALL_SOCKETS,tier:2,price:37,chk:true},
  {id:"tr-pa120se",name:"Thermalright Peerless Assassin 120 SE",kind:"air",h:155,cap:220,sockets:ALL_SOCKETS,tier:2,price:34,chk:true},
  {id:"nc-l12s",name:"Noctua NH-L12S",kind:"air",h:70,cap:110,sockets:ALL_SOCKETS,tier:3,price:67,chk:true},
  {id:"ar-lf3-240",name:"Arctic Liquid Freezer III Pro 240",kind:"aio",rad:240,h:0,cap:250,sockets:ALL_SOCKETS,tier:3,price:57,chk:true},
@@ -619,37 +621,37 @@ cooler:[
  {id:"ar-lf3-360",name:"Arctic Liquid Freezer III Pro 360",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:4,price:70,chk:true},
  {id:"ar-lf3-420",name:"Arctic Liquid Freezer III Pro 420",kind:"aio",rad:420,h:0,cap:330,sockets:ALL_SOCKETS,tier:4,price:77,chk:true},
  {id:"bq-drp6",name:"be quiet! Dark Rock Pro 6",kind:"air",h:169,cap:280,sockets:ALL_SOCKETS,tier:4,price:84,chk:true},
- {id:"nc-d15g2",name:"Noctua NH-D15 G2",kind:"air",h:168,cap:280,sockets:ALL_SOCKETS,tier:5,price:150},
- {id:"nzxt-elite-360",name:"NZXT Kraken Elite 360 (LCD)",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:5,price:260}
+ {id:"nc-d15g2",name:"Noctua NH-D15 G2",kind:"air",h:168,cap:280,sockets:ALL_SOCKETS,tier:5,price:144,chk:true},
+ {id:"nzxt-elite-360",name:"NZXT Kraken Elite 360 (LCD)",kind:"aio",rad:360,h:0,cap:300,sockets:ALL_SOCKETS,tier:5,price:236,chk:true}
 ],
 gpu:[
  {id:"none",name:"Keine Grafikkarte",none:true,brand:"",vram:0,power:0,len:0,rec:0,conn:"",g:0,tier:0,price:0},
- {id:"arc-b570",name:"Intel Arc B570 10 GB",brand:"Intel",vram:10,power:150,len:230,rec:450,conn:"8-Pin",g:35,tier:1,price:270,chk:true},
+ {id:"arc-b570",name:"Intel Arc B570 10 GB",brand:"Intel",vram:10,power:150,len:230,rec:450,conn:"8-Pin",g:35,tier:1,price:287,chk:true},
  {id:"rtx5050",name:"NVIDIA GeForce RTX 5050 8 GB",brand:"NVIDIA",vram:8,power:130,len:200,rec:450,conn:"8-Pin",g:39,tier:1,price:384,chk:true},
  {id:"arc-b580",name:"Intel Arc B580 12 GB",brand:"Intel",vram:12,power:190,len:250,rec:550,conn:"8-Pin",g:39,tier:1,price:397,chk:true},
  {id:"rx9060xt-8",name:"AMD Radeon RX 9060 XT 8 GB",brand:"AMD",vram:8,power:160,len:240,rec:450,conn:"8-Pin",g:56,tier:1,price:446,chk:true},
  {id:"rtx5060",name:"NVIDIA GeForce RTX 5060 8 GB",brand:"NVIDIA",vram:8,power:145,len:230,rec:550,conn:"8-Pin",g:50,tier:1,price:459,chk:true},
  {id:"rtx5060ti-8",name:"NVIDIA GeForce RTX 5060 Ti 8 GB",brand:"NVIDIA",vram:8,power:180,len:240,rec:600,conn:"8-Pin",g:58,tier:2,price:514,chk:true},
- {id:"rx9060xt-16",name:"AMD Radeon RX 9060 XT 16 GB",brand:"AMD",vram:16,power:180,len:250,rec:500,conn:"8-Pin",g:58,tier:2,price:606,chk:true},
+ {id:"rx9060xt-16",name:"AMD Radeon RX 9060 XT 16 GB",brand:"AMD",vram:16,power:180,len:250,rec:500,conn:"8-Pin",g:58,tier:2,price:625,chk:true},
  {id:"rtx5060ti-16",name:"NVIDIA GeForce RTX 5060 Ti 16 GB",brand:"NVIDIA",vram:16,power:180,len:240,rec:600,conn:"8-Pin",g:60,tier:2,price:799,chk:true},
  {id:"rtx5070",name:"NVIDIA GeForce RTX 5070 12 GB",brand:"NVIDIA",vram:12,power:250,len:270,rec:650,conn:"12V-2x6",g:75,tier:3,price:858,chk:true},
  {id:"rx9070gre",name:"AMD Radeon RX 9070 GRE 12 GB",brand:"AMD",vram:12,power:220,len:280,rec:650,conn:"8-Pin",g:76,tier:3,price:639,chk:true},
- {id:"rx9070",name:"AMD Radeon RX 9070 16 GB",brand:"AMD",vram:16,power:220,len:290,rec:650,conn:"8-Pin",g:84,tier:3,price:759,chk:true},
- {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:90,tier:4,price:896,chk:true},
- {id:"rtx5070ti",name:"NVIDIA GeForce RTX 5070 Ti 16 GB",brand:"NVIDIA",vram:16,power:300,len:305,rec:750,conn:"12V-2x6",g:93,tier:4,price:1279,chk:true},
- {id:"rtx5080",name:"NVIDIA GeForce RTX 5080 16 GB",brand:"NVIDIA",vram:16,power:360,len:315,rec:850,conn:"12V-2x6",g:105,tier:5,price:1889,chk:true},
- {id:"rtx5090",name:"NVIDIA GeForce RTX 5090 32 GB",brand:"NVIDIA",vram:32,power:575,len:335,rec:1000,conn:"12V-2x6",g:150,tier:5,price:7800,chk:true}
+ {id:"rx9070",name:"AMD Radeon RX 9070 16 GB",brand:"AMD",vram:16,power:220,len:290,rec:650,conn:"8-Pin",g:84,tier:3,price:722,chk:true},
+ {id:"rx9070xt",name:"AMD Radeon RX 9070 XT 16 GB",brand:"AMD",vram:16,power:304,len:320,rec:750,conn:"8-Pin",g:90,tier:4,price:876,chk:true},
+ {id:"rtx5070ti",name:"NVIDIA GeForce RTX 5070 Ti 16 GB",brand:"NVIDIA",vram:16,power:300,len:305,rec:750,conn:"12V-2x6",g:93,tier:4,price:1311,chk:true},
+ {id:"rtx5080",name:"NVIDIA GeForce RTX 5080 16 GB",brand:"NVIDIA",vram:16,power:360,len:315,rec:850,conn:"12V-2x6",g:105,tier:5,price:1800,chk:true},
+ {id:"rtx5090",name:"NVIDIA GeForce RTX 5090 32 GB",brand:"NVIDIA",vram:32,power:575,len:335,rec:1000,conn:"12V-2x6",g:150,tier:5,price:7637,chk:true}
 ],
 ssd:[
- {id:"kingston-nv3-1",name:"Kingston NV3 1 TB",cap:1000,gen:4,read:6000,tier:1,price:125,chk:true},
+ {id:"kingston-nv3-1",name:"Kingston NV3 1 TB",cap:1000,gen:4,read:6000,tier:1,price:147,chk:true},
  {id:"wd-sn7100-1",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 1 TB",cap:1000,gen:4,read:7250,tier:2,price:236,chk:true},
  {id:"s990evo-1",name:"Samsung 990 EVO Plus 1 TB",cap:1000,gen:4,read:7150,tier:2,price:189,chk:true},
  {id:"wd-sn7100-2",name:"SanDisk Optimus GX 7100 (ex WD Black SN7100) 2 TB",cap:2000,gen:4,read:7250,tier:3,price:446,chk:true},
  {id:"s990evo-2",name:"Samsung 990 EVO Plus 2 TB",cap:2000,gen:4,read:7250,tier:3,price:330},
  {id:"sn8100-2",name:"SanDisk WD_Black SN8100 2 TB",cap:2000,gen:5,read:14900,tier:5,price:420,chk:true},
- {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:400,chk:true},
+ {id:"s9100-2",name:"Samsung 9100 Pro 2 TB",cap:2000,gen:5,read:14700,tier:4,price:416,chk:true},
  {id:"lexar-nm790-4",name:"Lexar NM790 4 TB",cap:4000,gen:4,read:7400,tier:4,price:539,chk:true},
- {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:700,chk:true},
+ {id:"s990pro-4",name:"Samsung 990 Pro 4 TB",cap:4000,gen:4,read:7450,tier:5,price:670,chk:true},
  {id:"s9100-4",name:"Samsung 9100 Pro 4 TB",cap:4000,gen:5,read:14800,tier:5,price:870,chk:true}
 ],
 psu:[
@@ -658,13 +660,14 @@ psu:[
  {id:"bq-pp12-650",name:"be quiet! Pure Power 12 650 W",watt:650,eff:"Gold",form:"ATX",atx3:true,tier:2,price:70,chk:true},
  {id:"bq-pp12-750",name:"be quiet! Pure Power 12 750 W",watt:750,eff:"Gold",form:"ATX",atx3:true,tier:2,price:96,chk:true},
  {id:"sea-coregx-850",name:"Seasonic Core GX-850 (ATX 3.1)",watt:850,eff:"Gold",form:"ATX",atx3:true,tier:3,price:100,chk:true},
- {id:"cor-rm850e",name:"Corsair RM850e (2025)",watt:850,eff:"Gold",form:"ATX",atx3:true,tier:3,price:105,chk:true},
+ {id:"bq-pp13m-750",name:"be quiet! Pure Power 13 M 750 W",watt:750,eff:"Gold",form:"ATX",atx3:true,tier:2,price:105,chk:true},
+ {id:"cor-rm850e",name:"Corsair RM850e (2025)",watt:850,eff:"Gold",form:"ATX",atx3:true,tier:3,price:104,chk:true},
  {id:"cor-sf750",name:"Corsair SF750",watt:750,eff:"Platinum",form:"SFX",atx3:true,tier:4,price:165,chk:true},
  {id:"bq-sp12-1000",name:"be quiet! Straight Power 12 1000 W",watt:1000,eff:"Platinum",form:"ATX",atx3:true,tier:4,price:200},
  {id:"cor-sf1000",name:"Corsair SF1000",watt:1000,eff:"Platinum",form:"SFX",atx3:true,tier:5,price:194,chk:true},
  {id:"cor-rm1000x",name:"Corsair RM1000x (2024)",watt:1000,eff:"Gold",form:"ATX",atx3:true,tier:4,price:171,chk:true},
  {id:"bq-dp14-1000",name:"be quiet! Dark Power 14 1000 W",watt:1000,eff:"Titanium",form:"ATX",atx3:true,tier:5,price:228,chk:true},
- {id:"sea-gx1200",name:"Seasonic Vertex GX-1200",watt:1200,eff:"Gold",form:"ATX",atx3:true,tier:4,price:240},
+ {id:"sea-gx1200",eol:true,name:"Seasonic Vertex GX-1200 (ATX 3.0)",watt:1200,eff:"Gold",form:"ATX",atx3:true,tier:4,price:244,chk:true,atx:"3.0"},
  {id:"cor-hx1500i",name:"Corsair HX1500i",watt:1500,eff:"Platinum",form:"ATX",atx3:true,tier:5,price:278,chk:true}
 ],
 "case":[
@@ -674,9 +677,9 @@ psu:[
  {id:"ll-lancool217",silent:2,name:"Lian Li Lancool 217",form:"ATX",gpu:410,cooler:180,rads:[240,280,360],psu:["ATX"],tier:2,price:100,chk:true},
  {id:"cm-nr200p",silent:1,name:"Cooler Master NR200P V2",form:"ITX",gpu:336,cooler:155,rads:[240,280],psu:["SFX"],tier:3,price:110,eol:true},
  {id:"bq-pb501",silent:3,name:"be quiet! Pure Base 501 (gedämmt)",form:"ATX",gpu:368,cooler:178,rads:[240,280,360],radFrontOnly:[280,360],gpuFrontRad:300,psu:["ATX"],tier:2,price:60,chk:true},
- {id:"fd-north",silent:2,name:"Fractal Design North",form:"ATX",gpu:355,cooler:170,rads:[240,280,360],psu:["ATX"],tier:3,price:142,chk:true},
+ {id:"fd-north",silent:2,name:"Fractal Design North",form:"ATX",gpu:355,cooler:170,rads:[240,280,360],psu:["ATX"],tier:3,price:123,chk:true},
  {id:"ll-o11-evo",silent:1,name:"Lian Li O11 Dynamic EVO RGB",form:"ATX",gpu:426,cooler:167,rads:[240,280,360],psu:["ATX"],tier:4,price:167,chk:true},
- {id:"bq-sb802",silent:3,name:"be quiet! Silent Base 802 (gedämmt)",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:140,chk:true,radFrontOnly:[420],gpuFrontRad:369,gpuCage:287},
+ {id:"bq-sb802",silent:3,name:"be quiet! Silent Base 802 (gedämmt)",form:"ATX",gpu:432,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:137,radFrontOnly:[420],gpuFrontRad:369,gpuCage:287,chk:true},
  {id:"fd-define7",silent:3,name:"Fractal Design Define 7 (gedämmt)",form:"ATX",gpu:445,cooler:185,rads:[240,280,360,420],psu:["ATX"],tier:4,price:175},
  {id:"fd-terra",silent:1,name:"Fractal Design Terra",form:"ITX",gpu:322,cooler:77,rads:[],psu:["SFX"],tier:4,price:170,chk:true}
 ]};
@@ -684,9 +687,8 @@ psu:[
 /* Vergleichs-Laptops: g = Gaming-Leistung auf derselben Skala wie Desktop-GPUs (RX 9070 XT = 92), m = Multi-Core (Ryzen 9 9950X = 100) */
 const LAPTOPS=[
  {id:"g14",cls:"14 Zoll, mobil",name:"ASUS ROG Zephyrus G14 (2026)",cpu:"Intel Core Ultra 9 386H",gpu:"RTX 5070 Ti Laptop 12 GB",ram:"32 GB",ssd:"1 TB",display:"14\" 3K OLED",kg:1.6,g:63,m:62,watt:140,price:3299,priceNote:"Listenpreis laut Notebookcheck",chk:true,link:"https://geizhals.de/?fs=ROG+Zephyrus+G14+2026"},
- {id:"aorus16",cls:"16 Zoll, Allround",name:"Gigabyte Aorus Master 16",cpu:"AMD Ryzen 9 X3D (16 Kerne)",gpu:"RTX 5080 Laptop 16 GB",ram:"32 GB",ssd:"2 TB",display:"16\" 2,5K OLED 240 Hz",kg:2.5,g:72,m:92,watt:250,price:3299,priceNote:"Angebot Alternate laut Notebookcheck, sonst ab ca. 3.330 €",chk:true,link:"https://geizhals.de/?fs=Aorus+Master+16+RTX+5080"},
+ {id:"aorus16",cls:"16 Zoll, Allround",name:"Gigabyte Aorus Master 16 (Gen 2)",cpu:"AMD Ryzen 9 9955HX3D (16 Kerne)",gpu:"RTX 5080 Laptop 16 GB",ram:"32 GB",ssd:"2 TB",display:"16\" 2,5K OLED 240 Hz",kg:2.5,g:72,m:92,watt:250,price:3399,priceNote:"Geizhals/PCGH, 11.11.2026",chk:true,link:"https://geizhals.de/?fs=Aorus+Master+16+RTX+5080"},
  {id:"scar18",cls:"18 Zoll, Desktop-Ersatz",name:"ASUS ROG Strix Scar 18 (2026)",cpu:"Intel Core Ultra 9 290HX Plus (24 Kerne)",gpu:"RTX 5090 Laptop 24 GB",ram:"64 GB",ssd:"4 TB",display:"18\" 4K Mini-LED 240 Hz",kg:3.3,g:80,m:95,watt:330,price:6598,priceNote:"ab-Preis Deutschland (64 GB / 4 TB)",chk:true,link:"https://geizhals.de/?fs=RTX+5090+Laptop+18"},
- {id:"legionpro7i",cls:"16 Zoll, Allround",name:"Lenovo Legion Pro 7i Gen 10",cpu:"Intel Core Ultra 9 275HX (24 Kerne)",gpu:"RTX 5080 Laptop 16 GB",ram:"32 GB",ssd:"1 TB",display:"16\" OLED 240 Hz",kg:2.7,g:72,m:92,watt:250,price:2599,priceNote:"unter 2.600 € mit Edu-Rabatt (März 2026, Notebookcheck)",chk:false,link:"https://www.notebookcheck.com/Deal-Legion-Pro-7i-OLED-mit-RTX-5070-Ti-oder-RTX-5080-zum-Top-Preis-direkt-von-Lenovo.1250515.0.html"},
  {id:"mbp16",cls:"16 Zoll, Kreativ",name:"Apple MacBook Pro 16 M5 Max",cpu:"M5 Max, 18 Kerne",gpu:"32-Kern-GPU (integriert)",ram:"36 GB",ssd:"2 TB",display:"16,2\" Mini-LED XDR",kg:2.1,g:null,m:98,watt:140,price:4099,priceNote:"Bestpreis (36 GB / 2 TB); UVP 4.499 €",chk:true,link:"https://geizhals.de/?fs=MacBook+Pro+16+M5+Max"}
 ];
 
@@ -694,10 +696,10 @@ const LAPTOPS=[
 const PREBUILT=[
  {id:"legiont7-5070ti",name:"Lenovo Legion T7 (34IAS10, 90Y600AFGF)",cpu:"Core Ultra 7 265K",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:80,m:86,price:2599,priceNote:"notebooksbilliger.de, ab Lager, 10.11.2026; DDR5-5600, 850 W, Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/lenovo-legion-t7-34ias10-90y600afgf-a3775439.html",chk:true},
  {id:"legion5i-5070ti",name:"Lenovo Legion Tower 5i Gen10 (90YA001XGF)",cpu:"Core Ultra 7 265KF",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:80,m:86,price:2599,priceNote:"notebooksbilliger.de, auf Lager, 10.11.2026; DDR5-5600, 850 W, Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/lenovo-legion-tower-5i-gen10-90ya001xgf-a3510245.html",chk:true},
- {id:"captiva-9070xt",name:"Captiva Highend Gaming R10-0257",cpu:"Ryzen 7 9800X3D",gpu:"RX 9070 XT 16 GB",ram:"32 GB",ssd:"k. A.",g:90,cg:100,m:55,price:2445,priceNote:"ab 2.445 €, 10.11.2026; SSD, Windows und Lieferbarkeit nicht geprüft",link:"https://preisvergleich.pcgameshardware.de/captiva-highend-gaming-r10-0257-100257-a3868979.html",chk:false},
+ {id:"captiva-9070xt",name:"Captiva Highend Gaming R10-0257",cpu:"Ryzen 7 9800X3D",gpu:"RX 9070 XT 16 GB",ram:"32 GB",ssd:"1 TB",g:90,cg:100,m:55,price:2445,priceNote:"ab 2.445 €, 11.11.2026; SSD, Windows und Lieferbarkeit nicht geprüft",link:"https://preisvergleich.pcgameshardware.de/captiva-highend-gaming-r10-0257-100257-a3868979.html",chk:false},
  {id:"omen35l",name:"HP Omen 35L (GT16-1472ng)",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"1 TB",g:93,cg:100,m:55,price:3799,priceNote:"Geizhals ab 3.799 € (10.11.2026); 2.549 € war ein Angebot im Juli/Sept.",link:"https://preisvergleich.pcgameshardware.de/?fs=Omen+35L+GT16-1472ng",chk:true},
- {id:"legiont7-5080",name:"Lenovo Legion T7 (34IAS10, 90Y6001PGF)",cpu:"Core Ultra 7 265KF",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"2 TB",g:105,cg:80,m:86,price:3699,priceNote:"Geizhals/PCGH, 10.11.2026",link:"https://preisvergleich.pcgameshardware.de/?fs=Legion+T7+34IAS10+5080",chk:true},
- {id:"dubaro",name:"Dubaro Gaming-PC (Systemintegrator)",cpu:"Ryzen 7 7800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"2 TB",g:93,cg:92,m:42,price:3499,priceNote:"dubaro.de, 10.11.2026; ob Windows enthalten ist, nicht geprüft",link:"https://dubaro.de/Specials/NVIDIA-RTX-5070Ti-Gaming-PCs/",chk:false}
+ {id:"legiont7-5080",name:"Lenovo Legion T7 (34IAS10, 90Y6001PGF)",cpu:"Core Ultra 7 265KF",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"2 TB",g:105,cg:80,m:86,price:3699,priceNote:"Geizhals/PCGH, 11.11.2026; EN/ML-Variante, Tastaturlayout prüfen",link:"https://preisvergleich.pcgameshardware.de/?fs=Legion+T7+34IAS10+5080",chk:true},
+ {id:"dubaro",name:"Dubaro Gaming-PC (Systemintegrator)",cpu:"Ryzen 7 7800X3D",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"2 TB",g:93,cg:92,m:42,price:3299,priceNote:"dubaro.de, 11.11.2026; ob Windows enthalten ist, nicht geprüft",link:"https://dubaro.de/Specials/NVIDIA-RTX-5070Ti-Gaming-PCs/",chk:false}
 ];
 
 const CATS=[
@@ -811,6 +813,8 @@ function checkAll(parts,profile){
   if(cpu&&ram&&cpu.socket==="LGA1851"&&ram.speed<6400)add("info",["ram","cpu"],`Core Ultra profitiert von DDR5-6400 oder schneller.`);
   if(cpu&&ram&&cpu.brand==="AMD"&&ram.speed>6000)add("info",["ram","cpu"],`Bei Ryzen ist DDR5-6000 CL30 der Sweet Spot; schneller bringt kaum mehr.`);
   if(cpu&&board&&cpu.socket==="AM5"&&/^(A620|B650)$/.test(board.chipset)&&/^AMD Ryzen \d 9\d{3}/.test(cpu.name))add("info",["cpu","board"],`Ryzen 9000 auf ${board.chipset}: Das Board braucht ein BIOS mit AGESA 1.2 oder neuer. Bei älterer Lagerware vorher per Flash-BIOS-Taste (ohne CPU) aktualisieren.`);
+  if(state.budget){const tt=Object.values(parts).reduce((s2,x)=>s2+(x?x.price:0),0);if(tt>state.budget)add("info",[],`Budget um ${eur(tt-state.budget)} überschritten: Mit deinen festen Teilen und Vorgaben (RAM, SSD, Größe) gibt es keine günstigere passende Zusammenstellung.`);}
+  if(profile!=="office"&&cpu&&hasGpu&&buildFps(parts,P().res)<P().fps*0.9)add("info",["gpu"],`Ziel-Bildrate nicht erreicht: ca. ${buildFps(parts,P().res)} statt ${P().fps} FPS in ${RES[P().res].label} (AAA, ohne Upscaling).`);
   if(cpu&&cpu.socket==="LGA1700")add("info",["cpu","board"],`Core 14. Generation: vor dem ersten Start BIOS mit Intel-Microcode 0x12B oder neuer einspielen.`);
   return I;
 }
@@ -874,7 +878,7 @@ function prefer(cat,pool,parts,T){
   }
   if(cat==="ram"){
     let r=pool.filter(p=>p.cap===pa.ram);if(!r.length)r=pool.filter(p=>p.cap>=pa.ram);if(!r.length)r=pool;
-    if(parts.cpu&&parts.cpu.socket==="LGA1851"){const fast=r.filter(p=>p.speed>=6400);if(fast.length)r=fast;}
+    if(parts.cpu&&parts.cpu.socket==="LGA1851"){const fast=r.filter(p=>p.speed>=6400),mn=a=>Math.min(...a.map(x=>x.price));if(fast.length&&mn(fast)<=mn(r)*1.1)r=fast;}
     else if(pr!=="office"){const fast=r.filter(p=>p.speed>=6000&&p.cl<=30);if(fast.length)r=fast;}
     return r;
   }
@@ -888,6 +892,7 @@ function pickCooler(pool,parts,T){
   const need=parts.cpu?parts.cpu.cool:120,margin=1.1+P().quiet/100*0.5;
   let c=pool.filter(p=>p.cap>=need*margin);if(!c.length)c=pool.filter(p=>p.cap>=need);
   if(!c.length)return pool.slice().sort((a,b)=>b.cap-a.cap)[0];
+  if(c.every(p=>p.cap<need*margin)){const mn=Math.min(...c.map(p=>p.price));return c.filter(p=>p.price<=mn+40).sort((a,b)=>b.cap-a.cap||a.price-b.price)[0];}
   return c.slice().sort((a,b)=>a.price-b.price)[0];
 }
 function pickPsu(pool,parts,T){
@@ -913,7 +918,7 @@ function pickCpu(pool,alloc,parts){
   const needG=Math.min(Math.max(P().fps,gp?gp.g*RES[P().res].f:0)/CPU_FPS*1.3*(1-0.25*mixW()),100),needM=20+mixW()*70;
   pool=pool.filter(p=>isFinite(platformCost(p))).length?pool.filter(p=>isFinite(platformCost(p))):pool;
   /* Kleine Gehäuse: nur CPUs, die ein passender flacher Kühler noch schafft */
-  if(P().size==="ITX"){const cs=state.picks["case"]&&get("case",state.picks["case"].id);const maxH=cs?cs.cooler:155;
+  if(P().size==="ITX"){const cs=state.picks["case"]&&state.picks["case"].src==="user"&&get("case",state.picks["case"].id);const maxH=cs?cs.cooler:Math.max(0,...DB["case"].filter(x=>!x.eol&&x.form==="ITX").map(x=>x.cooler));
     const capMax=Math.max(...DB.cooler.filter(c=>c.kind==="air"&&c.h<=maxH).map(c=>c.cap),0);
     const cool=pool.filter(p=>p.cool<=capMax);if(cool.length)pool=cool;}
   const ok=pool.filter(p=>p.g>=needG&&p.m>=needM);
@@ -983,9 +988,46 @@ function fillMissing(base){
     const old=get("cpu",p.cpu.id);const rest=Object.assign({},p);delete rest.cpu;
     for(const c of ["cooler","psu"]){if(rest[c]&&rest[c].src==="auto")delete rest[c];}
     const ch=choose("cpu",rest,T,state.budget?old.price:null);
-    if(ch&&ch.id!==old.id&&ch.socket===old.socket){
+    if(ch&&ch.id!==old.id&&ch.socket===old.socket&&!(P().size==="ITX"&&ch.cool>old.cool)){
       p.cpu={id:ch.id,src:"auto"};
       for(const c of ["cooler","psu"]){if(p[c]&&p[c].src==="auto"){delete p[c];const c2=choose(c,p,T,null);if(c2)p[c]={id:c2.id,src:"auto"};}}
+    }
+  }
+  if(state.budget){
+    const tot=q=>Object.keys(q).reduce((s2,c)=>s2+get(c,q[c].id).price,0);
+    /* Aufwertung: Ziel-Bildrate verfehlt und Budget übrig -> stärkste Grafikkarte, die noch ins Budget passt */
+    if(state.profile!=="office"&&p.gpu&&p.gpu.src==="auto"&&buildFps(resolve(p),P().res)<P().fps){
+      const cur=get("gpu",p.gpu.id),rest=Object.assign({},p);delete rest.gpu;if(rest.psu&&rest.psu.src==="auto")delete rest.psu;
+      const rp=resolve(rest);
+      let pool=DB.gpu.filter(x=>!x.none&&!x.eol&&effG(x)>effG(cur)&&!issuesFor("gpu",x,rp,state.profile).some(i=>i.level==="error"));
+      pool=prefer("gpu",pool,rp,T);
+      let best=null;
+      for(const g of pool){
+        const trial=Object.assign({},rest,{gpu:{id:g.id,src:"auto"}});
+        if(!trial.psu){const c2=choose("psu",trial,T,null);if(c2)trial.psu={id:c2.id,src:"auto"};}
+        if(tot(trial)<=state.budget&&(!best||effG(g)>effG(get("gpu",best.gpu.id))))best=trial;
+      }
+      if(best){for(const k in p)delete p[k];Object.assign(p,best);}
+    }
+    /* Budget einhalten: automatisch gewählte Teile schrittweise günstiger wählen, Leistungsteile zuletzt */
+    const order=["board","case","psu","cooler","ssd","ram","gpu","cpu"];
+    for(let guard=0;guard<60&&tot(p)>state.budget;guard++){
+      let done=false;
+      for(const cat of order){
+        if(!p[cat]||p[cat].src!=="auto")continue;
+        const cur=get(cat,p[cat].id),rest=Object.assign({},p);delete rest[cat];const rp=resolve(rest);
+        const c=DB[cat].filter(x=>!x.eol&&x.price<cur.price
+          &&!(cat==="gpu"&&x.none&&state.profile!=="office")
+          &&!(cat==="ram"&&x.cap<P().ram)&&!(cat==="ssd"&&x.cap<P().storage)
+          &&!(cat==="cooler"&&x.kind==="boxed"&&state.profile!=="office")
+          &&!(cat==="case"&&x.form!==cur.form)&&!(cat==="board"&&x.form!==cur.form)
+          &&!(cat==="cpu"&&x.ig>=12&&rp.gpu&&!rp.gpu.none)
+          &&!(cat==="cpu"&&x.cool>cur.cool)
+          &&!issuesFor(cat,x,rp,state.profile).some(i=>i.level==="error"||(i.level==="warn"&&cat!=="gpu"&&cat!=="cpu")))
+          .sort((a,b)=>b.price-a.price);
+        if(c.length){p[cat]={id:c[0].id,src:"auto"};done=true;break;}
+      }
+      if(!done)break;
     }
   }
   return p;
@@ -1007,13 +1049,13 @@ function spec(cat,p){
     case "ram":return `${p.cap} GB (${p.modules}×${p.cap/p.modules} GB) · DDR5-${p.speed} · CL${p.cl}`;
     case "gpu":return p.none?"Bild über die Prozessor-Grafik (iGPU)":`${p.vram} GB · ${p.power} W · ${p.len} mm · ${p.conn}`;
     case "ssd":return `${fmtCap(p.cap)} · NVMe PCIe ${p.gen}.0 · bis ${p.read.toLocaleString("de-DE")} MB/s`;
-    case "psu":return `${p.watt} W · 80 PLUS ${p.eff} · ${p.form}${p.atx3?" · ATX 3.1 mit 12V-2x6":""}`;
+    case "psu":return `${p.watt} W · 80 PLUS ${p.eff} · ${p.form}${p.atx3?` · ATX ${p.atx||"3.1"} mit ${p.atx==="3.0"?"12VHPWR":"12V-2x6"}`:""}`;
     case "case":return `bis ${p.form} · GPU ≤ ${p.gpu} mm · Kühler ≤ ${p.cooler} mm · ${p.rads.length?"Radiator "+p.rads.join("/")+" mm":"kein Radiator"} · ${p.psu.join("/")}-Netzteil`;
   }
   return "";
 }
 function tierDots(t){if(!t)return "";let s='<span class="tier" title="Klasse '+t+' von 5" aria-label="Klasse '+t+' von 5">';for(let i=1;i<=5;i++)s+='<i class="'+(i<=t?"on":"")+'"></i>';return s+"</span>";}
-function priceLink(p){if(!p||p.price===0)return "";return `<span class="links">${p.chk?'<span class="tag rec">Preis geprüft 9.11.</span> ':""}<a href="https://geizhals.de/?fs=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
+function priceLink(p){if(!p||p.price===0)return "";return `<span class="links">${p.chk?'<span class="tag rec">Preis geprüft</span> ':""}<a href="https://geizhals.de/?fs=${encodeURIComponent(p.name)}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
 const SEV_LABEL={error:"Konflikt",warn:"Achtung",info:"Hinweis",ok:"Passt"};
 
 
@@ -1047,7 +1089,7 @@ function benefitText(cat,cur,p,parts){
     case "case":if((p.silent||1)>(cur.silent||1))t.push((p.silent||1)===3?"gedämmt, deutlich leiser":"leiser");
       if(p.gpu>cur.gpu)t.push(`Grafikkarten bis ${p.gpu} mm`);if(p.rads.length>cur.rads.length||Math.max(0,...p.rads)>Math.max(0,...cur.rads))t.push(`Radiator bis ${Math.max(...p.rads)} mm`);break;
     case "psu":if((EFF_RANK[p.eff]||0)>(EFF_RANK[cur.eff]||0))t.push(`80 PLUS ${p.eff} statt ${cur.eff}: effizienter, kühler, leiser`);
-      if(p.watt>cur.watt&&(parts.cpu||parts.gpu)&&cur.watt<recPsu(parts)*1.15)t.push(`+${p.watt-cur.watt} W Reserve`);if(p.atx3&&!cur.atx3)t.push("ATX 3.1 mit 12V-2x6");break;
+      if(p.watt>cur.watt&&(parts.cpu||parts.gpu)&&cur.watt<recPsu(parts))t.push(`+${p.watt-cur.watt} W Reserve`);if(p.atx3&&!cur.atx3)t.push("ATX 3.1 mit 12V-2x6");break;
     case "board":if((CHIP_RANK[p.chipset]||0)>(CHIP_RANK[cur.chipset]||0))t.push(`${p.chipset}-Chipsatz`);
       if(p.m2>cur.m2)t.push(`+${p.m2-cur.m2} M.2-Pl${p.m2-cur.m2>1?"ätze":"atz"}`);if(p.gen5m2&&!cur.gen5m2)t.push("PCIe-5.0-M.2");if(p.wifi&&!cur.wifi)t.push("WLAN");break;
     case "ram":if(p.cap>cur.cap)t.push(`+${p.cap-cur.cap} GB`);if(p.speed>cur.speed&&!(parts.cpu&&parts.cpu.brand==="AMD"&&cur.speed>=6000))t.push(`DDR5-${p.speed}`);if(p.speed<cur.speed)t.push(`langsamer: DDR5-${p.speed}`);if(p.cl<cur.cl)t.push(`CL${p.cl} statt CL${cur.cl}`);break;
@@ -1065,7 +1107,8 @@ function betterOptions(cat,cur,ctx,max){
       if(cat==="psu")return p.watt>=cur.watt&&(p.form===cur.form||!(ctx["case"]&&ctx["case"].psu.includes(cur.form)));
       if(cat==="board")return p.form===cur.form||(ctx["case"]&&FORM_FIT[ctx["case"].form].includes(p.form)&&FORM_FIT[p.form].includes(cur.form));
       if(cat==="ram"){const amd=ctx.cpu&&ctx.cpu.brand==="AMD";return p.cap>=cur.cap&&(amd?Math.min(p.speed,6000)>=Math.min(cur.speed,6000):p.speed>=cur.speed);}
-      if(cat==="ssd")return p.cap>=cur.cap;
+      if(cat==="ssd")return p.cap>=cur.cap&&p.gen>=cur.gen;
+      if(cat==="cooler")return !(ctx.cpu&&cur.cap>=ctx.cpu.cool*1.5);
       return true;})
     .sort((a,b)=>a.price-b.price);
   const minGain=cat==="psu"?20:0.5;
@@ -1459,7 +1502,7 @@ function prosCons(cat,p,parts){
 }
 function briefHtml(cat,p,parts){
   const rows=specRows(cat,p),pc=prosCons(cat,p,parts),key=cat+":"+p.id;
-  const src=p.chk?"Preis geprüft am 9.11.2026 (Geizhals-Daten bzw. Preisvergleich)":"Preis ist eine Schätzung, vor dem Kauf prüfen";
+  const src=p.chk?"Preis geprüft zwischen 9. und 11.11.2026 (Geizhals-Daten bzw. Preisvergleich)":"Preis ist eine Schätzung, vor dem Kauf prüfen";
   return `<details class="brief" data-brief="${esc(key)}"${openBriefs.has(key)?" open":""}><summary>Steckbrief</summary><div class="brief-body">
     <div><h4>Technische Daten</h4><table class="kvt">${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(String(r[1]))}</td></tr>`).join("")}<tr><td>Preis</td><td>${eur(p.price)}</td></tr><tr><td>Klasse</td><td>${p.tier||"–"} von 5</td></tr></table></div>
     <div><h4>Stärken und Schwächen</h4><ul class="pc">${pc.P.map(x=>`<li class="p"><span>${esc(x)}</span></li>`).join("")}${pc.C.map(x=>`<li class="c"><span>${esc(x)}</span></li>`).join("")}${pc.N.map(x=>`<li class="n"><span>${esc(x)}</span></li>`).join("")}</ul>
@@ -1576,7 +1619,7 @@ function renderOverview(parts,issues){
   $("#oPath").innerHTML=steps.length?`<div class="up"><span class="h">Schritt</span><span class="h">Aufpreis</span><span class="h">Nutzen</span><span></span>${steps.map((x,i)=>`<span>${i+1}. ${esc(x.c.label)}: <b>${esc(x.o.name)}</b><br><small class="subline">${esc(benefitText(x.c.k,x.pt,x.o,parts))}</small></span><span class="delta-neg">${x.d>0?"+":""}${eur(x.d)}</span><span class="delta-pos">${x.gain!=null?"+"+Math.round(x.gain)+" % Leistung":"Ausstattung"}</span><button type="button" class="btn" data-act="take" data-cat="${x.c.k}" data-id="${esc(x.o.id)}">Übernehmen</button>`).join("")}</div><p class="subline">Leistungs-Upgrades (Grafikkarte: FPS bei deiner Auflösung, Prozessor: Mix nach Gaming/Kreativ-Regler) stehen nach Nutzen pro Euro vorn, Ausstattungs-Upgrades folgen nach Aufpreis.</p>`:`<p class="subline">Keine sinnvollen Upgrades gefunden.</p>`;
   // Tabelle
   $("#oSum").textContent=eur(total);
-  $("#oTable").innerHTML=`<table class="ctable"><thead><tr><th>Bauteil</th><th>Modell</th><th>Eckdaten</th><th>Preisstand</th><th style="text-align:right">Preis</th></tr></thead><tbody>${CATS.map(c=>{const pt=parts[c.k];if(!pt)return `<tr><td>${esc(c.label)}</td><td colspan="4" class="subline">nicht gewählt</td></tr>`;return `<tr><td>${esc(c.label)}</td><td><b>${esc(pt.name)}</b></td><td><small class="subline">${esc(spec(c.k,pt))}</small></td><td>${pt.chk?'<span class="tag rec">geprüft 9.11.</span>':'<span class="subline">Schätzung</span>'}</td><td class="num">${eur(pt.price)}</td></tr>`;}).join("")}<tr><td colspan="4"><b>Summe Hardware</b></td><td class="num"><b>${eur(total)}</b></td></tr></tbody></table>`;
+  $("#oTable").innerHTML=`<table class="ctable"><thead><tr><th>Bauteil</th><th>Modell</th><th>Eckdaten</th><th>Preisstand</th><th style="text-align:right">Preis</th></tr></thead><tbody>${CATS.map(c=>{const pt=parts[c.k];if(!pt)return `<tr><td>${esc(c.label)}</td><td colspan="4" class="subline">nicht gewählt</td></tr>`;return `<tr><td>${esc(c.label)}</td><td><b>${esc(pt.name)}</b></td><td><small class="subline">${esc(spec(c.k,pt))}</small></td><td>${pt.chk?'<span class="tag rec">geprüft</span>':'<span class="subline">Schätzung</span>'}</td><td class="num">${eur(pt.price)}</td></tr>`;}).join("")}<tr><td colspan="4"><b>Summe Hardware</b></td><td class="num"><b>${eur(total)}</b></td></tr></tbody></table>`;
 }
 function schemaSvg(parts,errCats){
   const W=520,H=420,cs=parts["case"],b=parts.board,cpu=parts.cpu,cool=parts.cooler,gpu=parts.gpu,ram=parts.ram,ssd=parts.ssd,psu=parts.psu;
@@ -1803,7 +1846,7 @@ function savingsList(parts){
   const out=[];
   CATS.forEach(c=>{const cur=parts[c.k];if(!cur||cur.none||cur.kind==="boxed")return;
     const ctx=Object.assign({},parts);delete ctx[c.k];
-    const cands=DB[c.k].filter(p=>p.id!==cur.id&&!p.eol&&p.price<cur.price-4&&equalOrBetter(c.k,cur,p,parts))
+    const cands=DB[c.k].filter(p=>p.id!==cur.id&&!p.eol&&p.price<cur.price-Math.max(15,cur.price*0.03)&&equalOrBetter(c.k,cur,p,parts))
       .filter(p=>!issuesFor(c.k,p,ctx,state.profile).some(i=>i.level==="error"||i.level==="warn"))
       .sort((a,b)=>a.price-b.price);
     if(cands.length)out.push({c,cur,p:cands[0]});});
@@ -1825,19 +1868,20 @@ function renderSave(parts){
 }
 /* ---------- Preisentwicklung ---------- */
 const TREND=[
- {k:"ram",label:"32 GB DDR5-6000 CL30",color:"var(--c2)",pts:[["2025-07",90],["2026-01",240],["2026-05",415],["2026-11",525]],src:"PCGH, Geizhals"},
- {k:"ssd",label:"2-TB-NVMe-SSD (PCIe 4.0)",color:"var(--c5)",pts:[["2025-10",125],["2026-10",340],["2026-11",446]],src:"computingforgeeks, PCGH-Preisvergleich"},
- {k:"gpu",label:"RTX 5070 Ti",color:"var(--c3)",pts:[["2025-03",879],["2026-11",1279]],src:"NVIDIA-UVP, elitegear/Geizhals"},
- {k:"cpu",label:"Ryzen 9 9900X",color:"var(--c1)",pts:[["2024-08",539],["2026-11",303]],src:"AMD-UVP, Geizhals"}
+ {k:"ram",label:"32 GB DDR5-6000 CL30",color:"var(--c2)",pts:[["2025-07",90],["2026-01",240],["2026-05",415],["2026-11",get("ram","gs-2x16-6000").price]],src:"PCGH, Geizhals"},
+ {k:"ssd",label:"2-TB-NVMe-SSD (PCIe 4.0)",color:"var(--c5)",pts:[["2025-10",125],["2026-10",340],["2026-11",get("ssd","wd-sn7100-2").price]],src:"computingforgeeks, PCGH-Preisvergleich"},
+ {k:"gpu",label:"RTX 5070 Ti",color:"var(--c3)",pts:[["2025-03",879],["2026-11",get("gpu","rtx5070ti").price]],src:"NVIDIA-UVP, elitegear/Geizhals"},
+ {k:"cpu",label:"Ryzen 9 9900X",color:"var(--c1)",pts:[["2024-08",539],["2026-11",get("cpu","r9-9900x").price]],src:"AMD-UVP, Geizhals"}
 ];
+const CHG=(cat,id)=>eur(get(cat,id).price);
 const CHANGES=[
- ["Arbeitsspeicher 32 GB DDR5-6000","ca. 90 €","525 €"],
- ["SSD 2 TB PCIe 4.0","ca. 125 €","446 €"],
- ["RTX 5090","2.099 € (UVP)","7.800 €"],
- ["RTX 5070 Ti","879 € (UVP)","1.279 €"],
- ["RX 9070 XT","689 € (UVP)","896 €"],
- ["Ryzen 9 9900X","539 € (UVP)","303 €"],
- ["Ryzen 7 9800X3D","529 € (UVP)","398 €"]
+ ["Arbeitsspeicher 32 GB DDR5-6000","ca. 90 €",CHG("ram","gs-2x16-6000")],
+ ["SSD 2 TB PCIe 4.0","ca. 125 €",CHG("ssd","wd-sn7100-2")],
+ ["RTX 5090","2.099 € (UVP)",CHG("gpu","rtx5090")],
+ ["RTX 5070 Ti","879 € (UVP)",CHG("gpu","rtx5070ti")],
+ ["RX 9070 XT","689 € (UVP)",CHG("gpu","rx9070xt")],
+ ["Ryzen 9 9900X","539 € (UVP)",CHG("cpu","r9-9900x")],
+ ["Ryzen 7 9800X3D","529 € (UVP)",CHG("cpu","r7-9800x3d")]
 ];
 function monthIdx(ym){const [y,m]=ym.split("-").map(Number);return (y-2024)*12+m-1;}
 function renderTrend(){
@@ -1948,7 +1992,7 @@ function buildText(){
   const parts=resolve(state.picks);let total=0;
   const lines=[`PC-Werkbank – Konfiguration (${PROFILE_NAME[state.profile]})`,""];
   for(const c of CATS){const p=parts[c.k];if(!p)continue;total+=p.price;lines.push(`${c.label}: ${p.name} – ${p.price?eur(p.price):"0 €"}`);}
-  lines.push("",`Summe: ${eur(total)} (Preise Stand 9. November 2026, teils geschätzt)`);
+  lines.push("",`Summe: ${eur(total)} (Preise Stand 11. November 2026, teils geschätzt)`);
   if(parts.cpu||parts.gpu)lines.push(`Geschätzte Last: ca. ${estLoad(parts)} W, empfohlenes Netzteil ab ${recPsu(parts)} W`);
   const iss=checkAll(parts,state.profile).filter(i=>i.level!=="info");
   if(iss.length){lines.push("","Zu prüfen:");iss.forEach(i=>lines.push("- "+i.msg));}
