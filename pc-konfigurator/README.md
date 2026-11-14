@@ -58,14 +58,14 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
 - **Kostenverteilung als Ringdiagramm**, Preis-Leistungs-Diagramm mit gestrichelter Preis-Leistungs-Grenze.
-- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS und Filter „ähnliche Leistung“, „günstiger als deiner“, „alle“. Windows wird mit dem echten Preis der System-Builder-Lizenz eingerechnet, sofern kein Betriebssystem gewählt ist.
+- **Gegen Fertig-PCs** (16 Systeme von 1.299 € bis 3.799 €: MSI MAG Infinite S3 und MPG Infinite X3, Lenovo LOQ Tower, Legion T5/T7/Tower 5i, HP Omen 16L/35L, Acer Nitro N50/N70X3D, ASUS ROG G700, Captiva, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops** (11 Geräte vom Lenovo LOQ 15 bis zum ROG Strix Scar 18 und MacBook Pro), jeweils mit Preis je FPS und Filter „ähnliche Leistung“, „günstiger als deiner“, „alle“. Windows wird mit dem echten Preis der System-Builder-Lizenz eingerechnet, sofern kein Betriebssystem gewählt ist.
 - **Sparen ohne Nachteile:** gleichwertige, günstigere Teile mit Ersparnis, nur ohne Konflikte.
 - **Preisentwicklung:** Preisindex seit 2024 für RAM, SSD, Grafikkarte und Prozessor, Tabelle „damals – heute“ und Kauftipp.
 - Bildrate je Auflösung, Kostenverteilung, Upgrade-Stufen und Strom.
 - Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
-Teile mit „Preis geprüft“ wurden zwischen dem 9. und 14. November 2026 recherchiert (Grafikkarten-Modelle, Zubehör und neue Teile am 14.11.), alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
+Teile mit „Preis geprüft“ wurden zwischen dem 9. und 14. November 2026 recherchiert; am 14.11. wurden alle Teilepreise der Datenbank, Fertig-PCs und Laptops aktualisiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
