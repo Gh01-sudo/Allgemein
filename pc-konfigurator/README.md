@@ -17,6 +17,8 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
 ## Mehr auf einen Blick
+- **Dein PC als Seitenansicht:** maßstabsgetreue Zeichnung durch die Glasseite mit echten Gehäusemaßen, Mainboard-Formfaktor, Sockel, RAM-Riegeln, M.2, Turmkühler oder AiO-Radiator (oben oder vorne), Grafikkarte in echter Länge und Slot-Höhe mit Maßlinie gegen den Gehäuseplatz, Netzteil unter der Abdeckung und Lüftern. Jedes Bauteil ist anklickbar, Konflikte sind rot gestrichelt.
+- **Bauteil-Symbole** in Steckplätzen, Vergleich, Auswahlfenster und Dashboard; Kategorie-Farben durchgehend.
 - **Infobereich im Konfigurator** (statt der früheren Vorlagen):
   - **Kennzahlen:** Leistungsklasse, Spiele-CPU, Multi-Core, Preis je FPS, Stromkosten pro Jahr, Aufrüst-Reserve, Lautstärke, Speicher.
   - **Spiele und Anwendungen:** geschätzte FPS (eSports, AAA, Raytracing, Upscaling, Frame Generation) in allen Auflösungen und Anwendungs-Indizes.
@@ -29,6 +31,8 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
   Filter nach Preisspanne, Hersteller (bei Grafikkarten auch Chip) und Suchbegriff; Spalte „P/L“ (100 = bestes passendes Teil) mit Markierung von Preis-Leistungs-Sieger und -Tipps sowie Kacheln „Stärkste“, „Günstigste“ und „Leiseste starke Karte“.
 - Auslaufmodelle sind markiert und werden nicht mehr automatisch gewählt.
+
+- **Mobil:** Auf dem Handy stehen die Bauteile direkt unter den Einstellungen, der Infobereich folgt danach in gekürzter Form.
 
 ## Speichern und Drucken
 - **Speichern / Laden:** beliebig viele benannte Konfigurationen im Browser speichern, laden, löschen (mit Rückfrage) und im Dashboard vergleichen.
@@ -53,7 +57,8 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Leistungsprofil (Netzdiagramm):** Gaming, Kreativ, Leise, Effizienz, Zukunft, Preis-Leistung, mit Vergleichs-Konfiguration als zweiter Fläche.
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
-- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS.
+- **Kostenverteilung als Ringdiagramm**, Preis-Leistungs-Diagramm mit gestrichelter Preis-Leistungs-Grenze.
+- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS und Filter „ähnliche Leistung“, „günstiger als deiner“, „alle“. Windows wird mit dem echten Preis der System-Builder-Lizenz eingerechnet, sofern kein Betriebssystem gewählt ist.
 - **Sparen ohne Nachteile:** gleichwertige, günstigere Teile mit Ersparnis, nur ohne Konflikte.
 - **Preisentwicklung:** Preisindex seit 2024 für RAM, SSD, Grafikkarte und Prozessor, Tabelle „damals – heute“ und Kauftipp.
 - Bildrate je Auflösung, Kostenverteilung, Upgrade-Stufen und Strom.

@@ -21,7 +21,8 @@
   --f-display:"Bahnschrift","DIN Alternate","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
   --f-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
   --f-mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
-  --r:10px;
+  --r:14px;
+  --shadow:0 1px 2px rgba(16,24,40,.06),0 6px 18px -8px rgba(16,24,40,.12);
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --bg:#0E1218; --surface:#161B24; --sunk:#11151C; --ink:#E5E9F0; --muted:#97A1B2; --line:#283040;
@@ -452,6 +453,97 @@ label.btn{display:inline-flex;align-items:center}
   .sheet{border:0;border-radius:0;padding:0;max-width:none}
   .sheet tr,.sheet .kv4 div{break-inside:avoid}
 }
+
+/* Seitenansicht */
+.pcview{width:100%;height:auto;display:block;max-height:560px}
+.pcview .pv-case{fill:#0f1319;stroke:#2b3440;stroke-width:2}
+.pcview .pv-interior{fill:#171d25}
+.pcview .pv-foot{fill:#0b0e12}
+.pcview .pv-slotcover{fill:#2b3440}
+.pcview .pv-shroud{opacity:.96}
+.pcview .pv-shroudwin{fill:none;stroke:#566273;stroke-width:1;stroke-dasharray:4 3}
+.pcview .pv-psu{fill:#0c0f13;stroke:#3b4552}
+.pcview .pv-pcb{fill:#141c18;stroke:#2c3a33}
+.pcview .pv-trace{fill:none;stroke:#2a3a33;stroke-width:1.2}
+.pcview .pv-io,.pcview .pv-vrm{fill:url(#pvMetal);opacity:.75}
+.pcview .pv-chip{fill:#26303b;stroke:#4a5563}
+.pcview .pv-ramslot{fill:#0c1014}
+.pcview .pv-ram{fill:#3a4452;stroke:#5d6a7b;stroke-width:.6}
+.pcview .pv-ramrgb{fill:var(--g-acc);opacity:.9}
+.pcview .pv-pcie{fill:#0c1014;stroke:#465160}
+.pcview .pv-m2{fill:url(#pvMetal);opacity:.85}
+.pcview .pv-socket{fill:#0c1014;stroke:#5d6a7b}
+.pcview .pv-ihs{fill:url(#pvMetal)}
+.pcview .pv-fins{stroke:#5f6874}
+.pcview .pv-pipe{fill:#c07a45}
+.pcview .pv-fan{fill:#1d232b;stroke:#3c4653}
+.pcview .pv-blade{stroke:#4c5766;stroke-width:1.2}
+.pcview .pv-cfan{fill:#1a2028}
+.pcview .pv-xfan{fill:#1a2028;stroke:var(--g-acc)}
+.pcview .pv-fanface rect{fill:#1d232b;stroke:#3c4653}.pcview .pv-fanface .ring{fill:#11161c}.pcview .pv-fanface .bl{fill:none;stroke:#56616f;stroke-width:3}.pcview .pv-fanface .hub{fill:#2e3742}
+.pcview .pv-pump{fill:#1b2129;stroke:#4a5563}.pcview .pv-pumpring{fill:none;stroke:var(--g-acc);stroke-width:2}
+.pcview .pv-tube{fill:none;stroke:#0b0e12;stroke-width:9;stroke-linecap:round}
+.pcview .pv-rad{stroke:#3c4653}
+.pcview .pv-gpu{fill:#262d36;stroke:#4a5563}
+.pcview .pv-gpuline{fill:var(--g-acc);opacity:.85}
+.pcview .pv-gpubracket{fill:url(#pvMetal)}
+.pcview .pv-pcbedge{fill:#1d2b22}
+.pcview .pv-conn{fill:#0b0e12;stroke:#5d6a7b}
+.pcview .pv-brand{font:700 10px var(--f-display);fill:#9aa6b6;letter-spacing:.12em}
+.pcview .pv-t{font:700 13px var(--f-display);fill:#e8edf4}
+.pcview .pv-s{font:500 9.5px var(--f-mono);fill:#b4bfcd}
+.pcview .pv-dim line{stroke:#9aa6b6;stroke-width:1.2}.pcview .pv-dim line.max{stroke:var(--g-ok);stroke-dasharray:3 3}.pcview .pv-dim text{font:500 10.5px var(--f-mono);fill:#c7d0dc}
+.pcview .pv-dim.bad line,.pcview .pv-dim.bad text{stroke:var(--g-bad);fill:var(--g-bad)}
+.pcview .pv-air path{stroke:#6f7c8d;stroke-width:2;fill:none;stroke-dasharray:6 6;marker-end:none;opacity:.6}
+.pcview .pv-glass{pointer-events:none;stroke:#8fa3bd;stroke-opacity:.25;stroke-width:1.5}
+.pcview .pv-mesh{opacity:.9}
+.pcview .pv-cap{font:500 12px var(--f-body);fill:#93A0B4}
+.pcview text{pointer-events:none}
+.pcview .sp{cursor:pointer;outline:none}
+.pcview .pv-hit:hover>*,.pcview .pv-hit:focus-visible>*{filter:brightness(1.35)}
+.pcview .pv-case.sp:hover,.pcview .pv-case.sp:focus-visible{stroke:var(--accent);stroke-width:3}
+.pcview .sp.err>*,.pcview .pv-case.err{stroke:var(--g-bad)!important;stroke-width:3;stroke-dasharray:6 3}
+.pv-wrap{background:var(--panel);border-radius:var(--r);padding:12px;margin-top:10px}
+
+/* Feinschliff Design */
+.card,.slots,.controls,.hud-i,.kpi{box-shadow:var(--shadow)}
+.card{border-radius:var(--r)}
+.ico{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;flex:none;vertical-align:-4px}
+.ico.sm{width:16px;height:16px;vertical-align:-3px}
+.slot-cat{flex-direction:row;align-items:center;gap:10px}
+.slot-lbl{display:flex;flex-direction:column;gap:2px;min-width:0}
+.slot-ico{display:grid;place-items:center;width:38px;height:38px;border-radius:11px;flex:none;color:var(--cc);background:color-mix(in srgb,var(--cc) 13%,transparent);border:1px solid color-mix(in srgb,var(--cc) 30%,transparent)}
+.slot{position:relative;transition:background .15s}
+.slot:hover{background:color-mix(in srgb,var(--sunk) 60%,transparent)}
+.slot{grid-template-columns:168px minmax(0,1fr) auto}
+.chip{align-items:center}
+.chip[aria-pressed="true"] .ico{color:inherit}
+#pickerTitle{display:flex;align-items:center;gap:8px}
+.prow .eyebrow{display:inline-flex;align-items:center;gap:4px}
+.head h1{display:flex;align-items:center;gap:12px}
+.head h1::before{content:"";width:40px;height:40px;border-radius:12px;flex:none;background:linear-gradient(135deg,var(--accent),var(--auto));box-shadow:inset 0 0 0 7px rgba(255,255,255,.18)}
+.total{letter-spacing:-.02em}
+.kinfo .kc-pc{grid-row:span 2}
+@media (max-width:1000px){.kinfo .kc-pc{grid-row:auto}}
+@media (max-width:720px){
+  .head p{display:none}
+  #viewKonfig:not([hidden]){display:flex;flex-direction:column;gap:14px}
+  #viewKonfig>.controls{order:0}#viewKonfig>main{order:1}#viewKonfig>#kInfo{order:2}
+  #kPros li:nth-child(n+4),#kCons li:nth-child(n+4),#kTips li:nth-child(n+4){display:none}
+  .mk small{display:none}
+  .slot{grid-template-columns:minmax(0,1fr);padding:12px}
+  .slot-side{flex-direction:row;align-items:center;justify-content:space-between}
+  .slot-ico{width:32px;height:32px;border-radius:9px}
+  .card{padding:13px}
+  .kinfo{gap:10px}
+}
+.scatter .front{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:7 5;stroke-linejoin:round;opacity:.45}
+.dev-f{margin:4px 0 10px}
+.donut-wrap{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;align-items:center}
+.donut{width:170px;height:170px}.donut path{stroke:var(--surface);stroke-width:1;cursor:pointer;transition:opacity .15s}.donut path:hover{opacity:.8}
+.donut .dl{font:500 10px var(--f-mono);fill:var(--muted);letter-spacing:.08em;text-transform:uppercase}.donut .dv{font:700 17px var(--f-display);fill:var(--ink)}
+@media (max-width:560px){.donut-wrap{grid-template-columns:minmax(0,1fr)}.donut{margin:0 auto}}
+.bar-fill{border-radius:4px}.bar-track{border-radius:5px}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -548,7 +640,7 @@ label.btn{display:inline-flex;align-items:center}
   <div class="view" id="viewOv" role="tabpanel" aria-labelledby="tab-ov" hidden>
     <div class="kpis" id="oKpis"></div>
     <div class="ov">
-      <section class="card" aria-label="Schema"><h2>Dein PC im Schema <span class="eyebrow" id="oCase"></span></h2><div id="oSchema"></div></section>
+      <section class="card" aria-label="Schema"><h2>Dein PC <span class="eyebrow" id="oCase"></span></h2><div id="oSchema"></div></section>
       <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
         <section class="card" aria-label="Stärken"><h2>Stärken</h2><ul class="plist3 p" id="oPros"></ul></section>
         <section class="card" aria-label="Schwachstellen"><h2>Schwachstellen und Hinweise</h2><ul class="plist3 c" id="oCons"></ul></section>
@@ -596,6 +688,7 @@ label.btn{display:inline-flex;align-items:center}
   </section>
 
   <section class="kinfo" id="kInfo" aria-label="Auf einen Blick">
+    <section class="card kcard kc-pc" aria-label="Dein PC"><h2>Dein PC <span class="eyebrow">Seitenansicht, maßstabsgetreu</span></h2><div class="pv-wrap" id="kPc"></div></section>
     <section class="card kcard kc-kpi" aria-label="Kennzahlen"><h2>Kennzahlen <span class="eyebrow">Richtwerte</span></h2><div class="mkpis" id="kKpis"></div></section>
     <section class="card kcard kc-fps" aria-label="Spiele und Anwendungen"><h2>Spiele und Anwendungen <span class="eyebrow" id="kFpsSub"></span></h2><div class="scroll" id="kFps"></div></section>
     <section class="card kcard" aria-label="Stärken und Schwächen"><h2>Stärken und Schwächen</h2><div class="kpc"><ul class="plist3 p" id="kPros"></ul><ul class="plist3 c" id="kCons"></ul></div><h3 class="kh3">Kauf- und Einbautipps</h3><ul class="ktips" id="kTips"></ul></section>
@@ -980,6 +1073,23 @@ const CATS=[
 ];
 const CORE=CATS.filter(c=>!c.x),XCAT=new Set(CATS.filter(c=>c.x).map(c=>c.k));
 const CAT_LABEL=Object.fromEntries(CATS.map(c=>[c.k,c.label]));
+/* Bauteil-Symbole (24er-Raster, Strichzeichnung in currentColor) */
+const ICON={
+ cpu:'<rect x="6" y="6" width="12" height="12" rx="2"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v3M12 3v3M15 3v3M9 18v3M12 18v3M15 18v3M3 9h3M3 12h3M3 15h3M18 9h3M18 12h3M18 15h3"/>',
+ cooler:'<circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="1.8"/><path d="M12 10.2C11 6.5 13 4.5 15 5.2M13.7 12.6c3.6.8 4.8 3.3 3.7 5M10.4 12.8c-2.6 2.7-5.3 2.4-6.1.6"/>',
+ board:'<rect x="3.5" y="3.5" width="17" height="17" rx="2"/><rect x="7" y="7" width="5" height="5" rx="1"/><path d="M15 6.5v8M17.2 6.5v8M7 16h9"/>',
+ ram:'<rect x="2.5" y="7" width="19" height="9" rx="1.5"/><path d="M5.5 10h2.5v3H5.5zM10.5 10h3v3h-3zM16 10h2.5v3H16zM5 16v2.5M9 16v2.5M15 16v2.5M19 16v2.5"/>',
+ gpu:'<rect x="2.5" y="6" width="19" height="11" rx="2"/><circle cx="8.5" cy="11.5" r="3"/><circle cx="15.5" cy="11.5" r="3"/><path d="M4.5 17v2.5h8V17"/>',
+ ssd:'<rect x="2.5" y="8.5" width="19" height="7" rx="1.5"/><path d="M5 11h4v2H5zM11 11h2v2h-2zM15 11h2v2h-2zM21.5 10.5v3"/>',
+ psu:'<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="10" cy="12" r="4.2"/><path d="M10 7.8v8.4M5.8 12h8.4M17 9v6"/>',
+ "case":'<rect x="6" y="2.5" width="12" height="19" rx="2"/><circle cx="12" cy="8" r="2.4"/><circle cx="12" cy="14.5" r="2.4"/><path d="M9 19h6"/>',
+ monitor:'<rect x="2.5" y="4" width="19" height="12.5" rx="1.5"/><path d="M9 20.5h6M12 16.5v4"/>',
+ fans:'<circle cx="7.5" cy="12" r="5"/><circle cx="16.5" cy="12" r="5"/><circle cx="7.5" cy="12" r="1.2"/><circle cx="16.5" cy="12" r="1.2"/>',
+ os:'<rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1"/><rect x="13" y="13" width="7.5" height="7.5" rx="1"/>',
+ kbm:'<rect x="2" y="9" width="14.5" height="9" rx="1.5"/><path d="M4.5 12h1M7.5 12h1M10.5 12h1M13.5 12h1M5.5 15h7.5"/><rect x="18" y="8" width="4" height="7" rx="2"/><path d="M20 8v2.5"/>'
+};
+const icon=(k,cls)=>`<svg class="ico${cls?" "+cls:""}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICON[k]||""}</svg>`;
+
 const FILL_ORDER=["cpu","gpu","board","ram","ssd","case","cooler","psu"];
 const FORM_FIT={ATX:["ATX","mATX","ITX"],mATX:["mATX","ITX"],ITX:["ITX"]};
 const WEIGHTS={
@@ -1415,10 +1525,10 @@ function renderSlots(parts,issues){
   const html=CATS.map(c=>{
     const pick=state.picks[c.k];const p=pick&&get(c.k,pick.id);
     const sep=c.k==="monitor"?`<div class="slot-sep"><b>Zubehör und Software</b><span class="subline">optional · zählt zum Gesamtpreis, wenn gewählt</span></div>`:"";
-    if(c.x&&!p)return sep+`<div class="slot opt-slot"><div class="slot-cat"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></div><div class="slot-main"><span class="slot-empty">Optional, nicht gewählt</span></div>
+    if(c.x&&!p)return sep+`<div class="slot opt-slot"><div class="slot-cat"><span class="slot-ico" style="--cc:var(${CAT_COLOR[c.k]})">${icon(c.k)}</span><span class="slot-lbl"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></span></div><div class="slot-main"><span class="slot-empty">Optional, nicht gewählt</span></div>
       <div class="slot-side"><span class="price">–</span><div class="actions"><button type="button" class="btn" data-act="pick" data-cat="${c.k}">Hinzufügen</button></div></div></div>`;
     const own=issues.filter(i=>i.cats.includes(c.k)&&(i.level==="error"||i.level==="warn"));
-    const cat=`<div class="slot-cat"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></div>`;
+    const cat=`<div class="slot-cat"><span class="slot-ico" style="--cc:var(${CAT_COLOR[c.k]})">${icon(c.k)}</span><span class="slot-lbl"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></span></div>`;
     if(!p){
       return `<div class="slot">${cat}<div class="slot-main"><span class="slot-empty">Noch nichts gewählt</span></div>
       <div class="slot-side"><span class="price">–</span><div class="actions"><button type="button" class="btn primary" data-act="pick" data-cat="${c.k}">Auswählen</button></div></div></div>`;
@@ -1540,7 +1650,7 @@ function render(){
 
 
 /* ---------- Dashboard ---------- */
-const CAT_COLOR={cpu:"--c1",cooler:"--c8",board:"--c4",ram:"--c2",gpu:"--c3",ssd:"--c5",psu:"--c7","case":"--c6",monitor:"--muted",fans:"--muted",os:"--muted",kbm:"--muted"};
+const CAT_COLOR={cpu:"--c1",cooler:"--c8",board:"--c4",ram:"--c2",gpu:"--c3",ssd:"--c5",psu:"--c7","case":"--c6",monitor:"--c8",fans:"--c8",os:"--c8",kbm:"--c8"};
 const SLIDERS=[
  {k:"budget",label:"Budget",aff:"alle Teile",min:500,max:8050,step:50},
  {k:"mix",label:"Gaming ↔ Kreativ",aff:"alle Teile",min:0,max:100,step:5,ends:["nur Spiele","nur Kreativarbeit"]},
@@ -1638,7 +1748,7 @@ function renderDash(parts,issues){
    <div class="kpi"><span class="eyebrow">Kompatibilität</span><b>${errs?errs+" Konflikt"+(errs>1?"e":""):warns?warns+" Hinweis"+(warns>1?"e":""):"passt"}</b><span class="pill ${errs?"bad":warns?"warn":"ok"}">${errs?"bitte lösen":warns?"prüfen":"alles kompatibel"}</span></div>`;
   // Bauteile
   $("#dParts").innerHTML=CATS.filter(c=>!c.x||state.picks[c.k]).map(c=>{const pk=state.picks[c.k],pt=pk&&get(c.k,pk.id);const ch=pt&&prevIds[c.k]&&prevIds[c.k]!==pk.id;
-    return `<div class="prow${ch?" changed":""}"><span class="eyebrow">${esc(c.label)}</span><span class="nm">${pt?esc(pt.name):"–"} ${pt?(pk.src==="user"?'<span class="tag user">Deine Wahl</span>':'<span class="tag auto">Regler</span>'):""}</span><span class="price">${pt?eur(pt.price):""}</span></div>`;}).join("");
+    return `<div class="prow${ch?" changed":""}"><span class="eyebrow">${icon(c.k,"sm")} ${esc(c.label)}</span><span class="nm">${pt?esc(pt.name):"–"} ${pt?(pk.src==="user"?'<span class="tag user">Deine Wahl</span>':'<span class="tag auto">Regler</span>'):""}</span><span class="price">${pt?eur(pt.price):""}</span></div>`;}).join("");
   $("#dPartsSum").textContent=eur(total);
   // FPS-Diagramm
   const vals=RES.map((r,i)=>({r,gpu:Math.round(gpuFps(parts.gpu,parts.cpu,i)),eff:parts.gpu||parts.cpu?buildFps(parts,i):0}));
@@ -1652,9 +1762,13 @@ function renderDash(parts,issues){
    <p class="subline">Grafikkarte allein: ${gfps} FPS in ${esc(RES[p.res].label)}. Mit DLSS/FSR-Upscaling sind meist 30–60 % mehr möglich. Richtwerte, keine Messung.</p>`;
   // Kosten
   const segs=CATS.filter(c=>parts[c.k]&&parts[c.k].price>0).map(c=>({c,v:parts[c.k].price}));
-  $("#dCost").innerHTML=total?`<div class="stack" role="img" aria-label="Kostenverteilung">${segs.map(x=>`<span class="click" data-act="pick" data-cat="${x.c.k}" style="width:${x.v/total*100}%;background:var(${CAT_COLOR[x.c.k]})" data-tip="${esc(x.c.label)}: ${eur(x.v)} (${Math.round(x.v/total*100)} %) – klicken zum Ändern"></span>`).join("")}</div>
-    <div class="chart" style="margin-top:12px">${segs.sort((a,b)=>b.v-a.v).map(x=>`<div class="bar-row click" data-act="pick" data-cat="${x.c.k}" data-tip="${esc(x.c.label)}: ${esc(parts[x.c.k].name)}, ${eur(x.v)} – klicken zum Ändern"><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(${CAT_COLOR[x.c.k]});margin-right:6px"></i>${esc(x.c.label)}</span>
-      <div class="bar-track"><span class="bar-fill" style="width:${x.v/segs[0].v*100}%;background:var(${CAT_COLOR[x.c.k]})"></span></div><span class="num">${Math.round(x.v/total*100)} %</span></div>`).join("")}</div>
+  const donut=()=>{let a0=-Math.PI/2,o="";const R=70,r=46,cx=80,cy=80;
+    segs.forEach(x=>{const a1=a0+x.v/total*Math.PI*2,large=a1-a0>Math.PI?1:0,g=0.012;const A=a0+g,B=a1-g;
+      if(B>A)o+=`<path class="click" data-act="pick" data-cat="${x.c.k}" fill="var(${CAT_COLOR[x.c.k]})" d="M ${cx+R*Math.cos(A)} ${cy+R*Math.sin(A)} A ${R} ${R} 0 ${large} 1 ${cx+R*Math.cos(B)} ${cy+R*Math.sin(B)} L ${cx+r*Math.cos(B)} ${cy+r*Math.sin(B)} A ${r} ${r} 0 ${large} 0 ${cx+r*Math.cos(A)} ${cy+r*Math.sin(A)} Z" data-tip="${esc(x.c.label)}: ${eur(x.v)} (${Math.round(x.v/total*100)} %) – klicken zum Ändern"/>`;a0=a1;});
+    return `<div class="donut-wrap"><svg class="donut" viewBox="0 0 160 160" role="img" aria-label="Kostenverteilung">${o}<text x="80" y="76" text-anchor="middle" class="dl">Gesamt</text><text x="80" y="96" text-anchor="middle" class="dv">${eur(total)}</text></svg>`;};
+  $("#dCost").innerHTML=total?`${donut()}
+    <div class="chart">${segs.sort((a,b)=>b.v-a.v).map(x=>`<div class="bar-row click" data-act="pick" data-cat="${x.c.k}" data-tip="${esc(x.c.label)}: ${esc(parts[x.c.k].name)}, ${eur(x.v)} – klicken zum Ändern"><span><i style="display:inline-block;width:10px;height:10px;border-radius:2px;background:var(${CAT_COLOR[x.c.k]});margin-right:6px"></i>${esc(x.c.label)}</span>
+      <div class="bar-track"><span class="bar-fill" style="width:${x.v/segs[0].v*100}%;background:var(${CAT_COLOR[x.c.k]})"></span></div><span class="num">${Math.round(x.v/total*100)} %</span></div>`).join("")}</div></div>
     <p class="subline">Größter Posten: ${esc(segs[0].c.label)} mit ${eur(segs[0].v)}. Preis pro FPS in ${esc(RES[p.res].label)}: ${fps?eur(total/fps):"–"}.</p>`:`<p class="subline">Noch keine Teile gewählt.</p>`;
   renderLaptops(parts,total);
   renderSteps(parts);
@@ -1673,14 +1787,22 @@ function renderDash(parts,issues){
    <div class="kv"><span>Lautstärke-Einschätzung</span><span class="pill ${noise.cls}">${esc(noise.label)}</span></div>
    <ul class="issues" style="margin-top:6px">${issues.filter(i=>i.level!=="info").slice(0,4).map(i=>`<li><span class="sev ${i.level}">${SEV_LABEL[i.level]}</span><span>${esc(i.msg)}</span></li>`).join("")||`<li><span class="sev ok">Passt</span><span>Keine Konflikte. Details im Konfigurator.</span></li>`}</ul>`;
 }
+let devF={pre:"near",lap:"near"};
+function winAdd(parts){return parts.os?0:get("os","win11-pro").price;}
+function winNote(parts,total){return parts.os?`${eur(total)} inkl. ${parts.os.ed==="Linux"?"Linux":"Windows "+parts.os.ed}`:`${eur(total)} Teile + ${eur(winAdd(parts))} Windows 11 Pro`;}
+const devChips=(key)=>`<div class="fgroup dev-f" role="group" aria-label="Filter"><span>Zeigen</span>${[["near","ähnliche Leistung"],["cheaper","günstiger als deiner"],["all","alle"]].map(([k,l])=>`<button type="button" class="chip sm" data-devf="${key}" data-v="${k}" aria-pressed="${devF[key]===k}">${l}</button>`).join("")}</div>`;
 function renderLaptops(parts,total){
   const gpu=parts.gpu,cpu=parts.cpu;
   const dG=gpu&&!gpu.none?gpu.g:((cpu&&cpu.ig)||0),dM=cpu?cpu.m:0;
-  const win=260,dPrice=total+win;
+  const dPrice=total+winAdd(parts);
   const cands=LAPTOPS.filter(l=>l.g!=null);
   let best=null;if(dG>0){best=cands.slice().sort((a,b)=>Math.abs(a.g-dG)-Math.abs(b.g-dG)||a.price-b.price)[0];}
   const maxG=Math.max(dG,...cands.map(l=>l.g))||1,maxM=Math.max(dM,...LAPTOPS.map(l=>l.m))||1;
-  const rows=[{me:true,name:"Dein Desktop",cls:"diese Konfiguration",cpu:cpu?cpu.name:"–",gpu:gpu?gpu.name:"–",g:dG,m:dM,kg:null,watt:estLoad(parts),price:dPrice,priceNote:`${eur(total)} Hardware + ca. 260 € Windows, ohne Monitor`,chk:false},...LAPTOPS];
+  let lap=LAPTOPS.slice();
+  if(devF.lap==="near"&&dG)lap=lap.filter(l=>l.g==null||Math.abs(l.g/dG-1)<=0.35);
+  if(devF.lap==="cheaper")lap=lap.filter(l=>l.price<=dPrice);
+  lap.sort((a,b)=>(b.g||0)-(a.g||0)||a.price-b.price);
+  const rows=[{me:true,name:"Dein Desktop",cls:"diese Konfiguration",cpu:cpu?cpu.name:"–",gpu:gpu?gpu.name:"–",g:dG,m:dM,kg:null,watt:estLoad(parts),price:dPrice,priceNote:winNote(parts,total)+(parts.monitor?"":", ohne Monitor"),chk:false},...lap];
   const bar=(v,max)=>v==null?'<span class="subline">nicht vergleichbar</span>':`<div class="mini"><span style="width:${Math.min(100,v/max*100)}%"></span></div>`;
   const rel=v=>v==null||!dG?"":` <small>${Math.round(v/dG*100)} %</small>`;
   let verdict="";
@@ -1688,7 +1810,7 @@ function renderLaptops(parts,total){
     const diff=best.price-dPrice;
     verdict=`<p class="verdict"><b>Am nächsten dran: ${esc(best.name)}</b> mit ${esc(best.gpu)}. Er erreicht etwa <b>${Math.round(best.g/dG*100)} %</b> der Spieleleistung deines Desktops und kostet ${diff>=0?"<b>"+eur(diff)+" mehr</b>":"<b>"+eur(-diff)+" weniger</b>"} (inklusive Bildschirm und Windows). ${best.g<dG*0.95?"Volle Desktop-Leistung erreicht kein Laptop dieser Preisklasse; Laptop-GPUs laufen mit 150–175 W statt 300 W und mehr.":""}</p>`;
   }else verdict=`<p class="verdict">Wähle eine Grafikkarte, um einen passenden Laptop zu finden.</p>`;
-  $("#dLaptop").innerHTML=verdict+`<div class="scroll"><table class="ctable"><thead><tr><th>Gerät</th><th>Prozessor / Grafik</th><th>Spiele</th><th>Multi-Core</th><th>Gewicht</th><th>Strom</th><th class="num">Preis</th></tr></thead><tbody>
+  $("#dLaptop").innerHTML=verdict+devChips("lap")+`<div class="scroll"><table class="ctable"><thead><tr><th>Gerät</th><th>Prozessor / Grafik</th><th>Spiele</th><th>Multi-Core</th><th>Gewicht</th><th>Strom</th><th class="num">Preis</th></tr></thead><tbody>
    ${rows.map(r=>`<tr class="${r.me?"me":best&&r.id===best.id?"best":""}"><td><b>${esc(r.name)}</b><br><small class="subline">${esc(r.cls)}${r.display?" · "+esc(r.display):""}</small>${r.link?`<br><a href="${r.link}" target="_blank" rel="noopener" style="font-size:12px">Preis prüfen ↗</a>`:""}</td>
    <td>${esc(r.cpu)}<br><small class="subline">${esc(r.gpu)}${r.ram?" · "+esc(r.ram)+" RAM · "+esc(r.ssd):""}</small></td>
    <td>${r.g!=null?`<span class="num">${r.g}</span>${rel(r.g)}`:""}${bar(r.g,maxG)}</td>
@@ -1869,7 +1991,7 @@ function cmpCols(cat){
 }
 let cmpPL=new Map();
 function renderCompare(parts){
-  $("#cChips").innerHTML=CATS.map(c=>`<button type="button" class="chip" data-cmpcat="${c.k}" aria-pressed="${c.k===cmpCat}">${esc(c.label)}</button>`).join("");
+  $("#cChips").innerHTML=CATS.map(c=>`<button type="button" class="chip" data-cmpcat="${c.k}" aria-pressed="${c.k===cmpCat}">${icon(c.k,"sm")}${esc(c.label)}</button>`).join("");
   const cat=cmpCat,cur=state.picks[cat]&&state.picks[cat].id;
   const ctx=Object.assign({},parts);delete ctx[cat];
   const onlyOk=$("#cOnlyOk").checked;
@@ -1946,13 +2068,16 @@ function scatterSvg(pts,cur,cat){
   yt.forEach(v=>{s+=`<line class="ax" x1="${L}" x2="${W-R}" y1="${fy(v)}" y2="${fy(v)}"/><text x="${L-6}" y="${fy(v)+3}" text-anchor="end">${v}</text>`;});
   xt.forEach(v=>{s+=`<line class="ax" x1="${fx(v)}" x2="${fx(v)}" y1="${T}" y2="${H-B}" stroke-dasharray="2 3"/><text x="${fx(v)}" y="${H-B+14}" text-anchor="middle">${v>=1000?(v/1000).toLocaleString("de-DE")+" T€":v+" €"}</text>`;});
   s+=`<text x="${(W+L)/2}" y="${H-6}" text-anchor="middle">Preis${logX?" (logarithmisch)":""}</text><text x="12" y="${(H-B+T)/2}" transform="rotate(-90 12 ${(H-B+T)/2})" text-anchor="middle">${esc(PERF_LABEL[cat])}</text>`;
+  {let best=-1;const fr=pts.filter(p=>!p.err).slice().sort((a,b)=>a.x-b.x||b.y-a.y).filter(p=>{if(p.y>best){best=p.y;return true;}return false;});
+   if(fr.length>1)s+=`<polyline class="front" points="${fr.map(p=>fx(p.x)+","+fy(p.y)).join(" ")}" data-tip="Preis-Leistungs-Grenze: für jeden Preis das stärkste passende Teil"/>`;}
   pts.forEach(p=>{const isC=p.p.id===cur;s+=`<circle cx="${fx(p.x)}" cy="${fy(p.y)}" r="${isC?7:5}" fill="${col(p.p)}" fill-opacity="${p.err?0.3:0.85}" stroke="${isC?"var(--ink)":"var(--surface)"}" stroke-width="${isC?2.5:1}" data-tip="${esc(p.p.name)}: ${eur(p.x)}, ${p.y}${isC?" (deine Wahl)":p.err?" – passt nicht zu deinem System":" – klicken zum Übernehmen"}"${!isC&&!p.err?` class="pt" data-act="take" data-cat="${cat}" data-id="${esc(p.p.id)}" tabindex="0" role="button" aria-label="${esc(p.p.name)} übernehmen"`:""}></circle>`;});
   pts.filter(p=>p.p.id===cur||eff.includes(p.p.id)).forEach(p=>{const x=fx(p.x),right=x<W-170;s+=`<text class="lbl" x="${right?x+10:x-10}" y="${fy(p.y)-8}" text-anchor="${right?"start":"end"}">${esc(short(p.p.name))}${p.p.id===cur?" (deine Wahl)":eff.includes(p.p.id)?" · bestes P/L":""}</text>`;});
   s+=`</svg>`;
-  const leg=(cat==="gpu"||cat==="cpu")?`<div class="legend">${cat==="gpu"?'<span><i style="background:var(--c5)"></i>NVIDIA</span>':""}<span><i style="background:var(--c3)"></i>AMD</span><span><i style="background:var(--c1)"></i>Intel</span><span>blasse Punkte passen nicht zu deinem System</span></div>`:`<div class="legend"><span>blasse Punkte passen nicht zu deinem System</span></div>`;
+  const leg=(cat==="gpu"||cat==="cpu")?`<div class="legend">${cat==="gpu"?'<span><i style="background:var(--c5)"></i>NVIDIA</span>':""}<span><i style="background:var(--c3)"></i>AMD</span><span><i style="background:var(--c1)"></i>Intel</span><span><i style="background:var(--ink);opacity:.5;height:3px"></i>Preis-Leistungs-Grenze (gestrichelt)</span><span>blasse Punkte passen nicht zu deinem System</span></div>`:`<div class="legend"><span><i style="background:var(--ink);opacity:.5;height:3px"></i>Preis-Leistungs-Grenze (gestrichelt)</span><span>blasse Punkte passen nicht zu deinem System</span></div>`;
   return s+leg;
 }
 document.addEventListener("click",e=>{
+  const df=e.target.closest("[data-devf]");if(df){devF[df.dataset.devf]=df.dataset.v;render();return;}
   const f=e.target.closest("[data-cmpf]");if(f){const set=cmpF[f.dataset.cmpf],v=f.dataset.v;if(set.has(v))set.delete(v);else set.add(v);render();return;}
   const c=e.target.closest("[data-cmpcat]");if(c){cmpCat=c.dataset.cmpcat;cmpF={brand:new Set(),maker:new Set()};cmpSort={k:"perf",dir:-1};const cols=cmpCols(cmpCat);cmpSort.k=(cols.find(x=>["g","m","cap","watt"].includes(x[0]))||cols[cols.length-1])[0];render();return;}
   const h=e.target.closest("th[data-sort]");if(h){const k=h.dataset.sort;cmpSort=cmpSort.k===k?{k,dir:-cmpSort.dir}:{k,dir:k==="name"?1:-1};render();}
@@ -1998,6 +2123,7 @@ function renderKInfo(parts,issues){
     k("Lautstärke",esc(noise.label),esc(noise.why.join(", ")||"ausgewogen"),noise.cls,"Schätzung aus Kühlreserve, Netzteil-Last, Gehäusedämmung und GPU-Kühler"),
     k("Speicher",ram?ram.cap+" GB":"–",parts.ssd?fmtCap(parts.ssd.cap)+" SSD":"","","Arbeitsspeicher und SSD")
   ].join("");
+  $("#kPc").innerHTML=realPcSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)));
   // Spiele und Anwendungen kompakt
   const e=appEstimates(parts),ri=p.res;
   $("#kFpsSub").textContent="geschätzte FPS";
@@ -2028,14 +2154,14 @@ function renderOverview(parts,issues){
   const p=P(),fps=parts.gpu||parts.cpu?buildFps(parts,p.res):0,loadW=estLoad(parts),noise=noiseInfo(parts);
   const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
   $("#oKpis").innerHTML=`
-   <div class="kpi"><span class="eyebrow">Hardware</span><b>${eur(total)}</b><small>mit Windows ca. ${eur(total+260)}</small></div>
+   <div class="kpi"><span class="eyebrow">Hardware</span><b>${eur(total)}</b><small>${parts.os?"inkl. "+esc(parts.os.ed==="Linux"?"Linux":"Windows "+parts.os.ed):"mit Windows 11 Pro "+eur(total+winAdd(parts))}</small></div>
    <div class="kpi"><span class="eyebrow">Bildrate</span><b>${RES.map((r,i)=>i===p.res?fps:null).filter(x=>x!=null)[0]||"–"} FPS</b><small>${esc(RES[p.res].label)} · ${RES.map((r,i)=>r.label+" "+buildFps(parts,i)).filter((x,i)=>i!==p.res).join(" · ")}</small></div>
    <div class="kpi"><span class="eyebrow">Multi-Core</span><b>${parts.cpu?parts.cpu.m:"–"}</b><small>${parts.cpu?parts.cpu.cores+" Kerne":""}</small></div>
    <div class="kpi"><span class="eyebrow">Strom</span><b>ca. ${loadW} W</b><small>${parts.psu?Math.round(loadW/parts.psu.watt*100)+" % von "+parts.psu.watt+" W":""}</small></div>
    <div class="kpi"><span class="eyebrow">Lautstärke</span><b>${esc(noise.label)}</b><small>${esc(noise.why.join(", ")||"ausgewogen")}</small></div>
    <div class="kpi"><span class="eyebrow">Prüfung</span><b>${errs?errs+" Konflikt"+(errs>1?"e":""):warns?warns+" Warnung"+(warns>1?"en":""):"passt"}</b><span class="pill ${errs?"bad":warns?"warn":"ok"}">${errs?"bitte lösen":warns?"prüfen":"alles kompatibel"}</span></div>`;
   $("#oCase").textContent=parts["case"]?parts["case"].name:"";
-  $("#oSchema").innerHTML=schemaSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)));
+  $("#oSchema").innerHTML=`<div class="pv-wrap">${realPcSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)))}</div><p class="subline">Maßstabsgetreue Seitenansicht durch die Glasseite (Rückseite links). Gehäusemaße sind Herstellerangaben, gerundet; Kühler- und Lüfterpositionen typisch. Bauteil anklicken zum Tauschen, Konflikte rot gestrichelt.</p>`;
   // Stärken / Schwächen gesammelt
   const {pros,cons}=prosConsAll(parts,issues);
   $("#oPros").innerHTML=pros.map(x=>`<li><span>${x}</span></li>`).join("")||"<li><span>Noch keine Teile gewählt.</span></li>";
@@ -2047,6 +2173,133 @@ function renderOverview(parts,issues){
   $("#oSum").textContent=eur(total);
   $("#oTable").innerHTML=`<table class="ctable"><thead><tr><th>Bauteil</th><th>Modell</th><th>Eckdaten</th><th>Preisstand</th><th style="text-align:right">Preis</th></tr></thead><tbody>${CATS.map(c=>{const pt=parts[c.k];if(!pt)return `<tr><td>${esc(c.label)}</td><td colspan="4" class="subline">nicht gewählt</td></tr>`;return `<tr><td>${esc(c.label)}</td><td><b>${esc(pt.name)}</b></td><td><small class="subline">${esc(spec(c.k,pt))}</small></td><td>${pt.chk?'<span class="tag rec">geprüft</span>':'<span class="subline">Schätzung</span>'}</td><td class="num">${eur(pt.price)}</td></tr>`;}).join("")}<tr><td colspan="4"><b>Summe Hardware</b></td><td class="num"><b>${eur(total)}</b></td></tr></tbody></table>`;
 }
+/* ---------- Realistische Seitenansicht (Maßstab 1 Einheit = 1 mm, Blick durch die Glasseite, Rückseite links) ---------- */
+const CASE_DIM={"fd-pop-air":[454,470],"ll-a3":[443,308],"montech-903":[485,500],"ll-lancool217":[482,503],"cm-nr200p":[376,292],"bq-pb501":[450,463],"fd-north":[447,469],"ll-o11-evo":[466,459],"bq-sb802":[553,539],"fd-define7":[547,475],"fd-terra":[340,217],"nzxt-h5flow24":[440,464],"ph-xtpro-ultra":[475,480],"ll-lancool207":[450,463],"bq-shb800dx":[505,524],"fd-meshify3":[490,476]};
+function caseDims(cs){
+  if(!cs)return [460,470];
+  if(CASE_DIM[cs.id])return CASE_DIM[cs.id];
+  return cs.form==="ITX"?[360,260]:cs.form==="mATX"?[420,400]:[Math.max(450,cs.gpu+50),470];
+}
+function fanEdge(x,y,len,vertical,cls,extra){
+  // Lüfter von der Seite: 25 mm Rahmen mit angedeuteten Blättern
+  const w=vertical?25:len,h=vertical?len:25;let s=`<g ${extra||""}><rect class="pv-fan ${cls||""}" x="${x}" y="${y}" width="${w}" height="${h}" rx="3"/>`;
+  const n=Math.max(2,Math.round(len/40));
+  for(let i=1;i<n;i++){const t=i/n;s+=vertical?`<line class="pv-blade" x1="${x+3}" y1="${y+h*t}" x2="${x+w-3}" y2="${y+h*t-6}"/>`:`<line class="pv-blade" x1="${x+w*t}" y1="${y+3}" x2="${x+w*t+6}" y2="${y+h-3}"/>`;}
+  return s+`</g>`;
+}
+function fanFace(cx,cy,d){
+  let s=`<g class="pv-fanface"><rect x="${cx-d/2}" y="${cy-d/2}" width="${d}" height="${d}" rx="6"/><circle cx="${cx}" cy="${cy}" r="${d*0.44}" class="ring"/>`;
+  for(let i=0;i<7;i++){const a=i/7*Math.PI*2,r1=d*0.12,r2=d*0.42;s+=`<path class="bl" d="M ${cx+Math.cos(a)*r1} ${cy+Math.sin(a)*r1} Q ${cx+Math.cos(a+0.5)*r2*0.7} ${cy+Math.sin(a+0.5)*r2*0.7} ${cx+Math.cos(a+0.8)*r2} ${cy+Math.sin(a+0.8)*r2}"/>`;}
+  return s+`<circle cx="${cx}" cy="${cy}" r="${d*0.12}" class="hub"/></g>`;
+}
+function realPcSvg(parts,errCats){
+  const cs=parts["case"],b=parts.board,cpu=parts.cpu,cool=parts.cooler,gpu=parts.gpu,ram=parts.ram,ssd=parts.ssd,psu=parts.psu,fans=parts.fans;
+  const hasG=gpu&&!gpu.none;
+  const [D,H]=caseDims(cs);
+  const form=b?b.form:(cs?cs.form:"ATX");
+  const itx=form==="ITX",small=cs&&cs.form==="ITX";
+  const hot=(k,cls,focus=true)=>`class="${cls} sp${errCats&&errCats.has(k)?" err":""}" data-act="pick" data-cat="${k}"${focus?` tabindex="0" role="button" aria-label="${esc(CAT_LABEL[k])} ändern"`:' aria-hidden="true"'}`;
+  const tip=(k,t)=>` data-tip="${esc(CAT_LABEL[k]+": "+t+" – klicken zum Ändern")}"`;
+  const sh=(n,len)=>n?(n.length>len?n.slice(0,len-1)+"…":n):"";
+  const shroudH=small?0:Math.min(110,H*0.24);
+  const bw=itx?170:244,bh=itx?170:form==="mATX"?244:305;
+  const topRadPlanned=cool&&cool.kind==="aio"&&!small&&!(cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cool.rad));
+  const bx=small?Math.max(14,D*0.06):22,by=small?14:Math.max(26,Math.min(topRadPlanned?64:40,H-shroudH-bh-12));
+  const PAD=26,VBW=D+PAD*2,VBH=H+PAD*2+52;
+  let s=`<svg class="pcview" viewBox="${-PAD} ${-PAD} ${VBW} ${VBH}" role="group" aria-label="Seitenansicht des PCs, maßstabsgetreu">
+  <defs>
+    <linearGradient id="pvGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".35" stop-color="#fff" stop-opacity=".02"/><stop offset=".36" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>
+    <linearGradient id="pvMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9d0d8"/><stop offset="1" stop-color="#7d8794"/></linearGradient>
+    <linearGradient id="pvShroud" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#3a4350"/><stop offset="1" stop-color="#232a33"/></linearGradient>
+    <pattern id="pvFins" width="4" height="10" patternUnits="userSpaceOnUse"><rect width="4" height="10" fill="#8d97a3"/><rect width="1.4" height="10" fill="#5f6874"/></pattern>
+    <pattern id="pvRad" width="10" height="4" patternUnits="userSpaceOnUse"><rect width="10" height="4" fill="#2b323c"/><rect width="10" height="1.3" fill="#151a20"/></pattern>
+    <pattern id="pvMesh" width="6" height="6" patternUnits="userSpaceOnUse"><circle cx="3" cy="3" r="1.4" fill="#0b0f14"/></pattern>
+  </defs>`;
+  // Gehäuse
+  s+=`<rect ${hot("case","pv-case")} x="-14" y="-14" width="${D+28}" height="${H+28}" rx="16"${tip("case",cs?cs.name:"noch nicht gewählt")}/>`;
+  s+=`<rect class="pv-interior" x="0" y="0" width="${D}" height="${H}" rx="6"/>`;
+  s+=`<rect class="pv-mesh" x="${D-6}" y="6" width="6" height="${H-12}" fill="url(#pvMesh)"/>`;
+  s+=`<rect class="pv-foot" x="18" y="${H+14}" width="60" height="9" rx="3"/><rect class="pv-foot" x="${D-78}" y="${H+14}" width="60" height="9" rx="3"/>`;
+  // Slotblenden hinten
+  for(let i=0;i<(itx?2:7);i++)s+=`<rect class="pv-slotcover" x="-10" y="${by+(itx?120:140)+i*20.3}" width="8" height="16" rx="1"/>`;
+  // Netzteil (unten hinten, unter der Abdeckung)
+  if(!small){
+    s+=`<rect class="pv-shroud" x="0" y="${H-shroudH}" width="${D}" height="${shroudH}" fill="url(#pvShroud)"/>`;
+    s+=`<g ${hot("psu","pv-hit")}${tip("psu",psu?psu.name+", "+psu.watt+" W":"noch nicht gewählt")}><rect class="pv-psu" x="8" y="${H-shroudH+12}" width="${psu&&psu.form==="SFX"?100:150}" height="${Math.min(86,shroudH-18)}" rx="4"/>
+      <text class="pv-t" x="18" y="${H-shroudH+34}">${esc(psu?psu.watt+" W":"Netzteil")}</text><text class="pv-s" x="18" y="${H-shroudH+48}">${esc(psu?"80+ "+psu.eff:"")}</text></g>`;
+    s+=`<rect class="pv-shroudwin" x="4" y="${H-shroudH+6}" width="${(psu&&psu.form==="SFX"?100:150)+12}" height="${shroudH-10}" rx="5"/>`;
+  }else{
+    s+=`<g ${hot("psu","pv-hit")}${tip("psu",psu?psu.name:"noch nicht gewählt")}><rect class="pv-psu" x="${D-112}" y="${H-80}" width="100" height="64" rx="4"/><text class="pv-t" x="${D-102}" y="${H-52}">${esc(psu?psu.watt+" W SFX":"Netzteil")}</text></g>`;
+  }
+  // Mainboard
+  s+=`<g ${hot("board","pv-hit")}${tip("board",b?b.name+" ("+b.form+")":"noch nicht gewählt")}><rect class="pv-pcb" x="${bx}" y="${by}" width="${bw}" height="${bh}" rx="3"/>`;
+  for(let i=0;i<6;i++)s+=`<path class="pv-trace" d="M ${bx+10} ${by+bh-20-i*14} h ${bw*0.5-i*8} v ${-12-i*3} h ${30+i*6}"/>`;
+  s+=`<rect class="pv-io" x="${bx}" y="${by+6}" width="26" height="${itx?95:150}" rx="2"/><rect class="pv-vrm" x="${bx+30}" y="${by+6}" width="${itx?60:90}" height="16" rx="2"/><rect class="pv-vrm" x="${bx+30}" y="${by+24}" width="14" height="${itx?50:70}" rx="2"/>`;
+  s+=`<rect class="pv-chip" x="${bx+bw-70}" y="${by+bh-70}" width="44" height="44" rx="3"/></g>`;
+  // Steckplätze
+  const sx=bx+bw*(itx?0.42:0.4),sy=by+(itx?62:78);
+  const slotY=by+(itx?136:form==="mATX"?132:150);
+  const nRam=itx?2:4,ramX=sx+ (itx?52:62),ramLen=itx?120:133;
+  for(let i=0;i<nRam;i++){const on=!!ram&&(nRam===2?i<ram.modules:(ram.modules>=4||i%2===1));
+    s+=`<g ${hot("ram","pv-hit",i===1)}${tip("ram",ram?ram.name:"noch nicht gewählt")}><rect class="pv-ramslot" x="${ramX+i*10}" y="${by+12}" width="6" height="${ramLen}" rx="1"/>${on?`<rect class="pv-ram" x="${ramX+i*10-1}" y="${by+10}" width="8" height="${ramLen+4}" rx="1.5"/><rect class="pv-ramrgb" x="${ramX+i*10-1}" y="${by+10}" width="8" height="5"/>`:""}</g>`;}
+  // PCIe x16 + M.2
+  s+=`<rect class="pv-pcie" x="${bx+20}" y="${slotY-3}" width="${Math.min(bw-30,90)}" height="6" rx="1"/>`;
+  s+=`<g ${hot("ssd","pv-hit")}${tip("ssd",ssd?ssd.name:"noch nicht gewählt")}><rect class="pv-m2" x="${bx+40}" y="${slotY-30}" width="80" height="20" rx="2"/>${ssd?`<text class="pv-s" x="${bx+46}" y="${slotY-16}">${esc(fmtCap(ssd.cap)+" Gen"+ssd.gen)}</text>`:""}</g>`;
+  // CPU + Kühler
+  s+=`<g ${hot("cpu","pv-hit")}${tip("cpu",cpu?cpu.name:"noch nicht gewählt")}><rect class="pv-socket" x="${sx-24}" y="${sy-24}" width="48" height="48" rx="3"/><rect class="pv-ihs" x="${sx-17}" y="${sy-17}" width="34" height="34" rx="3"/></g>`;
+  let coolNote="";
+  if(cool&&cool.kind==="air"&&cool.h>=100){
+    const fw=Math.min(cool.h*0.62,108),fh=Math.min(125,bh*0.42);
+    s+=`<g ${hot("cooler","pv-hit")}${tip("cooler",cool.name+", "+cool.h+" mm hoch")}><rect class="pv-fins" x="${sx-fw/2}" y="${sy-fh/2}" width="${fw}" height="${fh}" fill="url(#pvFins)" rx="2"/>
+      <rect class="pv-pipe" x="${sx-fw/2-3}" y="${sy-fh/2+8}" width="${fw+6}" height="4" rx="2"/><rect class="pv-pipe" x="${sx-fw/2-3}" y="${sy+fh/2-12}" width="${fw+6}" height="4" rx="2"/>
+      ${fanEdge(sx+fw/2,sy-60,120,true,"")}${cool.cap>=250?fanEdge(sx-fw/2-25,sy-60,120,true,""):""}</g>`;
+    coolNote=`Kühler ${cool.h} mm${cs?" / max. "+cs.cooler+" mm":""}`;
+  }else if(cool&&(cool.kind==="air"||cool.kind==="boxed")){
+    s+=`<g ${hot("cooler","pv-hit")}${tip("cooler",cool.name)}>${fanFace(sx,sy,cool.kind==="boxed"?86:100)}</g>`;
+    coolNote=cool.kind==="boxed"?"Boxed-Kühler":`Flachkühler ${cool.h} mm`;
+  }else if(cool&&cool.kind==="aio"){
+    const front=cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cool.rad)||small;
+    s+=`<g ${hot("cooler","pv-hit")}${tip("cooler",cool.name+", Radiator "+cool.rad+" mm "+(front?"vorne":"oben"))}><circle class="pv-pump" cx="${sx}" cy="${sy}" r="30"/><circle class="pv-pumpring" cx="${sx}" cy="${sy}" r="20"/>`;
+    if(front){const rx=D-60,ry=Math.max(12,(H-shroudH-cool.rad)/2);
+      s+=`<path class="pv-tube" d="M ${sx+24} ${sy-10} C ${sx+120} ${sy-60}, ${rx-60} ${ry+30}, ${rx} ${ry+40}"/><path class="pv-tube" d="M ${sx+24} ${sy+10} C ${sx+140} ${sy}, ${rx-60} ${ry+70}, ${rx} ${ry+80}"/>
+        <rect class="pv-rad" x="${rx}" y="${ry}" width="27" height="${Math.min(cool.rad+20,H-shroudH-20)}" fill="url(#pvRad)" rx="2"/>${fanEdge(rx+27,ry+10,Math.min(cool.rad,H-shroudH-40),true,"")}`;
+      coolNote=`Radiator ${cool.rad} mm vorne`;
+    }else{const rx=Math.max(bx+20,(D-cool.rad-20)/2),ry=6;
+      s+=`<path class="pv-tube" d="M ${sx-10} ${sy-24} C ${sx-20} ${ry+80}, ${rx+30} ${ry+70}, ${rx+30} ${ry+52}"/><path class="pv-tube" d="M ${sx+10} ${sy-24} C ${sx+20} ${ry+90}, ${rx+70} ${ry+70}, ${rx+70} ${ry+52}"/>
+        <rect class="pv-rad" x="${rx}" y="${ry}" width="${cool.rad+20}" height="27" fill="url(#pvRad)" rx="2"/>${fanEdge(rx+10,ry+27,cool.rad,false,"")}`;
+      coolNote=`Radiator ${cool.rad} mm oben`;}
+    s+=`</g>`;
+  }
+  // Grafikkarte
+  let gpuNote="";
+  if(hasG){
+    const th=Math.max(2,gpu.slots||(gpu.power>=300?3:2))*20.3-4,gx=-4,gy=slotY+2,gl=gpu.len;
+    const nf=gl>=280?3:2,fd=Math.min(92,(gl-50)/nf-6);
+    s+=`<g ${hot("gpu","pv-hit")}${tip("gpu",gpu.name+", "+gl+" mm, "+(gpu.slots||"2–3")+" Slots")}><rect class="pv-gpubracket" x="${gx-6}" y="${gy-4}" width="8" height="${th+8}" rx="1"/>
+      <rect class="pv-gpu" x="${gx}" y="${gy}" width="${gl}" height="${th}" rx="6"/><rect x="${gx+8}" y="${gy+th*0.42}" width="${gl-16}" height="${th*0.58-12}" fill="url(#pvFins)" opacity=".45" rx="2"/><rect class="pv-gpuline" x="${gx+10}" y="${gy+th-8}" width="${gl-24}" height="3" rx="1.5"/>
+      <text class="pv-brand" x="${gx+gl-14}" y="${gy+16}" text-anchor="end">${esc(gpu.brand==="NVIDIA"?"GEFORCE RTX":gpu.brand==="AMD"?"RADEON":"ARC")}</text>
+      <rect class="pv-pcbedge" x="${gx}" y="${gy-3}" width="${gl}" height="4"/>${gpu.conn==="12V-2x6"?`<rect class="pv-conn" x="${gx+gl*0.55}" y="${gy-8}" width="16" height="6" rx="1"/>`:`<rect class="pv-conn" x="${gx+gl-60}" y="${gy-8}" width="30" height="6" rx="1"/>`}</g>`;
+    if(cs){const ok=gl<=cs.gpu;s+=`<g class="pv-dim${ok?"":" bad"}"><line x1="${gx}" y1="${gy+th+12}" x2="${gx+gl}" y2="${gy+th+12}"/><line x1="${gx+gl}" y1="${gy+th+6}" x2="${gx+gl}" y2="${gy+th+18}"/><line x1="${cs.gpu}" y1="${gy+th+4}" x2="${cs.gpu}" y2="${gy+th+22}" class="max"/><text x="${Math.min(gx+gl,cs.gpu)-4}" y="${gy+th+30}" text-anchor="end">${gl} mm · Platz bis ${cs.gpu} mm</text></g>`;}
+    gpuNote=`${gl} mm, ${gpu.slots||"2–3"} Slots`;
+  }
+  // Gehäuselüfter (vorne, hinten, Zusatzlüfter oben)
+  const frontRad=cool&&cool.kind==="aio"&&(small||(cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cool.rad)));
+  if(!small){
+    if(!frontRad){const n=Math.max(2,Math.min(3,Math.floor((H-shroudH-30)/125)));for(let i=0;i<n;i++)s+=fanEdge(D-33,22+i*126,120,true,"pv-cfan");}
+    s+=fanEdge(-6+0,by+16,120,true,"pv-cfan");
+    const topRad=cool&&cool.kind==="aio"&&!frontRad;
+    if(fans&&!topRad){const n=Math.min(fans.count,Math.floor((D-160)/130));for(let i=0;i<n;i++)s+=`<g ${hot("fans","pv-hit",i===0)}${tip("fans",fans.name)}>${fanEdge(150+i*130,4,fans.size,false,"pv-xfan")}</g>`;}
+  }
+  // Luftstrom
+  s+=`<g class="pv-air"><path d="M ${D+18} ${H*0.3} h -40"/><path d="M ${D+18} ${H*0.5} h -40"/><path d="M -2 ${by+60} h -22"/></g>`;
+  // Glas
+  s+=`<rect class="pv-glass" x="0" y="0" width="${D}" height="${H}" rx="6" fill="url(#pvGlass)"/>`;
+  // Legende unten
+  const L=[cs?`${sh(cs.name.replace(/\s*\([^)]*\)/,""),34)} · ca. ${D}×${H} mm (T×H)`:"Gehäuse offen",gpuNote&&("GPU "+gpuNote),coolNote].filter(Boolean);
+  s+=`<text class="pv-cap" x="0" y="${H+46}">${esc(L[0])}</text><text class="pv-cap" x="0" y="${H+64}">${esc(L.slice(1).join("   ·   "))}</text>`;
+  return s+`</svg>`;
+}
+
 function schemaSvg(parts,errCats){
   const W=520,H=420,cs=parts["case"],b=parts.board,cpu=parts.cpu,cool=parts.cooler,gpu=parts.gpu,ram=parts.ram,ssd=parts.ssd,psu=parts.psu;
   const sh=(n,len)=>n?(n.length>len?n.slice(0,len-1)+"…":n):"";
@@ -2210,15 +2463,19 @@ function renderApps(parts){
 /* Fertig-PCs */
 function renderPrebuilt(parts,total){
   const gpu=parts.gpu&&!parts.gpu.none?parts.gpu:null,cpu=parts.cpu;
-  const dG=gpu?gpu.g:0,dC=cpu?cpu.g:0,dM=cpu?cpu.m:0,dPrice=total+260;
+  const dG=gpu?gpu.g:0,dC=cpu?cpu.g:0,dM=cpu?cpu.m:0,dPrice=total+winAdd(parts);
   const fpsOf=(g,cg)=>Math.round(Math.min(g*RES[P().res].f,cg*CPU_FPS));
   const myFps=fpsOf(dG,dC);
-  const rows=[{me:true,name:"Dein Selbstbau",cpu:cpu?cpu.name.replace(/^(AMD|Intel) /,""):"–",gpu:gpu?gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""):"–",ram:parts.ram?parts.ram.cap+" GB":"–",ssd:parts.ssd?fmtCap(parts.ssd.cap):"–",g:dG,cg:dC,m:dM,price:dPrice,priceNote:`${eur(total)} Teile + ca. 260 € Windows`},...PREBUILT];
+  let pre=PREBUILT.slice();
+  if(devF.pre==="near"&&myFps)pre=pre.filter(x=>Math.abs(fpsOf(x.g,x.cg)/myFps-1)<=0.3);
+  if(devF.pre==="cheaper")pre=pre.filter(x=>x.price<=dPrice);
+  pre.sort((a,b)=>fpsOf(b.g,b.cg)-fpsOf(a.g,a.cg)||a.price-b.price);
+  const rows=[{me:true,name:"Dein Selbstbau",cpu:cpu?cpu.name.replace(/^(AMD|Intel) /,""):"–",gpu:gpu?gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""):"–",ram:parts.ram?parts.ram.cap+" GB":"–",ssd:parts.ssd?fmtCap(parts.ssd.cap):"–",g:dG,cg:dC,m:dM,price:dPrice,priceNote:winNote(parts,total)},...pre];
   const cheapest=PREBUILT.filter(x=>x.chk&&fpsOf(x.g,x.cg)>=myFps*0.95).sort((a,b)=>a.price-b.price)[0];
   let verdict="";
   if(cheapest&&dG){const d=dPrice-cheapest.price;verdict=`<p class="verdict-box">${d>0?`<b>${esc(cheapest.name)}</b> erreicht mindestens 95 % deiner Spieleleistung und ist <b>${eur(d)} günstiger</b> (${esc(cheapest.priceNote.split(";")[0])}). Dein Selbstbau bietet dafür ${parts["case"]&&parts["case"].silent===3?"ein gedämmtes Gehäuse, ":""}${parts.ssd&&parts.ssd.cap>=2000?"mehr SSD-Speicher, ":""}frei wählbare Markenteile und volle Aufrüstbarkeit. Fertig-PC-Angebote schwanken stark; Preise vor dem Kauf prüfen.`:`Dein Selbstbau ist <b>${eur(-d)} günstiger</b> als der günstigste belegte Fertig-PC mit gleicher Leistung (${esc(cheapest.name)}, ${esc(cheapest.priceNote.split(";")[0])}).`}</p>`;}
   const maxF=Math.max(myFps,...PREBUILT.map(x=>fpsOf(x.g,x.cg)))||1;
-  $("#dPrebuilt").innerHTML=verdict+`<div class="scroll"><table class="ctable"><thead><tr><th>System</th><th>Ausstattung</th><th>FPS ${esc(RES[P().res].label)}</th><th>Multi-Core</th><th class="num">Preis</th><th class="num">Preis je FPS</th></tr></thead><tbody>
+  $("#dPrebuilt").innerHTML=verdict+devChips("pre")+`<div class="scroll"><table class="ctable"><thead><tr><th>System</th><th>Ausstattung</th><th>FPS ${esc(RES[P().res].label)}</th><th>Multi-Core</th><th class="num">Preis</th><th class="num">Preis je FPS</th></tr></thead><tbody>
    ${rows.map(r=>{const f=fpsOf(r.g,r.cg);return `<tr class="${r.me?"me":cheapest&&r.id===cheapest.id?"best":""}"><td><b>${esc(r.name)}</b>${r.link?`<br><a href="${r.link}" target="_blank" rel="noopener" style="font-size:12px">Quelle ↗</a>`:""}</td>
    <td>${esc(r.cpu)} · ${esc(r.gpu)}<br><small class="subline">${esc(r.ram)} RAM · ${esc(r.ssd)} SSD</small></td>
    <td><span class="num">${f}</span>${myFps?` <small>${Math.round(f/myFps*100)} %</small>`:""}<div class="mini"><span style="width:${f/maxF*100}%"></span></div></td>
@@ -2335,7 +2592,7 @@ function renderTrend(){
 let pickerCat=null,lastFocus=null;
 function openPicker(cat){
   pickerCat=cat;lastFocus=document.activeElement;
-  $("#pickerTitle").textContent=CAT_LABEL[cat]+" wählen";
+  $("#pickerTitle").innerHTML=icon(cat)+esc(CAT_LABEL[cat]+" wählen");
   $("#pSearch").value="";
   $("#picker").hidden=false;
   renderPicker();
@@ -2496,7 +2753,7 @@ function printHtml(){
    <div class="meta">PC-Werkbank · erstellt am ${esc(today)} · Einsatz: ${esc(PROFILE_NAME[state.profile])}${state.budget?" · Budget "+eur(state.budget):""} · Preise Stand 14. November 2026</div>
    <div class="kv4" style="margin-top:12px">
      <div><span>Gesamtpreis</span><b>${eur(total)}</b></div>
-     <div><span>mit Windows</span><b>ca. ${eur(total+260)}</b></div>
+     <div><span>${parts.os?"inkl. Betriebssystem":"mit Windows 11 Pro"}</span><b>${eur(total+winAdd(parts))}</b></div>
      <div><span>Last / Netzteil</span><b>${estLoad(parts)} W${parts.psu?" / "+parts.psu.watt+" W":""}</b></div>
      <div><span>Lautstärke</span><b>${esc(nz.label)}</b></div>
    </div>
