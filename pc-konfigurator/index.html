@@ -540,6 +540,25 @@ label.btn{display:inline-flex;align-items:center}
 }
 .scatter .front{fill:none;stroke:var(--ink);stroke-width:2;stroke-dasharray:7 5;stroke-linejoin:round;opacity:.45}
 .dev-f{margin:4px 0 10px}
+.g-ctrl{margin:0 0 10px}
+.bg-wrap{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:18px;align-items:start}
+@media (max-width:900px){.bg-wrap{grid-template-columns:minmax(0,1fr)}}
+.bg-side{display:flex;flex-direction:column;gap:12px;min-width:0}
+.bg-prog{height:6px;border-radius:3px;background:var(--sunk);overflow:hidden;border:1px solid var(--line)}.bg-prog span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--auto));transition:width .3s}
+.bg-now h3{font-size:20px;margin:6px 0 8px;display:flex;align-items:center;gap:8px}.bg-now ul{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:14.5px}
+.bg-list{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}
+.bg-li{width:100%;text-align:left;border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:5px 9px;font-size:12.5px;cursor:pointer;color:var(--muted)}
+.bg-li.on{border-color:var(--accent);color:var(--ink);font-weight:700}.bg-li.done{color:var(--ok)}
+.pcview.has-focus .pv-hit:not(.focus),.pcview.has-focus .pv-case:not(.focus){opacity:.28;transition:opacity .25s}
+.pcview .pv-hit.focus>*{filter:drop-shadow(0 0 8px var(--g-acc)) brightness(1.25)}
+.pcview .pv-case.focus{stroke:var(--g-acc);stroke-width:3}
+.ukind{display:inline-block;font:700 10.5px var(--f-mono);letter-spacing:.06em;padding:2px 7px;border-radius:6px;margin-right:4px}
+.k-g{background:color-mix(in srgb,var(--c3) 20%,transparent);color:var(--c3)}.k-c{background:color-mix(in srgb,var(--c1) 20%,transparent);color:var(--c1)}.k-b{background:color-mix(in srgb,var(--c4) 20%,transparent);color:var(--c4)}
+.up-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 16px;margin-top:6px}
+.up-form label{display:flex;flex-direction:column;gap:4px;font:600 11px var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.up-form select,.up-form input{font:500 14px var(--f-body);letter-spacing:0;text-transform:none;color:var(--ink);background:var(--sunk);border:1px solid var(--line);border-radius:10px;padding:8px 10px}
+.games sup{font-size:9px;margin-left:1px;opacity:.85}
+.games td:first-child{min-width:180px}
 .donut-wrap{display:grid;grid-template-columns:170px minmax(0,1fr);gap:16px;align-items:center}
 .donut{width:170px;height:170px}.donut path{stroke:var(--surface);stroke-width:1;cursor:pointer;transition:opacity .15s}.donut path:hover{opacity:.8}
 .donut .dl{font:500 10px var(--f-mono);fill:var(--muted);letter-spacing:.08em;text-transform:uppercase}.donut .dv{font:700 17px var(--f-display);fill:var(--ink)}
@@ -677,6 +696,7 @@ label.btn{display:inline-flex;align-items:center}
     <button type="button" role="tab" id="tab-dash" aria-controls="viewDash" data-view="dash">Dashboard</button>
     <button type="button" role="tab" id="tab-ov" aria-controls="viewOv" data-view="ov">Übersicht</button>
     <button type="button" role="tab" id="tab-cmp" aria-controls="viewCmp" data-view="cmp">Vergleich</button>
+    <button type="button" role="tab" id="tab-up" aria-controls="viewUp" data-view="up">Aufrüsten</button>
   </nav>
   </div>
 
@@ -769,6 +789,11 @@ label.btn{display:inline-flex;align-items:center}
         <section class="card" aria-label="Schwachstellen"><h2>Schwachstellen und Hinweise</h2><ul class="plist3 c" id="oCons"></ul></section>
       </div>
     </div>
+    <section class="card" aria-label="Einkauf"><h2>Einkauf <span class="eyebrow" id="shopSub"></span></h2><div id="shopOut"></div></section>
+    <section class="card" aria-label="Bauanleitung"><h2>Bauanleitung <span class="eyebrow" id="bgSub"></span></h2>
+      <div class="bg-wrap"><div class="pv-wrap bg-pc" id="bgPc"></div><div class="bg-side"><div class="bg-prog"><span id="bgBar"></span></div><div id="bgStep"></div>
+      <div class="row-btns"><button type="button" class="btn" data-act="bgPrev">Zurück</button><button type="button" class="btn primary" data-act="bgNext">Weiter</button></div>
+      <ol class="bg-list" id="bgList"></ol></div></div></section>
     <section class="card" aria-label="Upgrade-Pfad"><h2>Upgrade-Pfad <span class="eyebrow">sortiert nach Nutzen pro Euro</span></h2><div id="oPath"></div></section>
     <div class="dash-tools"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button></div>
     <section class="card" aria-label="Teileliste"><h2>Alle Teile <span class="eyebrow" id="oSum"></span></h2><div class="scroll" id="oTable"></div></section>
@@ -791,6 +816,22 @@ label.btn{display:inline-flex;align-items:center}
     <section class="card" aria-label="Tabelle"><div id="cSide"></div><div class="scroll" id="cTable"></div><p class="subline" id="cNote"></p></section>
   </div>
 
+  <div class="view" id="viewUp" role="tabpanel" aria-labelledby="tab-up" hidden>
+    <section class="card" aria-label="Dein jetziger PC">
+      <h2>Aufrüst-Berater <span class="eyebrow">dein jetziger PC</span></h2>
+      <p class="subline" style="margin:0">Gib ein, was in deinem PC steckt. Der Berater rechnet aus, welches Upgrade pro Euro die meisten FPS bringt, und denkt an Netzteil, Mainboard und RAM.</p>
+      <div class="up-form">
+        <label>Prozessor<select id="upCpu"></select></label>
+        <label>Grafikkarte<select id="upGpu"></select></label>
+        <label>Arbeitsspeicher<select id="upRam"><option value="16:DDR4">16 GB DDR4</option><option value="32:DDR4">32 GB DDR4</option><option value="16:DDR5">16 GB DDR5</option><option value="32:DDR5" selected>32 GB DDR5</option><option value="64:DDR5">64 GB DDR5</option></select></label>
+        <label>Netzteil (Watt)<select id="upPsu"><option>450</option><option>550</option><option selected>650</option><option>750</option><option>850</option><option>1000</option></select></label>
+        <label>Auflösung<select id="upRes"></select></label>
+        <label>Budget (€)<input id="upBudget" type="number" min="0" step="50" placeholder="beliebig" inputmode="numeric"></label>
+      </div>
+    </section>
+    <section class="card" aria-label="Empfehlung"><h2>Empfehlung <span class="eyebrow" id="upSub"></span></h2><div id="upOut"></div></section>
+  </div>
+
   <div class="view" id="viewKonfig" role="tabpanel" aria-labelledby="tab-konfig">
   <section class="hero" id="hero" aria-label="Dein PC auf einen Blick">
     <div class="hero-pc" id="heroPc"></div>
@@ -801,7 +842,8 @@ label.btn{display:inline-flex;align-items:center}
       <div class="hero-bar" id="heroBar" hidden><span></span></div>
       <div class="hero-stats" id="heroStats"></div>
       <div class="hero-chips" id="heroChips"></div>
-      <div class="row-btns"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="hudGo" data-view="dash">Zum Dashboard</button></div>
+      <div class="row-btns"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="shareLink">Link teilen</button><button type="button" class="btn" data-act="hudGo" data-view="dash">Zum Dashboard</button></div>
+      <span class="toast" id="heroToast" role="status" aria-live="polite"></span><textarea id="heroFallback" hidden readonly aria-label="Link zum Kopieren"></textarea>
     </div>
   </section>
   <section class="controls" aria-label="Einstellungen">
@@ -965,19 +1007,19 @@ board:[
  {id:"msi-b850m-mortar",name:"MSI MAG B850M Mortar WiFi",socket:"AM5",chipset:"B850",form:"mATX",ramType:"DDR5",slots:4,maxRam:256,m2:3,gen5m2:true,wifi:true,tier:3,price:210,chk:true}
 ],
 ram:[
- {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",cap:16,modules:2,speed:5600,cl:36,tier:1,price:299,chk:true},
- {id:"gs-2x8-6000",name:"G.Skill Flare X5 16 GB DDR5-6000 CL30",type:"DDR5",cap:16,modules:2,speed:6000,cl:30,tier:1,price:297,chk:true},
- {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",cap:32,modules:2,speed:5600,cl:46,tier:2,price:636,chk:true},
- {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:3,price:524,chk:true},
- {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",cap:32,modules:2,speed:6400,cl:32,tier:4,price:673,chk:true},
- {id:"gs-2x16-6000c28",name:"G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL28",type:"DDR5",cap:32,modules:2,speed:6000,cl:28,tier:5,price:862,chk:true},
- {id:"c-2x16-6000c30",name:"Corsair Vengeance 32 GB DDR5-6000 CL30",type:"DDR5",cap:32,modules:2,speed:6000,cl:30,tier:3,price:620,chk:true},
- {id:"k-2x16-6000c30",name:"Kingston FURY Beast RGB 32 GB DDR5-6000 CL30",type:"DDR5",cap:32,modules:2,speed:6000,cl:30,tier:3,price:629,chk:true},
- {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000 CL36",type:"DDR5",cap:48,modules:2,speed:6000,cl:36,tier:4,price:798,chk:true,eol:true},
- {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:1235,chk:true},
- {id:"k-2x32-6000c30",name:"Kingston FURY Beast RGB 64 GB DDR5-6000 CL30",type:"DDR5",cap:64,modules:2,speed:6000,cl:30,tier:4,price:1310,chk:true},
- {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",cap:96,modules:2,speed:6000,cl:30,tier:5,price:2810,eol:true,chk:true},
- {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",cap:128,modules:2,speed:5600,cl:46,tier:5,price:3499,chk:true,eol:true}
+ {id:"k-2x8-5600",name:"Kingston FURY Beast 16 GB DDR5-5600",type:"DDR5",h:35,cap:16,modules:2,speed:5600,cl:36,tier:1,price:299,chk:true},
+ {id:"gs-2x8-6000",name:"G.Skill Flare X5 16 GB DDR5-6000 CL30",type:"DDR5",h:33,cap:16,modules:2,speed:6000,cl:30,tier:1,price:297,chk:true},
+ {id:"c-2x16-5600",name:"Crucial Pro 32 GB DDR5-5600",type:"DDR5",h:32,cap:32,modules:2,speed:5600,cl:46,tier:2,price:636,chk:true},
+ {id:"gs-2x16-6000",name:"Patriot Viper Venom 32 GB DDR5-6000 CL28",type:"DDR5",h:44,cap:32,modules:2,speed:6000,cl:28,tier:3,price:524,chk:true},
+ {id:"gs-2x16-6400",name:"G.Skill Trident Z5 RGB 32 GB DDR5-6400",type:"DDR5",h:44,cap:32,modules:2,speed:6400,cl:32,tier:4,price:673,chk:true},
+ {id:"gs-2x16-6000c28",name:"G.Skill Trident Z5 Neo RGB 32 GB DDR5-6000 CL28",type:"DDR5",h:44,cap:32,modules:2,speed:6000,cl:28,tier:5,price:862,chk:true},
+ {id:"c-2x16-6000c30",name:"Corsair Vengeance 32 GB DDR5-6000 CL30",type:"DDR5",h:35,cap:32,modules:2,speed:6000,cl:30,tier:3,price:620,chk:true},
+ {id:"k-2x16-6000c30",name:"Kingston FURY Beast RGB 32 GB DDR5-6000 CL30",type:"DDR5",h:42,cap:32,modules:2,speed:6000,cl:30,tier:3,price:629,chk:true},
+ {id:"c-2x24-6000",name:"Corsair Vengeance 48 GB DDR5-6000 CL36",type:"DDR5",h:35,cap:48,modules:2,speed:6000,cl:36,tier:4,price:798,chk:true,eol:true},
+ {id:"c-2x32-6000",name:"Corsair Vengeance 64 GB DDR5-6000",type:"DDR5",h:35,cap:64,modules:2,speed:6000,cl:30,tier:4,price:1235,chk:true},
+ {id:"k-2x32-6000c30",name:"Kingston FURY Beast RGB 64 GB DDR5-6000 CL30",type:"DDR5",h:42,cap:64,modules:2,speed:6000,cl:30,tier:4,price:1310,chk:true},
+ {id:"gs-2x48-6000",name:"G.Skill Trident Z5 Neo 96 GB DDR5-6000",type:"DDR5",h:44,cap:96,modules:2,speed:6000,cl:30,tier:5,price:2810,eol:true,chk:true},
+ {id:"c-2x64-5600",name:"Crucial Pro 128 GB DDR5-5600",type:"DDR5",h:32,cap:128,modules:2,speed:5600,cl:46,tier:5,price:3499,chk:true,eol:true}
 ],
 cooler:[
  {id:"boxed",name:"Boxed-Kühler (liegt der CPU bei)",kind:"boxed",h:60,cap:90,sockets:ALL_SOCKETS,tier:0,price:0},
@@ -1189,23 +1231,29 @@ const LAPTOPS=[
 ];
 
 /* Fertig-PCs: g = Grafikkarte (RTX 5080 = 105), cg/m = Prozessor; Preise inkl. Windows */
+/* Konsolen: g = Rohleistung der Grafik auf derselben Skala (Schätzung aus Digital-Foundry-/PCGH-Vergleichen), cg = Spiele-CPU (Zen 2, 8 Kerne). Preise: PCGH-Preisvergleich, 14.11.2026 */
+const CONSOLES=[
+ {id:"ps5slim-dig",name:"Sony PlayStation 5 Slim Digital",gpu:"RDNA 2, 36 CUs",ram:"16 GB GDDR6 (gemeinsam)",ssd:"825 GB",g:30,cg:42,m:22,price:600,link:"https://preisvergleich.pcgameshardware.de/?fs=PlayStation+5+Slim+Digital"},
+ {id:"xsx",name:"Microsoft Xbox Series X",gpu:"RDNA 2, 52 CUs",ram:"16 GB GDDR6 (gemeinsam)",ssd:"1 TB",g:34,cg:44,m:23,price:913,link:"https://preisvergleich.pcgameshardware.de/microsoft-xbox-series-x-1tb-schwarz-a2378111.html"},
+ {id:"ps5pro",name:"Sony PlayStation 5 Pro",gpu:"RDNA 3/4-Mischung, 60 CUs, PSSR",ram:"16 GB GDDR6 + 2 GB",ssd:"2 TB",g:50,cg:44,m:22,price:1299,link:"https://preisvergleich.pcgameshardware.de/sony-playstation-5-pro-2tb-weiss-a3298140.html"}
+];
 const PREBUILT=[
- {id:"ks-5500-5060",name:"Komplettsystem Ryzen 5 5500 + RTX 5060",cpu:"Ryzen 5 5500",gpu:"RTX 5060 8 GB",ram:"16 GB",ssd:"k. A.",g:50,cg:55,m:30,price:999,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-5-5500-a3477028.html",chk:true,noOs:true},
- {id:"ks-5700x-5060",name:"Komplettsystem Ryzen 7 5700X + RTX 5060",cpu:"Ryzen 7 5700X",gpu:"RTX 5060 8 GB",ram:"32 GB",ssd:"k. A.",g:50,cg:62,m:38,price:1119,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-5700x-a3477063.html",chk:true,noOs:true},
- {id:"ks-5700x-9060xt",name:"Komplettsystem Ryzen 7 5700X + RX 9060 XT",cpu:"Ryzen 7 5700X",gpu:"RX 9060 XT 16 GB",ram:"32 GB",ssd:"k. A.",g:58,cg:62,m:38,price:1279,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-5700x-a3512954.html",chk:true,noOs:true},
- {id:"ks-5700x-9070",name:"Komplettsystem Ryzen 7 5700X + RX 9070",cpu:"Ryzen 7 5700X",gpu:"RX 9070 16 GB",ram:"32 GB",ssd:"k. A.",g:84,cg:62,m:38,price:1549,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/amd-ryzen-7-5700x-a3436697.html",chk:true,noOs:true},
- {id:"ks-8700f-9070",name:"Komplettsystem Ryzen 7 8700F + RX 9070",cpu:"Ryzen 7 8700F",gpu:"RX 9070 16 GB",ram:"32 GB",ssd:"k. A.",g:84,cg:64,m:42,price:1649,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/amd-ryzen-7-8700f-a3436946.html",chk:true,noOs:true},
- {id:"orion3000-5060",name:"Acer Predator Orion 3000 (PO3-665, DG.E4TEG.009)",cpu:"Core Ultra 7 265F",gpu:"RTX 5060 8 GB",ram:"32 GB",ssd:"1 TB",g:50,cg:78,m:82,price:1699,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026",link:"https://preisvergleich.pcgameshardware.de/acer-predator-orion-3000-po3-665-dg-e4teg-009-a3663440.html",chk:true},
- {id:"ks-7800x3d-5070",name:"Komplettsystem Ryzen 7 7800X3D + RTX 5070",cpu:"Ryzen 7 7800X3D",gpu:"RTX 5070 12 GB",ram:"32 GB",ssd:"k. A.",g:75,cg:92,m:42,price:1899,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-7800x3d-a3427064.html",chk:true,noOs:true},
- {id:"msi-trident-5070",name:"MSI Trident AS AI 2nd (2NVP7-012AT), kompakt",cpu:"Core Ultra 7 265F",gpu:"RTX 5070 12 GB",ram:"32 GB",ssd:"1 TB",g:75,cg:78,m:82,price:1999,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Kompakt-Gehäuse ca. 10 l, AT-Modell",link:"https://preisvergleich.pcgameshardware.de/msi-trident-as-ai-2nd-2nvp7-012at-00b94411-012-a3628785.html",chk:true},
- {id:"ks-7800x3d-9070",name:"Komplettsystem Ryzen 7 7800X3D + RX 9070",cpu:"Ryzen 7 7800X3D",gpu:"RX 9070 16 GB",ram:"32 GB",ssd:"k. A.",g:84,cg:92,m:42,price:2049,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/amd-ryzen-7-7800x3d-a3436796.html",chk:true,noOs:true},
- {id:"ks-9800x3d-5070",name:"Komplettsystem Ryzen 7 9800X3D + RTX 5070",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5070 12 GB",ram:"32 GB",ssd:"k. A.",g:75,cg:100,m:55,price:2179,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-9800x3d-a3427048.html",chk:true,noOs:true},
- {id:"rog-nuc15-5070",name:"ASUS ROG NUC 15 (RNUC15JNK9X489A2), Mini-PC",cpu:"Core Ultra 9 275HX",gpu:"RTX 5070 Laptop 8 GB",ram:"32 GB",ssd:"1 TB",g:50,cg:82,m:85,price:2280,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Mini-PC ca. 3 l mit Notebook-Grafik",link:"https://preisvergleich.pcgameshardware.de/asus-rog-nuc-15-jean-canyon-rnuc15jnk9x489a2-90as00i1-m002y0-a3540458.html",chk:true},
- {id:"zotac-magnus-5070",name:"Zotac ZBOX Magnus One (EU275070C), kompakt",cpu:"Core Ultra 7 265",gpu:"RTX 5070 12 GB",ram:"16 GB",ssd:"1 TB",g:75,cg:78,m:80,price:2855,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Kompakt-PC ca. 8 l, Betriebssystem laut Variante prüfen",link:"https://preisvergleich.pcgameshardware.de/zotac-zbox-magnus-one-eu275070c-zbox-eu275070c-be-w5b-a3595383.html",chk:true},
- {id:"ks-9800x3d-5080",name:"Komplettsystem Ryzen 7 9800X3D + RTX 5080",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"k. A.",g:105,cg:100,m:55,price:3179,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-9800x3d-a3403452.html",chk:true,noOs:true},
+ {id:"ks-5500-5060",name:"Komplettsystem Ryzen 5 5500 + RTX 5060",cpu:"Ryzen 5 5500",gpu:"RTX 5060 8 GB",ram:"16 GB",ssd:"500 GB",g:50,cg:50,m:28,price:999,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot, mit Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-5-5500-a3477028.html",chk:false},
+ {id:"ks-5700x-5060",name:"Komplettsystem Ryzen 7 5700X + RTX 5060",cpu:"Ryzen 7 5700X",gpu:"RTX 5060 8 GB",ram:"32 GB",ssd:"512 GB",g:50,cg:62,m:38,price:1213,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot, mit Windows 11 Pro",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-5700x-a3477063.html",chk:false},
+ {id:"ks-5700x-9060xt",name:"Komplettsystem Ryzen 7 5700X + RX 9060 XT",cpu:"Ryzen 7 5700X",gpu:"RX 9060 XT 16 GB",ram:"32 GB",ssd:"1 TB",g:58,cg:62,m:38,price:1279,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot; Windows nicht angegeben",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-5700x-a3512954.html",chk:false,noOs:true},
+ {id:"ks-5700x-9070",name:"Komplettsystem Ryzen 7 5700X + RX 9070",cpu:"Ryzen 7 5700X",gpu:"RX 9070 16 GB",ram:"32 GB",ssd:"1 TB",g:84,cg:62,m:38,price:1599,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot; Windows nicht angegeben, mit Windows ab 1.699 €",link:"https://preisvergleich.pcgameshardware.de/amd-ryzen-7-5700x-a3436697.html",chk:false,noOs:true},
+ {id:"ks-8700f-9070",name:"Komplettsystem Ryzen 7 8700F + RX 9070",cpu:"Ryzen 7 8700F",gpu:"RX 9070 16 GB",ram:"32 GB",ssd:"1 TB",g:84,cg:64,m:42,price:1789,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot, mit Windows",link:"https://preisvergleich.pcgameshardware.de/amd-ryzen-7-8700f-a3436946.html",chk:false},
+ {id:"orion3000-5060",name:"Acer Predator Orion 3000 (PO3-665, DG.E4TEG.009)",cpu:"Core Ultra 7 265F",gpu:"RTX 5060 8 GB",ram:"32 GB",ssd:"1 TB",g:50,cg:78,m:80,price:1699,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026",link:"https://preisvergleich.pcgameshardware.de/acer-predator-orion-3000-po3-665-dg-e4teg-009-a3663440.html",chk:true},
+ {id:"ks-7800x3d-5070",name:"Komplettsystem Ryzen 7 7800X3D + RTX 5070",cpu:"Ryzen 7 7800X3D",gpu:"RTX 5070 12 GB",ram:"32 GB",ssd:"1 TB",g:75,cg:92,m:42,price:2049,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot; ohne Windows",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-7800x3d-a3427064.html",chk:false,noOs:true},
+ {id:"msi-trident-5070",name:"MSI Trident AS AI 2nd (2NVP7-012AT), kompakt",cpu:"Core Ultra 7 265F",gpu:"RTX 5070 12 GB",ram:"32 GB",ssd:"1 TB",g:75,cg:78,m:80,price:1999,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Kompakt-Gehäuse ca. 22 l, AT-Modell",link:"https://preisvergleich.pcgameshardware.de/msi-trident-as-ai-2nd-2nvp7-012at-00b94411-012-a3628785.html",chk:true},
+ {id:"ks-7800x3d-9070",name:"Komplettsystem Ryzen 7 7800X3D + RX 9070",cpu:"Ryzen 7 7800X3D",gpu:"RX 9070 16 GB",ram:"32 GB",ssd:"1 TB",g:84,cg:92,m:42,price:2249,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot, mit Windows",link:"https://preisvergleich.pcgameshardware.de/amd-ryzen-7-7800x3d-a3436796.html",chk:false},
+ {id:"ks-9800x3d-5070",name:"Komplettsystem Ryzen 7 9800X3D + RTX 5070",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5070 12 GB",ram:"32 GB",ssd:"1 TB",g:75,cg:100,m:55,price:2179,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot; ohne Windows",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-9800x3d-a3427048.html",chk:false,noOs:true},
+ {id:"rog-nuc15-5070",name:"ASUS ROG NUC 15 (RNUC15JNK9X489A2), Mini-PC",cpu:"Core Ultra 9 275HX",gpu:"RTX 5070 Laptop 8 GB",ram:"32 GB",ssd:"1 TB",g:50,cg:78,m:85,price:2280,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Mini-PC ca. 3 l mit Notebook-Grafik; Bestpreis nicht lagernd, lagernd ab ca. 2.656 €",link:"https://preisvergleich.pcgameshardware.de/asus-rog-nuc-15-jean-canyon-rnuc15jnk9x489a2-90as00i1-m002y0-a3540458.html",chk:true},
+ {id:"zotac-magnus-5070",name:"Zotac ZBOX Magnus One (EU275070C), kompakt",cpu:"Core Ultra 7 265",gpu:"RTX 5070 12 GB",ram:"16 GB",ssd:"1 TB",g:75,cg:78,m:80,price:2855,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Kompakt-PC ca. 8 l, mit Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/zotac-zbox-magnus-one-eu275070c-zbox-eu275070c-be-w5b-a3595383.html",chk:true},
+ {id:"ks-9800x3d-5080",name:"Komplettsystem Ryzen 7 9800X3D + RTX 5080",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"1 TB",g:105,cg:100,m:55,price:3179,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot, mit Windows",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-9800x3d-a3403452.html",chk:false},
  {id:"erazer-x30-5070ti",name:"Medion Erazer Hunter X30 (MD 34013)",cpu:"Core Ultra 7 265",gpu:"RTX 5070 Ti 16 GB",ram:"32 GB",ssd:"2 TB",g:93,cg:78,m:80,price:3299,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026",link:"https://preisvergleich.pcgameshardware.de/medion-erazer-hunter-x30-md-340132-10026281-a3835242.html",chk:true},
  {id:"erazer-x30-5080",name:"Medion Erazer Hunter X30 (10026189)",cpu:"Core Ultra 7 270K Plus",gpu:"RTX 5080 16 GB",ram:"32 GB",ssd:"2 TB",g:105,cg:84,m:104,price:3459,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026",link:"https://preisvergleich.pcgameshardware.de/medion-erazer-hunter-x30-10026189-a3785032.html",chk:true},
- {id:"ks-9800x3d-5090",name:"Komplettsystem Ryzen 7 9800X3D + RTX 5090",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5090 32 GB",ram:"32 GB",ssd:"k. A.",g:150,cg:100,m:55,price:9999,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Komplettsystem-Angebot mehrerer Shops, Betriebssystem und SSD je nach Shop",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-9800x3d-a3402917.html",chk:true,noOs:true},
+ {id:"ks-9800x3d-5090",name:"Komplettsystem Ryzen 7 9800X3D + RTX 5090",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5090 32 GB",ram:"32 GB",ssd:"2 TB",g:150,cg:100,m:55,price:9999,priceNote:"Geizhals-Sammelkategorie mit vielen Shop-Angeboten (14.11.2026): Ausstattung schwankt, Preis = günstigstes passendes Angebot, mit Windows 11 Pro",link:"https://preisvergleich.pcgameshardware.de/komplettsystem-amd-ryzen-7-9800x3d-a3402917.html",chk:false},
  {id:"captiva-r89-514",name:"Captiva Ultimate Gaming R89-514",cpu:"Ryzen 7 9800X3D",gpu:"RTX 5090 32 GB",ram:"64 GB",ssd:"2 TB",g:150,cg:100,m:55,price:11499,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; mit Windows 11 Home",link:"https://preisvergleich.pcgameshardware.de/captiva-ultimate-gaming-r89-514-89514-a3871323.html",chk:true},
  {id:"msi-s3-5060",name:"MSI MAG Infinite S3 (14NVL5-2814DE)",cpu:"Core i5-14400F",gpu:"RTX 5060 8 GB",ram:"16 GB",ssd:"1 TB",g:50,cg:68,m:38,price:1299,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; nur 16 GB RAM",link:"https://preisvergleich.pcgameshardware.de/msi-mag-infinite-s3-14nvl5-2814de-00b93851-2814-a3632695.html",chk:true},
  {id:"loq-tower-5060",name:"Lenovo LOQ Tower 26ADR10 (91DF000WGF)",cpu:"Ryzen 7 8745HX",gpu:"RTX 5060 8 GB",ram:"16 GB",ssd:"1 TB",g:50,cg:70,m:40,price:1299,priceNote:"PCGH-Preisvergleich (Geizhals-Daten), 14.11.2026; Notebook-Prozessor im Tower",link:"https://preisvergleich.pcgameshardware.de/lenovo-loq-26adr10-91df000wgf-a3645702.html",chk:true},
@@ -1234,6 +1282,7 @@ const CATS=[
  {k:"ssd",label:"SSD",code:"Speicher"},
  {k:"psu",label:"Netzteil",code:"Strom"},
  {k:"case",label:"Gehäuse",code:"Gehäuse"},
+ {k:"ssd2",label:"Zweite SSD",code:"Speicher",x:true},
  {k:"monitor",label:"Monitor",code:"Zubehör",x:true},
  {k:"fans",label:"Zusatzlüfter",code:"Zubehör",x:true},
  {k:"os",label:"Betriebssystem",code:"Software",x:true},
@@ -1254,6 +1303,7 @@ const ICON={
  monitor:'<rect x="2.5" y="4" width="19" height="12.5" rx="1.5"/><path d="M9 20.5h6M12 16.5v4"/>',
  fans:'<circle cx="7.5" cy="12" r="5"/><circle cx="16.5" cy="12" r="5"/><circle cx="7.5" cy="12" r="1.2"/><circle cx="16.5" cy="12" r="1.2"/>',
  os:'<rect x="3.5" y="3.5" width="7.5" height="7.5" rx="1"/><rect x="13" y="3.5" width="7.5" height="7.5" rx="1"/><rect x="3.5" y="13" width="7.5" height="7.5" rx="1"/><rect x="13" y="13" width="7.5" height="7.5" rx="1"/>',
+ get ssd2(){return this.ssd;},
  kbm:'<rect x="2" y="9" width="14.5" height="9" rx="1.5"/><path d="M4.5 12h1M7.5 12h1M10.5 12h1M13.5 12h1M5.5 15h7.5"/><rect x="18" y="8" width="4" height="7" rx="2"/><path d="M20 8v2.5"/>'
 };
 const icon=(k,cls)=>`<svg class="ico${cls?" "+cls:""}" viewBox="0 0 24 24" aria-hidden="true" focusable="false">${ICON[k]||""}</svg>`;
@@ -1269,6 +1319,7 @@ const PROFILE_NAME={gaming:"Gaming",office:"Büro & Alltag",creator:"Kreativ & W
 /* Startkonfiguration beim ersten Öffnen (deine Konfiguration) */
 const START={id:"mine",params:{mix:60,res:3,fps:60,ram:32,storage:2000,quiet:80,size:"ATX"},name:"Deine Konfiguration",hint:"4K-Gaming + Kreativ",profile:"creator",budget:null,user:{cpu:"r9-9900x",cooler:"ar-lf3-360",board:"msi-b850-tomahawk",ram:"gs-2x16-6000",gpu:"rtx5070ti",ssd:"s9100-2",psu:"cor-rm850e","case":"bq-sb802"}};
 
+DB.ssd2=DB.ssd;
 const BY={};for(const c in DB){BY[c]={};for(const p of DB[c])BY[c][p.id]=p;}
 const get=(cat,id)=>BY[cat]&&BY[cat][id];
 const eurFmt=new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",maximumFractionDigits:0});
@@ -1290,7 +1341,7 @@ function load(){
     for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
     const params=Object.assign({},DEF_PARAMS);
     if(s.params)for(const k in DEF_PARAMS){if(typeof s.params[k]===typeof DEF_PARAMS[k])params[k]=s.params[k];}
-    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks,params,view:["dash","ov","cmp"].includes(s.view)?s.view:"konfig"};
+    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks,params,view:["dash","ov","cmp","up"].includes(s.view)?s.view:"konfig"};
     return true;
   }catch(e){return false;}
 }
@@ -1353,6 +1404,18 @@ function checkAll(parts,profile){
   if(cpu&&board&&cpu.socket==="AM5"&&/^(A620|B650)$/.test(board.chipset)&&/^AMD Ryzen \d 9\d{3}/.test(cpu.name))add("info",["cpu","board"],`Ryzen 9000 auf ${board.chipset}: Das Board braucht ein BIOS mit AGESA 1.2 oder neuer. Bei älterer Lagerware vorher per Flash-BIOS-Taste (ohne CPU) aktualisieren.`);
   if(state.budget){const tt=Object.values(parts).reduce((s2,x)=>s2+(x?x.price:0),0);if(tt>state.budget)add("info",[],`Budget um ${eur(tt-state.budget)} überschritten: Mit deinen festen Teilen und Vorgaben (RAM, SSD, Größe) gibt es keine günstigere passende Zusammenstellung.`);}
   if(profile!=="office"&&cpu&&hasGpu&&buildFps(parts,P().res)<P().fps*0.9)add("info",["gpu"],`Ziel-Bildrate nicht erreicht: ca. ${buildFps(parts,P().res)} statt ${P().fps} FPS in ${RES[P().res].label} (AAA, ohne Upscaling).`);
+  /* RAM-Höhe unter großen Doppelturm-Kühlern */
+  if(ram&&cooler&&cooler.kind==="air"&&cooler.cap>=270&&ram.h&&ram.h>40)add("info",["ram","cooler"],`Der ${ram.h} mm hohe RAM (mit Heatspreader/RGB) stößt beim ${cooler.name} an den vorderen Lüfter: Lüfter einige Millimeter höher setzen oder flacheren RAM wählen.`);
+  /* SFX-Netzteil in großem Gehäuse: Kabel zum CPU-Stecker oben links oft zu kurz */
+  if(psu&&cs&&psu.form==="SFX"&&cs.form==="ATX"&&(CASE_DIM[cs.id]||[0,0])[1]>=440)add("info",["psu","case"],`SFX-Netzteile haben kurze Kabel. Im ${cs.name} reicht das CPU-Kabel (EPS) oben links oft nicht: Verlängerung einplanen oder ATX-Netzteil wählen.`);
+  /* Lüfteranschlüsse: Mainboards haben meist 4–6 Lüfterstecker */
+  if(parts.fans&&board){const nF=parts.fans.count+(cooler&&cooler.kind==="aio"?Math.round(cooler.rad/120):cooler&&cooler.cap>=250?2:1)+2;if(nF>(board.form==="ITX"?3:6))add("info",["fans","board"],`Rund ${nF} Lüfter, das ${board.form}-Board hat etwa ${board.form==="ITX"?3:"4–6"} Lüfteranschlüsse: Lüfter mit Durchschleif-Stecker (PST) oder einen Lüfter-Hub verwenden.`);}
+  /* USB-C vorne braucht einen USB-3.2-Gen2-Header (Key-A) */
+  if(board&&cs&&/^A620/.test(board.chipset))add("info",["board","case"],`Einsteiger-Boards wie das ${board.name} haben teils keinen USB-C-Frontanschluss (USB 3.2 Gen 2, Key-A). Der USB-C-Port vorne am Gehäuse bleibt dann tot.`);
+  /* Doppelturm + hohe Grafikkarte: Platz zwischen Kühler und Gehäusedeckel bei Top-Radiator? */
+  if(cooler&&cooler.kind==="aio"&&cs&&cs.cooler<165&&!(cs.radFrontOnly&&cs.radFrontOnly.includes(cooler.rad))&&ram&&ram.h&&ram.h>40)add("info",["cooler","ram","case"],`Radiator mit Lüftern im Deckel und ${ram.h} mm hoher RAM: In flachen Gehäusen kann es eng werden; Radiator ggf. vorne einbauen.`);
+  if(parts.ssd2&&board&&board.m2<2)add("error",["ssd2","board"],`Das ${board.name} hat nur ${board.m2} M.2-Platz; für eine zweite SSD wird ein Board mit mindestens zwei Plätzen gebraucht.`);
+  if(parts.ssd2&&board&&board.m2>=2&&/^B650|^B850|^B860|^A620/.test(board.chipset)&&parts.ssd2.gen===5)add("info",["ssd2","board"],`Der zweite M.2-Platz hängt meist am Chipsatz (PCIe 4.0); eine PCIe-5.0-SSD läuft dort mit halber Geschwindigkeit.`);
   const mon=parts.monitor;
   if(mon&&(cpu||hasGpu)&&profile!=="office"){
     const ri=RES.findIndex(r=>r.k===mon.res);
@@ -1589,6 +1652,11 @@ function fillMissing(base){
     }};
     enforce();
   }
+  /* Nachkontrolle: automatisch gewählte Grafikkarte, die der Prozessor spürbar ausbremst, eine Stufe tiefer wählen */
+  if(p.gpu&&p.gpu.src==="auto"&&state.profile!=="office"){const rest=Object.assign({},p);delete rest.gpu;const rp=resolve(rest);
+    if(issuesFor("gpu",get("gpu",p.gpu.id),rp,state.profile).some(i=>i.level==="warn"&&/bremst/.test(i.msg))){
+      const alt=DB.gpu.filter(x=>!x.none&&!x.eol&&!x.generic&&!issuesFor("gpu",x,rp,state.profile).some(i=>i.level!=="info")).sort((a,b)=>effG(b)-effG(a)||a.price-b.price)[0];
+      if(alt){p.gpu={id:alt.id,src:"auto"};if(p.psu&&p.psu.src==="auto"){const r2=Object.assign({},p);delete r2.psu;const c2=choose("psu",r2,T,null);if(c2)p.psu={id:c2.id,src:"auto"};}}}}
   /* Nachkontrolle: ein automatisch gewähltes Netzteil darf am Ende keine Warnung tragen */
   if(p.psu&&p.psu.src==="auto"){const rest=Object.assign({},p);delete rest.psu;
     if(issuesFor("psu",get("psu",p.psu.id),resolve(rest),state.profile).some(i=>i.level!=="info")){const c2=choose("psu",rest,T,null);if(c2){p.psu={id:c2.id,src:"auto"};if(state.budget&&Object.keys(p).reduce((s2,c)=>s2+get(c,p[c].id).price,0)>state.budget){if(enforce)enforce();}}}}
@@ -1608,13 +1676,13 @@ function spec(cat,p){
     case "cpu":return `${p.cores} Kerne / ${p.threads} Threads · bis ${p.boost.toLocaleString("de-DE",{minimumFractionDigits:1})} GHz · ${p.socket} · ${p.igpu?"mit iGPU":"ohne iGPU"}${p.box?" · Kühler inkl.":""}`;
     case "cooler":return p.kind==="boxed"?"Serienkühler, nur bei CPUs mit Kühler im Karton":p.kind==="aio"?`AiO-Wasserkühlung · Radiator ${p.rad} mm · bis ca. ${p.cap} W`:`Luftkühler · ${p.h} mm hoch · bis ca. ${p.cap} W`;
     case "board":return `${p.socket} · ${p.chipset} · ${p.form} · ${p.slots}× DDR5 · ${p.m2}× M.2${p.gen5m2?" (PCIe 5.0)":""}${p.wifi?" · WLAN":""}`;
-    case "ram":return `${p.cap} GB (${p.modules}×${p.cap/p.modules} GB) · DDR5-${p.speed} · CL${p.cl}`;
+    case "ram":return `${p.cap} GB (${p.modules}×${p.cap/p.modules} GB) · DDR5-${p.speed} · CL${p.cl}${p.h?" · "+p.h+" mm hoch":""}`;
     case "gpu":return p.none?"Bild über die Prozessor-Grafik (iGPU)":p.generic?`${p.vram} GB · ${p.power} W · ${p.lenMin}–${p.lenMax} mm je nach Modell · ${p.conn} · Chip-Angabe, ${p.models} Modelle ab ${eur(p.price)}`:`${p.vram} GB · ${p.power} W · ${p.len} mm${p.slots?" · "+p.slots+" Slots":""} · ${p.conn}${p.noise?" · "+NOISE_TXT[p.noise]:""}`;
     case "monitor":return `${p.size} Zoll · ${p.px} · ${p.hz} Hz · ${p.panel}${p.hdr?" · "+p.hdr:""}`;
     case "fans":return `${p.count}× ${p.size} mm · ${p.note}`;
     case "os":return p.note;
     case "kbm":return p.note;
-    case "ssd":return `${fmtCap(p.cap)} · NVMe PCIe ${p.gen}.0 · bis ${p.read.toLocaleString("de-DE")} MB/s`;
+    case "ssd":case "ssd2":return `${fmtCap(p.cap)} · NVMe PCIe ${p.gen}.0 · bis ${p.read.toLocaleString("de-DE")} MB/s`;
     case "psu":return `${p.watt} W · 80 PLUS ${p.eff} · ${p.form}${p.atx3?` · ATX ${p.atx||"3.1"} mit ${p.atx==="3.0"?"12VHPWR":"12V-2x6"}`:""}`;
     case "case":return `bis ${p.form} · GPU ≤ ${p.gpu} mm · Kühler ≤ ${p.cooler} mm · ${p.rads.length?"Radiator "+p.rads.join("/")+" mm":"kein Radiator"} · ${p.psu.join("/")}-Netzteil`;
   }
@@ -1692,7 +1760,7 @@ function upgradeTip(cat,p,parts){
 function renderSlots(parts,issues){
   const html=CATS.map(c=>{
     const pick=state.picks[c.k];const p=pick&&get(c.k,pick.id);
-    const sep=c.k==="monitor"?`<div class="slot-sep"><b>Zubehör und Software</b><span class="subline">optional · zählt zum Gesamtpreis, wenn gewählt</span></div>`:"";
+    const sep=c.k==="ssd2"?`<div class="slot-sep"><b>Zubehör und Software</b><span class="subline">optional · zählt zum Gesamtpreis, wenn gewählt</span></div>`:"";
     if(c.x&&!p)return sep+`<div class="slot opt-slot" style="--cc:var(${CAT_COLOR[c.k]})"><div class="slot-cat"><span class="slot-ico" style="--cc:var(${CAT_COLOR[c.k]})">${icon(c.k)}</span><span class="slot-lbl"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></span></div><div class="slot-main"><span class="slot-empty">Optional, nicht gewählt</span></div>
       <div class="slot-side"><span class="price">–</span><div class="actions"><button type="button" class="btn" data-act="pick" data-cat="${c.k}">Hinzufügen</button></div></div></div>`;
     const own=issues.filter(i=>i.cats.includes(c.k)&&(i.level==="error"||i.level==="warn"));
@@ -1796,12 +1864,16 @@ function runCounts(){
 function keyVal(cat,p){
   if(!p||p.none)return cat==="gpu"&&p?["iGPU",""]:["",""];
   switch(cat){
-    case "cpu":return [p.cores,"Kerne"];case "gpu":return [p.g,"Index · "+p.vram+" GB"];case "ram":return [p.cap,"GB"];case "ssd":return [p.cap>=1000?p.cap/1000:p.cap,p.cap>=1000?"TB":"GB"];
+    case "cpu":return [p.cores,"Kerne"];case "gpu":return [p.g,"Index · "+p.vram+" GB"];case "ram":return [p.cap,"GB"];case "ssd":case "ssd2":return [p.cap>=1000?p.cap/1000:p.cap,p.cap>=1000?"TB":"GB"];
     case "psu":return [p.watt,"W"];case "cooler":return p.kind==="boxed"?["Boxed",""]:[p.cap,"W Kühlung"];case "board":return [p.chipset,p.form];case "case":return [p.form,["","offen","teilgedämmt","gedämmt"][p.silent||1]];
     case "monitor":return [p.hz,"Hz · "+p.px];case "fans":return [p.count+"×",p.size+" mm"];case "os":return [p.ed,""];case "kbm":return [p.wl?"Funk":"Kabel",p.type];
   }
   return ["",""];
 }
+/* Preisalter: alle Preise stammen vom 9. bis 14.11.2026 */
+const PRICE_DATE=new Date("2026-11-14T12:00:00");
+function priceAge(){return Math.max(0,Math.floor((Date.now()-PRICE_DATE.getTime())/864e5));}
+function ageText(){const d=priceAge();return d<1?"Preise von heute":d===1?"Preise von gestern":`Preise ${d} Tage alt`;}
 function renderHero(parts,issues){
   const p=P();let total=0,core=0,chk=0;for(const c in parts){total+=parts[c].price;if(!XCAT.has(c)){core++;if(parts[c].chk||parts[c].price===0)chk++;}}
   const {cpu,gpu}=parts,hasG=gpu&&!gpu.none;
@@ -1829,7 +1901,8 @@ function renderHero(parts,issues){
     errs?ch("bad",errs+" Konflikt"+(errs>1?"e":"")):warns?ch("warn",warns+" Hinweis"+(warns>1?"e":"")):core?ch("ok","Alles kompatibel"):"",
     core?ch(chk===core?"ok":"warn",`${chk} von ${core} Preisen geprüft`):"",
     b?ch(total>b?"bad":"ok",total>b?"Budget überschritten":"im Budget"):"",
-    hasG&&gpu.noise?ch(gpu.noise===1?"ok":gpu.noise===3?"warn":"",NOISE_TXT[gpu.noise]):""
+    hasG&&gpu.noise?ch(gpu.noise===1?"ok":gpu.noise===3?"warn":"",NOISE_TXT[gpu.noise]):"",
+    ch(priceAge()>21?"bad":priceAge()>7?"warn":"ok",ageText()+" (Stand 14.11.2026)")
   ].join("");
 }
 function renderHud(parts,issues){
@@ -1867,13 +1940,14 @@ function render(){
   }
   if(state.view==="ov")renderOverview(parts,issues);
   if(state.view==="cmp")renderCompare(parts);
+  if(state.view==="up")renderUp();
   runCounts();
   {const t=$("#themeBtn");if(t)t.textContent=document.documentElement.dataset.theme==="dark"?"☀ Hell":"☾ Dunkel";}
 }
 
 
 /* ---------- Dashboard ---------- */
-const CAT_COLOR={cpu:"--c1",cooler:"--c8",board:"--c4",ram:"--c2",gpu:"--c3",ssd:"--c5",psu:"--c7","case":"--c6",monitor:"--c8",fans:"--c8",os:"--c8",kbm:"--c8"};
+const CAT_COLOR={cpu:"--c1",cooler:"--c8",board:"--c4",ram:"--c2",gpu:"--c3",ssd:"--c5",psu:"--c7","case":"--c6",ssd2:"--c5",monitor:"--c8",fans:"--c8",os:"--c8",kbm:"--c8"};
 const SLIDERS=[
  {k:"budget",label:"Budget",aff:"alle Teile",min:500,max:8050,step:50},
  {k:"mix",label:"Gaming ↔ Kreativ",aff:"alle Teile",min:0,max:100,step:5,ends:["nur Spiele","nur Kreativarbeit"]},
@@ -2018,12 +2092,13 @@ function systemsList(parts,total){
   const fpsOf=(g,cg)=>Math.round(cg?Math.min(g*RES[ri].f,cg*CPU_FPS):g*RES[ri].f);
   const win=get("os","win11-pro").price;
   const me={kind:"me",id:"me",name:"Dein Selbstbau",sub:(cpu?cpu.name.replace(/^(AMD|Intel) /,""):"–")+" · "+(gpu?gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""):"–"),
-    fps:gpu||cpu?buildFps(parts,ri):0,m:cpu?cpu.m:0,price:total+(parts.os?0:win),ram:parts.ram?parts.ram.cap:0,ssd:parts.ssd?parts.ssd.cap:0,up:100,chk:true};
+    fps:gpu||cpu?buildFps(parts,ri):0,m:cpu?cpu.m:0,price:total+(parts.os?0:win),ram:parts.ram?parts.ram.cap:0,ssd:(parts.ssd?parts.ssd.cap:0)+(parts.ssd2?parts.ssd2.cap:0),up:100,chk:true};
   const pre=PREBUILT.map(x=>({kind:"pre",id:x.id,name:x.name,sub:x.cpu+" · "+x.gpu,fps:fpsOf(x.g,x.cg),m:x.m,price:x.price+(x.noOs?win:0),ram:gbOf(x.ram),ssd:gbOf(x.ssd),up:/Omen 16L|LOQ Tower|Legion T5|Infinite S3/.test(x.name)?45:65,chk:x.chk,src:x}));
   const lap=LAPTOPS.filter(l=>l.g!=null).map(l=>({kind:"lap",id:l.id,name:l.name,sub:l.cpu+" · "+l.gpu,fps:Math.round(l.g*RES[ri].f),m:l.m,price:l.price,ram:gbOf(l.ram),ssd:gbOf(l.ssd),up:15,chk:l.chk,src:l}));
-  return [me,...pre,...lap];
+  const con=CONSOLES.map(c=>({kind:"con",id:c.id,name:c.name,sub:c.gpu,fps:fpsOf(c.g,c.cg),m:c.m,price:c.price,ram:16,ssd:gbOf(c.ssd),up:0,chk:true,src:c}));
+  return [me,...pre,...lap,...con];
 }
-const SYS_COL={me:"var(--accent)",pre:"var(--c2)",lap:"var(--c3)"};
+const SYS_COL={me:"var(--accent)",pre:"var(--c2)",lap:"var(--c3)",con:"var(--c4)"};
 function renderSysPlot(parts,total){
   const L=systemsList(parts,total).filter(x=>x.fps>0);if(!L.length){$("#dSysPlot").innerHTML="";return;}
   const W=900,H=360,l=58,r=20,t=16,b=44;
@@ -2037,10 +2112,11 @@ function renderSysPlot(parts,total){
   {let best=-1;const fr=L.filter(x=>x.chk).slice().sort((a,c)=>a.price-c.price||c.fps-a.fps).filter(x=>{if(x.fps>best){best=x.fps;return true;}return false;});
    if(fr.length>1)o+=`<polyline class="front" points="${fr.map(x=>fx(x.price)+","+fy(x.fps)).join(" ")}"/>`;}
   L.slice().sort((a,c)=>(a.kind==="me")-(c.kind==="me")).forEach(x=>{const me=x.kind==="me";const tip=`${x.name}: ${eur(x.price)}, ${x.fps} FPS${x.chk?"":" (Preis unbelegt)"}`;
+    if(x.kind==="con"){const cx=fx(x.price),cy=fy(x.fps);o+=`<path class="sp-dot" d="M ${cx} ${cy-8} L ${cx+8} ${cy} L ${cx} ${cy+8} L ${cx-8} ${cy} Z" fill="${SYS_COL.con}" data-tip="${esc(tip+" · Konsolen spielen meist mit Upscaling und fester Bildrate")}"/><text class="lbl" x="${cx+11}" y="${cy+4}" style="font-size:10.5px;opacity:.8">${esc(x.name.replace(/^(Sony|Microsoft) /,""))}</text>`;return;}
     o+=x.kind==="lap"?`<rect class="pt sp-dot" x="${fx(x.price)-6}" y="${fy(x.fps)-6}" width="12" height="12" rx="3" fill="${SYS_COL.lap}" fill-opacity="${x.chk?.85:.35}" data-tip="${esc(tip)}"/>`
       :`<circle class="sp-dot" cx="${fx(x.price)}" cy="${fy(x.fps)}" r="${me?10:7}" fill="${SYS_COL[x.kind]}" fill-opacity="${x.chk?.9:.35}" stroke="${me?"var(--ink)":"var(--surface)"}" stroke-width="${me?3:1.5}" ${x.kind==="pre"?`data-presel="${esc(x.id)}" `:""}data-tip="${esc(tip+(x.kind==="pre"?" – klicken für Detailvergleich":""))}"/>`;
     if(me)o+=`<text class="lbl" x="${fx(x.price)+14}" y="${fy(x.fps)-10}">Dein PC</text>`;});
-  o+=`</svg><div class="legend"><span><i style="background:var(--accent)"></i>dein Selbstbau</span><span><i style="background:var(--c2)"></i>Fertig-PCs (anklickbar)</span><span><i style="background:var(--c3)"></i>Laptops</span><span><i style="background:var(--ink);opacity:.4"></i>Grenze: meiste FPS je Preis</span><span>blass: Preis nicht belegt</span></div>
+  o+=`</svg><div class="legend"><span><i style="background:var(--accent)"></i>dein Selbstbau</span><span><i style="background:var(--c2)"></i>Fertig-PCs (anklickbar)</span><span><i style="background:var(--c3)"></i>Laptops</span><span><i style="background:var(--c4)"></i>Konsolen</span><span><i style="background:var(--ink);opacity:.4"></i>Grenze: meiste FPS je Preis</span><span>blass: Preis nicht belegt</span></div>
   <p class="subline">Je weiter links oben, desto mehr Leistung pro Euro. Laptops haben Bildschirm und Akku dabei, Desktops brauchen noch einen Monitor.</p>`;
   $("#dSysPlot").innerHTML=o;
 }
@@ -2053,9 +2129,9 @@ function renderRank(parts,total){
   const myIdx=rows.findIndex(r=>r.x.kind==="me");
   const shown=rows.slice(0,12);if(myIdx>=12)shown.push(rows[myIdx]);
   $("#dRank").innerHTML=`<div class="rk-leg">${W.map(c=>`<span><i style="background:${c[3]}"></i>${esc(c[0])} ${Math.round(c[1]/sum*100)} %</span>`).join("")}</div>
-  <div class="rank">${shown.map(r=>{const i=rows.indexOf(r);return `<div class="rk${r.x.kind==="me"?" me":""}"><span class="n">${i+1}</span><span class="nm">${esc(r.x.name)}<small>${esc({me:"Selbstbau",pre:"Fertig-PC",lap:"Laptop"}[r.x.kind])} · ${eur(r.x.price)} · ${r.x.fps} FPS${r.x.chk?"":" · Preis unbelegt"}</small></span>
+  <div class="rank">${shown.map(r=>{const i=rows.indexOf(r);return `<div class="rk${r.x.kind==="me"?" me":""}"><span class="n">${i+1}</span><span class="nm">${esc(r.x.name)}<small>${esc({me:"Selbstbau",pre:"Fertig-PC",lap:"Laptop",con:"Konsole"}[r.x.kind])} · ${eur(r.x.price)} · ${r.x.fps} FPS${r.x.chk?"":" · Preis unbelegt"}</small></span>
     <span class="bar" data-tip="${esc(r.segs.map(sg=>sg.c[0]+" "+Math.round(sg.v)).join(" · "))}">${r.segs.map(sg=>`<span class="rk-seg" style="width:${sg.v}%;background:${sg.c[3]}"></span>`).join("")}</span><span class="sc">${r.score}</span></div>`;}).join("")}</div>
-  <p class="subline">Punkte von 0 bis 100. Gewichte folgen dem Gaming/Kreativ-Regler (mehr Kreativ = mehr Multi-Core). Aufrüstbarkeit: Selbstbau 100, Fertig-PC mit Standardteilen 65, mit Herstellerplatine 45, Laptop 15. Platz ${myIdx+1} von ${rows.length} für deinen PC.</p>`;
+  <p class="subline">Punkte von 0 bis 100. Gewichte folgen dem Gaming/Kreativ-Regler (mehr Kreativ = mehr Multi-Core). Aufrüstbarkeit: Selbstbau 100, Fertig-PC mit Standardteilen 65, mit Herstellerplatine 45, Laptop 15, Konsole 0. Platz ${myIdx+1} von ${rows.length} für deinen PC.</p>`;
 }
 let preSel=null;
 function renderPreDetail(parts,total){
@@ -2088,6 +2164,113 @@ function renderPreDetail(parts,total){
    <p class="verdict-box">${verdict} ${src.priceNote?`<span class="subline">${esc(src.priceNote)}</span>`:""}</p>
    <div class="scroll"><table class="dd"><thead><tr><th>Merkmal</th><th>Dein Selbstbau</th><th>${esc(x.name)}</th><th>Fazit</th></tr></thead><tbody>${rows.join("")}</tbody></table></div>`;
 }
+
+/* ---------- Aufrüst-Berater ----------
+   Ältere Teile: Gaming-Index auf derselben Skala (RTX 5080 = 105, 9800X3D = 100), Multi-Core (9950X = 100). Schätzwerte aus Testvergleichen. */
+const OLD_CPU=[
+ {id:"o-i5-10400f",name:"Intel Core i5-10400F",socket:"LGA1200",ram:"DDR4",g:45,m:20,power:65},
+ {id:"o-i7-10700k",name:"Intel Core i7-10700K",socket:"LGA1200",ram:"DDR4",g:55,m:33,power:125},
+ {id:"o-r5-3600",name:"AMD Ryzen 5 3600",socket:"AM4",ram:"DDR4",g:50,m:22,power:88},
+ {id:"o-r5-5600",name:"AMD Ryzen 5 5600 / 5600X",socket:"AM4",ram:"DDR4",g:64,m:29,power:76},
+ {id:"o-r7-5700x",name:"AMD Ryzen 7 5700X",socket:"AM4",ram:"DDR4",g:62,m:38,power:76},
+ {id:"o-r7-5800x3d",name:"AMD Ryzen 7 5800X3D",socket:"AM4",ram:"DDR4",g:80,m:37,power:105},
+ {id:"o-i5-12400f",name:"Intel Core i5-12400F",socket:"LGA1700",ram:"DDR4/DDR5",g:62,m:28,power:65},
+ {id:"o-i5-13600k",name:"Intel Core i5-13600K",socket:"LGA1700",ram:"DDR4/DDR5",g:80,m:58,power:181},
+ {id:"o-i7-14700k",name:"Intel Core i7-14700K",socket:"LGA1700",ram:"DDR4/DDR5",g:86,m:78,power:253},
+ {id:"o-r7-7700x",name:"AMD Ryzen 7 7700X",socket:"AM5",ram:"DDR5",g:82,m:48,power:142}
+];
+const OLD_GPU=[
+ {id:"o-gtx1060",name:"GTX 1060 6 GB",g:14,vram:6,power:120},{id:"o-gtx1660s",name:"GTX 1660 Super",g:20,vram:6,power:125},
+ {id:"o-rtx2060",name:"RTX 2060",g:26,vram:6,power:160},{id:"o-rtx2070s",name:"RTX 2070 Super",g:33,vram:8,power:215},
+ {id:"o-rtx3060",name:"RTX 3060 12 GB",g:34,vram:12,power:170},{id:"o-rtx3060ti",name:"RTX 3060 Ti",g:42,vram:8,power:200},
+ {id:"o-rtx3070",name:"RTX 3070",g:47,vram:8,power:220},{id:"o-rtx3080",name:"RTX 3080 10 GB",g:62,vram:10,power:320},
+ {id:"o-rtx4060",name:"RTX 4060",g:40,vram:8,power:115},{id:"o-rtx4060ti",name:"RTX 4060 Ti 8 GB",g:46,vram:8,power:160},
+ {id:"o-rtx4070",name:"RTX 4070",g:60,vram:12,power:200},{id:"o-rtx4070s",name:"RTX 4070 Super",g:70,vram:12,power:220},
+ {id:"o-rtx4070tis",name:"RTX 4070 Ti Super",g:84,vram:16,power:285},{id:"o-rtx4080",name:"RTX 4080",g:93,vram:16,power:320},
+ {id:"o-rtx4090",name:"RTX 4090",g:115,vram:24,power:450},{id:"o-rx6600",name:"RX 6600",g:30,vram:8,power:132},
+ {id:"o-rx6700xt",name:"RX 6700 XT",g:41,vram:12,power:230},{id:"o-rx6800xt",name:"RX 6800 XT",g:60,vram:16,power:300},
+ {id:"o-rx7600",name:"RX 7600",g:34,vram:8,power:165},{id:"o-rx7800xt",name:"RX 7800 XT",g:63,vram:16,power:263},
+ {id:"o-rx7900xtx",name:"RX 7900 XTX",g:92,vram:24,power:355}
+];
+let upInit=false;
+function upOpts(){
+  if(upInit)return;upInit=true;
+  const cpus=OLD_CPU.map(c=>[c.id,c.name+" ("+c.socket+")"]).concat(DB.cpu.filter(c=>!c.eol).map(c=>[c.id,c.name+" ("+c.socket+")"]));
+  const gpus=OLD_GPU.map(g=>[g.id,g.name]).concat(DB.gpu.filter(g=>!g.none&&!g.of).map(g=>[g.id,g.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,"")]));
+  $("#upCpu").innerHTML=cpus.map(([v,t])=>`<option value="${v}"${v==="o-r5-5600"?" selected":""}>${esc(t)}</option>`).join("");
+  $("#upGpu").innerHTML=gpus.map(([v,t])=>`<option value="${v}"${v==="o-rtx3060"?" selected":""}>${esc(t)}</option>`).join("");
+  $("#upRes").innerHTML=RES.map((r,i)=>`<option value="${i}"${i===1?" selected":""}>${esc(r.label)}</option>`).join("");
+}
+function renderUp(){
+  upOpts();
+  const oc=OLD_CPU.find(c=>c.id===$("#upCpu").value)||get("cpu",$("#upCpu").value);
+  const og=OLD_GPU.find(g=>g.id===$("#upGpu").value)||get("gpu",$("#upGpu").value);
+  const [ramGb,ramT]=$("#upRam").value.split(":"),psuW=+$("#upPsu").value,ri=+$("#upRes").value,bud=parseFloat($("#upBudget").value)||Infinity;
+  if(!oc||!og){$("#upOut").innerHTML="";return;}
+  const ocRam=oc.ram||"DDR5";
+  const fps=(g,cg)=>Math.round(Math.min(g*RES[ri].f,cg*CPU_FPS));
+  const now=fps(og.g,oc.g),gpuLim=og.g*RES[ri].f<oc.g*CPU_FPS;
+  const needW=(cpuP,gpuP)=>Math.ceil((cpuP+gpuP+75)*1.3/50)*50;
+  const psuFor=w=>DB.psu.filter(x=>!x.eol&&x.form==="ATX"&&x.watt>=w).sort((a,b)=>a.price-b.price)[0];
+  const chipPrice=g=>Math.min(g.price,...DB.gpu.filter(x=>x.of===g.id).map(x=>x.price));
+  const cheapestRam=t=>DB.ram.filter(x=>!x.eol&&x.type==="DDR5"&&x.cap>=Math.max(32,+ramGb)).sort((a,b)=>a.price-b.price)[0];
+  const opts=[];
+  // A) nur Grafikkarte
+  DB.gpu.filter(g=>!g.none&&!g.of&&!g.eol&&g.g>og.g*1.08).forEach(g=>{
+    const nf=fps(g.g,oc.g),need=needW(oc.power||150,g.power);let cost=chipPrice(g);const notes=[];
+    let psuN=null;if(psuW<Math.max(need,g.rec||0)){psuN=psuFor(Math.max(need,g.rec||0));if(psuN){cost+=psuN.price;notes.push(`neues Netzteil ${psuN.name} (${eur(psuN.price)})`);}}
+    if(g.conn==="12V-2x6"&&!psuN)notes.push("12V-2x6-Adapter der Karte nutzen");
+    if(nf<g.g*RES[ri].f*0.85)notes.push("Prozessor bremst die neue Karte");
+    opts.push({kind:"GPU",what:g.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""),cost,nf,notes,mc:oc.m});});
+  // B) Prozessor/Plattform
+  DB.cpu.filter(c=>!c.eol&&c.g>oc.g*1.08).forEach(c=>{
+    let cost=c.price;const notes=[];const same=c.socket===oc.socket;
+    if(!same){const pc=platformCost(c);if(!isFinite(pc))return;cost+=pc;notes.push(`neues ${c.socket}-Mainboard (ab ${eur(pc)})`);}
+    if(!same&&(ocRam!=="DDR5"&&!(ocRam.includes("DDR5")&&ramT==="DDR5")||ramT!=="DDR5")){const r=cheapestRam();if(r){cost+=r.price;notes.push(`DDR5-RAM ${r.name} (${eur(r.price)})`);}}
+    if(same)notes.push("passt in dein Mainboard (vorher BIOS aktualisieren)");
+    if(!c.box)notes.push("Kühler nötig, falls der alte nicht passt");
+    const nf=fps(og.g,c.g);
+    opts.push({kind:"CPU",what:c.name.replace(/^(AMD|Intel) /,""),cost,nf,notes,mc:c.m});});
+  // C) beides: beste GPU-Option + beste CPU-Option kombiniert
+  const vf=o=>(o.nf-now)/Math.max(50,o.cost);
+  const bg=opts.filter(o=>o.kind==="GPU"&&o.cost<=bud).sort((a,b)=>vf(b)-vf(a))[0],bc=opts.filter(o=>o.kind==="CPU"&&o.cost<=bud).sort((a,b)=>vf(b)-vf(a))[0];
+  if(bg&&bc){const g=DB.gpu.find(x=>x.name.endsWith(bg.what)||x.name.includes(bg.what)),c=DB.cpu.find(x=>x.name.includes(bc.what));
+    if(g&&c){const nf=fps(g.g,c.g);opts.push({kind:"Beides",what:bc.what+" + "+bg.what,cost:bg.cost+bc.cost,nf,notes:["Plattform und Grafikkarte zusammen",...bc.notes.filter(n=>!/Kühler/.test(n))],mc:c.m});}}
+  const list=opts.filter(o=>o.cost<=bud&&o.nf>now).sort((a,b)=>vf(b)-vf(a)).slice(0,10);
+  $("#upSub").textContent=`jetzt ca. ${now} FPS in ${RES[ri].label} (AAA)`;
+  const lim=gpuLim?`Deine <b>Grafikkarte</b> begrenzt (${og.name}). Ein Grafikkarten-Upgrade bringt am meisten.`:`Dein <b>Prozessor</b> begrenzt (${oc.name}). Eine stärkere Grafikkarte allein bringt wenig.`;
+  $("#upOut").innerHTML=`<p class="verdict-box">${lim} ${ramT==="DDR4"||ocRam==="DDR4"?"Neue Plattformen (AM5, LGA1851) brauchen DDR5-RAM; das ist eingerechnet.":""}</p>
+   ${list.length?`<div class="scroll"><table class="dd"><thead><tr><th>#</th><th>Upgrade</th><th>Kosten</th><th>FPS danach</th><th>pro 100 €</th><th>Hinweise</th></tr></thead><tbody>
+   ${list.map((o,i)=>`<tr><td>${i+1}</td><td><span class="ukind k-${o.kind==="GPU"?"g":o.kind==="CPU"?"c":"b"}">${esc(o.kind)}</span> <b>${esc(o.what)}</b></td><td class="v">${eur(o.cost)}</td><td class="v"><b>${o.nf}</b> <span class="delta-pos">+${Math.round((o.nf/Math.max(1,now)-1)*100)} %</span></td><td class="v">+${Math.round((o.nf-now)/o.cost*100*10)/10} FPS</td><td><small class="subline">${esc(o.notes.join(" · ")||"–")}</small></td></tr>`).join("")}</tbody></table></div>`:`<p class="subline">Im gewählten Budget gibt es kein Upgrade, das spürbar mehr FPS bringt.</p>`}
+   <p class="subline">Preise der günstigsten Modelle im Katalog (Stand 14.11.2026). Für ältere Teile sind Leistungswerte geschätzt. Verkaufserlös alter Teile ist nicht eingerechnet. „Beides“ kombiniert die jeweils besten Einzel-Upgrades.</p>`;
+}
+
+/* ---------- Einkauf und Teilen ---------- */
+const gzUrl=p=>"https://geizhals.de/?fs="+encodeURIComponent(p.name.replace(/\s*\([^)]*\)/g,""));
+const pcghUrl=p=>"https://preisvergleich.pcgameshardware.de/?fs="+encodeURIComponent(p.name.replace(/\s*\([^)]*\)/g,""));
+function renderShop(parts){
+  let total=0;const rows=CATS.filter(c=>parts[c.k]&&parts[c.k].price>0).map(c=>{const x=parts[c.k];total+=x.price;return {c,x};});
+  $("#shopSub").textContent=`${rows.length} Teile · ${eur(total)} · ${ageText()}`;
+  $("#shopOut").innerHTML=`<div class="scroll"><table class="dd"><thead><tr><th>Bauteil</th><th>Modell</th><th>Preis</th><th>Kaufen und Preisalarm</th></tr></thead><tbody>
+   ${rows.map(({c,x})=>`<tr><td>${icon(c.k,"sm")} ${esc(c.label)}</td><td><b>${esc(x.name)}</b>${x.chk?"":' <span class="tag">Schätzpreis</span>'}</td><td class="v">${eur(x.price)}</td><td><a href="${gzUrl(x)}" target="_blank" rel="noopener">Geizhals ↗</a> · <a href="${pcghUrl(x)}" target="_blank" rel="noopener">PCGH-Preisvergleich ↗</a></td></tr>`).join("")}
+   <tr class="sum"><td colspan="2">Summe</td><td class="v">${eur(total)}</td><td></td></tr></tbody></table></div>
+   <div class="row-btns" style="margin-top:10px"><button type="button" class="btn primary" data-act="copyShop">Einkaufsliste mit Links kopieren</button><button type="button" class="btn" data-act="shareLink">Link zur Konfiguration</button></div>
+   <span class="toast" id="shopToast" role="status" aria-live="polite"></span><textarea id="shopFallback" hidden readonly aria-label="Einkaufsliste"></textarea>
+   <p class="subline">So kaufst du am günstigsten: Auf Geizhals zeigt jedes Teil den günstigsten Shop. Mit „Merken“ landen alle Teile in einer Wunschliste; dort berechnet Geizhals, bei welchen Shops die Summe inklusive Versand am niedrigsten ist. Über die Glocke auf der Produktseite lässt sich ein Preisalarm setzen. Die Werkbank selbst hat keine Live-Preise; die Beträge hier stammen vom 14.11.2026.</p>`;
+}
+function shopText(parts){
+  let t=0;const L=CATS.filter(c=>parts[c.k]&&parts[c.k].price>0).map(c=>{const x=parts[c.k];t+=x.price;return `${c.label}: ${x.name} – ${eur(x.price)}\n  ${gzUrl(x)}`;});
+  return `PC-Werkbank Einkaufsliste (Preise vom 14.11.2026)\n\n${L.join("\n")}\n\nSumme: ${eur(t)}`;
+}
+function shareUrl(){const base=location.href.split("#")[0];return base+"#cfg="+encodeURIComponent(encodeCfg(snapshot()));}
+function importFromHash(){
+  const h=location.hash||"";if(!h.startsWith("#cfg="))return;
+  const o=decodeCfg(decodeURIComponent(h.slice(5)));if(!o)return;
+  try{doSave("Gesichert vor geteiltem Link "+new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));}catch(e){}
+  applySnapshot(o);
+  try{history.replaceState(null,"",location.href.split("#")[0]);}catch(e){}
+  setTimeout(()=>flash("#heroToast","Konfiguration aus dem Link geladen. Deine vorige ist unter „Speichern / Laden“ gesichert."),300);
+}
 let devF={pre:"near",lap:"near"};
 function winAdd(parts){return parts.os?0:get("os","win11-pro").price;}
 function winNote(parts,total){return parts.os?`${eur(total)} inkl. ${parts.os.ed==="Linux"?"Linux":"Windows "+parts.os.ed}`:`${eur(total)} Teile + ${eur(winAdd(parts))} Windows 11 Pro`;}
@@ -2111,6 +2294,10 @@ function renderLaptops(parts,total){
     const diff=best.price-dPrice;
     verdict=`<p class="verdict"><b>Am nächsten dran: ${esc(best.name)}</b> mit ${esc(best.gpu)}. Er erreicht etwa <b>${Math.round(best.g/dG*100)} %</b> der Spieleleistung deines Desktops und kostet ${diff>=0?"<b>"+eur(diff)+" mehr</b>":"<b>"+eur(-diff)+" weniger</b>"} (inklusive Bildschirm und Windows). ${best.g<dG*0.95?"Volle Desktop-Leistung erreicht kein Laptop dieser Preisklasse; Laptop-GPUs laufen mit 150–175 W statt 300 W und mehr.":""}</p>`;
   }else verdict=`<p class="verdict">Wähle eine Grafikkarte, um einen passenden Laptop zu finden.</p>`;
+  const conHtml=`<h3 class="kh3">Gegen Konsolen</h3><div class="scroll"><table class="ctable"><thead><tr><th>Konsole</th><th>Ausstattung</th><th>Grafik-Rohleistung</th><th class="num">Preis</th></tr></thead><tbody>
+   ${CONSOLES.map(c=>`<tr><td><b>${esc(c.name)}</b><br><a href="${c.link}" target="_blank" rel="noopener" style="font-size:12px">Preis prüfen ↗</a></td><td>${esc(c.gpu)}<br><small class="subline">${esc(c.ram)} · ${esc(c.ssd)} SSD</small></td><td><span class="num">${c.g}</span>${dG?` <small>${Math.round(c.g/dG*100)} % deiner Grafik</small>`:""}<div class="mini"><span style="width:${Math.min(100,c.g/Math.max(dG,c.g)*100)}%"></span></div></td><td class="num"><b>${eur(c.price)}</b><br><small class="subline">ohne Monitor, Spiele teurer, Online-Abo für Mehrspieler</small></td></tr>`).join("")}</tbody></table></div>
+   <p class="subline">Konsolen sind 2026 wegen der Speicherkrise deutlich teurer geworden. Sie rendern meist in niedrigerer Auflösung mit Upscaling (PSSR, FSR) und fester Bildrate (30/60 FPS); die Rohleistung ist eine Schätzung auf derselben Skala wie die PC-Grafikkarten.</p>`;
+  setTimeout(()=>{const d=$("#dLaptop");if(d&&!d.querySelector(".con-h"))d.insertAdjacentHTML("beforeend",`<div class="con-h">${conHtml}</div>`);},0);
   $("#dLaptop").innerHTML=verdict+devChips("lap")+`<div class="scroll"><table class="ctable"><thead><tr><th>Gerät</th><th>Prozessor / Grafik</th><th>Spiele</th><th>Multi-Core</th><th>Gewicht</th><th>Strom</th><th class="num">Preis</th></tr></thead><tbody>
    ${rows.map(r=>`<tr class="${r.me?"me":best&&r.id===best.id?"best":""}"><td><b>${esc(r.name)}</b><br><small class="subline">${esc(r.cls)}${r.display?" · "+esc(r.display):""}</small>${r.link?`<br><a href="${r.link}" target="_blank" rel="noopener" style="font-size:12px">Preis prüfen ↗</a>`:""}</td>
    <td>${esc(r.cpu)}<br><small class="subline">${esc(r.gpu)}${r.ram?" · "+esc(r.ram)+" RAM · "+esc(r.ssd):""}</small></td>
@@ -2144,7 +2331,7 @@ function renderSteps(parts){
     <p class="subline">FPS-Änderung bei deiner Auflösung. Beim Prozessor zählt die Mischung aus Spiele- und Multi-Core-Leistung nach dem Gaming/Kreativ-Regler.</p>`:`<p class="subline">Wähle Grafikkarte und Prozessor, um Alternativen zu sehen.</p>`;
 }
 function renderView(){
-  const map={konfig:"viewKonfig",dash:"viewDash",ov:"viewOv",cmp:"viewCmp"},tabs={konfig:"tab-konfig",dash:"tab-dash",ov:"tab-ov",cmp:"tab-cmp"};
+  const map={konfig:"viewKonfig",dash:"viewDash",ov:"viewOv",cmp:"viewCmp",up:"viewUp"},tabs={konfig:"tab-konfig",dash:"tab-dash",ov:"tab-ov",cmp:"tab-cmp",up:"tab-up"};
   for(const k in map){$("#"+map[k]).hidden=state.view!==k;$("#"+tabs[k]).setAttribute("aria-selected",String(state.view===k));}
 }
 
@@ -2244,7 +2431,7 @@ function prosCons(cat,p,parts){
 }
 function briefHtml(cat,p,parts){
   const rows=specRows(cat,p),pc=prosCons(cat,p,parts),key=cat+":"+p.id;
-  const src=p.chk?"Preis geprüft zwischen 9. und 14.11.2026 (Geizhals-Daten bzw. Preisvergleich)":"Preis ist eine Schätzung, vor dem Kauf prüfen";
+  const src=(p.chk?"Preis geprüft zwischen 9. und 14.11.2026 (Geizhals-Daten bzw. Preisvergleich)":"Preis ist eine Schätzung, vor dem Kauf prüfen")+(priceAge()>7?` · ${ageText()}, aktuellen Preis über „Preis prüfen“ ansehen`:"");
   return `<details class="brief" data-brief="${esc(key)}"${openBriefs.has(key)?" open":""}><summary>Steckbrief</summary><div class="brief-body">
     <div><h4>Technische Daten</h4><table class="kvt">${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(String(r[1]))}</td></tr>`).join("")}<tr><td>Preis</td><td>${eur(p.price)}</td></tr><tr><td>Klasse</td><td>${p.tier||"–"} von 5</td></tr></table></div>
     <div><h4>Stärken und Schwächen</h4><ul class="pc">${pc.P.map(x=>`<li class="p"><span>${esc(x)}</span></li>`).join("")}${pc.C.map(x=>`<li class="c"><span>${esc(x)}</span></li>`).join("")}${pc.N.map(x=>`<li class="n"><span>${esc(x)}</span></li>`).join("")}</ul>
@@ -2292,7 +2479,7 @@ function cmpCols(cat){
 }
 let cmpPL=new Map(),cmpPick=[];
 function renderCompare(parts){
-  $("#cChips").innerHTML=CATS.map(c=>`<button type="button" class="chip" data-cmpcat="${c.k}" aria-pressed="${c.k===cmpCat}">${icon(c.k,"sm")}${esc(c.label)}</button>`).join("");
+  $("#cChips").innerHTML=CATS.filter(c=>c.k!=="ssd2").map(c=>`<button type="button" class="chip" data-cmpcat="${c.k}" aria-pressed="${c.k===cmpCat}">${icon(c.k,"sm")}${esc(c.label)}</button>`).join("");
   const cat=cmpCat,cur=state.picks[cat]&&state.picks[cat].id;
   const ctx=Object.assign({},parts);delete ctx[cat];
   const onlyOk=$("#cOnlyOk").checked;
@@ -2388,6 +2575,9 @@ function scatterSvg(pts,cur,cat){
 }
 document.addEventListener("click",e=>{
   const ps=e.target.closest("[data-presel]");if(ps&&!e.target.closest("a")){preSel=ps.dataset.presel;renderPreDetail(resolve(state.picks),Object.values(resolve(state.picks)).reduce((a,c)=>a+c.price,0));const d=$("#dPreDetail");if(d)d.scrollIntoView({behavior:"smooth",block:"nearest"});return;}
+  const bgb=e.target.closest("[data-bg]");if(bgb){bgIdx=+bgb.dataset.bg;const ps=resolve(state.picks);renderBuild(ps,checkAll(ps,state.profile));return;}
+  const gu=e.target.closest("[data-gups]");if(gu){gameUps=gu.dataset.gups;render();return;}
+  const gf=e.target.closest("[data-gfg]");if(gf){gameFG=!gameFG;render();return;}
   const df=e.target.closest("[data-devf]");if(df){devF[df.dataset.devf]=df.dataset.v;render();return;}
   const f=e.target.closest("[data-cmpf]");if(f){const set=cmpF[f.dataset.cmpf],v=f.dataset.v;if(set.has(v))set.delete(v);else set.add(v);render();return;}
   const c=e.target.closest("[data-cmpcat]");if(c){cmpCat=c.dataset.cmpcat;cmpPick=[];cmpF={brand:new Set(),maker:new Set()};cmpSort={k:"perf",dir:-1};const cols=cmpCols(cmpCat);cmpSort.k=(cols.find(x=>["g","m","cap","watt"].includes(x[0]))||cols[cols.length-1])[0];render();return;}
@@ -2436,12 +2626,11 @@ function renderKInfo(parts,issues){
   ].join("");
   // Spiele und Anwendungen kompakt
   const e=appEstimates(parts),ri=p.res;
-  $("#kFpsSub").textContent="geschätzte FPS";
-  $("#kFps").innerHTML=`<table class="apps kapps"><thead><tr><th>Spiele</th>${RES.map((r,i)=>`<th style="text-align:center"${i===ri?' class="curh"':""}>${esc(r.label)}</th>`).join("")}</tr></thead><tbody>
-    ${e.games.map(g=>`<tr><td><b>${esc(g.name)}</b></td>${RES.map((r,i)=>{const v=Math.round(g.f(i));return `<td class="c${i===ri?" cur":""}"><span class="fps ${fpsCls(v)}">${v}</span></td>`;}).join("")}</tr>`).join("")}
+  $("#kFpsSub").textContent="geschätzte FPS je Spiel";
+  $("#kFps").innerHTML=gamesTable(parts,true).replace('class="apps games"','class="apps kapps games"').replace("</tbody></table>","")+`
     <tr class="grp"><td colspan="5">Anwendungen · Index</td></tr>
     ${e.apps.map(a=>`<tr><td><b>${esc(a.name)}</b></td><td colspan="4"><div class="ix" data-tip="${esc(a.txt+" · "+a.ref)}"><span class="num" style="min-width:30px;font-weight:700">${a.v}</span><div class="mini"><span style="width:${Math.min(100,a.v)}%"></span></div></div></td></tr>`).join("")}
-  </tbody></table><p class="subline">Umrandet: deine Auflösung. Richtwerte, keine Messungen; ausführlich im Dashboard.</p>`;
+  </tbody></table><p class="subline">Nativ, hohe Details. Umrandet: deine Auflösung. <sup>c</sup> CPU-begrenzt, <sup>!</sup> VRAM knapp. Alle 12 Spiele mit Upscaling im Dashboard.</p>`;
   // Stärken, Schwächen, Tipps
   const pc=prosConsAll(parts,issues);
   $("#kPros").innerHTML=pc.pros.slice(0,6).map(x=>`<li><span>${x}</span></li>`).join("")||"<li><span>Noch keine.</span></li>";
@@ -2459,6 +2648,36 @@ function renderKInfo(parts,issues){
   $("#kUp").innerHTML=(st.length?`<h3 class="kh3">Bestes Upgrade pro Euro</h3><div class="up">${st.map((x,i)=>`<span>${i+1}. ${esc(x.c.label)}: <b>${esc(x.o.name)}</b><br><small class="subline">${esc(benefitText(x.c.k,x.pt,x.o,parts))}</small></span><span class="delta-neg">+${eur(x.d)}</span><span></span><button type="button" class="btn" data-act="take" data-cat="${x.c.k}" data-id="${esc(x.o.id)}">Übernehmen</button>`).join("")}</div>`:`<p class="subline">Kein passendes Upgrade gefunden.</p>`)+
     (sv.length?`<h3 class="kh3">Sparen ohne Nachteile <span class="delta-pos">bis −${eur(svSum)}</span></h3><div class="up">${sv.map(x=>`<span>${esc(x.c.label)}: <b>${esc(x.p.name)}</b><br><small class="subline">statt ${esc(x.cur.name)} · ${esc(saveNote(x.c.k,x.cur,x.p,parts))}</small></span><span class="delta-pos">−${eur(x.cur.price-x.p.price)}</span><span></span><button type="button" class="btn" data-act="take" data-cat="${x.c.k}" data-id="${esc(x.p.id)}">Übernehmen</button>`).join("")}</div>`:`<h3 class="kh3">Sparen ohne Nachteile</h3><p class="subline">Deine Teile sind bereits die günstigsten gleichwertigen im Katalog.</p>`);
 }
+
+/* ---------- Bauanleitung ---------- */
+let bgIdx=0;
+function buildSteps(parts){
+  const {cpu,board,ram,ssd,cooler,psu,gpu,os}=parts,cs=parts["case"],ssd2=parts.ssd2,fans=parts.fans;
+  const amd=cpu&&cpu.socket==="AM5",aio=cooler&&cooler.kind==="aio",front=aio&&cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cooler.rad);
+  const S=[];const st=(cat,title,min,lines)=>S.push({cat,title,min,lines:lines.filter(Boolean)});
+  st("board","Vorbereiten",10,["Werkzeug: Kreuzschlitz-Schraubendreher PH2, Kabelbinder, Taschenlampe.","Vorher ein Heizkörperrohr oder das Gehäuse anfassen (statische Ladung ableiten), auf Holz- oder Tischplatte arbeiten, nicht auf Teppich.",board?`Mainboard ${board.name} auf den Karton legen, nicht auf die Antistatik-Folie.`:"Mainboard auf den Karton legen."]);
+  st("cpu","Prozessor einsetzen",5,[cpu?`${cpu.name} (${cpu.socket}).`:"",amd?"Hebel öffnen, Rahmen hochklappen, CPU so einlegen, dass das goldene Dreieck zur Dreieck-Markierung am Sockel zeigt. Ohne Druck einlegen, Hebel schließen; die Kunststoffkappe springt dabei ab.":"Hebel und Rahmen öffnen, CPU nach den Kerben ausrichten und einlegen. Beim Schließen des Hebels die Schutzkappe aufbewahren (Rückgabe des Boards nur mit Kappe).","Keine Pins berühren."]);
+  st("ram","Arbeitsspeicher einstecken",3,[ram?`${ram.name}, ${ram.modules} Module.`:"",ram&&ram.modules===2&&board&&board.slots===4?"Bei zwei Modulen die Plätze A2 und B2 nutzen (meist 2. und 4. Slot vom Prozessor aus, im Handbuch prüfen).":"","Riegel gerade hineindrücken, bis beide Verriegelungen hörbar einrasten.",ram&&ram.h>40&&cooler&&cooler.kind==="air"&&cooler.cap>=270?`Achtung: Der RAM ist ${ram.h} mm hoch, den vorderen Kühlerlüfter später etwas höher setzen.`:""]);
+  st("ssd","SSD einbauen",5,[ssd?`${ssd.name} in den obersten M.2-Platz${ssd.gen===5&&board&&board.gen5m2?" (PCIe 5.0, direkt am Prozessor)":""}.`:"",ssd2?`Zweites Laufwerk ${ssd2.name} in einen weiteren M.2-Platz.`:"","Schutzfolie am Kühlkörper des Boards abziehen, SSD schräg einstecken, flach drücken, mit Schraube oder Schnellverschluss sichern."]);
+  st("cooler",aio?"Wasserkühlung montieren":"CPU-Kühler montieren",15,[cooler?cooler.name+".":"",amd?"Bei AM5 die Original-Halteklammern des Boards nutzen bzw. laut Anleitung abschrauben und die Kühlerhalterung montieren.":"Rückplatte (Backplate) auf der Board-Rückseite anbringen.","Wärmeleitpaste: erbsengroßer Punkt in die Mitte, falls nicht schon aufgetragen. Schutzfolie am Kühlerboden abziehen!",aio?`Pumpe erst nach dem Board-Einbau aufsetzen; vorher den ${cooler.rad}-mm-Radiator ${front?"vorne":"oben"} im Gehäuse festschrauben${front?" (HDD-Käfig vorher ausbauen)":""}. Schläuche nicht knicken.`:"Kühler über Kreuz gleichmäßig anziehen; Luftrichtung: von vorne nach hinten (Lüfter-Pfeil beachten)."]);
+  st("case","Mainboard ins Gehäuse",15,[cs?cs.name+".":"","Abstandshalter prüfen: genau dort, wo das Board Löcher hat; keiner an anderer Stelle (Kurzschlussgefahr).","I/O-Blende einsetzen, falls sie nicht schon am Board sitzt. Board schräg einführen, Anschlüsse in die Blende, dann verschrauben."]);
+  st("psu","Netzteil einbauen und verkabeln",15,[psu?`${psu.name} (${psu.watt} W).`:"","Lüfter nach unten, wenn das Gehäuse unten Lufteinlass und Staubfilter hat.","24-Pin ans Mainboard, 8-Pin-CPU-Kabel (EPS) oben links"+(cpu&&cpu.power>=200?", bei dieser CPU beide EPS-Stecker belegen.":"."),psu&&psu.form==="SFX"&&cs&&cs.form==="ATX"?"SFX-Kabel sind kurz: das EPS-Kabel vor dem Board-Einbau verlegen.":""]);
+  st("gpu","Grafikkarte einsetzen",10,[gpu&&!gpu.none?`${gpu.name}${gpu.len?", "+gpu.len+" mm lang":""}.`:"Keine Grafikkarte: Monitor an den Mainboard-Ausgang anschließen.",gpu&&!gpu.none?"In den obersten PCIe-x16-Slot, passende Slotblenden entfernen, einrasten lassen und verschrauben.":"",gpu&&gpu.conn==="12V-2x6"?"12V-2x6-Stecker bis zum Anschlag einstecken (kein Spalt), Kabel die ersten 3–4 cm nicht seitlich knicken.":gpu&&!gpu.none?"8-Pin-Stromkabel: bei zwei Anschlüssen zwei getrennte Kabel vom Netzteil nutzen, keinen Y-Strang.":"",gpu&&gpu.len>=320?"Lange, schwere Karte: Stütze verwenden (liegt oft bei), damit der Slot nicht durchhängt.":"",cs&&cs.gpuCage&&gpu&&gpu.len>cs.gpuCage?"Vorher den HDD-Käfig ausbauen, sonst passt die Karte nicht.":""]);
+  st("fans","Lüfter und Front-Anschlüsse",15,["Front-Panel-Stecker (Power, Reset, LED) laut Handbuch an F_PANEL, USB 3 und USB-C vorne, Audio (HD_AUDIO).",aio?"Pumpe an AIO_PUMP bzw. PUMP_FAN, Radiator-Lüfter an CPU_FAN.":"Kühler-Lüfter an CPU_FAN.",fans?`Zusatzlüfter (${fans.name}): vorne ansaugend, hinten und oben ausblasend; ${fans.count>=3?"per Durchschleif-Stecker (PST) verbinden.":"an SYS_FAN."}`:"Gehäuselüfter an SYS_FAN bzw. CHA_FAN.","Kabel hinter dem Mainboard-Tray verlegen und bündeln."]);
+  st("board","Erster Start und BIOS",15,["Monitor an die Grafikkarte (nicht ans Mainboard) anschließen.",amd?"Der erste Start mit neuem RAM dauert bei AM5 1–3 Minuten (Speichertraining). Nicht abbrechen.":"",board&&/^(A620|B650)$/.test(board.chipset)&&cpu&&/9\d{3}/.test(cpu.name)?"Ryzen 9000 auf älterem Board: Startet nichts, zuerst per Flash-BIOS-Taste aktualisieren.":"Im BIOS auf die neueste Version aktualisieren (per USB-Stick, „EZ Flash“/„M-Flash“/„Q-Flash“).",ram?`${amd?"EXPO":"XMP"} aktivieren, sonst läuft der RAM nur mit DDR5-4800.`:"","Lüfterkurven einstellen (leise bis 60 °C)."]);
+  st("os","Betriebssystem installieren",40,[os?`${os.name}.`:"Betriebssystem fehlt noch: Windows 11 als System-Builder-Lizenz oder Linux unter „Zubehör und Software“.","USB-Stick mit mindestens 8 GB: Media Creation Tool (Windows) bzw. Ventoy oder Rufus (Linux).","Danach Chipsatz-Treiber vom Board-Hersteller und den Grafiktreiber (NVIDIA App bzw. AMD Software) installieren."]);
+  st("case","Testen",30,["Temperaturen prüfen (HWiNFO): CPU unter Last unter 90 °C, Grafikkarte unter 80 °C.","Stabilität: 15 Minuten Cinebench oder OCCT, RAM mit TestMem5 oder dem OCCT-Speichertest.","Läuft alles, Seitenteil schließen und Folien abziehen."]);
+  return S;
+}
+function renderBuild(parts,issues){
+  const S=buildSteps(parts);bgIdx=Math.max(0,Math.min(bgIdx,S.length-1));const c=S[bgIdx];
+  const total=S.reduce((a,x)=>a+x.min,0);
+  $("#bgSub").textContent=`${S.length} Schritte · ca. ${Math.round(total/60*2)/2} Stunden`;
+  $("#bgPc").innerHTML=realPcSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)),c.cat);
+  $("#bgBar").style.width=((bgIdx+1)/S.length*100)+"%";
+  $("#bgStep").innerHTML=`<div class="bg-now"><span class="eyebrow">Schritt ${bgIdx+1} von ${S.length} · ca. ${c.min} min</span><h3>${icon(c.cat,"")} ${esc(c.title)}</h3><ul>${c.lines.map(l=>`<li>${esc(l)}</li>`).join("")}</ul></div>`;
+  $("#bgList").innerHTML=S.map((x,i)=>`<li><button type="button" class="bg-li${i===bgIdx?" on":""}${i<bgIdx?" done":""}" data-bg="${i}">${esc(x.title)}</button></li>`).join("");
+}
 function renderOverview(parts,issues){
   let total=0;for(const c in parts)total+=parts[c].price;
   const p=P(),fps=parts.gpu||parts.cpu?buildFps(parts,p.res):0,loadW=estLoad(parts),noise=noiseInfo(parts);
@@ -2473,6 +2692,8 @@ function renderOverview(parts,issues){
   $("#oCase").textContent=parts["case"]?parts["case"].name:"";
   $("#oSchema").innerHTML=`<div class="pv-wrap">${realPcSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)))}</div><p class="subline">Maßstabsgetreue Seitenansicht durch die Glasseite (Rückseite links). Gehäusemaße sind Herstellerangaben, gerundet; Kühler- und Lüfterpositionen typisch. Bauteil anklicken zum Tauschen, Konflikte rot gestrichelt.</p>`;
   // Stärken / Schwächen gesammelt
+  renderBuild(parts,issues);
+  renderShop(parts);
   const {pros,cons}=prosConsAll(parts,issues);
   $("#oPros").innerHTML=pros.map(x=>`<li><span>${x}</span></li>`).join("")||"<li><span>Noch keine Teile gewählt.</span></li>";
   $("#oCons").innerHTML=cons.map(x=>`<li><span>${x}</span></li>`).join("")||"<li><span>Keine.</span></li>";
@@ -2502,13 +2723,13 @@ function fanFace(cx,cy,d){
   for(let i=0;i<7;i++){const a=i/7*Math.PI*2,r1=d*0.12,r2=d*0.42;s+=`<path class="bl" d="M ${cx+Math.cos(a)*r1} ${cy+Math.sin(a)*r1} Q ${cx+Math.cos(a+0.5)*r2*0.7} ${cy+Math.sin(a+0.5)*r2*0.7} ${cx+Math.cos(a+0.8)*r2} ${cy+Math.sin(a+0.8)*r2}"/>`;}
   return s+`<circle cx="${cx}" cy="${cy}" r="${d*0.12}" class="hub"/></g>`;
 }
-function realPcSvg(parts,errCats){
+function realPcSvg(parts,errCats,focusCat){
   const cs=parts["case"],b=parts.board,cpu=parts.cpu,cool=parts.cooler,gpu=parts.gpu,ram=parts.ram,ssd=parts.ssd,psu=parts.psu,fans=parts.fans;
   const hasG=gpu&&!gpu.none;
   const [D,H]=caseDims(cs);
   const form=b?b.form:(cs?cs.form:"ATX");
   const itx=form==="ITX",small=cs&&cs.form==="ITX";
-  const hot=(k,cls,focus=true)=>`class="${cls} sp${errCats&&errCats.has(k)?" err":""}" data-act="pick" data-cat="${k}"${focus?` tabindex="0" role="button" aria-label="${esc(CAT_LABEL[k])} ändern"`:' aria-hidden="true"'}`;
+  const hot=(k,cls,focus=true)=>`class="${cls} sp${errCats&&errCats.has(k)?" err":""}${focusCat&&(k===focusCat||(focusCat==="ssd"&&k==="ssd2"))?" focus":""}" data-act="pick" data-cat="${k}"${focus?` tabindex="0" role="button" aria-label="${esc(CAT_LABEL[k])} ändern"`:' aria-hidden="true"'}`;
   const tip=(k,t)=>` data-tip="${esc(CAT_LABEL[k]+": "+t+" – klicken zum Ändern")}"`;
   const sh=(n,len)=>n?(n.length>len?n.slice(0,len-1)+"…":n):"";
   const shroudH=small?0:Math.min(110,H*0.24);
@@ -2516,7 +2737,7 @@ function realPcSvg(parts,errCats){
   const topRadPlanned=cool&&cool.kind==="aio"&&!small&&!(cs&&cs.radFrontOnly&&cs.radFrontOnly.includes(cool.rad));
   const bx=small?Math.max(14,D*0.06):22,by=small?14:Math.max(26,Math.min(topRadPlanned?64:40,H-shroudH-bh-12));
   const PAD=26,VBW=D+PAD*2,VBH=H+PAD*2+52;
-  let s=`<svg class="pcview" viewBox="${-PAD} ${-PAD} ${VBW} ${VBH}" role="group" aria-label="Seitenansicht des PCs, maßstabsgetreu">
+  let s=`<svg class="pcview${focusCat?" has-focus":""}" viewBox="${-PAD} ${-PAD} ${VBW} ${VBH}" role="group" aria-label="Seitenansicht des PCs, maßstabsgetreu">
   <defs>
     <linearGradient id="pvGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".10"/><stop offset=".35" stop-color="#fff" stop-opacity=".02"/><stop offset=".36" stop-color="#fff" stop-opacity="0"/><stop offset="1" stop-color="#fff" stop-opacity=".05"/></linearGradient>
     <linearGradient id="pvMetal" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9d0d8"/><stop offset="1" stop-color="#7d8794"/></linearGradient>
@@ -2759,9 +2980,59 @@ function appEstimates(parts){
   return {games,apps};
 }
 function fpsCls(v){return v<30?"f0":v<60?"f1":v<120?"f2":"f3";}
+
+/* ---------- Bildraten je Spiel ----------
+   gf: Faktor zum AAA-Durchschnitt (Gaming-Index × Auflösungsfaktor), cf: Faktor auf die CPU-Grenze,
+   nv/amd: Hersteller-Tendenz, vram: empfohlener Grafikspeicher je Auflösung (FHD, WQHD, UWQHD, 4K) in GB, rt: Raytracing-Preset.
+   Schätzung aus veröffentlichten Benchmark-Verhältnissen (PCGH, ComputerBase, TechPowerUp), keine eigene Messung. */
+const GAMES=[
+ {id:"cs2",name:"Counter-Strike 2",genre:"eSports",gf:3.6,cf:2.6,nv:1,amd:1.02,vram:[4,4,6,6]},
+ {id:"fortnite",name:"Fortnite",genre:"Battle Royale, hohe Details",gf:1.55,cf:1.4,nv:1,amd:1,vram:[6,8,8,10]},
+ {id:"bf6",name:"Battlefield 6",genre:"Shooter",gf:1.3,cf:1.05,nv:0.98,amd:1.04,vram:[6,8,10,12]},
+ {id:"bg3",name:"Baldur's Gate 3",genre:"Rollenspiel",gf:1.25,cf:0.85,nv:1,amd:1,vram:[6,8,8,10]},
+ {id:"acs",name:"Assassin's Creed Shadows",genre:"Open World",gf:0.8,cf:0.9,nv:1,amd:1.03,vram:[8,10,12,12]},
+ {id:"mhw",name:"Monster Hunter Wilds",genre:"Open World, CPU-lastig",gf:0.85,cf:0.7,nv:1,amd:1.02,vram:[8,10,12,16]},
+ {id:"indy",name:"Indiana Jones und der Große Kreis",genre:"Action, viel VRAM",gf:1.0,cf:1.1,nv:1.02,amd:0.98,vram:[8,12,12,16]},
+ {id:"wukong",name:"Black Myth: Wukong",genre:"Action, Unreal Engine 5",gf:0.82,cf:1,nv:1.04,amd:0.95,vram:[8,10,10,12]},
+ {id:"cp77",name:"Cyberpunk 2077",genre:"Open World, ohne Raytracing",gf:0.95,cf:1,nv:1,amd:1,vram:[8,8,10,12]},
+ {id:"cp77rt",name:"Cyberpunk 2077 Raytracing Ultra",genre:"RT-Benchmark",gf:0.45,cf:0.95,nv:1.25,amd:0.75,vram:[8,10,12,14],rt:true},
+ {id:"aw2",name:"Alan Wake 2 Raytracing",genre:"RT, Path Tracing aus",gf:0.48,cf:1,nv:1.2,amd:0.78,vram:[8,10,12,14],rt:true},
+ {id:"msfs",name:"Flight Simulator 2024",genre:"Simulation, CPU-lastig",gf:0.75,cf:0.6,nv:1,amd:1,vram:[8,10,12,14]}
+];
+const UPS=[{k:"off",label:"Nativ"},{k:"q",label:"Upscaling Qualität"},{k:"p",label:"Upscaling Leistung"}];
+let gameUps="off",gameFG=false;
+function upsInfo(gpu){
+  if(!gpu||gpu.none)return {name:"FSR 3 (iGPU)",q:1.3,p:1.6,fg:1.6};
+  if(gpu.brand==="NVIDIA"){const r50=/^rtx50/.test(gpu.of||gpu.id);return {name:r50?"DLSS 4":"DLSS",q:1.5,p:1.9,fg:1.8,mfg:r50};}
+  if(gpu.brand==="AMD")return /^rx9/.test(gpu.of||gpu.id)?{name:"FSR 4",q:1.45,p:1.85,fg:1.75}:{name:"FSR 3",q:1.4,p:1.75,fg:1.7};
+  return {name:"XeSS 2",q:1.4,p:1.75,fg:1.7};
+}
+function gameFps(gm,parts,ri,ups,fg){
+  const gpu=parts.gpu,cpu=parts.cpu,hasG=gpu&&!gpu.none;
+  const g=hasG?gpu.g:((cpu&&cpu.ig)||0);
+  const brand=hasG?(gpu.brand==="NVIDIA"?gm.nv:gpu.brand==="AMD"?gm.amd:Math.min(gm.amd,gm.nv)*0.95):0.9;
+  const u=upsInfo(gpu);
+  let gfps=g*RES[ri].f*gm.gf*brand*(ups==="q"?u.q:ups==="p"?u.p:1);
+  const vram=hasG?gpu.vram:4,need=gm.vram[ri];let vramLow=false;
+  if(vram<need){gfps*=vram<need*0.75?0.55:0.8;vramLow=true;}
+  const cap=cpu?cpu.g*CPU_FPS*gm.cf:Infinity;
+  let f=Math.min(gfps,cap);const cpuLim=cap<gfps;
+  if(fg&&hasG)f*=u.mfg?2.6:u.fg;
+  return {fps:Math.round(f),vramLow,cpuLim,ups:u};
+}
+function gamesTable(parts,compact){
+  const ri=P().res,u=upsInfo(parts.gpu);
+  const list=compact?GAMES.filter(g=>["cs2","fortnite","bf6","cp77","cp77rt","mhw"].includes(g.id)):GAMES;
+  const ctrl=compact?"":`<div class="fgroup g-ctrl" role="group" aria-label="Upscaling"><span>Upscaling (${esc(u.name)})</span>${UPS.map(o=>`<button type="button" class="chip sm" data-gups="${o.k}" aria-pressed="${gameUps===o.k}">${esc(o.label)}</button>`).join("")}
+    <button type="button" class="chip sm" data-gfg="1" aria-pressed="${gameFG}">${esc(u.mfg?"Multi Frame Generation 4×":"Frame Generation 2×")}</button></div>`;
+  return ctrl+`<table class="apps games"><thead><tr><th>Spiel</th>${RES.map((r,i)=>`<th style="text-align:center">${esc(r.label)}</th>`).join("")}</tr></thead><tbody>
+   ${list.map(gm=>`<tr><td><b>${esc(gm.name)}</b>${compact?"":`<br><small class="subline">${esc(gm.genre)}</small>`}</td>${RES.map((r,i)=>{const o=gameFps(gm,parts,i,compact?"off":gameUps,compact?false:gameFG);
+     return `<td class="c${i===ri?" cur":""}"><span class="fps ${fpsCls(o.fps)}" data-tip="${esc(gm.name+", "+r.label+": "+o.fps+" FPS"+(o.cpuLim?" · vom Prozessor begrenzt":"")+(o.vramLow?" · Grafikspeicher knapp, Texturen reduzieren":""))}">${o.fps}${o.vramLow?"<sup>!</sup>":""}${o.cpuLim?"<sup>c</sup>":""}</span></td>`;}).join("")}</tr>`).join("")}
+  </tbody></table>${compact?"":`<p class="subline">Hohe Details, Durchschnitts-FPS. <sup>c</sup> Prozessor begrenzt · <sup>!</sup> Grafikspeicher knapp. Frame Generation erhöht die angezeigte Bildrate, nicht die Reaktionszeit. Schätzung aus Benchmark-Verhältnissen, keine Messung; Patches und Treiber verschieben Werte.</p>`}`;
+}
 function renderApps(parts){
   const e=appEstimates(parts),ri=P().res;
-  $("#dApps").innerHTML=`<table class="apps"><thead><tr><th>Spieleklasse</th>${RES.map((r,i)=>`<th style="text-align:center">${esc(r.label)}<br><small style="font-weight:400">${esc(r.px)}</small></th>`).join("")}</tr></thead><tbody>
+  $("#dApps").innerHTML=`<h3 class="kh3" style="margin-top:0">Einzelne Spiele</h3>`+gamesTable(parts,false)+`<h3 class="kh3">Spieleklassen und Anwendungen</h3><table class="apps"><thead><tr><th>Spieleklasse</th>${RES.map((r,i)=>`<th style="text-align:center">${esc(r.label)}<br><small style="font-weight:400">${esc(r.px)}</small></th>`).join("")}</tr></thead><tbody>
     <tr class="grp"><td colspan="5">Spiele · geschätzte Bildrate in FPS</td></tr>
     ${e.games.map(g=>`<tr><td><b>${esc(g.name)}</b><br><small class="subline">${esc(g.ex)}</small></td>${RES.map((r,i)=>{const v=Math.round(g.f(i));return `<td class="c${i===ri?" cur":""}"><span class="fps ${fpsCls(v)}">${v}</span></td>`;}).join("")}</tr>`).join("")}
     <tr class="grp"><td colspan="5">Anwendungen · Leistungsindex</td></tr>
@@ -3128,6 +3399,11 @@ document.addEventListener("click",e=>{
     if(el.dataset.act==="hudGo"){const t=el.dataset.focus==="summary"?$("#summary .issues"):$("#hudWrap");const y=t.getBoundingClientRect().top+window.scrollY-(el.dataset.focus?$("#hudWrap").offsetHeight+12:0);window.scrollTo({top:Math.max(0,el.dataset.focus?y:Math.min(window.scrollY,y)),behavior:"smooth"});}
     return;}
   const act=el.dataset.act,cat=el.dataset.cat;
+  if(act==="bgNext"||act==="bgPrev"){bgIdx+=act==="bgNext"?1:-1;const ps=resolve(state.picks);renderBuild(ps,checkAll(ps,state.profile));return;}
+  if(act==="copyShop"){copyTextTo(shopText(resolve(state.picks)),"Einkaufsliste kopiert.","#shopToast",$("#shopFallback"));return;}
+  if(act==="shareLink"){const inShop=!!el.closest("#shopOut");const tid=inShop?"#shopToast":"#heroToast",fb=inShop?$("#shopFallback"):$("#heroFallback");
+    if(embedded){copyTextTo(encodeCfg(snapshot()),"Im eingebetteten Fenster gibt es keine teilbare Adresse: Konfigurations-Code kopiert (unter „Speichern / Laden“ einfügen).",tid,fb);}
+    else copyTextTo(shareUrl(),"Link kopiert. Wer ihn öffnet, sieht genau diese Konfiguration.",tid,fb);return;}
   if(act==="pick")openPicker(cat);
   if(act==="theme"){const d=document.documentElement,n=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=n;try{localStorage.setItem("pcwerkbank.theme",n);}catch(e){}render();return;}
   if(act==="cReset"){cmpF={brand:new Set(),maker:new Set()};$("#cMin").value="";$("#cMax").value="";$("#cQ").value="";render();return;}
@@ -3170,6 +3446,7 @@ document.addEventListener("pointerout",e=>{if(e.pointerType==="mouse"&&!e.relate
 document.addEventListener("click",e=>{const el=e.target.closest&&e.target.closest("[data-tip]");if(!el||el.closest("[data-act]"))hideTip();});
 document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("svg [data-act][tabindex]")){e.preventDefault();e.target.dispatchEvent(new MouseEvent("click",{bubbles:true}));}});
 $("#cOnlyOk").addEventListener("change",()=>render());
+["#upCpu","#upGpu","#upRam","#upPsu","#upRes"].forEach(id=>$(id).addEventListener("change",()=>renderUp()));$("#upBudget").addEventListener("input",()=>renderUp());
 document.addEventListener("change",e=>{if(e.target&&e.target.id==="preSel"){preSel=e.target.value;const ps=resolve(state.picks);renderPreDetail(ps,Object.values(ps).reduce((a,c)=>a+c.price,0));}
   if(e.target&&e.target.dataset&&e.target.dataset.cmppick){const id=e.target.dataset.cmppick;if(e.target.checked){cmpPick.push(id);if(cmpPick.length>3)cmpPick.shift();}else cmpPick=cmpPick.filter(x=>x!==id);render();}});
 ["#cMin","#cMax","#cQ"].forEach(id=>$(id).addEventListener("input",()=>render()));
@@ -3188,6 +3465,7 @@ document.addEventListener("input",e=>{
   else if(t.dataset&&t.dataset.param){state.params[t.dataset.param]=Number(t.value);save();render();}
 });
 if(!load())applyStart();else recompute();
+importFromHash();window.addEventListener("hashchange",importFromHash);
 renderSliders();render();
 })();
 </script>

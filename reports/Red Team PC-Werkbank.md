@@ -898,3 +898,203 @@ Empfehlungen (Einschätzung, nicht hart belegt):
   - Lenovo LOQ Tower Multi-Core 40.
 - **Nicht übernommen (unklar):** RTX-5050-Preis (nur 3 Angebote), Namenszusatz ATX 3.1 beim Seasonic GX-1200.
 - **Tests danach:** 108 Regler-Kombinationen ohne Konflikt oder Warnung, 7 Budget-Szenarien bestanden, Oberflächentests ohne JavaScript-Fehler.
+
+
+---
+
+# Runde 8 (14.11.2026): 17 neue Fertig-PCs
+
+## Red-Team-Prüfung 8: PREBUILT (17 Einträge), Stand 14.11.2026
+
+Quelle für alle Einträge sind die verlinkten PCGH-Preisvergleichsseiten (Geizhals-Daten), abgerufen am 14.11.2026 gegen 21:50 Uhr mit curl. Die Rohdaten liegen in `redteam8/dl/*.html`. Ausgewertet wurden Spec-Block, Angebotszahl („N Angebote inkl. Versand“) und alle Angebotszeilen mit Preis, Händler, Lieferstatus und Angebotstext.
+Lieferstatus nach Geizhals-Klasse: available = lagernd, shortly = kurzfristig lieferbar, unavailable = nicht lagernd bzw. Lieferzeit.
+
+## Grundbefund zu den 10 „Komplettsystem“-Einträgen (ks-*)
+- Alle zehn ks-Links sind Geizhals-**Sammelkategorien** vom Typ „Komplettsystem“. Festgelegt sind nur CPU, RAM-Größe und GPU. SSD und Betriebssystem stehen nicht im Spec-Block. Darunter sammeln sich 16 bis 307 Angebote vieler Shops und Systemhäuser mit unterschiedlicher Ausstattung (SSD 500 GB bis 3 TB, mit oder ohne Windows).
+- In mehreren Kategorien stehen Angebote, die **nicht passen**: RTX 5050 statt 5060, RX 9070 **GRE 12 GB** statt RX 9070 16 GB, RX 9070 XT, 16 GB statt 32 GB RAM. Der „ab“-Preis von Geizhals ist deshalb teils ein Fremdangebot.
+- **noOs:true ist überwiegend falsch.** Der größte Teil der Angebote nennt Windows 11 (z. B. 5500: 119 von 150, 5700X+5060: 259 von 307, 9800X3D+5090: 11 von 16). Der Code schlägt bei noOs eine Windows-Lizenz auf (`price+(x.noOs?win:0)`). Das rechnet Windows doppelt, wenn das günstigste Angebot es schon enthält.
+- Die günstigsten Treffer „PC - CSL Sprint NNNN“ (CSL-Computer.com) haben auf Geizhals keine Angaben zu GPU, SSD oder OS. csl-computer.com antwortet auf curl und WebFetch mit 403. Laut Websuche hat der Sprint 5877 (in ks-7800x3d-9070 gelistet) eine RX 9070 XT, gehört also nicht in die Kategorie. Diese Angebote sind daher UNKLAR.
+- **Empfehlung:** chk:false für alle zehn ks-Einträge, weil es keine konkreten Systeme sind und die Ausstattung stark schwankt. Falls sie bleiben sollen, die Werte unten einsetzen (günstigstes Angebot mit passender CPU, GPU und RAM).
+
+## Einzeltabellen
+
+### ks-5500-5060
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 150 Angebote | PCGH a3477028 | Sammelkat. → Empf. chk:false |
+| Preis | 999 | 999 (MIFCOM via Amazon „Auf Lager“; Xperion Styx bei MediaMarkt/Saturn, 2–3 WT) | dto. | OK |
+| CPU/GPU/RAM | 5500/5060/16 GB | passt | dto. | OK |
+| SSD | k. A. | 500 GB (beide 999-€-Angebote) | Angebotstext | FALSCH → 500 GB |
+| OS | noOs:true | Windows 11 Home enthalten (MIFCOM, Xperion) | Angebotstext | FALSCH |
+| g/cg/m | 50/55/30 | g OK. cg: Im eigenen CPU-Katalog hat der 8500G (Zen 4, 16 MB L3) cg 55. Der 5500 (Zen 3 Cezanne, 16 MB L3, PCIe 3.0) ist langsamer. m: CB-nT etwa 26–28 % eines 9950X | Schätzung | Empf.: cg ≈ 50, m ≈ 28 |
+
+### ks-5700x-5060
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 307 Angebote | PCGH a3477063 | Empf. chk:false |
+| Preis | 1119 | Das 1119-€-Angebot (kiebel InvaderXS V) hat **RTX 5050, 16 GB**. Erstes passendes Angebot: 1213 (CyberTitan VENOM, 32 GB, RTX 5060, 2–3 WT) | dto. | FALSCH → 1213 |
+| SSD | k. A. | 512 GB (1213-€-Angebot), 1 TB ab 1249 (CSL via Amazon) | dto. | FALSCH → 512 GB |
+| OS | noOs:true | Win 11 Pro enthalten | dto. | FALSCH |
+| g/cg/m | 50/62/38 | plausibel. m bei CB-nT ca. 36 | Schätzung | OK (Empf. m 36–38) |
+
+### ks-5700x-9060xt
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 44 Angebote | PCGH a3512954 | Empf. chk:false |
+| Preis | 1279 | 1279 (hmcw-deals via eBay, nicht lagernd, 3–7 WT). Das nächste ist 1349,99 (Revampix via Amazon, auf Lager, mit Win 11) | dto. | OK (Händler wenig bekannt; lieferbar erst +5,5 %) |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | 1279-Angebot ohne OS-Angabe; 38 von 44 Angeboten mit Windows | dto. | UNKLAR |
+| g/cg/m | 58/62/38 | passt zur Skala | – | OK |
+
+### ks-5700x-9070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 59 Angebote. Der Link-Slug „amd-ryzen-7-5700x-a3436697“ ist trotzdem die KS-Kategorie | PCGH a3436697 | Empf. chk:false |
+| Preis | 1549 | Alle Angebote von 1549 bis 1599 haben die **RX 9070 GRE 12 GB** (GameMachines, kiebel, Netto). Erste echte RX 9070 16 GB: 1599 (kiebel.de InvaderXS V, nicht lagernd); mit Win 11 und kurzfristig lieferbar: 1699 | dto. | FALSCH → 1599 |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | 1599: keine OS-Angabe; 1699: Windows 11 | dto. | UNKLAR |
+| g | 84 | korrekt für die RX 9070, aber der alte Preis gehörte zur GRE | – | (bei Preiskorrektur OK) |
+
+### ks-8700f-9070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 47 Angebote, keines lagernd | PCGH a3436946 | Empf. chk:false |
+| Preis | 1649 | 1649 = „PC - CSL Sprint 5789“ ohne Ausstattungsangabe (nicht prüfbar, CSL-Seite 403). Erstes verifiziertes RX-9070-Angebot: 1789 (CSL 94883/94884, 32 GB DDR5, 1000 GB, Win 11 Home, 5–6 WT) | dto. | UNKLAR → Empf. 1789 |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | Windows 11 Home enthalten (1789) | dto. | FALSCH |
+| g/cg/m | 84/64/42 | plausibel | – | OK |
+
+### orion3000-5060
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 1699 | 1699 notebooksbilliger.de, sofort ab Lager; 7 Angebote | PCGH a3663440 | OK |
+| Ausstattung | 265F/5060/32/1 TB | 265F, RTX 5060 8 GB Desktop, 32 GB DDR5-5600, 1 TB | Spec-Block | OK |
+| OS | (kein noOs) | Windows 11 Home | Spec-Block | OK |
+| g/cg/m | 50/78/82 | g OK. m 82 gegenüber 80 beim Core Ultra 7 265 in anderen Einträgen (gleicher Chip) | – | Empf.: einheitlich 80 |
+
+### ks-7800x3d-5070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 183 Angebote | PCGH a3427064 | Empf. chk:false |
+| Preis | 1899 | 1899 = „CSL Sprint 5807“ ohne Angaben (nicht prüfbar). Erstes verifiziertes Angebot: 2049 (x-kom G4M3R HERO R7-7800X3D 32GB 1TB RTX5070, sofort lieferbar) | dto. | UNKLAR → Empf. 2049 |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | 2049-Angebot ohne Win-Angabe (x-kom kennzeichnet Win-Varianten mit „/W11x“) | dto. | OK |
+| g/cg/m | 75/92/42 | entspricht dem eigenen CPU-Katalog | – | OK |
+
+### msi-trident-5070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 1999 | 1999 notebooksbilliger.de, sofort ab Lager; 11 Angebote | PCGH a3628785 | OK |
+| Ausstattung | 265F/5070/32/1 TB | 265F, RTX 5070 12 GB Desktop, 32 GB DDR5-5600, 1 TB | Spec-Block | OK |
+| OS | – | Windows 11 Home | Spec-Block | OK |
+| priceNote „ca. 10 l“ | ca. 10 l | Volumen 22,3 l (berechnet) | Spec-Block | FALSCH → „ca. 22 l“ |
+| g/cg/m | 75/78/82 | wie Orion | – | Empf. m 80 |
+
+### ks-7800x3d-9070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 98 Angebote. Viele Angebote mit RX 9070 GRE oder XT | PCGH a3436796 | Empf. chk:false |
+| Preis | 2049 | 2049 = „CSL Sprint 5770“ ohne Angaben (nicht prüfbar). Bis 2239 nur GRE-Angebote oder unbekannte. Erste verifizierte RX 9070 16 GB: 2249 (GameMachines View via Amazon, auf Lager, 1000 GB, Win 11) | dto. | UNKLAR → Empf. 2249 |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | Windows 11 enthalten (2249) | dto. | FALSCH |
+
+### ks-9800x3d-5070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 180 Angebote | PCGH a3427048 | Empf. chk:false |
+| Preis | 2179 | 2179 (x-kom G4M3R HERO 2.0 R7-9800X3D/32GB/1TB/RTX 5070, sofort lieferbar) | dto. | OK |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | ohne Windows (die Win-Variante „/W11x“ kostet 2259) | dto. | OK |
+
+### rog-nuc15-5070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 2280 | Bestpreis 2279,84 (geniuzcom.de, 3–5 WT, nicht lagernd). Lagernd in DE erst ab 2656,09 (Future-X), in AT ab 2637,32; 27 Angebote | PCGH a3540458 | OK (Bestpreis); Hinweis: lieferbar erst ab ca. 2656 (+16 %) |
+| GPU | RTX 5070 Laptop 8 GB | „RTX 5070 - 8GB GDDR7 - Mobile, 36SM, GB206“ | Spec-Block | OK |
+| Rest | 275HX/32/1 TB | 275HX, 32 GB DDR5-6400 SO-DIMM, 1 TB, Win 11 Home, 3 l | Spec-Block | OK |
+| g/cg/m | 50/82/85 | g OK, m plausibel. cg 82 liegt über dem 265K (80), obwohl der 275HX niedriger taktet (5,4 GHz), mobile TDP und SO-DIMM hat | Schätzung | Empf. cg ≈ 78 |
+
+### zotac-magnus-5070
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 2855 | 2855,11 (geniuzcom.de, nicht lagernd). Lagernd ab 2876,69 (Easynotebooks.de); 22 Angebote | PCGH a3595383 | OK |
+| Ausstattung | 265/5070/16 GB/1 TB | 265, RTX 5070 12 GB **Desktop**, 16 GB (1×16, 1 Slot frei), 1 TB, 8,5 l | Spec-Block | OK |
+| OS | „laut Variante prüfen“ | Windows 11 Home (Spec-Block und Mindfactory „WIN11HOME“) | Spec-Block | Empf.: priceNote „mit Windows 11 Home“ |
+
+### ks-9800x3d-5080
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 122 Angebote | PCGH a3403452 | Empf. chk:false |
+| Preis | 3179 | 3179 (CyberPowerPC UK via Amazon, auf Lager) | dto. | OK |
+| SSD | k. A. | 1 TB | dto. | FALSCH → 1 TB |
+| OS | noOs:true | Windows 11 enthalten. Ohne Windows erst ab 3329 (x-kom SMX) | dto. | FALSCH |
+
+### erazer-x30-5070ti
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 3299 | 3299 Cyberport und computeruniverse, sofort lieferbar; 6 Angebote | PCGH a3835242 | OK |
+| Ausstattung | 265/5070 Ti/32/2 TB | passt, Win 11 Home | Spec-Block | OK |
+| g/cg/m | 93/78/80 | OK | – | OK |
+
+### erazer-x30-5080
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 3459 | 3459 Cyberport und computeruniverse, sofort lieferbar; 6 Angebote | PCGH a3785032 | OK |
+| Ausstattung | 270K Plus/5080/32/2 TB | passt, Win 11 Home | Spec-Block | OK |
+| g/cg/m | 105/84/104 | entspricht dem CPU-Katalog (u7-270kp) | – | OK |
+
+### ks-9800x3d-5090
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Typ | Komplettsystem | Sammelkategorie, 16 Angebote | PCGH a3402917 | Empf. chk:false |
+| Preis | 9999 | 9999 (ARLT 3091253, lagernd) | dto. | OK |
+| SSD | k. A. | 2 TB | dto. | FALSCH → 2 TB |
+| OS | noOs:true | Win 11 Pro enthalten | dto. | FALSCH |
+
+### captiva-r89-514
+| Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|
+| Preis | 11499 | 11499 nur bei AT-Händlern (DiTech.at, e-tec.at), nicht lagernd. Günstigstes DE-Angebot: 11563,47 (NEXOC via Amazon, +0,6 %); 12 Angebote, keines lagernd | PCGH a3871323 | OK (±5 %); Lieferbarkeit nur kurzfristig |
+| Ausstattung | 9800X3D/5090/64/2 TB | passt, X870, DDR5-5200, Win 11 Home | Spec-Block | OK |
+
+## Korrekturliste (id, Feld, neuer Wert)
+| id | Feld | neuer Wert |
+|---|---|---|
+| ks-5500-5060 | ssd | "500 GB" |
+| ks-5500-5060 | noOs | entfernen (Win 11 Home enthalten) |
+| ks-5700x-5060 | price | 1213 (1119 = RTX 5050/16 GB) |
+| ks-5700x-5060 | ssd | "512 GB" |
+| ks-5700x-5060 | noOs | entfernen (Win 11 Pro) |
+| ks-5700x-9060xt | ssd | "1 TB" |
+| ks-5700x-9070 | price | 1599 (1549 = RX 9070 GRE) |
+| ks-5700x-9070 | ssd | "1 TB" |
+| ks-8700f-9070 | price | 1789 (1649 CSL Sprint unverifizierbar) |
+| ks-8700f-9070 | ssd / noOs | "1 TB" / entfernen |
+| ks-7800x3d-5070 | price | 2049 (1899 CSL Sprint unverifizierbar) |
+| ks-7800x3d-5070 | ssd | "1 TB" |
+| ks-7800x3d-9070 | price | 2249 (2049 CSL Sprint unverifizierbar, sonst GRE) |
+| ks-7800x3d-9070 | ssd / noOs | "1 TB" / entfernen |
+| ks-9800x3d-5070 | ssd | "1 TB" |
+| ks-9800x3d-5080 | ssd / noOs | "1 TB" / entfernen |
+| ks-9800x3d-5090 | ssd / noOs | "2 TB" / entfernen |
+| msi-trident-5070 | priceNote | „ca. 10 l“ → „ca. 22 l“ |
+| alle 10 ks-* | chk | false (Empfehlung: Sammelkategorie) |
+| ks-5500-5060 | cg / m | ≈50 / ≈28 (Empfehlung) |
+| orion3000-5060, msi-trident-5070 | m | 80 (Empfehlung, wie Core Ultra 7 265) |
+| rog-nuc15-5070 | cg | ≈78 (Empfehlung) |
+| rog-nuc15-5070 | priceNote | Hinweis: lagernd erst ab ca. 2656 € (Empfehlung) |
+| zotac-magnus-5070 | priceNote | „mit Windows 11 Home“ statt „laut Variante prüfen“ |
+
+## Umsetzung Runde 8
+- **Komplettsysteme (alle 10):**
+  - Als Sammelkategorie gekennzeichnet und nicht mehr als „Preis belegt“ geführt.
+  - SSD-Größen eingetragen.
+  - Windows-Angabe korrigiert (sechs enthalten Windows).
+  - Preise angepasst, wo das günstigste Angebot eine andere Grafikkarte hatte: 5700X + RTX 5060 jetzt 1.213 €, 5700X + RX 9070 jetzt 1.599 €; die CSL-Angebote ersetzt durch die nächsten geprüften (8700F + RX 9070 1.789 €, 7800X3D + RTX 5070 2.049 €, 7800X3D + RX 9070 2.249 €).
+  - Ryzen 5 5500: CPU-Spieleindex 50, Multi-Core 28.
+- **Einzelne Systeme:**
+  - Multi-Core für Core Ultra 7 265F auf 80 (Acer Predator Orion 3000, MSI Trident).
+  - MSI Trident mit 22 Litern Volumen.
+  - ASUS ROG NUC 15: CPU-Spieleindex 78, Hinweis „lagernd ab ca. 2.656 €“.
+  - Zotac Magnus One mit Windows 11 Home.
+- **Ohne Befund:** Acer Predator Orion 3000, Medion Erazer Hunter X30 (beide), Captiva Ultimate R89-514.

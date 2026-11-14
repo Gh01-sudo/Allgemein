@@ -41,6 +41,24 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 
 - **Mobil:** Auf dem Handy stehen die Bauteile direkt unter den Einstellungen, der Infobereich folgt danach in gekürzter Form.
 
+## Neu: Spiele, Aufrüsten, Bauen, Kaufen
+- **Bildraten je Spiel:** 12 Spiele (CS2, Fortnite, Battlefield 6, Baldur's Gate 3, Assassin's Creed Shadows, Monster Hunter Wilds, Indiana Jones, Black Myth: Wukong, Cyberpunk 2077 mit und ohne Raytracing, Alan Wake 2, Flight Simulator 2024) in vier Auflösungen. Upscaling Qualität/Leistung (DLSS 4, FSR 4, FSR 3, XeSS) und Frame Generation zuschaltbar; markiert, wenn der Prozessor begrenzt oder der Grafikspeicher knapp ist.
+- **Reiter „Aufrüsten“:** jetzigen Prozessor, Grafikkarte, RAM, Netzteil und Auflösung eingeben; der Berater sortiert Grafikkarten-, Prozessor- und kombinierte Upgrades nach FPS pro 100 € und rechnet neues Netzteil, Mainboard und DDR5-RAM ein, wenn nötig.
+- **Bauanleitung** (Übersicht): 12 Schritte passend zu deinen Teilen, z. B. AM5-Speichertraining, Radiator-Position, 12V-2x6, HDD-Käfig, EXPO/XMP; die Seitenansicht hebt das jeweilige Bauteil hervor.
+- **Einkauf** (Übersicht): alle Teile mit Geizhals- und PCGH-Links, Einkaufsliste zum Kopieren, Hinweis auf Wunschliste und Preisalarm.
+- **Teilen per Link:** „Link teilen“ erzeugt eine Adresse mit der ganzen Konfiguration. Beim Öffnen wird die vorige Konfiguration automatisch gesichert. Im eingebetteten Artifact-Fenster wird stattdessen der Konfigurations-Code kopiert.
+- **Zweite SSD** als optionales Laufwerk, mit Prüfung der M.2-Plätze.
+- **Konsolen** (PS5 Slim Digital, Xbox Series X, PS5 Pro) im Preis-FPS-Diagramm, im Ranking und als eigene Tabelle.
+- **Mehr Prüfungen:** RAM-Höhe unter Doppelturm-Kühlern, kurze SFX-Kabel in großen Gehäusen, Zahl der Lüfteranschlüsse, USB-C-Front bei Einsteiger-Boards, Radiator im Deckel bei hohem RAM.
+- **Preisalter:** Hero und Steckbriefe zeigen, wie alt die Preise sind, und warnen ab 7 bzw. 21 Tagen.
+
+## Tests
+`node pc-konfigurator/tests/run.js` prüft mit Playwright (Chromium):
+- Start ohne JavaScript-Fehler, alle Ansichten
+- 54 Regler-Kombinationen ohne Konflikt oder Warnung
+- alle Vergleiche, Aufrüst-Berater, Bauanleitung, Einkauf, zweite SSD, Speichern
+- Handy-Breite 390 px ohne horizontales Scrollen
+
 ## Speichern und Drucken
 - **Speichern / Laden:** beliebig viele benannte Konfigurationen im Browser speichern, laden, löschen (mit Rückfrage) und im Dashboard vergleichen.
 - **Konfigurations-Code** (beginnt mit `PCW1:`) zum Kopieren und auf einem anderen Gerät Einfügen; außerdem als JSON-Datei herunterladen und wieder öffnen.
@@ -65,7 +83,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
 - **Kostenverteilung als Ringdiagramm**, Preis-Leistungs-Diagramm mit gestrichelter Preis-Leistungs-Grenze.
-- **Gegen Fertig-PCs** (33 Systeme von 999 € bis 11.499 €: Komplettsysteme aus dem Preisvergleich, MSI MAG Infinite S3, MPG Infinite X3 und Trident, Lenovo LOQ Tower, Legion T5/T7/Tower 5i, HP Omen 16L/35L, Acer Nitro und Predator Orion, ASUS ROG G700 und ROG NUC, Zotac Magnus One, Medion Erazer Hunter X30, Captiva bis RTX 5090, Dubaro; Fazit nur mit belegten Preisen)
+- **Gegen Fertig-PCs** (33 Systeme von 999 € bis 11.499 €: Komplettsysteme aus Geizhals-Sammelkategorien (als „Preis nicht belegt“ markiert, Ausstattung schwankt je Shop), MSI MAG Infinite S3, MPG Infinite X3 und Trident, Lenovo LOQ Tower, Legion T5/T7/Tower 5i, HP Omen 16L/35L, Acer Nitro und Predator Orion, ASUS ROG G700 und ROG NUC, Zotac Magnus One, Medion Erazer Hunter X30, Captiva bis RTX 5090, Dubaro; Fazit nur mit belegten Preisen)
 - **Detailvergleich mit einem Fertig-PC:** Zeile anklicken oder auswählen; Bauteil für Bauteil mit Preis, FPS, Prozessor, RAM, SSD, Mainboard, Netzteil, Kühlung, Garantie und Aufbau, dazu Ersparnis bzw. Mehrpreis.
 - **Preis gegen Leistung:** ein Diagramm mit deinem PC, allen Fertig-PCs und Laptops sowie der Grenze „meiste FPS je Preis“.
 - **Ranking aller Systeme:** Punkte aus Leistung, Preis-Leistung, Multi-Core, Ausstattung und Aufrüstbarkeit, gewichtet nach dem Gaming/Kreativ-Regler. und **gegen Laptops** (11 Geräte vom Lenovo LOQ 15 bis zum ROG Strix Scar 18 und MacBook Pro), jeweils mit Preis je FPS und Filter „ähnliche Leistung“, „günstiger als deiner“, „alle“. Windows wird mit dem echten Preis der System-Builder-Lizenz eingerechnet, sofern kein Betriebssystem gewählt ist.
