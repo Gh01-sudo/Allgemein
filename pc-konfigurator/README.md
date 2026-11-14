@@ -6,20 +6,33 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 
 ## Funktionen
 - **8 Steckplätze:** Prozessor, CPU-Kühler, Mainboard, Arbeitsspeicher, Grafikkarte, SSD, Netzteil, Gehäuse
+- **Zubehör und Software (optional):** Monitor, Zusatzlüfter, Betriebssystem (Windows 11 Home/Pro als System-Builder-Lizenz, Linux) und Tastatur & Maus. Werden nie automatisch ergänzt, zählen aber zu Gesamtpreis und Budget; der Monitor wird gegen Auflösung und Bildrate geprüft.
 - **Automatisch ergänzen:** fehlende Teile werden passend zu Einsatz (Gaming, Büro, Kreativ/Workstation),
   Budget und der Leistungsklasse deiner gewählten Teile gewählt. „Behalten“ hält ein ergänztes Teil fest.
 - **Kompatibilitätsprüfung:** Sockel, RAM-Typ und Steckplätze, Formfaktor, GPU-Länge, Kühlerhöhe und Radiator,
   Kühlleistung, Netzteil-Leistung und Bauform (SFX/ATX), 12V-2x6, iGPU-Pflicht ohne Grafikkarte,
   CPU-Flaschenhals, VRAM- und RAM-Empfehlungen
 - **Leistungsbild** (Gaming-Klasse, Multi-Core) und **Strombilanz** mit empfohlener Netzteilgröße
-- **Vorlagen:** Deine Konfiguration (4K-Gaming + Kreativ), Büro, Einstieg Full HD, Gaming WQHD, 4K-Enthusiast, Workstation, Kompakt-ITX
+- **Start:** beim ersten Öffnen deine Konfiguration (4K-Gaming + Kreativ); eigene Stände über „Speichern / Laden“
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
 ## Mehr auf einen Blick
+- **Dein PC als Seitenansicht:** maßstabsgetreue Zeichnung durch die Glasseite mit echten Gehäusemaßen, Mainboard-Formfaktor, Sockel, RAM-Riegeln, M.2, Turmkühler oder AiO-Radiator (oben oder vorne), Grafikkarte in echter Länge und Slot-Höhe mit Maßlinie gegen den Gehäuseplatz, Netzteil unter der Abdeckung und Lüftern. Jedes Bauteil ist anklickbar, Konflikte sind rot gestrichelt.
+- **Bauteil-Symbole** in Steckplätzen, Vergleich, Auswahlfenster und Dashboard; Kategorie-Farben durchgehend.
+- **Infobereich im Konfigurator** (statt der früheren Vorlagen):
+  - **Kennzahlen:** Leistungsklasse, Spiele-CPU, Multi-Core, Preis je FPS, Stromkosten pro Jahr, Aufrüst-Reserve, Lautstärke, Speicher.
+  - **Spiele und Anwendungen:** geschätzte FPS (eSports, AAA, Raytracing, Upscaling, Frame Generation) in allen Auflösungen und Anwendungs-Indizes.
+  - **Stärken und Schwächen** des Systems mit Kauf- und Einbautipps.
+  - **Spar- und Upgrade-Tipps:** bestes Upgrade pro Euro und gleichwertige günstigere Teile, per Klick übernehmbar.
+- **Kopfleiste**, die beim Scrollen oben bleibt: Gesamtpreis mit Budgetbalken, Bildrate gegen Ziel, Grafikkarte/Prozessor, Strom und Netzteil-Last, Lautstärke und Prüfstatus. Ein Klick springt in die passende Ansicht.
+- **Konkrete Grafikkarten:** 56 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
 - **Steckbrief** an jedem Bauteil (aufklappbar): alle technischen Daten, Stärken, Schwächen, Hinweise und Preisstand.
 - **Reiter „Übersicht“:** Kennzahlen, Schema des PCs (inkl. Radiator-Position), gesammelte Stärken und Schwachstellen, Upgrade-Pfad nach Nutzen pro Euro, Teileliste mit Preisstand.
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
+  Filter nach Preisspanne, Hersteller (bei Grafikkarten auch Chip) und Suchbegriff; Spalte „P/L“ (100 = bestes passendes Teil) mit Markierung von Preis-Leistungs-Sieger und -Tipps sowie Kacheln „Stärkste“, „Günstigste“ und „Leiseste starke Karte“.
 - Auslaufmodelle sind markiert und werden nicht mehr automatisch gewählt.
+
+- **Mobil:** Auf dem Handy stehen die Bauteile direkt unter den Einstellungen, der Infobereich folgt danach in gekürzter Form.
 
 ## Speichern und Drucken
 - **Speichern / Laden:** beliebig viele benannte Konfigurationen im Browser speichern, laden, löschen (mit Rückfrage) und im Dashboard vergleichen.
@@ -43,15 +56,16 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **8 Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße; die betroffenen Bauteile werden live neu gewählt, mit „Rückgängig“.
 - **Leistungsprofil (Netzdiagramm):** Gaming, Kreativ, Leise, Effizienz, Zukunft, Preis-Leistung, mit Vergleichs-Konfiguration als zweiter Fläche.
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
-- **Zwei Konfigurationen nebeneinander:** gegen jede Vorlage oder gespeicherte Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
-- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS.
+- **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
+- **Kostenverteilung als Ringdiagramm**, Preis-Leistungs-Diagramm mit gestrichelter Preis-Leistungs-Grenze.
+- **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS und Filter „ähnliche Leistung“, „günstiger als deiner“, „alle“. Windows wird mit dem echten Preis der System-Builder-Lizenz eingerechnet, sofern kein Betriebssystem gewählt ist.
 - **Sparen ohne Nachteile:** gleichwertige, günstigere Teile mit Ersparnis, nur ohne Konflikte.
 - **Preisentwicklung:** Preisindex seit 2024 für RAM, SSD, Grafikkarte und Prozessor, Tabelle „damals – heute“ und Kauftipp.
 - Bildrate je Auflösung, Kostenverteilung, Upgrade-Stufen und Strom.
 - Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
-Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
+Teile mit „Preis geprüft“ wurden zwischen dem 9. und 14. November 2026 recherchiert (Grafikkarten-Modelle, Zubehör und neue Teile am 14.11.), alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
