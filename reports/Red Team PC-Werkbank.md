@@ -673,3 +673,228 @@ Quellen: HWD = hardwaredealz.com (Geizhals-Angebote mit market "de", Attribute L
 - **Ergänzt:** INNO3D RTX 5070 Ti X3 (1.350 €) und XFX Swift RX 9070 XT White Triple Fan (875 €); die Ab-Preise der Chips sinken entsprechend.
 - **Nicht geändert:** ASUS Dual und Gigabyte Windforce SFF bleiben „laut“ (kein Beleg in beide Richtungen; Einordnung nach Kühlerserie).
 - **Tests danach:** 108 Regler-Kombinationen ohne Konflikt oder Warnung, 7 Budget-Szenarien bestanden, alle Oberflächentests ohne JavaScript-Fehler, 400 px ohne horizontales Scrollen.
+
+
+---
+
+# Runde 7 (14.11.2026): Gesamte Datenbank, Fertig-PCs, Laptops, Gehäusemaße
+
+## Red-Team-Bericht 7: pc-werkbank.html (Stand 14.11.2026, ca. 19:00–20:20 UTC)
+
+Quellen: PCGH-Preisvergleich (Geizhals-Daten, `hloc=de`), Produktseiten dort (Spezifikationen und Händlertexte), Herstellerseiten (Fractal, Lian Li, NZXT, be quiet!, ASUS), Notebookcheck, Händlerdatenblätter. Toleranz ±5 %. Die Rohdaten liegen in diesem Ordner (`p_*.html` sind Produktseiten, `s_*.html` Suchergebnisse).
+Nicht mehr geprüft (Ratenbegrenzung/Zeit): die Produktseite des Legion T7 90Y6001PGF (429), MBP16 MGED4D, G14 SY106W und Aorus AM6J (nur die Suchliste), Arc B580, RTX 5060 Ti 8 GB und RTX 5090 (die Suche lieferte falsche Treffer).
+
+## 1. Fertig-PCs (PREBUILT)
+
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| msi-s3-5060 | Preis/Ausstattung/Win | 1299; i5-14400F/5060/16/1TB | 1299 (MediaMarkt/Saturn), Win 11 Home, 2×8 GB | PCGH a3632695 | OK |
+| loq-tower-5060 | Preis/Ausstattung/Win | 1299 | 1299 nbb lagernd, 2×8 GB DDR5-5200, Win 11 Home, 500 W | PCGH a3645702 | OK |
+| loq-tower-5060 | m | 45 | CB2024 MT 913 (LOQ Tower) ≈ 40 % von 9950X (~2270) | for-real.jp-Test | Empfehlung: 40 |
+| loq-tower-5060 | cg | 70 | etwa auf Ryzen-7-7700-Niveau (howmanyfps/technical.city) | – | OK |
+| omen16l-5060ti | Windows | „Preise inkl. Windows“ | **FreeDOS** (Händlertext: „…1 TB, FreeDOS“); PCGH-Betriebssystem: N/A | PCGH a3873122 | FALSCH |
+| omen16l-5060ti | RAM | 16 GB | 16 GB als **1×16 GB (Single Channel)** DDR5-5200 | PCGH | Hinweis |
+| omen16l-5060ti | Preis | 1699 | 1699 (Cyberport/CU, sofort) | PCGH | OK |
+| omen16l-5060ti | cg/m | 64/42 | 8700F (Phoenix, 16 MB L3) ≈ 8600G+; plausibel (Single Channel kostet zusätzlich Spieleleistung) | – | OK (Empfehlung cg ≈ 60 wegen Single Channel) |
+| nitro-n50-5060 | Preis/Ausstattung/Win | 2295 | 2294,98, 265F, 32 GB, Win 11 Home | PCGH a3998303 | OK |
+| nitro-n50-5060 | cg/m | 78/82 | 265F PL1 65 W / PL2 182 W; ~90–95 % des 265K plausibel | Intel-Spezifikation | OK |
+| legion-t5-5060ti | gpu | RTX 5060 Ti 16 GB | PCGH-Spezifikation: **RTX 5060 Ti 8 GB**; Händlertexte (Cyberport, computeruniverse, Easynotebooks): **RTX 5070** | PCGH a3775838 | FALSCH (16 GB nirgends belegt), Variante UNKLAR |
+| legion-t5-5060ti | g | 60 | 58 (5060 Ti 8 GB) bzw. 75 (5070) | – | FALSCH/UNKLAR |
+| legion-t5-5060ti | Preis/Win | 2299 | 2299, Win 11 Home | PCGH | OK |
+| legion-t5-5060ti | cg/m | 80/92 | 285 (65/182 W) ≈ 90 % des 285K im MT plausibel | – | OK |
+| captiva-r92-889 | Preis/Win | 2376 | 2385,53 (NEXOC), Win 11 Home im Titel | PCGH a3870334 | OK |
+| nitro-n70x3d-5070 | Preis | 2399 | 2399, Win 11 Home, DDR5-7200 | PCGH a3650944 | OK |
+| msi-x3-5080 | Preis | 3059 | 3059 (Cyberport/CU), AT-Modell, Win 11 Home | PCGH a3431307 | OK |
+| rog-g700-5080 | Preis | 3399 | 3398,99, Win 11 Home | PCGH a3910827 | OK |
+| omen35l-5080 | Preis | 3499 | 3499 nbb, Win 11 Home | PCGH a3919857 | OK |
+| legiont7-5070ti | Preis | 2599 | **2849** (expert, 4 Angebote; nbb-Angebot nicht mehr gelistet) | PCGH a3775439 | FALSCH (+9,6 %) |
+| legion5i-5070ti | Preis | 2599 | 2599 nbb lagernd, Win 11 Home | PCGH a3510245 | OK |
+| captiva-9070xt | Preis | 2445 | 2431,20 (NEXOC), Jacob „sofort lieferbar“ 2489,52 | PCGH a3868979 | OK |
+| captiva-9070xt | SSD/Win | ungeprüft | 1 TB M.2; Betriebssystem N/A, kein Windows im Titel (beim R92-889 schon) → vermutlich **ohne Windows** | PCGH | UNKLAR (eher ohne OS) |
+| omen35l | Preis/Lieferbarkeit | 3799 | 3799, nur 2 Angebote, beide **„Noch nicht verfügbar, nicht vorrätig“** | PCGH a3668757 | FALSCH (nicht lieferbar) |
+| legiont7-5080 | Preis | 3699 | Suchliste: **ab 3299**, „lagernd beim Händler“ (Produktseite 429, nicht geprüft) | PCGH-Suche a3496433 | FALSCH (−10,8 %) |
+| dubaro | Preis | 3299 | günstigster 7800X3D/5070 Ti/32 GB/2 TB: 3349 (400078); Windows nicht angegeben | dubaro.de | OK (Preis), Windows UNKLAR |
+
+## 2. Laptops (LAPTOPS)
+
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| loq15-5060 | display | 15,6" Full HD 144 Hz | **15,3" 1920×1200 (WUXGA) 165 Hz IPS** | PCGH a3901619, Händlerdatenblatt | FALSCH |
+| loq15-5060 | kg | 2.4 | **2,10 kg** | PCGH | FALSCH |
+| loq15-5060 | Preis | 1199 | 1199 nur Coolblue; nächster Händler 1699 (Alternate) | PCGH | OK (Ausreißer, Hinweis) |
+| loq15-5060 | watt | 140 | GPU 115 W + CPU 30 W, Netzteil 245 W | PCGH | OK |
+| legionpro5-5070 | display | 2,5K OLED 240 Hz | **2560×1600 OLED 165 Hz** | PCGH a3507900 | FALSCH |
+| legionpro5-5070 | Preis/kg | 1999 / 2.5 | 1999 (nur über eBay: Cyberport/CU); 2,43 kg | PCGH | OK |
+| legionpro7-5070ti | Preis/Display | 3058 | 3057,89; OLED 240 Hz; 5070 Ti mit 140 W | PCGH a3880703 | OK |
+| legionpro7-5070ti | kg | 2.7 | 2,56 kg | PCGH | FALSCH (knapp, −5,2 %) → 2.6 |
+| omenmax16-5080 | Preis/Display/kg | 3600/2.7 | 3599,99; OLED 240 Hz; 2,68 kg | PCGH a3427909 | OK |
+| legionpro7-5080 | Preis | 3834 | 3833,71; 5080 mit 175 W | PCGH a3780247 | OK |
+| legionpro7-5080 | kg | 2.7 | 2,56 kg | PCGH | FALSCH (knapp) → 2.6 |
+| blade16-5080 | Preis/CPU/kg | 4299 / 386H / 2.1 | 4299; 386H 16 Kerne; 2,08 kg; 5080 mit 140+25 W | PCGH a3770272 | OK |
+| blade16-5080 | g | 66 | TGP 165 W gegenüber 175 W bei Legion/Omen → etwa −5 bis −8 % plausibel | PCGH | OK |
+| mbp14-m5pro | Preis/kg | 2430 / 1.6 | 2429,99 (Centroelektro ohne Bewertungen), 2447 galaxus/Amazon; 1,60 kg | PCGH a3750319 | OK |
+| g14 | Preis | 3299 (Listenpreis) | GU405AR (5070 Ti) ab 3271 (SY106W) / 3299 (SY006W), lagernd | PCGH-Suche | OK, priceNote aktualisieren |
+| g14 | kg / Display | 1.6 / 14" 3K OLED | 1,568 kg; 2880×1800 OLED 120 Hz; 5070 Ti mit 115 W; Netzteil 250 W | Notebookcheck-Test | OK (Display: „120 Hz“ ergänzen) |
+| g14 | g | 63 | Time Spy Graphics 16.295 (Turbo), entspricht dem NBC-Mittel der 5070 Ti Laptop (16.409) | Notebookcheck | OK |
+| g14 | watt | 140 | CPU 70 W + GPU 115 W ≈ 185 W | Notebookcheck | Empfehlung: ~180 |
+| aorus16 | Preis | 3399 | Gen 2 AM6J (6YJM5DEE65SP) ab **3299**, lagernd | PCGH-Suche a3858998 | OK (−2,9 %) |
+| aorus16 | kg | 2.5 | keine belastbare Angabe (2,3 kg bei 5090-Listing) | finalboss.io | UNKLAR |
+| scar18 | Preis | 6598 | 6598 (Easynotebooks/Notebook.de lagernd), G835LXG, 290HX Plus/64 GB/4 TB | PCGH a3888375 | OK |
+| scar18 | kg | 3.3 | **3,70–3,73 kg** | ASUS-Spezifikation / Notebookcheck | FALSCH |
+| scar18 | display | 18" 4K Mini-LED 240 Hz | 3840×2400 Mini-LED 240 Hz | ASUS-Pressemitteilung | OK |
+| scar18 | Hinweis | – | Scar 18 (2025) G835LX mit RTX 5090/32 GB/2 TB ab 4799 (nbb, lagernd) | PCGH a3428764 | Empfehlung |
+| mbp16 | Preis/kg | 4099 / 2.1 | MGED4D 4098,99; Silber MGE74D (gleiche Ausstattung) **3999**; 2,15 kg | PCGH-Suche, Galaxus | OK (−2,4 %) |
+
+### Laptop-GPU-Skala (g)
+Notebookcheck-Mittelwerte Time Spy Graphics: 5060 Laptop ≈ 11.700, 5070 Ti Laptop ≈ 16.400, 5080 Laptop ≈ 19.700, 5090 Laptop ≈ 21.700. Notebookcheck stuft die 5080 Laptop theoretisch etwa wie eine Desktop-RTX-5070 ein. Laut PCGH/ComputerBase liegt die 5090 Laptop rund 3 % hinter der 4090 Laptop, die 5080 Laptop mit 175 W nur etwa 2 % hinter einer 5090 Laptop mit 160 W.
+
+| GPU | im Code | Verhältnis aus Tests | Urteil |
+|---|---|---|---|
+| 5060 Laptop | 45 | 11.700/16.400 × 63 ≈ 45; −15 % zur Desktop-5060 → 42–45 | OK |
+| 5070 Laptop | 50 | ≈ Desktop-5060 (+0 bis −5 %) | OK |
+| 5070 Ti Laptop | 63 | 16.400/19.700 × 72 ≈ 60 | OK (Empfehlung 60–62) |
+| 5080 Laptop | 72 | ≈ Desktop-5070 (75) laut NBC | OK |
+| 5090 Laptop | 80 | 21.700/19.700 × 72 ≈ 79 nach Time Spy; in Spielen nur +2 bis +10 % gegenüber 5080 Laptop | Empfehlung: 76–78 (UNKLAR) |
+| Blade 16 (5080, 165 W) | 66 | plausibel | OK |
+
+## 3. Gehäusemaße CASE_DIM [Tiefe, Höhe] in mm
+
+| id | im Code | Herstellerangabe | Quelle | Urteil |
+|---|---|---|---|---|
+| fd-pop-air | [454,470] | 473,5 (L) × 215 × 454 (H) | fractal-design.com | FALSCH → [474,454] |
+| ll-a3 | [443,308] | 443 × 192 × 308 | Lian Li (bekannt) | OK |
+| montech-903 | [485,500] | 478 × 230 × 493 | Caseking/Alternate | OK (<2 %), Empfehlung [478,493] |
+| ll-lancool217 | [482,503] | 482 (D) × 238 × 503 (H) | lian-li.com | OK |
+| cm-nr200p | [376,292] | V2: 372 × 185 × 292 (376 gilt für die V1) | Puget/ocinside | OK (<2 %), Empfehlung [372,292] |
+| bq-pb501 | [450,463] | 450 (T) × 231 × 463 (H) | Händler | OK |
+| fd-north | [447,469] | 447 × 215 × 469 | Fractal | OK |
+| ll-o11-evo | [466,459] | EVO **RGB**: 478 (D) × 290 × 471 (H); 465/459 gilt für das EVO ohne RGB | lian-li.com o11d-evo-rgb | FALSCH → [478,471] |
+| bq-sb802 | [553,539] | 553 × 281 × 539 | be quiet! (bekannt) | OK |
+| fd-define7 | [547,475] | 547 × 240 × 475 | Fractal | OK |
+| fd-terra | [340,217] | 343 × 153 × 218 | fractal-design.com | OK |
+| nzxt-h5flow24 | [440,464] | 430 (T) × 225 × 465 (H, mit Füßen) | support.nzxt.com | FALSCH (knapp) → [430,465] |
+| ph-xtpro-ultra | [475,480] | 450 (T) × 230 × 500 (H) | PB Tech, Digitec, Desertcart | FALSCH → [450,500] |
+| ll-lancool207 | [450,463] | 455,6 (D) × 219 × 456 (H) | lian-li.com | OK (<2 %), Empfehlung [456,456] |
+| bq-shb800dx | [505,524] | 550 (L) × 247 × 522 (H, mit Füßen; 503 ohne) | bequiet.com BGW62, Club386 | FALSCH → [550,522] |
+| fd-meshify3 | [490,476] | 433 (L) × 229 × 507 (H) | Fractal (über Suche) | FALSCH → [433,507] |
+
+## 4. Kernteile (Stichprobe, 45 Einträge)
+
+| id | im Code | gefunden (günstigstes Angebot, Angebotszahl) | Urteil |
+|---|---|---|---|
+| r7-9800x3d | 365 | 365,19 (59) | OK |
+| r7-7800x3d | 282 | 281,63 boxed (55) | OK |
+| r5-7600 | 170 | 169,90 boxed (37) | OK |
+| u7-265k | 309 | 309,00 (11) | OK |
+| r9-9950x | 472 | 472,20 (43) | OK |
+| r9-9950x3d | 558 | 557,50 (46) | OK |
+| r9-9950x3d2 | 779 | 779,00 (40) | OK |
+| i5-14400f | 152 | 152,00 boxed (45) | OK |
+| asr-a620m (eol) | 95 | 94,90 (2 Angebote) | OK, eol bestätigt |
+| asr-b650m-pro (eol) | 206 | 208,68 (1 Angebot, kurzfristig) | OK, eol bestätigt |
+| msi-b650-gp (eol) | 131 | **keine Angebote** | FALSCH: nicht lieferbar, Preis unbelegt |
+| msi-b760m-a (eol) | 200 | 200,24 (1 Angebot, 7D99-007R) | OK, eol bestätigt |
+| gb-b760-gx (eol) | 421 | 420,68 (1 Angebot) | OK, eol bestätigt |
+| msi-b860m-a (eol) | 227 | 227,37 (2 Angebote) | OK, eol bestätigt |
+| msi-z890-tomahawk (eol) | 331 | 330,67 (2 Angebote) | OK, eol bestätigt |
+| msi-b850-tomahawk | 263 | 262,90 (25) | OK |
+| asr-b850m-prors | 130 | 129,90 (7) | OK |
+| gb-x870e-elite | 271 | 270,62 (42) | OK |
+| k-2x8-5600 | 299 | 299,00 (34) | OK |
+| c-2x16-6000c30 | 620 | 619,90 (21) | OK |
+| c-2x24-6000 (eol) | 798, CL36 | 797,98 CMK48GX5M2E6000C36 (2 Angebote) | OK, eol bestätigt |
+| c-2x32-6000 | 1235 | 1235,22 (14) | OK |
+| gs-2x48-6000 | 1750 | Trident Z5 Neo 96 GB DDR5-6000: nur Neo RGB CL26 **2809,68** (1 Angebot); Royal Neo CL30 2903,36 (1); kein Neo-CL30-Kit mit Angebot gefunden | FALSCH (−38 %), eol-Kandidat |
+| c-2x64-5600 | 3499 | 3499,00, 1 Angebot, Verfügbarkeit „siehe Shop“ | Preis OK, Lieferbarkeit UNKLAR (eol-Kandidat) |
+| tr-pa120se | 34 | 34,29 (32) | OK |
+| ar-lf3-360 | 70 | 70,25 (41) | OK |
+| nc-d15g2 | 144 | 139,90 (29) | OK |
+| kingston-nv3-1 | 133 | 132,90 (59) | OK |
+| crucial-p310-2 | 250 | 249,99 (38) | OK |
+| s990evo-2 | 329 | 328,67 (68) | OK |
+| sn850x-2 | 379 | 379,00 (50) | OK |
+| s9100-4 | 870 | 859,95 (54) | OK |
+| cm-mwe-650 (eol) | 88 | 87,50 (1 Angebot) | OK, eol bestätigt |
+| bq-pp13m-850 | 119 | 119,00 (50) | OK |
+| cor-rm850e | 108 | 107,90 (23) | OK |
+| bq-sp12-1000 | 200 | 199,89 (12) | OK |
+| cor-sf1000 | 195 | 194,89 (22) | OK |
+| sea-gx1200 (eol) | 244 | 243,91 (3 Angebote); heute als ATX 3.1 gelistet (Name im Code: „ATX 3.0“) | OK, eol bestätigt |
+| cm-nr200p (eol) | 110 | NR200P V2 schwarz/weiß: **keine Angebote** (nur die MAX V2 für 618,82) | FALSCH: nicht lieferbar, Preis unbelegt |
+| fd-pop-air | 80 | 77,78 (34) | OK |
+| fd-define7 | 170 | 169,90 (6) | OK |
+| ll-lancool217 | 100 | schwarz **117,47** (7); weiß 122,91; INF weiß 111,78 | FALSCH (+17 %) |
+| fd-north | 127 | 128,45 (36) | OK |
+| ar-p12pro-argb-3 | 21 | ACFAN00310A 21,01 (36 Angebote) | OK, lieferbar |
+
+eol-Teile: bei allen geprüften eol-Einträgen gibt es nur 0–3 Angebote, das passt. msi-b650-gp und cm-nr200p haben gar keine Angebote mehr.
+
+## 5. GPU-Chips ohne Modellliste
+
+| id | im Code | gefunden | Urteil |
+|---|---|---|---|
+| arc-b570 | 287 | 291,00 ASRock Challenger (25) | OK |
+| rtx5050 | 407 | 382,90 Gigabyte WF OC V2 (3), 387 Gainward (6), 409,99 ASUS Dual (20) | UNKLAR (−5,9 % zum Tiefstpreis), Empfehlung 387 |
+| rx9060xt-8 | 514 | 509,00 Gigabyte (4), 513,90 Sapphire Pulse (17) | OK |
+| rtx5060 | 459 | 459,00 Gainward/Gigabyte | OK |
+| rx9070gre | 638 | 638,00 Gigabyte (32) | OK |
+| arc-b580, rtx5060ti-8, rtx5090 | 397/522/7637 | die Suche lieferte nur Fremdtreffer, nicht geprüft | UNKLAR |
+
+## Konkrete Korrekturen (id, Feld, neuer Wert)
+
+Belegt:
+1. omen16l-5060ti, Windows: kein Windows (FreeDOS), in priceNote „ohne Windows“ vermerken oder Win-Lizenz einrechnen; RAM „16 GB (1×16, Single Channel)“
+2. legion-t5-5060ti, gpu: nicht „5060 Ti 16 GB“. PCGH nennt 5060 Ti 8 GB (g 58), Händler RTX 5070 (g 75). Bis zur Klärung chk:false
+3. legiont7-5070ti, price: 2849 (expert)
+4. legiont7-5080, price: 3299 (Produktseite noch prüfen)
+5. omen35l, Lieferbarkeit: nicht verfügbar (3799), chk:false oder entfernen
+6. captiva-9070xt, Windows: vermutlich ohne OS (Betriebssystem N/A), price 2431
+7. loq15-5060, display: 15,3" WUXGA (1920×1200) 165 Hz
+8. loq15-5060, kg: 2.1
+9. legionpro5-5070, display: 16" 2,5K OLED 165 Hz
+10. legionpro7-5070ti, kg: 2.6
+11. legionpro7-5080, kg: 2.6
+12. scar18, kg: 3.7
+13. g14, priceNote: PCGH-Preisvergleich, 14.11.2026 (ab 3271 bis 3299); display „14" 3K OLED 120 Hz“
+14. aorus16, price: 3299
+15. mbp16, price: 3999 (Silber MGE74D, gleiche Ausstattung)
+16. CASE_DIM fd-pop-air: [474,454]
+17. CASE_DIM ll-o11-evo: [478,471]
+18. CASE_DIM ph-xtpro-ultra: [450,500]
+19. CASE_DIM bq-shb800dx: [550,522]
+20. CASE_DIM fd-meshify3: [433,507]
+21. CASE_DIM nzxt-h5flow24: [430,465]
+22. gs-2x48-6000, price: 2810 (einziges Neo-96-GB-Angebot, CL26 RGB, 1 Händler), eol:true
+23. msi-b650-gp: keine Angebote, als nicht lieferbar markieren/entfernen
+24. cm-nr200p: keine Angebote (V2), als nicht lieferbar markieren/entfernen
+25. ll-lancool217, price: 117
+26. c-2x64-5600: nur 1 Angebot, Verfügbarkeit „siehe Shop“, eol:true erwägen
+
+Empfehlungen (Einschätzung, nicht hart belegt):
+27. loq-tower-5060, m: 40 (CB2024 913)
+28. omen16l-5060ti, cg: ~60 (Single Channel)
+29. g14, watt: ~180 (70 W CPU + 115 W GPU)
+30. Laptop-GPU 5090: g 76–78 statt 80; 5070 Ti Laptop eher 60–62
+31. CASE_DIM montech-903 [478,493], cm-nr200p [372,292], ll-lancool207 [456,456] (Abweichung <2 %)
+32. rtx5050, price: 387
+33. sea-gx1200, Name: „ATX 3.1“
+34. scar18: das Vorjahresmodell G835LX (5090/32 GB/2 TB) für 4799 bei nbb als günstigere Alternative erwägen
+
+## Umsetzung Runde 7
+- **Fertig-PCs:**
+  - HP Omen 16L als „ohne Windows, 1×16 GB Single Channel“ markiert (CPU-Spieleindex 60).
+  - Captiva R10-0257 auf 2.431 € ohne Windows. Bei Systemen ohne Windows rechnen Fazit und Preis je FPS jetzt die Windows-Lizenz dazu.
+  - Lenovo Legion T5: Grafikkarte widersprüchlich angegeben (RTX 5060 Ti 8 GB laut PCGH, RTX 5070 laut Händlern), deshalb mit RTX 5060 Ti 8 GB gerechnet und nicht mehr als „Preis belegt“ geführt.
+  - Legion T7 5070 Ti jetzt 2.849 €, Legion T7 5080 jetzt 3.299 €.
+  - HP Omen 35L GT16-1472ng nicht lieferbar, nicht mehr als „Preis belegt“ geführt.
+- **Laptops:**
+  - Displays und Gewichte von LOQ 15, Legion Pro 5/7, Scar 18 und G14 korrigiert.
+  - Preise Aorus Master 16 (3.299 €) und MacBook Pro 16 (3.999 €).
+  - Grafik-Index: RTX 5070 Ti Laptop 61, RTX 5090 Laptop 78. Der G14 braucht ca. 180 W.
+- **Gehäusemaße:** 9 Werte angepasst (Pop Air, O11 EVO RGB, XT Pro Ultra, Shadow Base 800 DX, Meshify 3, H5 Flow 2024, AIR 903 MAX, NR200P, Lancool 207).
+- **Teile:**
+  - G.Skill 96 GB jetzt 2.810 € und als auslaufend markiert; Crucial 128 GB ebenfalls als auslaufend markiert.
+  - Lancool 217 jetzt 117 €.
+  - Lenovo LOQ Tower Multi-Core 40.
+- **Nicht übernommen (unklar):** RTX-5050-Preis (nur 3 Angebote), Namenszusatz ATX 3.1 beim Seasonic GX-1200.
+- **Tests danach:** 108 Regler-Kombinationen ohne Konflikt oder Warnung, 7 Budget-Szenarien bestanden, Oberflächentests ohne JavaScript-Fehler.
