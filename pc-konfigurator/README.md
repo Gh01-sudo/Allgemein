@@ -6,6 +6,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 
 ## Funktionen
 - **8 Steckplätze:** Prozessor, CPU-Kühler, Mainboard, Arbeitsspeicher, Grafikkarte, SSD, Netzteil, Gehäuse
+- **Zubehör und Software (optional):** Monitor, Zusatzlüfter, Betriebssystem (Windows 11 Home/Pro als System-Builder-Lizenz, Linux) und Tastatur & Maus. Werden nie automatisch ergänzt, zählen aber zu Gesamtpreis und Budget; der Monitor wird gegen Auflösung und Bildrate geprüft.
 - **Automatisch ergänzen:** fehlende Teile werden passend zu Einsatz (Gaming, Büro, Kreativ/Workstation),
   Budget und der Leistungsklasse deiner gewählten Teile gewählt. „Behalten“ hält ein ergänztes Teil fest.
 - **Kompatibilitätsprüfung:** Sockel, RAM-Typ und Steckplätze, Formfaktor, GPU-Länge, Kühlerhöhe und Radiator,
@@ -16,9 +17,12 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
 ## Mehr auf einen Blick
+- **Kopfleiste**, die beim Scrollen oben bleibt: Gesamtpreis mit Budgetbalken, Bildrate gegen Ziel, Grafikkarte/Prozessor, Strom und Netzteil-Last, Lautstärke und Prüfstatus. Ein Klick springt in die passende Ansicht.
+- **Konkrete Grafikkarten:** 54 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
 - **Steckbrief** an jedem Bauteil (aufklappbar): alle technischen Daten, Stärken, Schwächen, Hinweise und Preisstand.
 - **Reiter „Übersicht“:** Kennzahlen, Schema des PCs (inkl. Radiator-Position), gesammelte Stärken und Schwachstellen, Upgrade-Pfad nach Nutzen pro Euro, Teileliste mit Preisstand.
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
+  Filter nach Preisspanne, Hersteller (bei Grafikkarten auch Chip) und Suchbegriff; Spalte „P/L“ (100 = bestes passendes Teil) mit Markierung von Preis-Leistungs-Sieger und -Tipps sowie Kacheln „Stärkste“, „Günstigste“ und „Leiseste starke Karte“.
 - Auslaufmodelle sind markiert und werden nicht mehr automatisch gewählt.
 
 ## Speichern und Drucken
@@ -51,7 +55,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
-Teile mit „Preis geprüft 9.11.“ wurden am 9. November 2026 recherchiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
+Teile mit „Preis geprüft“ wurden zwischen dem 9. und 14. November 2026 recherchiert (Grafikkarten-Modelle, Zubehör und neue Teile am 14.11.), alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
