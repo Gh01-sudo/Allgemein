@@ -371,6 +371,49 @@ button,input,select{font:inherit;color:inherit}
 .bar-row.click:hover .bar-track{border-color:var(--accent)}
 .stack .click:hover{filter:brightness(1.15)}
 .opt .live{grid-column:1/-1;font-size:12.5px;color:var(--muted);font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.save-sec{display:flex;flex-direction:column;gap:8px;padding:12px 8px;border-bottom:1px solid var(--line)}
+.save-sec h3{font-family:var(--f-display);font-size:16px;margin:0;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.save-row{display:flex;gap:8px;flex-wrap:wrap}
+.save-row input,#codeIn{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:8px 10px;font-size:14px;flex:1 1 200px;min-width:0;color:var(--ink)}
+#codeIn{width:100%;font-family:var(--f-mono);font-size:12px;resize:vertical;flex:none;height:76px}
+.save-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);margin-bottom:8px}
+.save-item .nm{font-weight:650;overflow-wrap:anywhere}
+.save-item .meta{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
+.save-item .acts{grid-row:1/3;grid-column:2;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.save-item.cur{border-color:var(--accent);background:var(--accent-soft)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+label.btn{display:inline-flex;align-items:center}
+.print-wrap{position:fixed;inset:0;z-index:60;background:var(--bg);overflow:auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.print-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 0 10px;background:var(--bg);border-bottom:1px solid var(--line);margin-bottom:16px}
+.print-bar-btns{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.sheet{max-width:800px;margin:0 auto;background:#fff;color:#111;border:1px solid #d8dce2;border-radius:8px;padding:28px 30px;font-family:var(--f-body);font-size:13px;line-height:1.45}
+.sheet h1{font-family:var(--f-display);font-size:24px;margin:0 0 2px;color:#111}
+.sheet h2{font-family:var(--f-display);font-size:15px;margin:18px 0 6px;color:#111;border-bottom:2px solid #111;padding-bottom:3px}
+.sheet .meta{color:#555;font-size:12px}
+.sheet table{width:100%;border-collapse:collapse}
+.sheet th,.sheet td{text-align:left;padding:5px 6px;border-bottom:1px solid #ddd;vertical-align:top}
+.sheet th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#555;font-weight:600}
+.sheet td.r,.sheet th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sheet tr.sum td{font-weight:700;border-bottom:2px solid #111;border-top:2px solid #111}
+.sheet .kv4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.sheet{padding:18px 14px}.sheet .kv4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sheet .kv4 div{border:1px solid #ddd;border-radius:6px;padding:6px 8px}
+.sheet .kv4 b{display:block;font-size:16px;font-family:var(--f-display)}
+.sheet .kv4 span{font-size:10.5px;color:#555;text-transform:uppercase;letter-spacing:.05em}
+.sheet ul{margin:4px 0;padding-left:18px}
+.sheet .small{font-size:11px;color:#666;margin-top:14px}
+.sheet .chk{display:inline-block;width:11px;height:11px;border:1.5px solid #333;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff!important;padding:0!important}
+  body>*:not(#printDlg){display:none!important}
+  #printDlg{position:static!important;display:block!important;padding:0!important;background:#fff!important;overflow:visible!important}
+  .print-bar{display:none!important}
+  .sheet{border:0;border-radius:0;padding:0;max-width:none}
+  .sheet tr,.sheet .kv4 div{break-inside:avoid}
+}
 @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
 
@@ -395,7 +438,7 @@ button,input,select{font:inherit;color:inherit}
       <div class="gauges" id="dGauges"></div>
       <div class="kpis kpis-slim" id="dKpis"></div>
     </section>
-    <div class="dash-tools"><button type="button" class="btn" data-act="openAll">Alle Abschnitte öffnen</button><button type="button" class="btn" data-act="closeAll">Alle schließen</button></div>
+    <div class="dash-tools"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="openAll">Alle Abschnitte öffnen</button><button type="button" class="btn" data-act="closeAll">Alle schließen</button></div>
     <div class="dash">
       <section class="card span12 cpanel" aria-label="Spiele und Anwendungen">
         <h2><span class="ph-dot"></span>Spiele und Anwendungen <span class="eyebrow">geschätzte Bildraten und Leistungsindizes</span></h2>
@@ -471,6 +514,7 @@ button,input,select{font:inherit;color:inherit}
       </div>
     </div>
     <section class="card" aria-label="Upgrade-Pfad"><h2>Upgrade-Pfad <span class="eyebrow">sortiert nach Nutzen pro Euro</span></h2><div id="oPath"></div></section>
+    <div class="dash-tools"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button></div>
     <section class="card" aria-label="Teileliste"><h2>Alle Teile <span class="eyebrow" id="oSum"></span></h2><div class="scroll" id="oTable"></div></section>
   </div>
 
@@ -515,6 +559,48 @@ button,input,select{font:inherit;color:inherit}
   </div>
 
   <p class="note"><b>Zu den Preisen:</b> Teile mit „Preis geprüft“ wurden zwischen dem 9. und 11. November 2026 recherchiert und anschließend von einem unabhängigen Red-Team-Prüfer gegengecheckt (günstigste Angebote in Deutschland, überwiegend Geizhals-Daten). Alle anderen Preise sind Schätzungen. Grafikkarten, Arbeitsspeicher und SSDs sind wegen der Speicherkrise stark überteuert und schwanken täglich; vor dem Kauf über „Preis prüfen“ vergleichen. Leistungswerte sind Richtwerte: Gaming-Index RTX 5080 = 105, Multi-Core-Index Ryzen 9 9950X = 100 (Cinebench-Messreihen). Die Bildraten im Dashboard sind daraus geschätzt und ersetzen keine Benchmarks.</p>
+</div>
+
+<div class="picker" id="saveDlg" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
+    <div class="panel-head">
+      <div class="panel-title"><h2 id="saveTitle">Konfigurationen</h2><button type="button" class="btn" data-act="closeSave">Schließen</button></div>
+      <p class="panel-note">Gespeichert wird in diesem Browser. Für andere Geräte den Konfigurations-Code kopieren und dort einfügen.</p>
+    </div>
+    <div class="plist">
+      <section class="save-sec" aria-label="Aktuelle Konfiguration speichern">
+        <h3>Aktuelle Konfiguration speichern</h3>
+        <form id="saveForm" class="save-row">
+          <label class="sr" for="saveName">Name</label>
+          <input id="saveName" type="text" maxlength="60" placeholder="z. B. 4K-PC mit RTX 5070 Ti" autocomplete="off">
+          <button type="submit" class="btn primary">Speichern</button>
+        </form>
+        <p class="toast" id="saveToast" role="status" aria-live="polite"></p>
+      </section>
+      <section class="save-sec" aria-label="Gespeicherte Konfigurationen">
+        <h3>Gespeicherte Konfigurationen <span class="eyebrow" id="saveCount"></span></h3>
+        <div id="saveList"></div>
+      </section>
+      <section class="save-sec" aria-label="Code teilen">
+        <h3>Konfigurations-Code</h3>
+        <p class="subline">Enthält alle Teile und Regler. Zum Sichern, Teilen oder auf einem anderen Gerät laden.</p>
+        <div class="row-btns"><button type="button" class="btn" data-act="copyCode">Code der aktuellen Konfiguration kopieren</button><button type="button" class="btn" data-act="downloadJson" id="dlBtn">Als Datei herunterladen</button></div>
+        <label class="ctl-label" for="codeIn" style="margin-top:10px;display:block">Code einfügen und laden</label>
+        <textarea id="codeIn" rows="3" spellcheck="false" placeholder="PCW1:…"></textarea>
+        <div class="row-btns"><button type="button" class="btn" data-act="loadCode">Code laden</button><label class="btn" id="fileLbl">Datei öffnen<input type="file" id="fileIn" accept=".json,application/json" hidden></label></div>
+        <p class="toast" id="codeToast" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="print-wrap" id="printDlg" hidden>
+  <div class="print-bar">
+    <b>Druckansicht</b>
+    <span class="subline" id="printHint"></span>
+    <span class="print-bar-btns"><button type="button" class="btn primary" data-act="doPrint" id="printBtn">Drucken</button><button type="button" class="btn" data-act="copyPrint">Als Text kopieren</button><button type="button" class="btn" data-act="closePrint">Schließen</button></span>
+  </div>
+  <article class="sheet" id="printSheet" aria-label="Druckbare Zusammenfassung"></article>
 </div>
 
 <div class="picker" id="picker" hidden>
@@ -1195,7 +1281,9 @@ function renderSummary(parts,issues){
       <div class="subline">${autoSum?`davon ${eur(autoSum)} für ergänzte Teile · `:""}${PROFILE_NAME[state.profile]}</div>
       ${budgetHtml}
       <div class="row-btns">
-        <button type="button" class="btn primary" data-act="copy">Teileliste kopieren</button>
+        <button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button>
+        <button type="button" class="btn" data-act="openPrint">Drucken</button>
+        <button type="button" class="btn" data-act="copy">Teileliste kopieren</button>
         ${!state.auto&&missing.length?`<button type="button" class="btn" data-act="fill">Fehlende ergänzen</button>`:""}
         <button type="button" class="btn" data-act="reset">Alles leeren</button>
       </div>
@@ -1710,6 +1798,7 @@ function loadVariants(){try{return JSON.parse(localStorage.getItem(VKEY)||"{}")|
 function saveVariant(slot){const v=loadVariants();v[slot]={picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,saved:new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})};try{localStorage.setItem(VKEY,JSON.stringify(v));}catch(e){}}
 let cmpSel="preset:wqhd";
 function buildConfig(key){
+  if(key.startsWith("save:")){const x=loadSaves().find(y=>y.id===key.slice(5));if(!x)return null;const picks={};for(const c in x.picks){if(get(c,x.picks[c].id))picks[c]=x.picks[c];}return {name:"„"+x.name+"“",picks,params:x.params};}
   if(key.startsWith("var:")){const v=loadVariants()[key.slice(4)];if(!v)return null;const picks={};for(const c in v.picks){if(get(c,v.picks[c].id))picks[c]=v.picks[c];}return {name:"Variante "+key.slice(4)+" ("+v.saved+")",picks,params:v.params};}
   const pr=PRESETS.find(x=>"preset:"+x.id===key);if(!pr)return null;
   const keep=JSON.stringify(state);
@@ -1721,7 +1810,7 @@ function buildConfig(key){
 }
 function renderRadarAndCompare(parts){
   const v=loadVariants();
-  const opts=PRESETS.map(p=>[`preset:${p.id}`,`Vorlage: ${p.name}`]).concat(["A","B"].filter(k=>v[k]).map(k=>[`var:${k}`,`Variante ${k} (${v[k].saved})`]));
+  const opts=PRESETS.map(p=>[`preset:${p.id}`,`Vorlage: ${p.name}`]).concat(["A","B"].filter(k=>v[k]).map(k=>[`var:${k}`,`Variante ${k} (${v[k].saved})`])).concat(loadSaves().map(x=>[`save:${x.id}`,`Gespeichert: ${x.name}`]));
   if(!opts.some(o=>o[0]===cmpSel))cmpSel=opts[0][0];
   const sel=$("#dCmpSel");sel.innerHTML=opts.map(o=>`<option value="${o[0]}"${o[0]===cmpSel?" selected":""}>${esc(o[1])}</option>`).join("");
   const other=buildConfig(cmpSel);const oParts=other?resolve(other.picks):{};
@@ -2008,6 +2097,120 @@ function copyList(){
   }catch(e){fallback();}
 }
 
+
+/* ---------- Speichern, Laden, Drucken ---------- */
+const SKEY="pcwerkbank.saves";
+const embedded=(()=>{try{return window.self!==window.top;}catch(e){return true;}})();
+function loadSaves(){try{const a=JSON.parse(localStorage.getItem(SKEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
+function writeSaves(a){try{localStorage.setItem(SKEY,JSON.stringify(a));return true;}catch(e){return false;}}
+function snapshot(){return {v:1,picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,auto:state.auto};}
+function cfgTotal(picks){let t=0;for(const c in picks){const x=get(c,picks[c].id);if(x)t+=x.price;}return t;}
+function applySnapshot(o){
+  if(!o||typeof o!=="object"||!o.picks)return false;
+  const picks={};for(const c in o.picks){const v=o.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
+  if(!Object.keys(picks).length)return false;
+  const params=Object.assign({},DEF_PARAMS);if(o.params)for(const k in DEF_PARAMS){if(typeof o.params[k]===typeof DEF_PARAMS[k])params[k]=o.params[k];}
+  state.picks=picks;state.params=params;state.profile=WEIGHTS[o.profile]?o.profile:state.profile;
+  state.budget=(typeof o.budget==="number"&&o.budget>0)?o.budget:null;state.auto=o.auto!==false;
+  recompute();renderSliders&&renderSliders();render();return true;
+}
+function encodeCfg(o){const j=JSON.stringify({v:1,p:Object.fromEntries(Object.entries(o.picks).map(([c,v])=>[c,(v.src==="user"?"u:":"a:")+v.id])),r:o.params,f:o.profile,b:o.budget,a:o.auto});return "PCW1:"+btoa(unescape(encodeURIComponent(j)));}
+function decodeCfg(code){
+  code=String(code||"").trim();
+  try{
+    if(code.startsWith("{")){const o=JSON.parse(code);return o.picks?o:null;}
+    if(!code.startsWith("PCW1:"))return null;
+    const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(5).replace(/\s+/g,"")))));
+    const picks={};for(const c in o.p||{}){const [src,id]=String(o.p[c]).split(":");picks[c]={id,src:src==="u"?"user":"auto"};}
+    return {picks,params:o.r,profile:o.f,budget:o.b,auto:o.a};
+  }catch(e){return null;}
+}
+let pendingDelete=null,saveLastFocus=null;
+function openSave(){saveLastFocus=document.activeElement;pendingDelete=null;$("#saveDlg").hidden=false;$("#saveToast").textContent="";$("#codeToast").textContent="";
+  const parts=resolve(state.picks);$("#saveName").value=parts.cpu&&parts.gpu?`${parts.cpu.name.replace(/^(AMD|Intel) (Ryzen \d |Core (Ultra \d )?)?/,"")} + ${parts.gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon |Arc )?/,"").replace(/ \d+ GB$/,"")}`:"";
+  $("#dlBtn").hidden=embedded;$("#fileLbl").hidden=false;renderSaves();setTimeout(()=>$("#saveName").focus(),0);}
+function closeSave(){$("#saveDlg").hidden=true;if(saveLastFocus&&saveLastFocus.focus)saveLastFocus.focus();}
+function renderSaves(){
+  const a=loadSaves(),curKey=JSON.stringify(state.picks);
+  $("#saveCount").textContent=a.length?a.length+" gespeichert":"";
+  $("#saveList").innerHTML=a.length?a.slice().reverse().map(x=>`<div class="save-item${JSON.stringify(x.picks)===curKey?" cur":""}">
+     <span class="nm">${esc(x.name)}</span>
+     <span class="meta">${eur(cfgTotal(x.picks))} · ${esc(PROFILE_NAME[x.profile]||"")} · ${esc(x.saved)}</span>
+     <span class="acts">${pendingDelete===x.id?`<span class="subline">Wirklich löschen?</span><button type="button" class="btn danger" data-act="delSave" data-id="${esc(x.id)}">Ja, löschen</button><button type="button" class="btn" data-act="cancelDel">Nein</button>`:`<button type="button" class="btn primary" data-act="loadSave" data-id="${esc(x.id)}">Laden</button><button type="button" class="btn" data-act="cmpSave" data-id="${esc(x.id)}">Vergleichen</button><button type="button" class="btn ghost" data-act="askDel" data-id="${esc(x.id)}" aria-label="${esc(x.name)} löschen">Löschen</button>`}</span></div>`).join(""):`<p class="subline">Noch nichts gespeichert. Gib oben einen Namen ein und tippe auf „Speichern“.</p>`;
+}
+function doSave(name){
+  name=(name||"").trim()||"Konfiguration "+new Date().toLocaleDateString("de-DE");
+  const a=loadSaves(),snap=snapshot(),now=new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"});
+  const ex=a.find(x=>x.name===name);
+  if(ex)Object.assign(ex,snap,{saved:now});else a.push(Object.assign({id:"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,saved:now},snap));
+  if(writeSaves(a)){$("#saveToast").textContent=ex?`„${name}“ aktualisiert.`:`„${name}“ gespeichert.`;}else $("#saveToast").textContent="Speichern nicht möglich: Der Browser blockiert den lokalen Speicher. Nutze den Konfigurations-Code.";
+  renderSaves();
+}
+function flash(id,msg){const t=$(id);if(t)t.textContent=msg;}
+function copyTextTo(txt,okMsg,toastId,fallbackEl){
+  const fb=()=>{if(fallbackEl){fallbackEl.value=txt;fallbackEl.focus();fallbackEl.select();}flash(toastId,"Text markiert: mit Strg+C bzw. ⌘+C kopieren.");};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>flash(toastId,okMsg),fb);else fb();}catch(e){fb();}
+}
+/* Druckansicht */
+function printHtml(){
+  const parts=resolve(state.picks),p=P();let total=0;for(const c in parts)total+=parts[c].price;
+  const issues=checkAll(parts,state.profile),nz=noiseInfo(parts);
+  const today=new Date().toLocaleDateString("de-DE",{day:"2-digit",month:"long",year:"numeric"});
+  const rows=CATS.map(c=>{const x=parts[c.k];return x?`<tr><td><span class="chk"></span>${esc(c.label)}</td><td><b>${esc(x.name)}</b><br><span class="meta">${esc(spec(c.k,x))}</span></td><td>${x.chk?"geprüft":"Schätzung"}</td><td class="r">${eur(x.price)}</td></tr>`:`<tr><td>${esc(c.label)}</td><td colspan="3" class="meta">nicht gewählt</td></tr>`;}).join("");
+  const fpsRow=RES.map((r,i)=>`<td class="r">${parts.gpu||parts.cpu?buildFps(parts,i):"–"}</td>`).join("");
+  const warn=issues.filter(i=>i.level!=="info"),info=issues.filter(i=>i.level==="info");
+  const tips=[],seen=new Set(info.map(i=>i.msg));CATS.forEach(c=>{const x=parts[c.k];if(!x)return;prosCons(c.k,x,parts).N.forEach(n=>{if(/HDD-Käfig/.test(n)&&[...seen].some(m=>/HDD-Käfig/.test(m)))return;if(!seen.has(n)){seen.add(n);tips.push(`${c.label}: ${n}`);}});});
+  return `<h1>PC-Konfiguration</h1>
+   <div class="meta">PC-Werkbank · erstellt am ${esc(today)} · Einsatz: ${esc(PROFILE_NAME[state.profile])}${state.budget?" · Budget "+eur(state.budget):""} · Preise Stand 11. November 2026</div>
+   <div class="kv4" style="margin-top:12px">
+     <div><span>Gesamtpreis</span><b>${eur(total)}</b></div>
+     <div><span>mit Windows</span><b>ca. ${eur(total+260)}</b></div>
+     <div><span>Last / Netzteil</span><b>${estLoad(parts)} W${parts.psu?" / "+parts.psu.watt+" W":""}</b></div>
+     <div><span>Lautstärke</span><b>${esc(nz.label)}</b></div>
+   </div>
+   <h2>Bauteile</h2>
+   <table><thead><tr><th>Bauteil</th><th>Modell und Eckdaten</th><th>Preis</th><th class="r">Euro</th></tr></thead><tbody>${rows}
+   <tr class="sum"><td colspan="3">Summe Hardware</td><td class="r">${eur(total)}</td></tr></tbody></table>
+   <h2>Leistung (Richtwerte)</h2>
+   <table><thead><tr><th>AAA-Spiele, hohe Details</th>${RES.map(r=>`<th class="r">${esc(r.label)}</th>`).join("")}</tr></thead><tbody><tr><td>Bildrate in FPS</td>${fpsRow}</tr></tbody></table>
+   <p class="meta">Multi-Core-Index ${parts.cpu?parts.cpu.m:"–"} (Ryzen 9 9950X = 100) · Gaming-Index Grafik ${parts.gpu&&!parts.gpu.none?parts.gpu.g:"–"} (RTX 5080 = 105) · Ziel: ${p.fps} FPS in ${esc(RES[p.res].label)}</p>
+   <h2>Prüfung</h2>
+   ${warn.length?`<ul>${warn.map(i=>`<li><b>${SEV_LABEL[i.level]}:</b> ${esc(i.msg)}</li>`).join("")}</ul>`:"<p>Alle Teile passen zusammen, keine Konflikte.</p>"}
+   ${info.length?`<p class="meta" style="margin-top:6px">Hinweise:</p><ul>${info.map(i=>`<li>${esc(i.msg)}</li>`).join("")}</ul>`:""}
+   ${tips.length?`<h2>Beim Kauf und Zusammenbau beachten</h2><ul>${tips.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:""}
+   <p class="small">Preise sind günstige Straßenpreise in Deutschland laut Preisvergleich (geprüft) bzw. Schätzungen; Bildraten sind aus Leistungsindizes geschätzt und keine Messungen. Vor dem Kauf Tagespreise prüfen. Konfigurations-Code zum Wiederherstellen: <span style="font-family:var(--f-mono);word-break:break-all">${esc(encodeCfg(snapshot()))}</span></p>`;
+}
+let printLastFocus=null;
+function openPrint(){printLastFocus=document.activeElement;$("#printSheet").innerHTML=printHtml();$("#printDlg").hidden=false;
+  $("#printHint").textContent=embedded?"Im eingebetteten Viewer blockiert der Browser das Drucken. Öffne pc-konfigurator/index.html direkt im Browser, um zu drucken oder als PDF zu speichern; hier kannst du den Text kopieren.":"Als PDF speichern: im Druckdialog „Als PDF speichern“ wählen.";
+  $("#printBtn").hidden=embedded;setTimeout(()=>$(embedded?"[data-act='copyPrint']":"#printBtn").focus(),0);}
+function closePrint(){$("#printDlg").hidden=true;if(printLastFocus&&printLastFocus.focus)printLastFocus.focus();}
+function downloadJson(){
+  try{const blob=new Blob([JSON.stringify(Object.assign({name:"PC-Werkbank-Konfiguration",saved:new Date().toISOString()},snapshot()),null,2)],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pc-konfiguration.json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);flash("#codeToast","Datei pc-konfiguration.json wird heruntergeladen.");}
+  catch(e){flash("#codeToast","Herunterladen nicht möglich. Kopiere stattdessen den Code.");}
+}
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act;
+  if(act==="openSave")openSave();
+  else if(act==="closeSave")closeSave();
+  else if(act==="loadSave"){const x=loadSaves().find(y=>y.id===el.dataset.id);if(x&&applySnapshot(x)){flash("#saveToast",`„${x.name}“ geladen.`);renderSaves();}}
+  else if(act==="cmpSave"){cmpSel="save:"+el.dataset.id;closeSave();state.view="dash";save();renderSliders();render();const sec=document.querySelector('[aria-label="Zwei Konfigurationen"]');if(sec)sec.scrollIntoView({block:"start"});}
+  else if(act==="askDel"){pendingDelete=el.dataset.id;renderSaves();}
+  else if(act==="cancelDel"){pendingDelete=null;renderSaves();}
+  else if(act==="delSave"){const a=loadSaves().filter(y=>y.id!==el.dataset.id);writeSaves(a);pendingDelete=null;flash("#saveToast","Gelöscht.");renderSaves();}
+  else if(act==="copyCode")copyTextTo(encodeCfg(snapshot()),"Code kopiert. Auf dem anderen Gerät unter „Code einfügen“ laden.","#codeToast",$("#codeIn"));
+  else if(act==="loadCode"){const o=decodeCfg($("#codeIn").value);if(o&&applySnapshot(o)){flash("#codeToast","Konfiguration aus dem Code geladen.");renderSaves();}else flash("#codeToast","Der Code ist ungültig oder unvollständig. Er beginnt mit „PCW1:“.");}
+  else if(act==="downloadJson")downloadJson();
+  else if(act==="openPrint")openPrint();
+  else if(act==="closePrint")closePrint();
+  else if(act==="doPrint"){try{window.print();}catch(err){}}
+  else if(act==="copyPrint")copyTextTo(buildText()+"\n\nKonfigurations-Code: "+encodeCfg(snapshot()),"Zusammenfassung kopiert.","#printHint",null);
+});
+$("#saveForm").addEventListener("submit",e=>{e.preventDefault();doSave($("#saveName").value);});
+$("#fileIn").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let o=null;try{o=JSON.parse(r.result);}catch(err){}if(o&&applySnapshot(o)){flash("#codeToast",`Datei „${f.name}“ geladen.`);renderSaves();}else flash("#codeToast","Die Datei enthält keine gültige Konfiguration.");e.target.value="";};r.readAsText(f);});
+$("#saveDlg").addEventListener("click",e=>{if(e.target.id==="saveDlg")closeSave();});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("#printDlg").hidden)closePrint();else if(!$("#saveDlg").hidden)closeSave();});
 /* ---------- Ereignisse ---------- */
 function applyPreset(id){
   const pr=PRESETS.find(x=>x.id===id);if(!pr)return;
