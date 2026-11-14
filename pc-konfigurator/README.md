@@ -13,10 +13,15 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
   Kühlleistung, Netzteil-Leistung und Bauform (SFX/ATX), 12V-2x6, iGPU-Pflicht ohne Grafikkarte,
   CPU-Flaschenhals, VRAM- und RAM-Empfehlungen
 - **Leistungsbild** (Gaming-Klasse, Multi-Core) und **Strombilanz** mit empfohlener Netzteilgröße
-- **Vorlagen:** Deine Konfiguration (4K-Gaming + Kreativ), Büro, Einstieg Full HD, Gaming WQHD, 4K-Enthusiast, Workstation, Kompakt-ITX
+- **Start:** beim ersten Öffnen deine Konfiguration (4K-Gaming + Kreativ); eigene Stände über „Speichern / Laden“
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
 ## Mehr auf einen Blick
+- **Infobereich im Konfigurator** (statt der früheren Vorlagen):
+  - **Kennzahlen:** Leistungsklasse, Spiele-CPU, Multi-Core, Preis je FPS, Stromkosten pro Jahr, Aufrüst-Reserve, Lautstärke, Speicher.
+  - **Spiele und Anwendungen:** geschätzte FPS (eSports, AAA, Raytracing, Upscaling, Frame Generation) in allen Auflösungen und Anwendungs-Indizes.
+  - **Stärken und Schwächen** des Systems mit Kauf- und Einbautipps.
+  - **Spar- und Upgrade-Tipps:** bestes Upgrade pro Euro und gleichwertige günstigere Teile, per Klick übernehmbar.
 - **Kopfleiste**, die beim Scrollen oben bleibt: Gesamtpreis mit Budgetbalken, Bildrate gegen Ziel, Grafikkarte/Prozessor, Strom und Netzteil-Last, Lautstärke und Prüfstatus. Ein Klick springt in die passende Ansicht.
 - **Konkrete Grafikkarten:** 56 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
 - **Steckbrief** an jedem Bauteil (aufklappbar): alle technischen Daten, Stärken, Schwächen, Hinweise und Preisstand.
@@ -47,7 +52,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **8 Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße; die betroffenen Bauteile werden live neu gewählt, mit „Rückgängig“.
 - **Leistungsprofil (Netzdiagramm):** Gaming, Kreativ, Leise, Effizienz, Zukunft, Preis-Leistung, mit Vergleichs-Konfiguration als zweiter Fläche.
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
-- **Zwei Konfigurationen nebeneinander:** gegen jede Vorlage oder gespeicherte Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
+- **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
 - **Gegen Fertig-PCs** (Lenovo Legion T7 und Tower 5i, Captiva, HP Omen 35L, Dubaro; Fazit nur mit belegten Preisen) und **gegen Laptops**, jeweils mit Preis je FPS.
 - **Sparen ohne Nachteile:** gleichwertige, günstigere Teile mit Ersparnis, nur ohne Konflikte.
 - **Preisentwicklung:** Preisindex seit 2024 für RAM, SSD, Grafikkarte und Prozessor, Tabelle „damals – heute“ und Kauftipp.
