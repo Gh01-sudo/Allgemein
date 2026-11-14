@@ -21,6 +21,11 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
 - Auslaufmodelle sind markiert und werden nicht mehr automatisch gewählt.
 
+## Speichern und Drucken
+- **Speichern / Laden:** beliebig viele benannte Konfigurationen im Browser speichern, laden, löschen (mit Rückfrage) und im Dashboard vergleichen.
+- **Konfigurations-Code** (beginnt mit `PCW1:`) zum Kopieren und auf einem anderen Gerät Einfügen; außerdem als JSON-Datei herunterladen und wieder öffnen.
+- **Drucken:** Druckansicht als A4-Datenblatt mit Teileliste zum Abhaken, Preisen, Bildraten, Prüfung, Kauf- und Einbauhinweisen und Code; im Druckdialog auch als PDF speicherbar. Im eingebetteten Artifact-Viewer blockiert der Browser das Drucken und Herunterladen, dort bleibt „Als Text kopieren“.
+
 ## Interaktiv
 - **Tooltips** an Instrumenten, Balken, Diagrammpunkten und Schema (Maus, Touch und Tastatur).
 - **Schema anklickbar:** Bauteil im PC-Schema anklicken, um es zu tauschen; Konflikte sind rot markiert.
