@@ -18,7 +18,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 
 ## Mehr auf einen Blick
 - **Kopfleiste**, die beim Scrollen oben bleibt: Gesamtpreis mit Budgetbalken, Bildrate gegen Ziel, Grafikkarte/Prozessor, Strom und Netzteil-Last, Lautstärke und Prüfstatus. Ein Klick springt in die passende Ansicht.
-- **Konkrete Grafikkarten:** 54 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
+- **Konkrete Grafikkarten:** 56 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
 - **Steckbrief** an jedem Bauteil (aufklappbar): alle technischen Daten, Stärken, Schwächen, Hinweise und Preisstand.
 - **Reiter „Übersicht“:** Kennzahlen, Schema des PCs (inkl. Radiator-Position), gesammelte Stärken und Schwachstellen, Upgrade-Pfad nach Nutzen pro Euro, Teileliste mit Preisstand.
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.

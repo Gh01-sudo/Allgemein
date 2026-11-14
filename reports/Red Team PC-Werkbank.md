@@ -487,3 +487,189 @@ Preise innerhalb ±3 % (11.11.2026): r5-8600g 169, i5-14400f 146,90, r5-7600 171
 - **Weitere Logik:** DDR5-6400 für Core Ultra nur bei höchstens 10 % Aufpreis; Kühler-Rückfall wählt den stärksten statt den billigsten; SSD-Tipps nie mit langsamerer Schnittstelle; kein Kühler-Tipp bei 50 % Reserve; Spar-Schwelle 15 € bzw. 3 %; Netzteil-Reserve-Text nur bei echtem Bedarf; ATX-3.0-Netzteile korrekt beschriftet; Hinweis bei verfehlter Ziel-Bildrate; ITX-Prozessoren nach Kühlgrenze des kleinsten lieferbaren Gehäuses.
 - **Audit danach:** 108 Regler-Kombinationen ohne Konflikt; 6 Warnungen (ITX mit reinem Kreativ-Schwerpunkt: Prozessor bremst die Grafikkarte, weil stärkere Prozessoren dort nicht kühlbar sind). Budget-Überschreitungen nur noch, wo die Vorgaben (32 GB RAM, 2 TB SSD) ein Budget von 1.500 € unerreichbar machen.
 - **Offen:** Bauhöhe des 360er-Radiators im Deckel des Silent Base 802 gegenüber dem RAM ist nicht belegt.
+
+
+---
+
+# Runde 6 (14.11.2026): GPU-Partnermodelle, Zubehör, neue Kernteile
+
+## Red-Team-Prüfung 6 – pc-werkbank.html (Stand 14.11.2026)
+
+Quellen: HWD = hardwaredealz.com (Geizhals-Angebote mit market "de", Attribute Länge/Slots); PCGH = preisvergleich.pcgameshardware.de (Geizhals-Daten, Suche sortiert nach Preis; bei Boards und Gehäusen auch die Produktseite); dazu Herstellerseiten und Testberichte. Toleranz beim Preis: ±5 %.
+
+## 1. GPU_MODELS (geprüft: 54 Modelle; Preis, Länge, Slots über HWD)
+
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| asus-prime-rtx-5060-ti-oc | Preis/Länge/Slots | 790/304/3 | 789,99/304/3 | HWD 26841 | OK |
+| asus-dual-rtx-5060-ti-oc | Preis/Länge/Slots | 799/229/3 | 799/229/3 | HWD 26839 | OK |
+| msi-rtx-5060-ti-ventus-2x-oc-plus | P/L/S | 829/227/2 | 829/227/2 | HWD 26853 | OK |
+| gigabyte-rtx-5060-ti-windforce-oc | P/L/S | 867/208/2 | 867/208/2 | HWD 27905 | OK |
+| gigabyte-rtx-5060-ti-gaming-oc | P/L/S | 879/281/2 | 879/281/2 | HWD 26849 | OK |
+| gigabyte-rtx-5060-ti-windforce-max-oc | P/L/S | 897/208/2 | 896,97/208/2 | HWD 30327 | OK |
+| asus-tuf-gaming-rtx-5060-ti-oc | P/L/S | 949/302/3 | 949/302/3 | HWD 26844 | OK |
+| msi-rtx-5060-ti-gaming-trio-oc | P/L/S | 1183/300/2 | 1183,43/300/2 | HWD 26852 | OK |
+| msi-rtx-5070-ventus-2x-oc | P/L/S | 861/236/3 | 861,49/236/3 | HWD 25496 | OK |
+| gigabyte-rtx-5070-windforce-oc-sff | P/L/S | 899/282/3 | 898,52/282/3 | HWD 25611 | OK |
+| asus-dual-rtx-5070-oc | P/L/S | 905/249/3 | 905/249/3 | HWD 28032 | OK |
+| msi-rtx-5070-gaming-trio-oc | P/L/S | 917/338/3 | 917,24/338/3 | HWD 25363 | OK |
+| gigabyte-rtx-5070-gaming-oc | P/L/S | 919/327/3 | 919/327/3 | HWD 25440 | OK |
+| asus-t1-rtx-5070-oc-edition | P/L/S | 949/305/3 | 949/305/3 | HWD 33588 | OK |
+| asus-tuf-gaming-rtx-5070-oc | P/L/S | 1039/329/4 | 1039/329/4 | HWD 25359 | OK |
+| msi-rtx-5070-ti-ventus-3x-oc | P/L/S | 1399/303/3 | 1399/303/3 | HWD 25183 | OK |
+| gigabyte-rtx-5070-ti-gaming-oc | P/L/S | 1399/340/4 | 1399/340/4 | HWD 25194 | OK |
+| gigabyte-rtx-5070-ti-windforce-oc-sff | P/L/S | 1399/304/3 | 1399/304/3 | HWD 25199 | OK |
+| gigabyte-rtx-5070-ti-eagle-oc-sff | P/L/S | 1399/304/3 | 1399/304/3 | HWD 25472 | OK |
+| asus-prime-rtx-5070-ti-oc | P/L/S | 1440/304/3 | 1439,90/304/3 | HWD 25223 | OK |
+| inno3d-rtx-5070-ti-x3-oc | P/L/S | 1469/300/2 | 1469/300/2 | HWD 25229 | OK |
+| msi-rtx-5070-ti-gaming-trio-oc | P/L/S | 1481/338/3 | 1481/338/3 | HWD 26368 | OK |
+| asus-tuf-gaming-rtx-5070-ti-oc | P/L/S | 1580/329/4 | 1579,90/329/4 | HWD 25168 | OK |
+| pny-rtx-5080-argb-epic-x… | P/L/S | 1949/329/3 | 1949/329/3 | HWD 25110 | OK |
+| asus-prime-rtx-5080-oc | P/L/S | 1959/306/3 | 1959/306/3 | HWD 25130 | OK |
+| gigabyte-rtx-5080-windforce-oc-sff | P/L/S | 1969/304/3 | 1969/304/3 | HWD 25071 | OK |
+| zotac-…-5080-amp-extreme-infini | P/L/S | 1999/332/4 | 1999/332/4 | HWD 25201 | OK |
+| gigabyte-rtx-5080-gaming-oc | P/L/S | 2049/340/4 | 2049/340/4 | HWD 24952 | OK |
+| gigabyte-rtx-5080-aero-oc-sff | P/L/S | 2049/304/3 | 2049/304/3 | HWD 25342 | OK |
+| msi-rtx-5080-gaming-trio-oc | P/L/S | 2169/338/3 | 2169/338/3 | HWD 25131 | OK |
+| asus-tuf-gaming-rtx-5080-oc | P/L/S | 2180/348/4 | 2179,90/348/4 | HWD 24951 | OK |
+| sapphire-pure-rx-9060-xt | P/L/S | 648/240/3 | 647,68/240/3 | HWD 29143 | OK |
+| powercolor-reaper-rx-9060-xt | P/L/S | 649/200/2 | 649 (PCGH) bzw. 689 (HWD)/200/2 | PCGH, HWD 29138 | OK (Geizhals/PCGH 649) |
+| sapphire-pulse-rx-9060-xt | P/L/S | 654/244/3 | 653,90/244/3 | HWD 29141 | OK |
+| gigabyte-rx-9060-xt-gaming-oc | P/L/S | 662/281/2 | 661,90/281/2 | HWD 29134 | OK |
+| sapphire-nitro-rx-9060-xt | P/L/S | 667/300/3 | 666,52/300/3 | HWD 29140 | OK |
+| xfx-swift-rx-9060-xt-oc-gaming-edition | P/L/S | 675/270/2 | 674,76/270/2 | HWD 29145 | OK |
+| powercolor-hellhound-rx-9060-xt | P/L/S | 729/330/2 | 729,38/330/2 | HWD 29136 | OK |
+| asrock-rx-9060-xt-steel-legend-16gb-oc | P/L/S | 819/298/3 | 819/298/3 | HWD 29129 | OK |
+| gigabyte-rx-9070-gaming-oc | P/L/S | 812/288/3 | 811,90 (PCGH 806,99)/288/3 | HWD 25381 | OK |
+| asrock-rx-9070-challenger | P/L/S | 834/290/3 | 833,90/290/3 | HWD 25289 | OK |
+| powercolor-reaper-rx-9070 | P/L/S | 836/289/2 | 836,02/289/2 | HWD 25366 | OK |
+| sapphire-pulse-rx-9070 | P/L/S | 860/280/3 | 859,84/280/3 | HWD 25368 | OK |
+| sapphire-pure-rx-9070 | P/L/S | 879/320/3 | 879/320/3 | HWD 25387 | OK |
+| asus-prime-rx-9070-oc | P/L/S | 879/312/3 | 879/312/3 | HWD 25393 | OK |
+| sapphire-nitro-rx-9070 | P/L/S | 899/331/4 | 899/331/4 | HWD 25385 | OK |
+| powercolor-reaper-rx-9070-xt | P/L/S | 914/289/2 | 914,11/289/2 | HWD 25400 | OK |
+| xfx-swift-rx-9070-xt-triple-fan… | P/L/S | 940/325/4 | 940,37/325/4 | HWD 25429 | OK |
+| sapphire-pulse-rx-9070-xt | P/L/S | 960/320/3 | 959,83/320/3 | HWD 25386 | OK |
+| gigabyte-rx-9070-xt-gaming-oc | P/L/S | 966/288/3 | 965,71/288/3 | HWD 25382 | OK |
+| xfx-mercury-rx-9070-xt… | P/L/S | 975/360/4 | 974,90/360/4 | HWD 25402 | OK |
+| powercolor-hellhound-rx-9070-xt | P/L/S | 989/327/3 | 989/327/3 | HWD 25383 | OK |
+| asrock-rx-9070-xt-steel-legend-dark | P/L/S | 1015/298/3 | 1015,07/298/3 | HWD 25288 | OK |
+| sapphire-nitro-rx-9070-xt | P/L/S | 1019/331/4 | 1019/331/4 | HWD 25384 | OK |
+| (Chip rtx5070ti) | ab-Preis (= günstigstes Modell der Liste) | 1399 | INNO3D RTX 5070 Ti X3 (ohne OC) 1349,99 € fehlt in der Liste | HWD 25230 | UNKLAR (−3,5 %, in Toleranz) |
+| (Chip rx9070xt) | ab-Preis (= günstigstes Modell der Liste) | 914 | XFX Swift RX 9070 XT White Triple Fan 875,15 € fehlt in der Liste | HWD 25445, PCGH | UNKLAR (−4,3 %, in Toleranz) |
+
+### Lautstärke-Einordnung (Kühlerserie)
+
+| Serie | im Code | Befund | Quelle | Urteil |
+|---|---|---|---|---|
+| MSI Ventus (2X/3X) | 3 laut | PCGH nennt die RTX 5070 Ti Ventus 3X „laut“ mit schwacher Kühlung; laut ComputerBase ist ihr Kühler mit 300 W überfordert | PCGH-Vergleich RTX 5070 Ti (6 Custom-Modelle), ComputerBase-Test RTX 5070 Ti Custom | OK |
+| MSI Gaming Trio | 1 leise | Igor'sLab misst die RTX 5070 Gaming Trio unter Last mit etwa 32 dB(A) | igorslab.de | OK |
+| ASUS TUF | 1 leise | ComputerBase: TUF im Quiet-BIOS „flüsterleise“ | ComputerBase (Bildstrecke 116171) | OK |
+| Sapphire Nitro+ / PowerColor Hellhound | 1 leise | große Kühler, nach Testberichten durchweg leise; hier keine eigene Messung gesucht | – | OK (plausibel) |
+| PowerColor Reaper (9070 / 9070 XT) | 3 laut | Tom's Hardware lobt bei der Reaper die Lautstärke („noch beeindruckender als die Temperaturen“, laut Suchauszug), HotHardware: „Lautstärke kein Problem“. Belege für „laut“ fehlen | Tom's Hardware (RX 9070 XT Review S. 8), HotHardware | UNKLAR, eher 2 |
+| ASUS Dual (5060 Ti / 5070) | 3 laut | keine Messung gefunden, die „laut“ belegt (TPU hat das Dual-Modell nicht in der Tabelle) | – | UNKLAR |
+| Gigabyte Windforce (SFF) | 3 laut | keine eindeutige Messung gefunden | – | UNKLAR |
+
+## 2. Chip-Einträge ohne Modellliste
+
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| rtx5050 | price | 407 | 406,90 (Gigabyte Windforce OC 8G) | HWD 29554 | OK |
+| rx9060xt-8 | price | 514 | 513,90 (Sapphire Pulse 8GB) | PCGH, HWD 29142 | OK |
+| rtx5060 | price | 479 | 459,00 (Gainward Ghost, Gigabyte Windforce OC 8G) | PCGH, HWD 28425 | Abweichung −4,2 % (in Toleranz, aber nicht der Bestpreis) → 459 empfohlen |
+| rtx5060ti-8 | price | 522 | 521,90 (Gainward Ghost 8GB) | HWD 26846 | OK |
+| rx9070gre | price | 638 | 638,00 (Gigabyte Gaming OC 12G) | HWD 33593 | OK |
+| arc-b570 | price | 287 | 291,00 (ASRock Challenger OC) | PCGH | OK (+1,4 %) |
+| arc-b580 | price | 397 | 386,90 (ASRock Challenger OC) | PCGH | OK (−2,6 %) |
+| rtx5090 | price | 7637 | 7702,58 (Aorus Stealth ICE), danach 7708,58 (TUF OC) | HWD 29659/25076 | OK (−0,9 %) |
+
+## 3. Neue Kategorien
+
+### monitor
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| aoc-q27g4xf | Preis; 27", 1440p, 180 Hz, IPS | 149 | 148,90 | PCGH | OK |
+| sam-g55c | Preis; 27", 1440p, 165 Hz, VA | 130 | 129,90 (26,9") | PCGH | OK |
+| sam-g50sf | Preis; QD-OLED 180 Hz, True Black 400 | 283 | 282,90 | PCGH | OK |
+| lg-27gs95qe | Preis; 26,5", 240 Hz, WOLED | 545 | 545,00 | PCGH | OK |
+| sam-g55t-34 | Preis; 34", UWQHD, 165 Hz, VA | 214 | 213,90 (2023er-Modell) | PCGH | OK |
+| lg-27us550 | Preis; 4K, 60 Hz, IPS, HDR10 | 169 | 168,99 | PCGH | OK |
+| dell-s2725qs | Preis; 4K, 120 Hz, IPS | 278 | 277,72 | PCGH | OK |
+| gb-m27up | Preis; 4K, 160 Hz | 303 | 302,88 (M27UP ICE: 269) | PCGH | OK |
+| asus-xg27ucs | Preis; 4K, 160 Hz, Fast IPS | 312 | 311,99 | PCGH | OK |
+| asus-pa279crv | Preis | 399 | 398,90 | PCGH | OK |
+| msi-272urx | Preis; 4K, 240 Hz, QD-OLED | 699 | 699,00 (272URXDE); 272URX ohne DE: 907,85 | PCGH | OK |
+
+### fans
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| ar-p12pro-5 | Preis 5er-Pack | 18 | 17,59 (ACFAN00307A, 5er-Pack) | PCGH | OK – der niedrige Preis stimmt |
+| ar-p14pro-5 | Preis 5er-Pack | 26 | 25,98 (ACFAN00319A, 5er-Pack) | PCGH | OK – der niedrige Preis stimmt |
+| ar-p12pro-argb-3 | Preis 3er-Pack | 21 | 21,01 | PCGH | OK |
+| bq-sw4-120 | Preis | 20 | 20,39 | PCGH | OK |
+| nc-a12x25g2 | Preis | 33 | 32,89 | PCGH | OK |
+| ll-tl-wl-3 | Preis 3er-Pack | 85 | 84,90 schwarz (weiß 69,90) | PCGH | OK |
+
+### os
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| win11-home | Preis DSP/SB deutsch | 125 | 124,99 | PCGH | OK |
+| win11-pro | Preis DSP/SB deutsch | 167 | 166,59 | PCGH | OK |
+
+### kbm
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| lg-mk295 | Preis | 26 | 25,69 (DE) | PCGH | OK |
+| lg-mk540 | Preis | 34 | 34,29 (DE) | PCGH | OK |
+| set-kc200-g305 | Preis | 80 (44,95 + 34,99) | 44,95 + 34,99 | PCGH | OK |
+| lg-mxkeys-combo | Preis | 136 | 135,94 (DE) | PCGH | OK |
+| set-gprox-g502x | Preis | 212 (129,99 + 81,99) | 129,99 schwarz DE + 81,99 | PCGH | OK |
+
+## 4. Neue Kernteile
+
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| asr-b850m-prors | price | 130 | 129,90 | PCGH | OK |
+| asr-b850m-prors | m2 | 2 | 3 (1× PCIe 5.0 x4, 2× PCIe 4.0 x4) | PCGH-Produktseite, tech4gamers-Test | FALSCH |
+| asr-b850m-prors | form / gen5m2 / wifi | mATX / ja / ja | µATX / ja / Wi-Fi 6E | PCGH | OK |
+| asus-b850-tufplus | price / form / m2 / gen5 / wifi | 172 / ATX / 3 / ja / ja | 171,90 / ATX / 3 (1× 5.0, 2× 4.0) / ja / Wi-Fi 7 | PCGH | OK |
+| gb-b850m-elite-ice | price / form / m2 / gen5 / wifi | 178 / mATX / 2 / ja / ja | 177,75 / µATX / 2 (1× 5.0, 1× 4.0) / ja / Wi-Fi 6E | PCGH | OK |
+| msi-b850m-mortar | price / form / m2 / gen5 / wifi | 210 / mATX / 3 / ja / ja | 210,31 / mATX / 3 (2× 5.0 x4, 1× 4.0 x2) / ja / Wi-Fi 7 | PCGH, MSI-Datenblatt | OK |
+| c-2x16-6000c30 | price | 620 | 613,61 (CMK32GX5M2B6000C30) | PCGH | OK |
+| k-2x16-6000c30 | price | 629 | 629,00 (schwarz, Kit) | PCGH | OK |
+| k-2x32-6000c30 | price | 1310 | 1310,00 | PCGH | OK |
+| crucial-p310-2 | price / read | 250 / 7100 | 249,99 / 7100 laut Hersteller | PCGH | OK |
+| kc3000-2 | price / read | 340 / 7000 | 339,90 / 7000 | PCGH | OK |
+| sn850x-2 | price / read | 381 / 7300 | 380,65 / 7300 | PCGH | OK |
+| cor-rm750e | price | 105 | 104,89 | PCGH | OK |
+| msi-a850gl | price | 107 | 107,09 | PCGH | OK |
+| bq-pp13m-850 | price | 119 | 119,00 | PCGH | OK |
+| tr-ps120se | price / h | 38 / 154 | 37,59 / 154 mm | PCGH, Thermalright | OK |
+| ar-lf3-280 | price | 66 | 65,89 | PCGH | OK |
+| nc-u12a | price / h | 125 / 158 | 124,57 / 158 mm | PCGH, Noctua | OK |
+| nzxt-h5flow24 | price | 70 | 69,89 (schwarz) | PCGH | OK |
+| nzxt-h5flow24 | gpu | 365 | 410 mm | NZXT-Support „H5 Flow 2024 Specs“, Geizhals/PCGH | FALSCH (365 mm gilt für das Modell von 2022) |
+| nzxt-h5flow24 | cooler | 165 | 170 mm | NZXT, Geizhals/PCGH | FALSCH (165 mm gilt für das Modell von 2022) |
+| ph-xtpro-ultra | price / gpu / cooler | 71 / 415 / 184 | 70,86 / 415 / 184 | PCGH | OK |
+| ll-lancool207 | price / gpu / cooler | 83 / 375 / 180 | 83,47 / 375 / 180 | PCGH, Lian Li | OK |
+| bq-shb800dx | price / gpu / cooler / rads | 100 / 430 / 180 / bis 420 | 99,90 / 430 / 180 / bis 420; Geizhals führt es als „schallgedämmt“ | PCGH, Overclockers UK | OK |
+| fd-meshify3 | price / cooler | 125 / 173 | 124,89 / 173 (Fractal; Geizhals 171,5) | PCGH, Fractal | OK |
+| fd-meshify3 | gpu | 400 | 349 mm | Fractal-Produktseite, Geizhals/PCGH | FALSCH |
+| fd-meshify3 | rads | 240/280/360 | Front 240/280/360, Deckel 240/280 | Fractal | OK |
+
+## Konkrete Korrekturen
+
+- asr-b850m-prors, m2: 2 → **3**
+- nzxt-h5flow24, gpu: 365 → **410**
+- nzxt-h5flow24, cooler: 165 → **170**
+- fd-meshify3, gpu: 400 → **349**
+- rtx5060, price: 479 → **459** (Bestpreis; die alte Zahl liegt noch innerhalb von 5 %)
+- GPU_MODELS, Lautstärke PowerColor Reaper (rx9070 / rx9070xt): 3 → **2** (empfohlen; Tom's Hardware und HotHardware beschreiben die Reaper als leise)
+- optional GPU_MODELS ergänzen: ["rtx5070ti","inno3d-rtx-5070-ti-x3","INNO3D RTX 5070 Ti X3","INNO3D",1350,300,2,3] und ["rx9070xt","xfx-swift-rx-9070-xt-white-triple-fan-gaming-e","XFX Swift RX 9070 XT White Triple Fan Gaming Edition","XFX",875,325,4,2]. Sonst ist der ab-Preis der Chips 3–4 % zu hoch.
+
+## Umsetzung Runde 6
+- **Übernommen:** ASRock B850M Pro RS WiFi 3× M.2; NZXT H5 Flow (2024) GPU 410 mm, Kühler 170 mm; Fractal Meshify 3 GPU 349 mm; RTX 5060 459 €.
+- **Lautstärke:** PowerColor Reaper RX 9070 / 9070 XT von „laut“ auf „mittel“.
+- **Ergänzt:** INNO3D RTX 5070 Ti X3 (1.350 €) und XFX Swift RX 9070 XT White Triple Fan (875 €); die Ab-Preise der Chips sinken entsprechend.
+- **Nicht geändert:** ASUS Dual und Gigabyte Windforce SFF bleiben „laut“ (kein Beleg in beide Richtungen; Einordnung nach Kühlerserie).
+- **Tests danach:** 108 Regler-Kombinationen ohne Konflikt oder Warnung, 7 Budget-Szenarien bestanden, alle Oberflächentests ohne JavaScript-Fehler, 400 px ohne horizontales Scrollen.
