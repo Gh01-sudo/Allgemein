@@ -1098,3 +1098,261 @@ Lieferstatus nach Geizhals-Klasse: available = lagernd, shortly = kurzfristig li
   - ASUS ROG NUC 15: CPU-Spieleindex 78, Hinweis „lagernd ab ca. 2.656 €“.
   - Zotac Magnus One mit Windows 11 Home.
 - **Ohne Befund:** Acer Predator Orion 3000, Medion Erazer Hunter X30 (beide), Captiva Ultimate R89-514.
+
+
+---
+
+# Runde 9 (21.11.2026): Preisaktualisierung, 30 neue Teile, Alternate
+
+## Red-Team-Bericht 9: pc-werkbank.html (Stand 21.11.2026)
+
+Quellen: PCGH-Preisvergleich (Geizhals-Daten), Suchseiten und Produktseiten, abgerufen am 21.11.2026 (Rohdaten in `redteam9/dl/`). Alternate-Produktseiten und -Suchlisten, abgerufen am 21.11.2026 (Rohdaten in `redteam9/alt/`): Preis aus `class="price "` bzw. JSON-LD, Verfügbarkeit aus JSON-LD. Technische Daten aus den Alternate-Datenblättern, Herstellerseiten (Gigabyte, MSI, DeepCool, be quiet!, Lian Li, Montech, AOC) und Händlerangaben.
+Toleranz: Preis ±5 % (Bereiche 1 und 2), ALT ±3 %.
+
+## Bereich 1: 30 neue Teile
+
+| id | Feld | im Code | gefunden | Quelle | Urteil |
+|---|---|---|---|---|---|
+| r5-9600 | price | 202 | 201,60 € (boxed) | PCGH a3382427 | OK |
+| r5-9600 | cores/threads/boost | 6/12/5.2 | 6C/12T, 3,8–5,2 GHz | PCGH-Titel | OK |
+| r5-9600 | box | false | **boxed mit Wraith Stealth** (anders als der 9600X) | PCGH „boxed“ (9600X: „boxed ohne Kühler“), Caseking „boxed, mit Kühler“, Tom's Hardware, HotHardware | **FALSCH** |
+| r5-9600 | g/m | 75/37 | knapp unter dem 9600X (77/40), plausibel | Einschätzung | OK |
+| u5-225f | price | 130 | 129,99 € | PCGH a3385434 | OK |
+| u5-225f | Kerne/Threads/Boost/iGPU/box | 10/10/4.9/keine/true | 6P+4E/10T, 3,3–4,9 GHz, F = ohne iGPU, boxed | PCGH, Alternate „Boxed-Version“ | OK |
+| u5-225f | power/g/m | 121/66/52 | 121 W Max Turbo, gleiche Werte wie u5-225 | Intel-Spezifikation | OK |
+| gb-b850-eagle | price | 125 | 124,90 € | PCGH a3380364 | OK |
+| gb-b850-eagle | m2/gen5m2/wifi/form | 3/true/true/ATX | 3x M.2, davon 1x PCIe 5.0, WiFi 6E, ATX | Gigabyte-Produktseite | OK |
+| asus-b850-primeplus | price | 172 | 172,48 € | PCGH a3415513 | OK |
+| asus-b850-primeplus | m2/gen5m2/wifi | 3/true/true | Herstellerseite nicht abgerufen | – | UNKLAR (unbestätigt) |
+| asus-b850f | price | 275 | 275,00 € | PCGH a3381528 | OK |
+| asus-b850f | m2/gen5m2/wifi | 4/true/true | 4x M.2 (2x Gen5, 2x Gen4), WLAN | Alternate-Datenblatt, ASUS | OK |
+| asus-z890-tufplus | price | 232 | 232,12 € | PCGH a3330387 | OK |
+| asus-z890-tufplus | m2/gen5m2 | 4/true | 4x M.2 (1x Gen5) | Alternate-Datenblatt | OK |
+| msi-b860-tomahawk | price | 215 | 214,89 € | PCGH a3386584 | OK |
+| msi-b860-tomahawk | m2/gen5m2/wifi | 3/true/true | 3x M.2, M.2_1 PCIe 5.0 x4 (CPU), WiFi 7 | MSI-Spezifikation | OK |
+| gs-flare-2x16-6000 | price | 584 | 583,90 € (F5-6000J3038F16GH2) | PCGH a3698627 | OK |
+| gs-flare-2x16-6000 | speed/cl/h | 6000/30/33 | DDR5-6000 CL30-38-38-96, 33 mm (Flare X5) | PCGH, G.Skill | OK |
+| c-2x16-6400 | price | 691 | 690,99 € (CMK32GX5M2B6400C32) | PCGH a2866111 | OK |
+| c-2x16-6400 | cl/h | 32/35 | CL32-40-40-84, Vengeance ohne RGB ca. 34 mm | PCGH, Corsair | OK |
+| k-2x32-5600 | price | 1149 | 1.149,00 € (KF556C36BBEK2-64, CL36) | PCGH a2876907 | OK |
+| k-2x32-5600 | cl/h | 36/35 | CL36-38-38, Fury Beast ca. 34,9 mm | PCGH | OK |
+| s990pro-2 | price/read/gen | 425/7450/4 | 424,96 € (ohne Kühlkörper), PCIe 4.0 | PCGH a2795958 | OK |
+| kingston-nv3-2 | price/read/gen | 260/6000/4 | 259,90 €, PCIe 4.0, 6000 MB/s | PCGH a3248577 | OK |
+| lexar-nm790-2 | price/read/gen | 369/7400/4 | 369,00 €, PCIe 4.0 | PCGH a2956595 | OK |
+| crucial-t705-2 | price/read/gen | 415/14500/5 | 415,18 €, PCIe 5.0, 14.500 MB/s | PCGH a3128724 | OK |
+| wd-sn7100-4 | price/read/gen | 683/7250/4 | 682,99 € | PCGH a3700978 | OK |
+| crucial-p310-1 | price/read/gen | 160/7100/4 | 159,99 € | PCGH a3305570 | OK |
+| cor-rm1000e | price/watt/eff/atx3 | 108/1000/Gold/true | 107,99 €, RMe 2025, ATX 3.1, Gold | PCGH a3385877 | OK |
+| msi-a750gl | price/watt/eff/atx3 | 100/750/Gold/true | 100,18 €, ATX 3.1 (laut Listung) | PCGH a2979498 | OK |
+| sea-focusgx-1000 | price/atx3 | 160/true | 159,90 € (GX-1000 V4, ATX 3.1) | PCGH a3317257 | OK |
+| cor-sf850 | price/eff/form | 133/Platinum/SFX | 132,99 €, SFX, Platinum, ATX 3.1 | PCGH a3203827 | OK |
+| dc-ak620d | price | 53 | 52,90 € (Digital SE, schwarz) | PCGH a3632336 | OK |
+| dc-ak620d | h/cap | 162/260 | 161 mm laut Hersteller; 260 W laut Händler | DeepCool-Produktseite | OK |
+| nc-u12s | price/h | 87/158 | 86,58 €, 158 mm | PCGH a2152745 | OK |
+| tr-ps120evo | price/h | 46/157 | 45,99 €, 157 mm | PCGH a3092806 | OK |
+| bq-prp3 | price/h | 35/155 | 34,88–34,89 €, 155 mm | PCGH a3427452, be quiet! | OK |
+| bq-prp3 | cap | 220 | Hersteller: 250 W TDP | bequiet.com BK041 | UNKLAR (Empfehlung: 250, falls die Skala Herstellerwerte nutzt) |
+| tr-fw360 | price/rad | 66/360 | 65,54 €, 360 mm | PCGH a3156742 | OK |
+| fd-northxl | price | 130 | 129,99 € (Charcoal Black Mesh) | PCGH a3146953 | OK |
+| fd-northxl | gpu/cooler/rads | 413/185/bis 420 | stimmt mit den Herstellerangaben überein | Fractal | OK |
+| fd-northxl | silent | 2 (teilgedämmt) | keine Dämmmatten (Mesh/Holz) | Tests (GN, Tom's) | UNKLAR (wie fd-north; Empfehlung: 1) |
+| ll-o11vc | price | 100 | 99,90 € | PCGH a3330467 | OK |
+| ll-o11vc | gpu/cooler | 400/167 | 408/167 mm | Lian Li | OK (400 ist konservativ) |
+| montech-xr | price/gpu/cooler | 43/420/175 | 42,90 €, 420/175 mm | PCGH a3259572, Montech | OK |
+| montech-xr | rads | [240,280,360] | Montech oben: 360/240/140/120 mm, 280 nicht genannt | Montech | UNKLAR |
+| msi-mag275qf | price | 140 | 139,90 € | PCGH a3317888 | OK |
+| msi-mag275qf | size/res/hz/panel | 27/1440p/180/Rapid IPS | entspricht der Modellbezeichnung (Herstellerseite gab 403 zurück) | – | OK (nicht voll belegt) |
+| aoc-u27g4 | price | 249 | 249,00 € (U27G4/U27G4R) | PCGH a3492149 | OK |
+| aoc-u27g4 | size/res/hz/panel/hdr | 27/4k/160/IPS/HDR400 | 27", 3840×2160 @160 Hz (FHD 320 Hz), Fast IPS, DisplayHDR 400 | aoc.com | OK |
+
+## Bereich 2: Preisaktualisierung vom 21.11. (Stichprobe: 33 Teile, 8 Systeme, 12 GPU-Modelle)
+
+| id | Feld | im Code | gefunden (PCGH-Bestpreis) | Urteil |
+|---|---|---|---|---|
+| cor-rm850e | price | 83 | 82,99 € | OK |
+| cor-rm750e | price | 74 | 73,99 € | OK |
+| cor-sf750 | price | 116 | 115,99 € | OK |
+| cor-sf1000 | price | 152 | 151,99 € | OK |
+| cor-rm1000x | price | 140 | 139,90 € | OK |
+| asus-x870e-hero | price | 450 | 449,99 € | OK |
+| asus-x870e-e | price | 390 | 389,99 € | OK |
+| wd-sn7100-1 | price | 180 | 179,90 € (WD_BLACK SN7100 1TB) | OK |
+| wd-sn7100-2 | price | 342 | **299,99 €**: WD_BLACK SN7100 2TB (WDS200T4X0E, dasselbe Laufwerk), Mediamarkt.de, lagernd. Die Listung unter dem neuen Namen SanDisk Optimus GX 7100 2TB steht bei 341,90 € | **FALSCH** (+14 %) |
+| crucial-p310-2 | price | 302 | 301,90 € | OK |
+| u5-225 | price | 150 | 149,99 € | OK |
+| asus-z890i | price | 553 | 552,53 € | OK |
+| tr-axp90 | price | 30 | 29,93 € | OK |
+| asus-pa279crv | price | 339 | 339,00 € | OK |
+| sam-g55c | price | 118 | 118,06 € | OK |
+| ll-o11-evo | price | 135 | 134,90 € | OK |
+| fd-terra | price | 195 | 194,96 € (Silver) | OK |
+| u7-265kf | price | 270 | 261,62 € (tray; boxed nicht unter den ersten Treffern) | OK (3 %) |
+| r7-9800x3d | price | 365 | 365,00 € | OK |
+| r9-9950x | price | 472 | 472,20 € | OK |
+| i5-14400f | price | 144 | 143,90 € | OK |
+| u9-285k | price | 495 | 494,99 € | OK |
+| r7-7800x3d | price | 275 | 275,00 € | OK |
+| (Bereich 1, 30 Teile) | price | s. o. | alle innerhalb ±5 % | OK |
+| erazer-x30-5070ti | price/Ausstattung | 2799 | 2.799 €; Core Ultra 7 265, 32 GB, 2 TB, RTX 5070 Ti | OK |
+| legion-t5-5060ti | price/GPU | 2749 / 5060 Ti 8 GB | 2.749 €; Datenblatt: RTX 5060 Ti 8 GB | OK |
+| nitro-n50-5060 | price | 1999 | 1.999 € | OK |
+| zotac-magnus-5070 | price | 2379 | 2.379 € | OK |
+| loq15-5060 | price | 1699 | 1.699 € | OK |
+| xsx | price | 1030 | 1.029,99 € | OK |
+| ps5slim-dig | price | 679 | 679,00 € (Digital Edition 825 GB) | OK |
+| mbp14-m5pro | price | 2399 | 2.399 € (MGDR4D/A, 15C/16G, 24 GB, 1 TB) | OK |
+
+### GPU_MODELS (12 Modelle)
+
+| Kennung | Preis Code | PCGH-Bestpreis | Länge/Slots | Urteil |
+|---|---|---|---|---|
+| msi-rtx-5060-8g-gaming-oc | 479 | 478,84 € | 248 / 3 | OK |
+| asus-dual-rtx-5060-oc | 479 | 478,84 € | 228 / 3 (Alternate: 2,5 Slots) | OK |
+| gigabyte-rtx-5060-oc-low-profile-8g | 483 | 482,84 € | 182 / 2 | OK |
+| gigabyte-rtx-5060-windforce-max-oc-8g | 487 | 486,69 € | 199 / 2 | OK |
+| gigabyte-rtx-5060-windforce-max-oc-v2-8g | 488 | 488,33 € | 199 / 2 | OK |
+| msi-rtx-5060-8g-ventus-2x-oc | 509 | 499,99 € | 197 / 2 | OK (1,8 %) |
+| asus-tuf-gaming-rtx-5060-oc | 519 | **566,00 €** | 302 / 3 (Alternate: 3,1 Slots) | **FALSCH** (+9 %; das PCGH-Bestangebot entspricht dem Alternate-Preis) |
+| gigabyte-aorus-rtx-5090-stealth-ice-32g | 7703 | 7.702,58 € | 360 / 4 (Gigabyte: L=360 mm, 3,5 Slots) | OK |
+| asus-tuf-gaming-rtx-5090-oc | 7709 | 7.708,58 € | 348 / 4 | OK |
+| gainward-rtx-5090-phantom | 7742 | 7.741,97 € | 332 / 4 | OK |
+| gigabyte-rtx-5090-gaming-oc-32g | 7799 | 7.799,00 € | 342 / 4 | OK |
+| asus-rog-astral-rtx-5090-oc | 8054 | 8.053,73 € | 358 / 4 | OK |
+
+## Bereich 3: Alternate-Daten (ALT), Stichprobe mit 48 Einträgen und 11 Fertig-PCs
+
+| ALT id | Code [Preis, Lieferbar] | Alternate-Artikel (Titel) | Alternate-Preis | Urteil |
+|---|---|---|---|---|
+| m-gigabyte-rtx-5070-ti-eagle-oc-sff | 999, 1 | GIGABYTE RTX **5070** EAGLE OC SFF 12G (kein Ti) | 999 | **FALSCH (anderer Chip)** |
+| m-asus-dual-rtx-5060-ti-oc | 609, 1 | ASUS RTX 5060 Ti DUAL OC **8GB** (Modell in DB: 16 GB) | 609 | **FALSCH (8 statt 16 GB)** |
+| m-gigabyte-rtx-5060-ti-windforce-max-oc | 632, 0 | … WINDFORCE MAX OC **8G** | 632 | **FALSCH (8 GB)** |
+| m-gigabyte-rtx-5060-ti-windforce-oc | 626, 0 | … WINDFORCE OC **8G** | 626 | **FALSCH (8 GB)** |
+| m-msi-rtx-5060-ti-ventus-2x-oc-plus | 624, 0 | … VENTUS 2X OC PLUS **8G** | 624 | **FALSCH (8 GB)** |
+| m-msi-rtx-5060-ti-gaming-trio-oc | 765, 0 | … GAMING TRIO OC **8G** | 765 | **FALSCH (8 GB)** |
+| m-sapphire-pure-rx-9070 | 1171, 1 | SAPPHIRE RX **9070 XT** Pure, weiß | 1.171 | **FALSCH (XT statt 9070)** |
+| m-asrock-rx-9070-challenger | 900, 0 | ASRock RX **9070 XT** Challenger 16GB | 900 | **FALSCH (XT statt 9070)** |
+| m-gigabyte-rx-9060-xt-gaming-oc | 440, 0 | GIGABYTE RX 9060 XT GAMING OC **8GB** (Modell in DB: 16 GB) | 440 | **FALSCH (8 GB)** |
+| m-inno3d-rtx-5070-ti-x3 | 1387, 0 | INNO3D RTX 5070 Ti **ICHILL X3** (anderes Modell als X3) | 1.387 | **FALSCH (anderes Modell)** |
+| m-xfx-swift-rx-9070-xt-triple-fan-gaming-e | 1047, 1 | XFX RX 9070 XT Swift, **weiß** | 1.047 | **FALSCH (Farbvariante)** |
+| m-xfx-swift-rx-9060-xt-oc-gaming-edition | 753, 1 | XFX RX 9060 XT Swift OC Triple Fan, **weiß** | 753 | **FALSCH (Farbvariante)** |
+| m-xfx-swift-rx-9060-xt-oc-triple-fan-gamin | 753, 1 | derselbe weiße Artikel | 753 | **FALSCH (Farbvariante)** |
+| m-asus-t1-rtx-5070-oc-edition | 992, 0 | ASUS RTX 5070 PRIME OC T1 Edition | 992 | OK |
+| m-asus-prime-rtx-5060-ti-oc | 893, 1 | ASUS RTX 5060 Ti PRIME OC 16GB | 893 | OK |
+| m-msi-rtx-5060-8g-gaming-oc | 640, 0 | MSI RTX 5060 GAMING OC 8G | 640 | OK |
+| m-asus-tuf-gaming-rtx-5060-oc | 566, 1 | ASUS RTX 5060 TUF GAMING OC 8GB | 566 | OK |
+| m-gigabyte-rtx-5060-windforce-max-oc-v2-8g | 572, 0 | … WINDFORCE MAX OC V2 8G | 572 | OK |
+| m-gigabyte-aorus-rtx-5080-master-ice | 2118, 0 | … 5080 AORUS MASTER ICE 16G | 2.118 | OK |
+| m-sapphire-pulse-rx-9070 | 905, 1 | SAPPHIRE RX 9070 Pulse | 905 | OK |
+| m-asus-prime-rx-9070-oc | 1018, 1 | ASUS RX 9070 PRIME GAMING OC | 1.018 | OK |
+| m-asus-rog-astral-rtx-5090-oc / m-asus-tuf-…-5090-oc / m-gigabyte-rtx-5090-gaming-oc-32g / m-gainward-rtx-5090-phantom / m-gigabyte-aorus-rtx-5090-master-ice-32g / m-gigabyte-aorus-rtx-5090-stealth-ice-32g / rtx5090 | 14877 / 14705 / 13520 / 10504 / 13721 / 13752 / 9809 | Produktseiten liefern eine Cloudflare-Abfrage; geprüft über die Alternate-Suchliste (gleiche Produkt-IDs) | identisch | OK |
+| rtx5060 | 541, 1 | ASUS RTX 5060 DUAL OC Edition Advanced 8GB | 541 | OK |
+| dc-ak620d | 65, 0 | DeepCool **AK620 G2 DIGITAL NYX** (DB: AK620 Digital SE) | 64,90 | **FALSCH (anderes Modell)** |
+| ll-lancool217 | 125, 1 | Lian Li LANCOOL 217 **Infinity** | 124,90 | **FALSCH (Sondervariante)** |
+| k-2x16-6000c30 | 796, 1 | Kingston FURY Beast RGB **weiß** KF560C30BWEAK2-32 | 796 | **FALSCH (Farbvariante)** |
+| k-2x32-5600 | 1295, 0 | Kingston FURY Beast KF556C**40**BBK2-64 (**CL40**; DB: CL36) | 1.295 | **FALSCH (andere Latenz)** |
+| c-2x16-6400 | 599, 1 | Corsair Vengeance CMK32GX5M2B6400C32 | 599 | OK |
+| gs-2x16-6000 | 547, 1 | Patriot Viper Venom VV532G60C28AK | 547 | OK |
+| s990pro-2 | 459, 1 | Samsung 990 PRO 2 TB | 459 | OK |
+| kingston-nv3-2 | 281, 1 | Kingston NV3 2 TB | 281 | OK |
+| wd-sn7100-4 | 990, 0 | SanDisk Optimus GX 7100 4 TB | 990 | OK |
+| s9100-2 | 419, 1 | Samsung 9100 PRO 2 TB | 419 | OK |
+| cor-rm1000e | 150, 1 | Corsair RM1000e | 149,90 | OK |
+| cor-rm750e | 110, 1 | Corsair RM750e | 109,90 | OK |
+| msi-a750gl | 109, 1 | MSI MAG A750GL PCIE5 | 109 | OK |
+| sea-focusgx-1000 | 160, 0 | Seasonic FOCUS GX-1000-V4 ATX3.1 | 159,90 | OK |
+| cor-sf850 | 170, 0 | Corsair SF850 | 169,90 | OK |
+| nc-u12s | 90, 1 | Noctua NH-U12S chromax.black | 89,90 | OK |
+| nc-d15g2 | 140, 1 | Noctua NH-D15 G2 | 139,90 | OK |
+| bq-prp3 | 35, 1 | be quiet! Pure Rock Pro 3 | 34,90 | OK |
+| ar-lf3-360 | 71, 1 | ARCTIC Liquid Freezer III Pro 360 | 70,90 | OK |
+| nzxt-elite-360 | 236, 1 | NZXT Kraken Elite 360 | 235,90 | OK |
+| fd-northxl | 165, 1 | North XL Charcoal Black, Mesh | 164,90 | OK |
+| fd-north | 143, 1 | North Charcoal Black, Mesh | 142,90 | OK |
+| ll-o11vc | 100, 0 | O11 Vision Compact, schwarz | 99,90 | OK |
+| montech-xr | 43, 0 | Montech XR, schwarz | 42,90 | OK |
+| bq-shb800dx | 110, 1 | be quiet! SHADOW BASE 800 DX | 109,90 | OK |
+| fd-meshify3 | 155, 0 | Fractal Design Meshify 3 **Solid** | 154,90 | UNKLAR (geschlossene Seitenwand; DB nennt keine Variante) |
+| asus-b850f | 275, 1 | ROG STRIX B850-F GAMING WIFI | 275 | OK |
+| asus-z890-tufplus | 224, 1 | TUF GAMING Z890-PLUS WIFI | 224 | OK |
+| gb-b850-eagle | 161, 1 | B850 EAGLE WIFI6E | 160,90 | OK |
+| asus-b850-primeplus | 198, 1 | PRIME B850-PLUS WIFI | 198 | OK |
+| msi-b850-tomahawk | 288, 1 | MAG B850 TOMAHAWK MAX WIFI | 288 | OK |
+| u5-225f | 152, 1 | Core Ultra 5 225F Boxed | 151,90 | OK |
+| r5-9600 | 206, 1 | Ryzen 5 9600 Boxed | 205,90 | OK |
+| sam-g50sf | 329, 1 | Odyssey OLED G5 G50SF | 329 | OK |
+| msi-272urx | 699, 0 | MPG 272URXDE QD-OLED | 699 | OK |
+| msi-b850m-a, k-2x16-6000c30b, asr-x870-prors, bq-lb600, bq-pp13m-1000, cor-3500x, u7-265f | – | ALT-Schlüssel ohne passendes Teil in DB/GPU_MODELS (verwaist) | – | UNKLAR (wirkungslos; Empfehlung: entfernen) |
+
+Die Lieferbar-Flags aller geprüften Einträge stimmen mit `availability` in JSON-LD überein.
+
+### Alternate-Fertig-PCs (PREBUILT, alt-…)
+
+| id | Feld | im Code | gefunden | Urteil |
+|---|---|---|---|---|
+| alt-100211681 | Preis/Ausstattung/Windows | 1199; i5-14400F, RTX 5060, 16 GB, 500 GB; mit Windows | 1.199 €; 16 GB DDR4-3200, Crucial P310 500 GB, Win 11 Home | OK |
+| alt-100205080 | Preis/Ausstattung | 1399; 9700X, RTX 5060, 16 GB, 1 TB | 1.399 €; identisch, Win 11 Home | OK |
+| alt-100205075 | price | 1499 | **1.843 €** (durchgestrichen 1.999 €) | **FALSCH** |
+| alt-100205075 | gpu / g | RTX 5060 Ti 16 GB / 60 | **GIGABYTE RTX 5060 Ti WINDFORCE MAX OC 8G (8 GB)** | **FALSCH** (→ „RTX 5060 Ti 8 GB“, g 58) |
+| alt-100203779 | Preis | 1799 | 1.799 € | OK |
+| alt-100203779 | gpu / g | RTX 5060 Ti 16 GB / 60 | **RTX 5060 Ti mit 8 GB GDDR7** | **FALSCH** (→ „RTX 5060 Ti 8 GB“, g 58) |
+| alt-100205859 | Preis/Ausstattung | 2497; 265F, RTX 5070, 16 GB, 1 TB | stimmt, Win 11 Home | OK |
+| alt-100148859 | Preis/Ausstattung | 2799; 7800X3D, 5070, 32 GB, 1 TB | stimmt, Win 11 Home | OK |
+| alt-100227641 | Preis/Ausstattung | 2999 | 2.999 € (das erste `class="price"` auf der Seite, 4.499 €, gehört zu einem anderen Element); 7800X3D, 5070 Windforce OC SFF, 32 GB DDR5-6400, 1 TB, Win 11 Home | OK |
+| alt-100148871 | Preis/Ausstattung | 3199 | stimmt, Win 11 Home | OK |
+| alt-100229535 | Preis/Ausstattung | 3299; 7800X3D, 5070 Ti, 32 GB, 1 TB | 3.299 €; Palit RTX 5070 Ti GamingPro-S 16 GB, **Win 11 Pro** | OK (Hinweis: Pro statt Home) |
+| alt-100219911 | Zustand | als normales Angebot geführt | **„Generalüberholt“** (Refurbished-Bereich); sonst 3.999 €, 9800X3D, RTX 5080 FE, 32 GB, 2 TB 9100 Pro, Win 11 Home | **FALSCH (B-Ware/Refurbished)** |
+| alt-100102268 | Preis/Ausstattung | 4999; 265K, 5080, 32 GB, 2 TB | stimmt, Win 11 Home | OK |
+
+Indizes der Fertig-PCs (g/cg/m) passen zu den DB-Werten der jeweiligen CPU und GPU, mit zwei Ausnahmen: die beiden 8-GB-Fälle oben.
+
+## Korrekturliste
+
+| id | Feld | neuer Wert |
+|---|---|---|
+| r5-9600 | box | true (Wraith Stealth im Lieferumfang) |
+| wd-sn7100-2 | price | 300 |
+| m-asus-tuf-gaming-rtx-5060-oc (GPU_MODELS) | Preis | 566 |
+| m-gigabyte-rtx-5070-ti-eagle-oc-sff | ALT | ALT id entfernen (Artikel ist RTX 5070 ohne Ti) |
+| m-asus-dual-rtx-5060-ti-oc | ALT | ALT id entfernen (8-GB-Artikel) |
+| m-gigabyte-rtx-5060-ti-windforce-max-oc | ALT | ALT id entfernen (8 GB) |
+| m-gigabyte-rtx-5060-ti-windforce-oc | ALT | ALT id entfernen (8 GB) |
+| m-msi-rtx-5060-ti-ventus-2x-oc-plus | ALT | ALT id entfernen (8 GB) |
+| m-msi-rtx-5060-ti-gaming-trio-oc | ALT | ALT id entfernen (8 GB) |
+| m-gigabyte-rx-9060-xt-gaming-oc | ALT | ALT id entfernen (8 GB) |
+| m-sapphire-pure-rx-9070 | ALT | ALT id entfernen (RX 9070 XT Pure) |
+| m-asrock-rx-9070-challenger | ALT | ALT id entfernen (RX 9070 XT Challenger) |
+| m-inno3d-rtx-5070-ti-x3 | ALT | ALT id entfernen (iChill X3) |
+| m-xfx-swift-rx-9070-xt-triple-fan-gaming-e | ALT | ALT id entfernen (weiße Variante) |
+| m-xfx-swift-rx-9060-xt-oc-gaming-edition | ALT | ALT id entfernen (weiße Variante) |
+| m-xfx-swift-rx-9060-xt-oc-triple-fan-gamin | ALT | ALT id entfernen (weiße Variante) |
+| dc-ak620d | ALT | ALT id entfernen (AK620 G2 Digital NYX) |
+| ll-lancool217 | ALT | ALT id entfernen (Lancool 217 Infinity) |
+| k-2x16-6000c30 | ALT | ALT id entfernen (weiße Variante KF560C30BWEAK2) |
+| k-2x32-5600 | ALT | ALT id entfernen (CL40-Kit KF556C40BBK2-64) |
+| alt-100205075 | price | 1843 |
+| alt-100205075 | gpu / g | "RTX 5060 Ti 8 GB" / 58 |
+| alt-100203779 | gpu / g | "RTX 5060 Ti 8 GB" / 58 |
+| alt-100219911 | Eintrag | entfernen (generalüberholt) oder als „Generalüberholt“ kennzeichnen |
+| Empfehlung | fd-northxl silent | 1 (keine Dämmung; dann fd-north ebenso) |
+| Empfehlung | bq-prp3 cap | 250 (Herstellerangabe) |
+| Empfehlung | verwaiste ALT-Schlüssel | msi-b850m-a, k-2x16-6000c30b, asr-x870-prors, bq-lb600, bq-pp13m-1000, cor-3500x, u7-265f entfernen |
+| Empfehlung | fd-meshify3 (ALT) | prüfen: verlinkt ist die Solid-Variante |
+
+## Umsetzung Runde 9
+- **Alternate-Zuordnung grundsätzlich verschärft** (17 von 48 Stichproben waren falsch):
+  - Grafikkarten müssen Chip (Ti, XT, GRE) und Speichergröße exakt treffen.
+  - Farb- und Sondervarianten werden auch im Untertitel erkannt (weiß, ICE, G2, NYX, Infinity, iChill, Solid, Pro und andere).
+  - Beim RAM wird die Latenz über die Teilenummer geprüft.
+- **Neu zugeordnet:** Alle 281 Alternate-Treffer wurden mit diesen Regeln neu zugeordnet; übrig bleiben 201 Einträge. Alle gemeldeten Fehlzuordnungen zeigen jetzt auf den richtigen Artikel oder sind entfernt (Kingston 64 GB DDR5-5600: CL40 statt CL36; AORUS Master RTX 5070 Ti wegen auffälligen Preises).
+- **Maschinelle Kontrolle danach:** Alle 63 Grafikkarten-Links enthalten den richtigen Chip und die richtige Speichergröße. Vier echte Preisabweichungen beim richtigen Artikel bleiben: zwei ASRock Steel Legend günstiger, zwei RTX 5090 teurer als der Bestpreis.
+- **Teile:**
+  - Ryzen 5 9600 mit Boxed-Kühler.
+  - SanDisk/WD SN7100 2 TB 300 €.
+  - ASUS TUF RTX 5060 OC 566 €.
+  - be quiet! Pure Rock Pro 3 Kühlleistung 250 W.
+  - Fractal North und North XL als ungedämmt eingestuft.
+- **Alternate-Fertig-PCs:**
+  - Gigabyte Aorus Prime 3 (5060 Ti): 1.843 €, RTX 5060 Ti 8 GB.
+  - Ein weiteres System mit RTX 5060 Ti 8 GB.
+  - Ein generalüberholtes Angebot entfernt.
+- **Tests danach:** 20 bestanden, 0 fehlgeschlagen.
