@@ -11,7 +11,7 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
 
 (async()=>{
   const b=await chromium.launch();
-  const ctx=await b.newContext({viewport:{width:1300,height:1000}});
+  const ctx=await b.newContext({viewport:{width:1300,height:1000},acceptDownloads:true});
   const p=await ctx.newPage();
   const errs=[];p.on('pageerror',e=>errs.push(e.message));
   const set=(id,v)=>p.$eval('#sl-'+id,(el,v)=>{el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));},String(v));
@@ -65,6 +65,21 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   await p.click('#slots [data-act=pick][data-cat=ssd2]');await p.click('#plist [data-id=crucial-p310-2]');await p.waitForTimeout(250);
   ok('zweite SSD gewählt',(await picks()).ssd2==='crucial-p310-2');
   await p.click('#slots [data-act=remove][data-cat=ssd2]');await p.waitForTimeout(150);
+
+  console.log('Vergleich: Score, Unterschied, Filter');
+  await p.click('#tab-cmp');await p.waitForTimeout(250);
+  ok('„Für dich“-Spalte vorhanden',await p.$$eval('th[data-sort="fit"]',x=>x.length)===1);
+  ok('Unterschied zu deinem Teil',await p.$$eval('th[data-sort="dprice"]',x=>x.length)===1);
+  await p.check('#cQuiet');await p.waitForTimeout(150);const nq=await p.$$eval('#cTable tbody tr',x=>x.length);await p.uncheck('#cQuiet');await p.waitForTimeout(150);
+  ok('Filter „nur leise“ wirkt',nq>0&&nq<await p.$$eval('#cTable tbody tr',x=>x.length));
+  console.log('PDF');
+  await p.click('#tab-konfig');await p.waitForTimeout(200);
+  await p.click('#hero [data-act="openPdf"]');await p.waitForTimeout(150);
+  ok('PDF-Dialog mit 15 Abschnitten',await p.$$eval('[data-pdfsec]',x=>x.length)===15);
+  await p.click('[data-act="pdfAll"]');
+  try{const [d]=await Promise.all([p.waitForEvent('download',{timeout:60000}),p.click('#pdfGo')]);const fp=await d.path();const sz=require('fs').statSync(fp).size;ok('PDF wird erzeugt ('+Math.round(sz/1024)+' KB)',sz>50000&&sz<3e6,sz);}
+  catch(e){ok('PDF wird erzeugt',false,String(e).slice(0,120));}
+  await p.click('[data-act="closePdf"]');
 
   console.log('Speichern und Code');
   await p.click('#tab-konfig');await p.waitForTimeout(200);

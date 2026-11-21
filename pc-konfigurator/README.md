@@ -52,6 +52,13 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Mehr Prüfungen:** RAM-Höhe unter Doppelturm-Kühlern, kurze SFX-Kabel in großen Gehäusen, Zahl der Lüfteranschlüsse, USB-C-Front bei Einsteiger-Boards, Radiator im Deckel bei hohem RAM.
 - **Preisalter:** Hero und Steckbriefe zeigen, wie alt die Preise sind, und warnen ab 7 bzw. 21 Tagen.
 
+## Teile-Vergleich und PDF
+- **„Für dich“-Score (0–100)** je Teil aus Leistung, Preis-Leistung und Laufruhe, gewichtet nach Profil und Leise-Regler; Konflikte 0, Warnungen −20 %, über Budget −15 %. Die Begründung erscheint beim Darüberfahren, die Tabelle ist standardmäßig danach sortiert; eigene Kachel „Für dich am besten“.
+- **Unterschied zu deinem Teil:** Spalten „Δ Preis“ und „Δ FPS“ bzw. „Δ Leistung/GB/Watt“, farbig.
+- **Balken** in allen Zahlenspalten und im Seite-an-Seite-Vergleich (länger = besser, Bestwert grün).
+- **Mehr Kennwerte:** Grafikkarte „Platz im Gehäuse“, RAM-Höhe, Netzteil-Reserve, Kühler-Reserve; Filter „nur leise“ und „bei Alternate sofort lieferbar“.
+- **PDF speichern** (Hero und Zusammenfassung): 15 Abschnitte frei wählbar – Übersicht, Seitenansicht, Teileliste, Alternate-Preise, Kompatibilität, Spiele-FPS, Anwendungen, Stärken/Schwächen, Spar- und Upgrade-Tipps, Fertig-PCs, Laptops und Konsolen, Ranking, Bauanleitung, Einkaufsliste mit anklickbaren Links, Konfigurations-Code. Dunkles Design wie die Seite; die Auswahl wird gemerkt. Im eingebetteten Artifact-Viewer läuft das Speichern über dessen Download-Bestätigung (ebenso der JSON-Download).
+
 ## Alternate
 - **Zweiter Preis je Teil:** Neben dem Bestpreis (Geizhals-Daten) zeigt jedes Teil den Preis bei **alternate.de** mit Lieferstatus (grüner Punkt = sofort lieferbar) und direktem Produktlink, ebenso im Auswahlfenster, als Spalte im Vergleich und in der Einkaufsliste.
 - **„Alles bei Alternate“:** Zusammenfassung und Einkaufsliste rechnen die Summe bei einem Shop aus und zeigen den Aufpreis gegenüber den Bestpreisen. Teile, die es dort nicht gibt, gehen mit dem Bestpreis ein und werden genannt.

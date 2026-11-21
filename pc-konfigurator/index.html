@@ -210,6 +210,13 @@ button.hud-i{cursor:pointer}button.hud-i:hover{border-color:var(--accent)}
 .win .eyebrow{color:var(--ok)}.win b{font-size:15px}.win .row-btns{margin-top:4px}
 .tag.win1{background:var(--ok-soft);color:var(--ok)}.tag.win2{background:var(--accent-soft);color:var(--accent)}
 .vtable td.pl{font-family:var(--f-mono)}
+.cb{display:block;height:4px;border-radius:2px;background:var(--sunk);margin-top:3px;min-width:44px;overflow:hidden}
+.cb i{display:block;height:100%;border-radius:2px;background:linear-gradient(90deg,var(--accent),var(--auto))}
+.best .cb i{background:var(--ok)}
+.cb.wide{min-width:90px;height:6px}
+.vtable td.fit b{font-family:var(--f-display);font-size:15px}
+.vtable td.dl{white-space:nowrap;font-family:var(--f-mono)}
+.vtable td:nth-child(2){min-width:190px}
 .tabs button{border:0;background:transparent;padding:10px 16px;font-family:var(--f-display);font-size:17px;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
 .tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
 .view{display:flex;flex-direction:column;gap:18px}
@@ -556,6 +563,9 @@ label.btn{display:inline-flex;align-items:center}
 .altb:hover{background:color-mix(in srgb,#ff8a3d 14%,transparent)}
 .altb i{width:7px;height:7px;border-radius:50%;background:var(--warn)}.altb i.on{background:var(--ok)}
 .alt-kv small{font-size:12px}
+.pdf-opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:6px 14px}
+.pdf-opt{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--sunk);cursor:pointer;font-size:14px}
+.pdf-opt input{width:17px;height:17px;accent-color:var(--accent)}
 .ukind{display:inline-block;font:700 10.5px var(--f-mono);letter-spacing:.06em;padding:2px 7px;border-radius:6px;margin-right:4px}
 .k-g{background:color-mix(in srgb,var(--c3) 20%,transparent);color:var(--c3)}.k-c{background:color-mix(in srgb,var(--c1) 20%,transparent);color:var(--c1)}.k-b{background:color-mix(in srgb,var(--c4) 20%,transparent);color:var(--c4)}
 .up-form{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px 16px;margin-top:6px}
@@ -811,6 +821,8 @@ label.btn{display:inline-flex;align-items:center}
       <div class="cfilters">
         <label>Preis <input type="number" id="cMin" min="0" step="10" inputmode="numeric" placeholder="von" aria-label="Preis von"> – <input type="number" id="cMax" min="0" step="10" inputmode="numeric" placeholder="bis" aria-label="Preis bis"> €</label>
         <input type="search" id="cQ" placeholder="Suchen, z. B. 5070 Ti oder TUF" aria-label="Im Vergleich suchen">
+        <label class="switch"><input type="checkbox" id="cQuiet"> nur leise</label>
+        <label class="switch"><input type="checkbox" id="cAltNow"> bei Alternate sofort lieferbar</label>
         <button type="button" class="btn ghost" data-act="cReset">Filter zurücksetzen</button>
       </div>
       <div class="cfilters" id="cMakers"></div>
@@ -846,7 +858,7 @@ label.btn{display:inline-flex;align-items:center}
       <div class="hero-bar" id="heroBar" hidden><span></span></div>
       <div class="hero-stats" id="heroStats"></div>
       <div class="hero-chips" id="heroChips"></div>
-      <div class="row-btns"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="shareLink">Link teilen</button><button type="button" class="btn" data-act="hudGo" data-view="dash">Zum Dashboard</button></div>
+      <div class="row-btns"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPdf">PDF speichern</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="shareLink">Link teilen</button><button type="button" class="btn" data-act="hudGo" data-view="dash">Zum Dashboard</button></div>
       <span class="toast" id="heroToast" role="status" aria-live="polite"></span><textarea id="heroFallback" hidden readonly aria-label="Link zum Kopieren"></textarea>
     </div>
   </section>
@@ -913,6 +925,20 @@ label.btn{display:inline-flex;align-items:center}
         <div class="row-btns"><button type="button" class="btn" data-act="loadCode">Code laden</button><label class="btn" id="fileLbl">Datei öffnen<input type="file" id="fileIn" accept=".json,application/json" hidden></label></div>
         <p class="toast" id="codeToast" role="status" aria-live="polite"></p>
       </section>
+    </div>
+  </div>
+</div>
+
+<div class="picker" id="pdfDlg" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pdfTitle">
+    <div class="panel-head">
+      <div class="panel-title"><h2 id="pdfTitle">Als PDF speichern</h2><button type="button" class="btn" data-act="closePdf">Schließen</button></div>
+      <p class="panel-note">Wähle, was ins PDF soll. Das PDF ist im dunklen Design der Werkbank gestaltet; Links in der Einkaufsliste sind anklickbar.</p>
+    </div>
+    <div class="plist">
+      <div class="row-btns" style="margin-bottom:10px"><button type="button" class="btn" data-act="pdfAll">Alle auswählen</button><button type="button" class="btn" data-act="pdfNone">Keine</button><button type="button" class="btn" data-act="pdfStd">Standard</button></div>
+      <div class="pdf-opts" id="pdfOpts"></div>
+      <div class="row-btns" style="margin-top:14px"><button type="button" class="btn primary" data-act="makePdf" id="pdfGo">PDF erstellen</button><span class="toast" id="pdfToast" role="status" aria-live="polite"></span></div>
     </div>
   </div>
 </div>
@@ -1915,6 +1941,7 @@ function renderSummary(parts,issues){
       ${(()=>{const A=altSum(resolve(state.picks));if(!A.best)return "";const d=A.sum-A.best;return `<div class="kv alt-kv"><span>Alles bei Alternate${A.miss.length?` <small class="subline">(${A.miss.length} Teil${A.miss.length>1?"e":""} dort nicht gefunden: Bestpreis eingesetzt)</small>`:""}</span><span class="num">${eur(A.sum)} <small class="${d>0?"delta-neg":"delta-pos"}">${d>=0?"+":"−"}${eur(Math.abs(d))}</small></span></div>`;})()}
       <div class="row-btns">
         <button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button>
+        <button type="button" class="btn" data-act="openPdf">PDF speichern</button>
         <button type="button" class="btn" data-act="openPrint">Drucken</button>
         <button type="button" class="btn" data-act="copy">Teileliste kopieren</button>
         ${!state.auto&&missing.length?`<button type="button" class="btn" data-act="fill">Fehlende ergänzen</button>`:""}
@@ -2350,6 +2377,129 @@ function importFromHash(){
   try{history.replaceState(null,"",location.href.split("#")[0]);}catch(e){}
   setTimeout(()=>flash("#heroToast","Konfiguration aus dem Link geladen. Deine vorige ist unter „Speichern / Laden“ gesichert."),300);
 }
+
+/* ---------- PDF-Export (jsPDF, dunkles Design) ---------- */
+const PDF_SECS=[
+ ["over","Übersicht und Kennzahlen",1],["view","Seitenansicht des PCs",1],["parts","Teileliste mit Eckdaten",1],["alt","Alternate-Preise und Summe",1],
+ ["compat","Kompatibilität und Hinweise",1],["games","Bildraten je Spiel",1],["apps","Anwendungen (Blender, Video, KI …)",0],["pros","Stärken und Schwächen",1],
+ ["tips","Spar- und Upgrade-Tipps",1],["pre","Vergleich mit Fertig-PCs",0],["lap","Laptops und Konsolen",0],["rank","Ranking aller Systeme",0],
+ ["build","Bauanleitung",0],["shop","Einkaufsliste mit Links",1],["code","Konfigurations-Code zum Wiederherstellen",1]];
+const PDFKEY="pcwerkbank.pdfsel";
+function pdfSel(){try{const o=JSON.parse(localStorage.getItem(PDFKEY)||"null");if(o)return o;}catch(e){}return Object.fromEntries(PDF_SECS.map(x=>[x[0],!!x[2]]));}
+function renderPdfOpts(){const sel=pdfSel();$("#pdfOpts").innerHTML=PDF_SECS.map(([k,l])=>`<label class="pdf-opt"><input type="checkbox" data-pdfsec="${k}"${sel[k]?" checked":""}> ${esc(l)}</label>`).join("");}
+function storePdfSel(){const o={};document.querySelectorAll("[data-pdfsec]").forEach(c=>o[c.dataset.pdfsec]=c.checked);try{localStorage.setItem(PDFKEY,JSON.stringify(o));}catch(e){}return o;}
+let pdfLast=null;
+function openPdf(){pdfLast=document.activeElement;renderPdfOpts();$("#pdfToast").textContent="";$("#pdfDlg").hidden=false;setTimeout(()=>$("#pdfGo").focus(),0);}
+function closePdf(){$("#pdfDlg").hidden=true;if(pdfLast&&pdfLast.focus)pdfLast.focus();}
+function loadScript(src){return new Promise((ok,no)=>{if(document.querySelector(`script[src="${src}"]`)){ok();return;}const sc=document.createElement("script");sc.src=src;sc.onload=()=>ok();sc.onerror=()=>no(new Error("load"));document.head.appendChild(sc);});}
+async function ensureJsPdf(){
+  if(!(window.jspdf&&window.jspdf.jsPDF))await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js");
+  if(!(window.jspdf.jsPDF.API.autoTable))await loadScript("https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js");
+  return window.jspdf.jsPDF;
+}
+/* Standardschrift kennt nur Latin-1/WinAnsi: Sonderzeichen ersetzen */
+function pdfTxt(t){
+  return String(t==null?"":t).replace(/<[^>]+>/g,"").replace(/&nbsp;/g," ").replace(/&amp;/g,"&").replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#39;/g,"'")
+   .replace(/Δ/g,"Diff. ").replace(/≤/g,"<=").replace(/≥/g,">=").replace(/↗/g,"").replace(/→/g,"->").replace(/←/g,"<-").replace(/≈/g,"~").replace(/⇆/g,"").replace(/▲/g,"+").replace(/▾|▸/g,"")
+   .replace(/[  ]/g," ").replace(/[^\x00-\xFF–—‘’‚“”„•…€™]/g,"").replace(/\s+/g," ").trim();
+}
+async function svgToPng(svgHtml,w){
+  const host=document.createElement("div");host.style.cssText="position:fixed;left:-9999px;top:0;width:"+w+"px";host.innerHTML=svgHtml;document.body.appendChild(host);
+  const svg=host.querySelector("svg");const cs=getComputedStyle(document.documentElement);
+  let css="";for(const sh of document.styleSheets){let rules;try{rules=sh.cssRules;}catch(e){continue;}for(const r of rules){if(r.cssText&&r.cssText.includes(".pcview"))css+=r.cssText+"\n";}}
+  css=css.replace(/var\((--[a-z0-9-]+)\)/gi,(m,v)=>cs.getPropertyValue(v).trim()||"#888");
+  const st=document.createElementNS("http://www.w3.org/2000/svg","style");st.textContent=css;svg.insertBefore(st,svg.firstChild);
+  const vb=svg.viewBox.baseVal,ratio=vb.height/vb.width;svg.setAttribute("width",w);svg.setAttribute("height",Math.round(w*ratio));svg.setAttribute("xmlns","http://www.w3.org/2000/svg");
+  const xml=new XMLSerializer().serializeToString(svg);host.remove();
+  const img=new Image();const url="data:image/svg+xml;charset=utf-8,"+encodeURIComponent(xml);
+  await new Promise((ok,no)=>{img.onload=ok;img.onerror=no;img.src=url;});
+  const c=document.createElement("canvas");c.width=w*2;c.height=Math.round(w*ratio)*2;const g=c.getContext("2d");g.fillStyle="#0D121B";g.fillRect(0,0,c.width,c.height);g.drawImage(img,0,0,c.width,c.height);
+  return {data:c.toDataURL("image/jpeg",0.88),ratio};
+}
+function rankData(parts,total){
+  const L=systemsList(parts,total).filter(x=>x.fps>0);if(!L.length)return [];
+  const w=mixW(),mx=k=>Math.max(...L.map(x=>x[k]))||1,vmax=Math.max(...L.map(x=>x.fps/x.price));
+  const W=[[0.36-0.16*w,x=>x.fps/mx("fps")],[0.24,x=>(x.fps/x.price)/vmax],[0.08+0.2*w,x=>x.m/mx("m")],[0.14-0.04*w,x=>Math.min(x.ram,64)/64*0.5+Math.min(x.ssd,4000)/4000*0.5],[0.18,x=>x.up/100]];
+  const sum=W.reduce((a,c)=>a+c[0],0);
+  return L.map(x=>({x,score:Math.round(W.reduce((a,c)=>a+c[1](x)*c[0]/sum*100,0))})).sort((a,b)=>b.score-a.score);
+}
+async function makePdf(){
+  const sel=storePdfSel();if(!Object.values(sel).some(Boolean)){flash("#pdfToast","Bitte mindestens einen Abschnitt wählen.");return;}
+  const btn=$("#pdfGo");btn.disabled=true;flash("#pdfToast","PDF wird erstellt …");
+  try{
+    const JsPDF=await ensureJsPdf();
+    const doc=new JsPDF({unit:"mm",format:"a4"});const PW=210,PH=297,M=14;
+    const C={bg:[11,15,23],card:[16,21,31],alt:[13,18,27],line:[35,45,64],ink:[236,240,248],muted:[141,152,172],acc:[139,155,255],ok:[74,222,128],bad:[248,113,113],warn:[251,191,36],teal:[61,217,198]};
+    const paint=()=>{doc.setFillColor(...C.bg);doc.rect(0,0,PW,PH,"F");doc.setFillColor(...C.acc);doc.rect(0,0,PW,1.4,"F");};
+    paint();let y=M;
+    const page=()=>{doc.addPage();paint();y=M;};
+    const need=h=>{if(y+h>PH-14)page();};
+    const parts=resolve(state.picks),issues=checkAll(parts,state.profile),p=P();let total=0;for(const c in parts)total+=parts[c].price;
+    const T=(txt,size,color,opt)=>{doc.setFontSize(size);doc.setTextColor(...(color||C.ink));doc.setFont("helvetica",opt&&opt.bold?"bold":"normal");const lines=doc.splitTextToSize(pdfTxt(txt),(opt&&opt.w)||PW-2*M);need(lines.length*size*0.42+1);doc.text(lines,(opt&&opt.x)||M,y+size*0.36);y+=lines.length*size*0.42+((opt&&opt.gap)!=null?opt.gap:1.5);};
+    const H=(txt)=>{need(14);y+=3;doc.setFillColor(...C.acc);doc.roundedRect(M,y,1.4,6,0.6,0.6,"F");T(txt,13.5,C.ink,{bold:true,x:M+4,gap:2.5});};
+    const table=(head,body,opt)=>{doc.autoTable(Object.assign({head:[head.map(pdfTxt)],body:body.map(r=>r.map(c=>typeof c==="object"&&c?Object.assign({},c,{content:pdfTxt(c.content)}):pdfTxt(c))),startY:y,margin:{left:M,right:M,top:16,bottom:14},theme:"plain",
+      styles:{font:"helvetica",fontSize:8.6,textColor:C.ink,fillColor:C.card,lineColor:C.line,lineWidth:0.15,cellPadding:1.8,overflow:"linebreak"},
+      headStyles:{fillColor:[19,26,38],textColor:C.muted,fontStyle:"bold",fontSize:7.6},alternateRowStyles:{fillColor:C.alt},
+      willDrawPage:(d)=>{if(d.pageNumber>1||doc.internal.getNumberOfPages()>1){}},didDrawPage:()=>{}},opt||{}));y=doc.lastAutoTable.finalY+4;};
+    // Hintergrund für Folgeseiten von Tabellen
+    const _add=doc.addPage.bind(doc);doc.addPage=function(){const r=_add(...arguments);paint();return r;};
+    // Kopf
+    doc.setFillColor(...C.acc);doc.roundedRect(M,y,9,9,2,2,"F");doc.setFillColor(...C.teal);doc.roundedRect(M+2.2,y+2.2,4.6,4.6,1.2,1.2,"F");
+    doc.setFont("helvetica","bold");doc.setFontSize(20);doc.setTextColor(...C.ink);doc.text("PC-Werkbank",M+12,y+7);
+    doc.setFont("helvetica","normal");doc.setFontSize(8.5);doc.setTextColor(...C.muted);doc.text(pdfTxt(`Erstellt am ${new Date().toLocaleDateString("de-DE")} · Preise Stand 21.11.2026 · ${PROFILE_NAME[state.profile]}${state.budget?" · Budget "+eur(state.budget):""}`),M+12,y+11.5);y+=17;
+    const fps=parts.gpu||parts.cpu?buildFps(parts,p.res):0;
+    if(sel.over){
+      const cpu=parts.cpu,gpu=parts.gpu,sn=x=>x.replace(/^(AMD|Intel|NVIDIA) (GeForce |Radeon |Core )?/,"");
+      T(`${cpu?sn(cpu.name):"Prozessor offen"} + ${gpu&&!gpu.none?sn(gpu.name):"ohne Grafikkarte"}`,15,C.ink,{bold:true,gap:1});
+      T(gamingLabel(gpu,cpu)||"",9.5,C.muted,{gap:3});
+      need(26);const kp=[["Gesamtpreis",eur(total)],[`FPS ${RES[p.res].label}`,fps?fps+" FPS":"–"],["Multi-Core",cpu?String(cpu.m):"–"],["Strom",parts.cpu||parts.gpu?estLoad(parts)+" W":"–"],["Lautstärke",noiseInfo(parts).label],["Preis je FPS",fps?eur(total/fps):"–"]];
+      const bw=(PW-2*M-5*3)/6;kp.forEach((k,i)=>{const x=M+i*(bw+3);doc.setFillColor(...C.card);doc.setDrawColor(...C.line);doc.roundedRect(x,y,bw,18,2,2,"FD");doc.setFontSize(6.6);doc.setTextColor(...C.muted);doc.text(pdfTxt(k[0]).toUpperCase(),x+2.5,y+5);doc.setFont("helvetica","bold");doc.setFontSize(11.5);doc.setTextColor(...C.ink);doc.text(pdfTxt(k[1]),x+2.5,y+12.5);doc.setFont("helvetica","normal");});
+      y+=23;
+      const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
+      T(errs?`${errs} Konflikt(e) – bitte lösen`:warns?`${warns} Hinweis(e) zur Abstimmung`:"Alle Teile passen zusammen.",9.5,errs?C.bad:warns?C.warn:C.ok,{bold:true,gap:2});
+    }
+    if(sel.view){H("Seitenansicht");try{const im=await svgToPng(realPcSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats))),900);const w=PW-2*M,h=Math.min(w*im.ratio,150);const ww=h/im.ratio;need(h+4);doc.addImage(im.data,"JPEG",M+(w-ww)/2,y,ww,h,undefined,"FAST");y+=h+4;}catch(e){T("Seitenansicht konnte nicht erzeugt werden.",9,C.muted);}}
+    if(sel.parts){H("Teileliste");const rows=CATS.filter(c=>parts[c.k]).map(c=>{const x=parts[c.k],a=altOf(x);const r=[c.label,x.name,spec(c.k,x),x.price?eur(x.price):"0 €"];if(sel.alt)r.push(a?eur(a.price)+(a.now?"":" (Lieferzeit)"):"–");return r;});
+      const head=["Bauteil","Modell","Eckdaten","Bestpreis"];if(sel.alt)head.push("Alternate");
+      const A=altSum(parts);const sum=["Summe","","",eur(total)];if(sel.alt)sum.push(eur(A.sum));rows.push(sum.map(v=>({content:v,styles:{fontStyle:"bold",fillColor:[19,26,38]}})));
+      table(head,rows,{columnStyles:{0:{cellWidth:26},1:{cellWidth:48},3:{halign:"right",cellWidth:20},4:{halign:"right",cellWidth:22}}});
+      if(sel.alt){const d=A.sum-A.best;T(`Alles bei Alternate: ${eur(A.sum)} (${d>=0?"+":"−"}${eur(Math.abs(d))} gegenüber den Bestpreisen)${A.miss.length?"; nicht bei Alternate: "+A.miss.join(", "):""}.`,8.5,C.muted,{gap:2});}}
+    if(sel.compat){H("Kompatibilität und Hinweise");const L=issues.slice().sort((a,b)=>({error:0,warn:1,info:2}[a.level])-({error:0,warn:1,info:2}[b.level]));
+      if(!L.length)T("Keine Konflikte oder Hinweise.",9,C.ok);else table(["Stufe","Hinweis"],L.map(i=>[{content:SEV_LABEL[i.level],styles:{textColor:i.level==="error"?C.bad:i.level==="warn"?C.warn:C.acc,fontStyle:"bold"}},i.msg]),{columnStyles:{0:{cellWidth:22}}});}
+    if(sel.games){H(`Bildraten je Spiel (nativ, hohe Details)`);table(["Spiel",...RES.map(r=>r.label)],GAMES.map(gm=>[gm.name,...RES.map((r,i)=>{const o=gameFps(gm,parts,i,"off",false);return {content:o.fps+(o.cpuLim?" c":"")+(o.vramLow?" !":""),styles:{halign:"right",textColor:o.fps<30?C.bad:o.fps<60?C.warn:o.fps<120?C.ok:C.acc,fontStyle:i===p.res?"bold":"normal"}};})]),{columnStyles:{0:{cellWidth:70}}});
+      T("c = Prozessor begrenzt, ! = Grafikspeicher knapp. Schätzwerte aus Benchmark-Verhältnissen, keine Messung.",7.5,C.muted,{gap:2});}
+    if(sel.apps){H("Anwendungen");const e=appEstimates(parts);table(["Anwendung","Index","Hinweis"],e.apps.map(a=>[a.name,{content:String(a.v),styles:{halign:"right",fontStyle:"bold"}},a.txt+" ("+a.ref+")"]),{columnStyles:{0:{cellWidth:55},1:{cellWidth:16}}});}
+    if(sel.pros){H("Stärken und Schwächen");const pc=prosConsAll(parts,issues);const n=Math.max(pc.pros.length,pc.cons.length);const rows=[];for(let i=0;i<Math.min(n,10);i++)rows.push([pc.pros[i]?"+ "+pc.pros[i]:"",pc.cons[i]?"! "+pc.cons[i]:""]);
+      table(["Stärken","Schwächen und Hinweise"],rows,{columnStyles:{0:{textColor:C.ok},1:{textColor:C.warn}}});}
+    if(sel.tips){H("Spar- und Upgrade-Tipps");const st=upgradeSteps(parts).slice(0,5),sv=savingsList(parts);
+      const rows=st.map(x=>["Upgrade",x.c.label+": "+x.o.name,"+"+eur(x.d),benefitText(x.c.k,x.pt,x.o,parts)]).concat(sv.map(x=>["Sparen",x.c.label+": "+x.p.name+" statt "+x.cur.name,"−"+eur(x.cur.price-x.p.price),saveNote(x.c.k,x.cur,x.p,parts)]));
+      if(rows.length)table(["Art","Vorschlag","Preis","Nutzen"],rows,{columnStyles:{0:{cellWidth:18},2:{cellWidth:18,halign:"right"}}});else T("Keine Vorschläge.",9,C.muted);}
+    const sysL=systemsList(parts,total),me=sysL[0];
+    if(sel.pre){H("Vergleich mit Fertig-PCs (ähnliche Leistung)");const L=sysL.filter(x=>x.kind==="pre"&&me.fps&&Math.abs(x.fps/me.fps-1)<=0.3).sort((a,b)=>a.price-b.price).slice(0,14);
+      table(["System","Ausstattung","FPS","Preis","Preis/FPS"],[[{content:"Dein Selbstbau",styles:{fontStyle:"bold",textColor:C.acc}},me.sub,String(me.fps),eur(me.price),me.fps?eur(me.price/me.fps):"–"],...L.map(x=>[x.name+(x.chk?"":" (Preis unbelegt)"),x.sub+" · "+(x.src.ram||"")+" · "+(x.src.ssd||""),String(x.fps),eur(x.price),eur(x.price/x.fps)])],{columnStyles:{2:{halign:"right",cellWidth:13},3:{halign:"right",cellWidth:20},4:{halign:"right",cellWidth:18}}});}
+    if(sel.lap){H("Laptops und Konsolen");const L=sysL.filter(x=>x.kind==="lap"||x.kind==="con").sort((a,b)=>b.fps-a.fps);
+      table(["Gerät","Ausstattung","FPS","Preis"],L.map(x=>[x.name+(x.kind==="con"?" (Konsole)":""),x.sub,String(x.fps),eur(x.price)]),{columnStyles:{2:{halign:"right",cellWidth:13},3:{halign:"right",cellWidth:20}}});}
+    if(sel.rank){H("Ranking aller Systeme");const R=rankData(parts,total);const mi=R.findIndex(r=>r.x.kind==="me");const shown=R.slice(0,12);if(mi>=12)shown.push(R[mi]);
+      table(["#","System","Art","Preis","FPS","Punkte"],shown.map(r=>[String(R.indexOf(r)+1),r.x.name,{me:"Selbstbau",pre:"Fertig-PC",lap:"Laptop",con:"Konsole"}[r.x.kind],eur(r.x.price),String(r.x.fps),{content:String(r.score),styles:{fontStyle:"bold",textColor:r.x.kind==="me"?C.acc:C.ink}}]),{columnStyles:{0:{cellWidth:8},3:{halign:"right"},4:{halign:"right"},5:{halign:"right"}}});}
+    if(sel.build){H("Bauanleitung");buildSteps(parts).forEach((st,i)=>{T(`${i+1}. ${st.title} (ca. ${st.min} min)`,10,C.ink,{bold:true,gap:0.8});st.lines.forEach(l=>T("• "+l,8.6,C.muted,{x:M+3,w:PW-2*M-3,gap:0.6}));y+=2;});}
+    if(sel.shop){H("Einkaufsliste");doc.setFontSize(8.6);CATS.filter(c=>parts[c.k]&&parts[c.k].price>0).forEach(c=>{const x=parts[c.k],a=altOf(x);need(11);
+      doc.setFont("helvetica","bold");doc.setTextColor(...C.ink);doc.text(pdfTxt(`${c.label}: ${x.name}`),M,y+3);doc.setFont("helvetica","normal");doc.text(eur(x.price),PW-M,y+3,{align:"right"});
+      doc.setTextColor(...C.acc);doc.textWithLink("Geizhals",M,y+7.5,{url:gzUrl(x)});let xx=M+doc.getTextWidth("Geizhals")+4;doc.textWithLink("PCGH-Preisvergleich",xx,y+7.5,{url:pcghUrl(x)});xx+=doc.getTextWidth("PCGH-Preisvergleich")+4;
+      doc.setTextColor(255,138,61);if(a)doc.textWithLink(pdfTxt(`Alternate ${eur(a.price)}`),xx,y+7.5,{url:a.url});else doc.textWithLink("Alternate-Suche",xx,y+7.5,{url:altSearch(x)});y+=11;});
+      need(8);doc.setDrawColor(...C.line);doc.line(M,y,PW-M,y);y+=4.5;doc.setFont("helvetica","bold");doc.setTextColor(...C.ink);doc.text("Summe",M,y);doc.text(eur(total),PW-M,y,{align:"right"});y+=6;doc.setFont("helvetica","normal");}
+    if(sel.code){H("Konfigurations-Code");T("In der PC-Werkbank unter „Speichern / Laden“ einfügen, um diese Konfiguration wiederherzustellen:",8.6,C.muted,{gap:1.5});doc.setFont("courier","normal");doc.setFontSize(7.5);doc.setTextColor(...C.teal);const lines=doc.splitTextToSize(encodeCfg(snapshot()),PW-2*M);need(lines.length*3.2);doc.text(lines,M,y+3);y+=lines.length*3.2+3;doc.setFont("helvetica","normal");}
+    // Fußzeile
+    const n=doc.internal.getNumberOfPages();for(let i=1;i<=n;i++){doc.setPage(i);doc.setFontSize(7.5);doc.setTextColor(...C.muted);doc.text(pdfTxt(`PC-Werkbank · Richtwerte, Preise ohne Gewähr · Seite ${i} von ${n}`),PW/2,PH-7,{align:"center"});}
+    const fname=`PC-Werkbank ${new Date().toISOString().slice(0,10)}.pdf`;
+    const blob=doc.output("blob");
+    if(embedded){const dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;
+      if(!dl){flash("#pdfToast","Speichern ist in dieser Ansicht nicht möglich. Öffne pc-konfigurator/index.html direkt im Browser.");return;}
+      try{await dl.save({filename:fname,data:blob});flash("#pdfToast","PDF gespeichert.");}
+      catch(e){flash("#pdfToast",e&&e.code==="declined"?"Speichern abgebrochen.":e&&e.code==="rate_limited"?"Bitte kurz warten und erneut versuchen.":"Speichern hier nicht möglich.");}}
+    else{doc.save(fname);flash("#pdfToast","PDF gespeichert: "+fname);}
+  }catch(e){console.error(e);flash("#pdfToast","PDF konnte nicht erstellt werden"+(e&&e.message==="load"?": Die PDF-Bibliothek ließ sich nicht laden (Internetverbindung?).":"."));}
+  finally{btn.disabled=false;}
+}
 let devF={pre:"near",lap:"near"};
 function winAdd(parts){return parts.os?0:get("os","win11-pro").price;}
 function winNote(parts,total){return parts.os?`${eur(total)} inkl. ${parts.os.ed==="Linux"?"Linux":"Windows "+parts.os.ed}`:`${eur(total)} Teile + ${eur(winAdd(parts))} Windows 11 Pro`;}
@@ -2519,7 +2669,7 @@ function briefHtml(cat,p,parts){
 document.addEventListener("toggle",e=>{const d=e.target;if(d&&d.dataset&&d.dataset.brief){if(d.open)openBriefs.add(d.dataset.brief);else openBriefs.delete(d.dataset.brief);}},true);
 
 /* Vergleich */
-let cmpCat="gpu",cmpSort={k:"perf",dir:-1},cmpF={brand:new Set(),maker:new Set()};
+let cmpCat="gpu",cmpSort={k:"fit",dir:-1},cmpF={brand:new Set(),maker:new Set()};
 const MULTI=["be quiet!","Lian Li","Cooler Master","Fractal Design","Thermal Grizzly"];
 function makerOf(cat,p){
   if(cat==="gpu")return p.of?p.maker:"Chip-Angabe";
@@ -2534,8 +2684,18 @@ function perfOf(cat,p){
   return p.tier;
 }
 const PERF_LABEL={cpu:"Leistung (Mix)",gpu:"Gaming-Index",ram:"GB",ssd:"TB",cooler:"Kühlung W",psu:"Watt",board:"Ausstattung",case:"Dämmung"};
+/* Vergleich: niedriger ist besser; Kontext (eigene Teile, aktuelles Teil) für Unterschieds-Spalten */
+const LOWER=new Set(["price","ppp","ppg","ppt","power","cl","len","alt","ppf"]);
+let cmpCtx={parts:{},cur:null},cmpFit=new Map(),cmpQuiet=false,cmpAltNow=false;
+function dPerf(cat,p){
+  const {parts,cur}=cmpCtx;if(!cur||!p)return 0;
+  if(cat==="gpu"){const a=buildFps(parts,P().res),b=buildFps(Object.assign({},parts,{gpu:p}),P().res);return b-a;}
+  if(cat==="cpu")return Math.round(cpuBlend(p)-cpuBlend(cur));
+  const v=perfOf(cat,p),w=perfOf(cat,cur);return Math.round((v-w)*10)/10;
+}
+const DLABEL={gpu:"Δ FPS",cpu:"Δ Leistung",ram:"Δ GB",ssd:"Δ TB",psu:"Δ Watt",cooler:"Δ Kühlung",board:"Δ Ausstattung","case":"Δ Dämmung",monitor:"Δ Stufe",fans:"Δ Stufe",os:"Δ Stufe",kbm:"Δ Stufe"};
 function cmpCols(cat){
-  const c=[["name","Teil",p=>p.name,"t"],["tier","Klasse",p=>p.tier||0,"n"]];
+  const c=[["name","Teil",p=>p.name,"t"],["fit","Für dich",p=>(cmpFit.get(p.id)||{s:0}).s,"n"],["tier","Klasse",p=>p.tier||0,"n"]];
   const extra={
     cpu:[["cores","Kerne",p=>p.cores,"n"],["g","Spiele",p=>p.g,"n"],["m","Multi-Core",p=>p.m,"n"],["power","Watt",p=>p.power,"n"],["socket","Sockel",p=>p.socket,"t"]],
     gpu:[["vram","VRAM",p=>p.vram||0,"n"],["g","Index",p=>p.g,"n"],["fps","FPS "+RES[P().res].label,p=>Math.round((p.g||0)*RES[P().res].f),"n"],["power","Watt",p=>p.power,"n"],["len","Länge",p=>p.len,"n"]],
@@ -2550,10 +2710,15 @@ function cmpCols(cat){
     os:[["ed","Edition",p=>p.ed,"t"],["lic","Lizenz",p=>p.lic,"t"]],
     kbm:[["type","Art",p=>p.type,"t"],["wl","Funk",p=>p.wl?"ja":"–","t"]]
   }[cat]||[];
-  if(cat==="gpu")extra.push(["noise","Kühler",p=>p.noise?["","leise","mittel","laut"][p.noise]:"–","t"],["maker","Hersteller",p=>makerOf("gpu",p),"t"]);
+  if(cat==="gpu")extra.push(["noise","Kühler",p=>p.noise?["","leise","mittel","laut"][p.noise]:"–","t"],["maker","Hersteller",p=>makerOf("gpu",p),"t"],
+    ["fits","Platz im Gehäuse",p=>{const cs=cmpCtx.parts["case"];return cs&&!p.none?(p.len<=cs.gpu?"+"+(cs.gpu-p.len)+" mm":"passt nicht"):"–";},"t"]);
+  if(cat==="ram")extra.push(["h","Höhe mm",p=>p.h||0,"n"]);
+  if(cat==="psu")extra.push(["res","Reserve W",p=>{const q=Object.assign({},cmpCtx.parts);delete q.psu;return (q.cpu||q.gpu)?p.watt-estLoad(q):0;},"n"]);
+  if(cat==="cooler")extra.push(["resv","Reserve %",p=>{const c2=cmpCtx.parts.cpu;return c2&&p.kind!=="boxed"?Math.round((p.cap/c2.cool-1)*100):0;},"n"]);
   const tail=[["price","Preis",p=>p.price,"n"],["alt","Alternate",p=>altOf(p)?altOf(p).price:0,"n"]];
   if(cat==="cpu"||cat==="gpu")tail.push(["ppp","€ je Punkt",p=>perfOf(cat,p)?Math.round(p.price/perfOf(cat,p)*10)/10:0,"n"]);
   if(!XCAT.has(cat))tail.push(["pl","P/L",p=>cmpPL.get(p.id)||0,"n"]);
+  if(cmpCtx.cur)tail.push(["dprice","Δ Preis",p=>p.price-cmpCtx.cur.price,"d"],["dperf",DLABEL[cat]||"Δ Leistung",p=>dPerf(cat,p),"d"]);
   return c.concat(extra,tail);
 }
 let cmpPL=new Map(),cmpPick=[];
@@ -2562,6 +2727,7 @@ function renderCompare(parts){
   const cat=cmpCat,cur=state.picks[cat]&&state.picks[cat].id;
   const ctx=Object.assign({},parts);delete ctx[cat];
   const onlyOk=$("#cOnlyOk").checked;
+  cmpCtx={parts,cur:cur?get(cat,cur):null};
   const all=DB[cat].filter(p=>!p.none&&p.kind!=="boxed");
   // Filterleisten: Chip-Hersteller (nur GPU) und Marke
   const brands=cat==="gpu"?[...new Set(all.map(p=>p.brand))]:[];
@@ -2578,31 +2744,53 @@ function renderCompare(parts){
   if(!isNaN(mn))rows=rows.filter(r=>r.p.price>=mn||isCur(r));
   if(!isNaN(mx))rows=rows.filter(r=>r.p.price<=mx||isCur(r));
   if(q)rows=rows.filter(r=>(r.p.name+" "+spec(cat,r.p)).toLowerCase().includes(q)||isCur(r));
+  const quietN=x=>{const c2=parts.cpu,q2=Object.assign({},parts);delete q2.psu;const load=(q2.cpu||q2.gpu)?estLoad(q2):300;
+    switch(cat){case "gpu":return x.none?1:(4-(x.noise||2))/3;case "case":return (x.silent||1)/3;case "cooler":return x.kind==="boxed"?0.1:Math.min(1,x.cap/((c2?c2.cool:150)*1.6));
+      case "psu":return ((EFF_RANK[x.eff]||0)+1)/4*0.5+Math.min(1,Math.max(0,(x.watt-load)/(load*0.8)))*0.5;case "fans":return /leise|Noctua|Silent Wings/i.test(x.name+" "+(x.note||""))?1:0.5;default:return 0.6;}};
+  if($("#cQuiet").checked)rows=rows.filter(r=>quietN(r.p)>=0.75||isCur(r));
+  if($("#cAltNow").checked)rows=rows.filter(r=>{const a=altOf(r.p);return (a&&a.now)||isCur(r);});
   // Preis-Leistung: 100 = bester Wert der gefilterten, passenden Teile
   const okRows=rows.filter(r=>!r.err&&!r.p.generic);
   const vmax=Math.max(0,...okRows.map(r=>cmpValue(cat,r.p)));
   cmpPL=new Map(rows.map(r=>[r.p.id,vmax?Math.round(cmpValue(cat,r.p)/vmax*100):0]));
   const ranked=okRows.filter(r=>cmpValue(cat,r.p)>0).sort((a,b)=>cmpValue(cat,b.p)-cmpValue(cat,a.p));
   const winIds=new Map(ranked.slice(0,3).map((r,i)=>[r.p.id,i]));
+  // „Für dich“-Score: Leistung, Preis-Leistung und Laufruhe nach Profil und Leise-Regler; Konflikte 0, Warnungen −20 %
+  {const pmax=Math.max(1,...rows.filter(r=>!r.err).map(r=>perfOf(cat,r.p)||0)),qw=0.05+0.25*P().quiet/100,wP=0.45,wV=0.35,sw=wP+wV+qw;
+   let tot=0;for(const c2 in parts)tot+=parts[c2].price;const curPr=cmpCtx.cur?cmpCtx.cur.price:0;
+   cmpFit=new Map(rows.map(r=>{const x=r.p;if(r.err)return [x.id,{s:0,why:"passt nicht: "+r.err.msg}];
+     const pn=(perfOf(cat,x)||0)/pmax,vn=vmax?cmpValue(cat,x)/vmax:0.5,qn=quietN(x);
+     let sc=(wP*pn+wV*vn+qw*qn)/sw*100;const why=[];
+     if(pn>0.85)why.push("sehr stark");else if(pn<0.45)why.push("eher schwach");
+     if(vn>0.85)why.push("sehr gutes Preis-Leistungs-Verhältnis");else if(vn<0.4)why.push("teuer für die Leistung");
+     if(qn>=0.8)why.push("leise");else if(qn<0.4&&P().quiet>=60)why.push("eher laut");
+     const warn=issuesFor(cat,x,ctx,state.profile).some(i=>i.level==="warn");if(warn){sc*=0.8;why.push("mit Warnung");}
+     if(state.budget&&tot-curPr+x.price>state.budget){sc*=0.85;why.push("sprengt das Budget");}
+     return [x.id,{s:Math.round(sc),why:why.join(", ")||"ausgewogen"}];}));}
   const cols=cmpCols(cat);
   const col=cols.find(c=>c[0]===cmpSort.k)||cols.find(c=>c[0]==="price");
   rows.sort((a,b)=>{const va=col[2](a.p),vb=col[2](b.p);return (typeof va==="number"?va-vb:String(va).localeCompare(String(vb)))*cmpSort.dir;});
   const numCols=cols.filter(c=>c[3]==="n"&&c[0]!=="tier").map(c=>c[0]);
-  const best={};numCols.forEach(k=>{const c=cols.find(x=>x[0]===k);const vals=rows.map(r=>c[2](r.p)).filter(v=>typeof v==="number"&&v>0);if(!vals.length)return;best[k]=(k==="price"||k==="ppp"||k==="ppg"||k==="ppt"||k==="power"||k==="cl")?Math.min(...vals):Math.max(...vals);});
+  const best={},cmax={},cmin={};numCols.forEach(k=>{const c=cols.find(x=>x[0]===k);const vals=rows.map(r=>c[2](r.p)).filter(v=>typeof v==="number"&&v>0);if(!vals.length)return;cmax[k]=Math.max(...vals);cmin[k]=Math.min(...vals);best[k]=LOWER.has(k)?cmin[k]:cmax[k];});
+  const bar=(k,v)=>{if(typeof v!=="number"||v<=0||!cmax[k]||k==="tier")return "";const pct=LOWER.has(k)?cmin[k]/v*100:v/cmax[k]*100;return `<span class="cb"><i style="width:${Math.max(4,Math.min(100,pct))}%"></i></span>`;};
+  const dcell=(k,v)=>{if(!cmpCtx.cur)return "–";if(v===0)return '<span class="subline">±0</span>';const good=k==="dprice"?v<0:v>0;const t=k==="dprice"?eur(Math.abs(v)):String(Math.abs(Math.round(v*10)/10));return `<span class="${good?"delta-pos":"delta-neg"}">${v>0?"+":"−"}${t}</span>`;};
   // Seite an Seite
   const pk=cmpPick.map(id=>get(cat,id)).filter(Boolean);
   if(pk.length>=2){const nc=cols.filter(c=>c[0]!=="name");
-    const bestOf=c=>{const vals=pk.map(x=>c[2](x)).filter(v=>typeof v==="number"&&v>0);if(c[3]!=="n"||!vals.length||c[0]==="tier"||new Set(vals).size===1)return null;return (["price","ppp","ppg","ppt","power","cl","len"].includes(c[0]))?Math.min(...vals):Math.max(...vals);};
+    const bestOf=c=>{const vals=pk.map(x=>c[2](x)).filter(v=>typeof v==="number"&&v>0);if(c[3]!=="n"||!vals.length||c[0]==="tier"||new Set(vals).size===1)return null;return LOWER.has(c[0])?Math.min(...vals):Math.max(...vals);};
+    const sbar=(c,v)=>{if(c[3]!=="n"||typeof v!=="number"||v<=0||c[0]==="tier")return "";const vals=pk.map(x=>c[2](x)).filter(x=>typeof x==="number"&&x>0);const pct=LOWER.has(c[0])?Math.min(...vals)/v*100:v/Math.max(...vals)*100;return `<span class="cb wide"><i style="width:${Math.max(4,pct)}%"></i></span>`;};
     $("#cSide").innerHTML=`<div class="side3"><table><thead><tr><th>${pk.length} im Vergleich</th>${pk.map(x=>`<th>${esc(x.name)}</th>`).join("")}</tr></thead><tbody>
-      ${nc.map(c=>{const bv=bestOf(c);return `<tr><td class="k">${esc(c[1])}</td>${pk.map(x=>{const v=c[2](x);return `<td class="${bv!=null&&v===bv?"best":""}">${c[0]==="price"?eur(v):c[0]==="tier"?tierDots(v):c[0]==="pl"?(v||"–"):esc(String(v))}</td>`;}).join("")}</tr>`;}).join("")}
+      ${nc.map(c=>{const bv=bestOf(c);return `<tr><td class="k">${esc(c[1])}</td>${pk.map(x=>{const v=c[2](x);return `<td class="${bv!=null&&v===bv?"best":""}">${c[3]==="d"?(x.id===cur?'<span class="subline">deine Wahl</span>':dcell(c[0],v)):c[0]==="price"||c[0]==="alt"?(v?eur(v):"–"):c[0]==="tier"?tierDots(v):c[0]==="pl"||c[0]==="fit"?(v||"–"):esc(String(v))}${sbar(c,v)}</td>`;}).join("")}</tr>`;}).join("")}
       <tr><td class="k">Passt</td>${pk.map(x=>{const r=rows.find(rr=>rr.p.id===x.id);return `<td>${r&&r.err?`<span class="sev error">nein</span> <small class="subline">${esc(r.err.msg)}</small>`:'<span class="sev ok">ja</span>'}</td>`;}).join("")}</tr>
       <tr><td class="k"></td>${pk.map(x=>`<td>${x.id===cur?'<span class="tag user">Deine Wahl</span>':`<button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(x.id)}">Übernehmen</button>`}</td>`).join("")}</tr></tbody></table></div>`;}
   else $("#cSide").innerHTML=`<p class="subline" style="margin:0 0 8px">Tipp: Bis zu drei Teile in der ersten Spalte ankreuzen, um sie nebeneinander zu vergleichen.${pk.length===1?" Noch ein weiteres Teil wählen.":""}</p>`;
   $("#cTable").innerHTML=`<table class="vtable"><thead><tr><th class="pick" scope="col" aria-label="Zum Vergleich wählen">⇆</th>${cols.map(c=>`<th data-sort="${c[0]}" aria-sort="${cmpSort.k===c[0]?(cmpSort.dir>0?"ascending":"descending"):"none"}" scope="col">${esc(c[1])}</th>`).join("")}<th scope="col">Passt</th><th></th></tr></thead><tbody>
-   ${rows.map(r=>`<tr class="${r.p.id===cur?"cur":""}${r.err?" bad":""}"><td class="pick"><input type="checkbox" data-cmppick="${esc(r.p.id)}" aria-label="${esc(r.p.name)} vergleichen"${cmpPick.includes(r.p.id)?" checked":""}></td>${cols.map(c=>{const v=c[2](r.p);const w=winIds.get(r.p.id);const shown=c[0]==="alt"?(v?`<a href="${altOf(r.p).url}" target="_blank" rel="noopener">${eur(v)}</a>`:"–"):c[0]==="price"?eur(v):c[0]==="name"?esc(v)+(w===0?' <span class="tag win1">P/L-Sieger</span>':w!=null?' <span class="tag win2">P/L-Tipp</span>':"")+(r.p.generic?' <span class="tag">Chip</span>':""):c[0]==="tier"?tierDots(v):c[0]==="pl"?(v||"–"):esc(String(v));return `<td class="${c[3]==="n"&&c[0]!=="tier"?"n":""}${best[c[0]]!=null&&v===best[c[0]]?" best":""}">${shown}</td>`;}).join("")}
+   ${rows.map(r=>`<tr class="${r.p.id===cur?"cur":""}${r.err?" bad":""}"><td class="pick"><input type="checkbox" data-cmppick="${esc(r.p.id)}" aria-label="${esc(r.p.name)} vergleichen"${cmpPick.includes(r.p.id)?" checked":""}></td>${cols.map(c=>{const v=c[2](r.p);const w=winIds.get(r.p.id);if(c[3]==="d")return `<td class="n dl">${r.p.id===cur?'<span class="subline">deine Wahl</span>':dcell(c[0],v)}</td>`;
+     if(c[0]==="fit"){const f=cmpFit.get(r.p.id)||{s:0,why:""};return `<td class="n fit" data-tip="${esc(f.why)}"><b class="${f.s>=75?"delta-pos":f.s<45?"delta-neg":""}">${f.s||"–"}</b>${bar("fit",f.s)}</td>`;}
+     const shown=c[0]==="alt"?(v?`<a href="${altOf(r.p).url}" target="_blank" rel="noopener">${eur(v)}</a>`:"–"):c[0]==="price"?eur(v):c[0]==="name"?esc(v)+(w===0?' <span class="tag win1">P/L-Sieger</span>':w!=null?' <span class="tag win2">P/L-Tipp</span>':"")+(r.p.generic?' <span class="tag">Chip</span>':""):c[0]==="tier"?tierDots(v):c[0]==="pl"?(v||"–"):esc(String(v));return `<td class="${c[3]==="n"&&c[0]!=="tier"?"n":""}${best[c[0]]!=null&&v===best[c[0]]?" best":""}">${shown}${c[3]==="n"?bar(c[0],v):""}</td>`;}).join("")}
    <td>${r.p.id===cur?'<span class="tag user">Deine Wahl</span>':r.err?`<span class="sev error" title="${esc(r.err.msg)}">nein</span>`:'<span class="sev ok">ja</span>'}</td>
    <td>${r.p.id!==cur&&!r.err?`<button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(r.p.id)}">Übernehmen</button>`:""}</td></tr>`).join("")}</tbody></table>`;
-  $("#cNote").textContent=`${rows.length} von ${all.length} Teilen. Grün = Bestwert der Spalte. P/L = Preis-Leistung nach deinem Profil, 100 = bestes passendes Teil der Auswahl. Spaltenkopf anklicken zum Sortieren. „Passt“ prüft gegen deine übrigen Teile.`;
+  $("#cNote").textContent=`${rows.length} von ${all.length} Teilen. „Für dich“ = Score 0–100 aus Leistung, Preis-Leistung und Laufruhe nach deinem Profil und Leise-Regler (Konflikte 0, Warnungen −20 %, über Budget −15 %; Begründung beim Darüberfahren). Δ = Unterschied zu deinem Teil. Balken: länger = besser. Grün = Bestwert der Spalte. P/L = Preis-Leistung nach deinem Profil, 100 = bestes passendes Teil der Auswahl. Spaltenkopf anklicken zum Sortieren. „Passt“ prüft gegen deine übrigen Teile.`;
   // Sieger-Kacheln
   const curP=cur&&get(cat,cur);
   const card=(lbl,r,why)=>r?`<div class="win"><span class="eyebrow">${esc(lbl)}</span><b>${esc(r.p.name)}</b><span class="subline">${esc(why)}</span><span class="price">${eur(r.p.price)}${curP&&r.p.id!==cur?` <span class="subline">${esc(deltaPrice(r.p.price-curP.price))}</span>`:""}</span>${r.p.id===cur?'<span class="tag user">Deine Wahl</span>':`<div class="row-btns"><button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(r.p.id)}">Übernehmen</button></div>`}</div>`:"";
@@ -2611,7 +2799,9 @@ function renderCompare(parts){
   const quiet=cat==="gpu"?okRows.filter(r=>r.p.noise===1).sort((a,b)=>b.p.g-a.p.g||a.p.price-b.p.price)[0]:null;
   const pf=r=>XCAT.has(cat)?spec(cat,r.p):`${PERF_LABEL[cat]} ${perfOf(cat,r.p)}`;
   $("#cWinSub").textContent=`${CAT_LABEL[cat]} · passende Teile der aktuellen Auswahl`;
+  const fitBest=okRows.slice().sort((a,b)=>((cmpFit.get(b.p.id)||{s:0}).s-(cmpFit.get(a.p.id)||{s:0}).s)||a.p.price-b.p.price)[0];
   $("#cWinners").innerHTML=okRows.length?[
+    fitBest?card("Für dich am besten",fitBest,`Score ${(cmpFit.get(fitBest.p.id)||{}).s} · ${(cmpFit.get(fitBest.p.id)||{}).why}`):"",
     XCAT.has(cat)?"":card("Preis-Leistungs-Sieger",ranked[0],ranked[0]?`${pf(ranked[0])} · P/L 100`:""),
     card(XCAT.has(cat)?"Beste Ausstattung":"Stärkste",strongest,strongest?pf(strongest):""),
     card("Günstigste",cheapest,cheapest?pf(cheapest):""),
@@ -2659,7 +2849,7 @@ document.addEventListener("click",e=>{
   const gf=e.target.closest("[data-gfg]");if(gf){gameFG=!gameFG;render();return;}
   const df=e.target.closest("[data-devf]");if(df){devF[df.dataset.devf]=df.dataset.v;render();return;}
   const f=e.target.closest("[data-cmpf]");if(f){const set=cmpF[f.dataset.cmpf],v=f.dataset.v;if(set.has(v))set.delete(v);else set.add(v);render();return;}
-  const c=e.target.closest("[data-cmpcat]");if(c){cmpCat=c.dataset.cmpcat;cmpPick=[];cmpF={brand:new Set(),maker:new Set()};cmpSort={k:"perf",dir:-1};const cols=cmpCols(cmpCat);cmpSort.k=(cols.find(x=>["g","m","cap","watt"].includes(x[0]))||cols[cols.length-1])[0];render();return;}
+  const c=e.target.closest("[data-cmpcat]");if(c){cmpCat=c.dataset.cmpcat;cmpPick=[];cmpF={brand:new Set(),maker:new Set()};cmpSort={k:"fit",dir:-1};render();return;}
   const h=e.target.closest("th[data-sort]");if(h){const k=h.dataset.sort;cmpSort=cmpSort.k===k?{k,dir:-cmpSort.dir}:{k,dir:k==="name"?1:-1};render();}
 });
 
@@ -3379,7 +3569,7 @@ function decodeCfg(code){
 let pendingDelete=null,saveLastFocus=null;
 function openSave(){saveLastFocus=document.activeElement;pendingDelete=null;$("#saveDlg").hidden=false;$("#saveToast").textContent="";$("#codeToast").textContent="";
   const parts=resolve(state.picks);$("#saveName").value=parts.cpu&&parts.gpu?`${parts.cpu.name.replace(/^(AMD|Intel) (Ryzen \d |Core (Ultra \d )?)?/,"")} + ${parts.gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon |Arc )?/,"").replace(/ \d+ GB$/,"")}`:"";
-  $("#dlBtn").hidden=embedded;$("#fileLbl").hidden=false;renderSaves();setTimeout(()=>$("#saveName").focus(),0);}
+  $("#dlBtn").hidden=false;$("#fileLbl").hidden=false;renderSaves();setTimeout(()=>$("#saveName").focus(),0);}
 function closeSave(){$("#saveDlg").hidden=true;if(saveLastFocus&&saveLastFocus.focus)saveLastFocus.focus();}
 function renderSaves(){
   const a=loadSaves(),curKey=JSON.stringify(state.picks);
@@ -3436,7 +3626,12 @@ function openPrint(){printLastFocus=document.activeElement;$("#printSheet").inne
   $("#printHint").textContent=embedded?"Im eingebetteten Viewer blockiert der Browser das Drucken. Öffne pc-konfigurator/index.html direkt im Browser, um zu drucken oder als PDF zu speichern; hier kannst du den Text kopieren.":"Als PDF speichern: im Druckdialog „Als PDF speichern“ wählen.";
   $("#printBtn").hidden=embedded;setTimeout(()=>$(embedded?"[data-act='copyPrint']":"#printBtn").focus(),0);}
 function closePrint(){$("#printDlg").hidden=true;if(printLastFocus&&printLastFocus.focus)printLastFocus.focus();}
-function downloadJson(){
+async function downloadJson(){
+  if(embedded){const dl=window.claude&&window.claude.use?await window.claude.use("downloads"):null;
+    if(!dl){flash("#codeToast","Herunterladen ist hier nicht möglich. Kopiere stattdessen den Code.");return;}
+    try{await dl.save({filename:"pc-konfiguration.json",data:JSON.stringify(Object.assign({name:"PC-Werkbank-Konfiguration",saved:new Date().toISOString()},snapshot()),null,2)});flash("#codeToast","Datei gespeichert.");}
+    catch(e){flash("#codeToast",e&&e.code==="declined"?"Speichern abgebrochen.":"Herunterladen hier nicht möglich. Kopiere stattdessen den Code.");}
+    return;}
   try{const blob=new Blob([JSON.stringify(Object.assign({name:"PC-Werkbank-Konfiguration",saved:new Date().toISOString()},snapshot()),null,2)],{type:"application/json"});
     const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="pc-konfiguration.json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);flash("#codeToast","Datei pc-konfiguration.json wird heruntergeladen.");}
   catch(e){flash("#codeToast","Herunterladen nicht möglich. Kopiere stattdessen den Code.");}
@@ -3461,7 +3656,7 @@ document.addEventListener("click",e=>{
 $("#saveForm").addEventListener("submit",e=>{e.preventDefault();doSave($("#saveName").value);});
 $("#fileIn").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let o=null;try{o=JSON.parse(r.result);}catch(err){}if(o&&applySnapshot(o)){flash("#codeToast",`Datei „${f.name}“ geladen.`);renderSaves();}else flash("#codeToast","Die Datei enthält keine gültige Konfiguration.");e.target.value="";};r.readAsText(f);});
 $("#saveDlg").addEventListener("click",e=>{if(e.target.id==="saveDlg")closeSave();});
-document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("#printDlg").hidden)closePrint();else if(!$("#saveDlg").hidden)closeSave();});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("#pdfDlg").hidden)closePdf();else if(!$("#printDlg").hidden)closePrint();else if(!$("#saveDlg").hidden)closeSave();});
 /* ---------- Ereignisse ---------- */
 function applyStart(){
   const pr=START;
@@ -3483,9 +3678,14 @@ document.addEventListener("click",e=>{
   if(act==="shareLink"){const inShop=!!el.closest("#shopOut");const tid=inShop?"#shopToast":"#heroToast",fb=inShop?$("#shopFallback"):$("#heroFallback");
     if(embedded){copyTextTo(encodeCfg(snapshot()),"Im eingebetteten Fenster gibt es keine teilbare Adresse: Konfigurations-Code kopiert (unter „Speichern / Laden“ einfügen).",tid,fb);}
     else copyTextTo(shareUrl(),"Link kopiert. Wer ihn öffnet, sieht genau diese Konfiguration.",tid,fb);return;}
+  if(act==="openPdf"){openPdf();return;}
+  if(act==="closePdf"){closePdf();return;}
+  if(act==="pdfAll"||act==="pdfNone"){document.querySelectorAll("[data-pdfsec]").forEach(c=>c.checked=act==="pdfAll");storePdfSel();return;}
+  if(act==="pdfStd"){try{localStorage.removeItem(PDFKEY);}catch(e){}renderPdfOpts();return;}
+  if(act==="makePdf"){makePdf();return;}
   if(act==="pick")openPicker(cat);
   if(act==="theme"){const d=document.documentElement,n=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=n;try{localStorage.setItem("pcwerkbank.theme",n);}catch(e){}render();return;}
-  if(act==="cReset"){cmpF={brand:new Set(),maker:new Set()};$("#cMin").value="";$("#cMax").value="";$("#cQ").value="";render();return;}
+  if(act==="cReset"){cmpF={brand:new Set(),maker:new Set()};$("#cMin").value="";$("#cMax").value="";$("#cQ").value="";$("#cQuiet").checked=false;$("#cAltNow").checked=false;render();return;}
   if(act==="pickModel"){const g=get("gpu",state.picks.gpu.id);openPicker("gpu");$("#pSearch").value=g.name.replace(/^(NVIDIA|AMD) (GeForce |Radeon )?/,"").replace(/ \d+ GB$/,"");renderPicker();}
   else if(act==="close")closePicker();
   else if(act==="choose"){state.picks[pickerCat]={id:el.dataset.id,src:"user"};closePicker();recompute();}
@@ -3529,6 +3729,7 @@ $("#cOnlyOk").addEventListener("change",()=>render());
 document.addEventListener("change",e=>{if(e.target&&e.target.id==="preSel"){preSel=e.target.value;const ps=resolve(state.picks);renderPreDetail(ps,Object.values(ps).reduce((a,c)=>a+c.price,0));}
   if(e.target&&e.target.dataset&&e.target.dataset.cmppick){const id=e.target.dataset.cmppick;if(e.target.checked){cmpPick.push(id);if(cmpPick.length>3)cmpPick.shift();}else cmpPick=cmpPick.filter(x=>x!==id);render();}});
 ["#cMin","#cMax","#cQ"].forEach(id=>$(id).addEventListener("input",()=>render()));
+["#cQuiet","#cAltNow"].forEach(id=>$(id).addEventListener("change",()=>render()));
 {const hw=$("#hudWrap");const setH=()=>document.documentElement.style.setProperty("--hudH",hw.offsetHeight+"px");setH();if(window.ResizeObserver)new ResizeObserver(setH).observe(hw);}
 $("#dCmpSel").addEventListener("change",e=>{cmpSel=e.target.value;render();});
 $("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
