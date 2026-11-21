@@ -31,7 +31,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
   - **Stärken und Schwächen** des Systems mit Kauf- und Einbautipps.
   - **Spar- und Upgrade-Tipps:** bestes Upgrade pro Euro und gleichwertige günstigere Teile, per Klick übernehmbar.
 - **Kopfleiste**, die beim Scrollen oben bleibt: Gesamtpreis mit Budgetbalken, Bildrate gegen Ziel, Grafikkarte/Prozessor, Strom und Netzteil-Last, Lautstärke und Prüfstatus. Ein Klick springt in die passende Ansicht.
-- **Konkrete Grafikkarten:** 56 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
+- **Konkrete Grafikkarten:** 80 Partnerkarten (z. B. MSI Gaming Trio, Gigabyte Windforce SFF, Sapphire Nitro+, PowerColor Reaper) mit eigenem Preis, Länge, Slot-Höhe und Kühler-Lautstärke. Der Chip-Eintrag bleibt als „Modell offen“ wählbar; „Modell wählen“ zeigt die passenden Karten. Bei hohem Leise-Wunsch nimmt die Automatik bis 10 % Aufpreis für einen leiseren Kühler in Kauf.
 - **Steckbrief** an jedem Bauteil (aufklappbar): alle technischen Daten, Stärken, Schwächen, Hinweise und Preisstand.
 - **Reiter „Übersicht“:** Kennzahlen, Schema des PCs (inkl. Radiator-Position), gesammelte Stärken und Schwachstellen, Upgrade-Pfad nach Nutzen pro Euro, Teileliste mit Preisstand.
 - **Reiter „Vergleich“:** alle Teile einer Kategorie als sortierbare Tabelle mit Bestwerten, Passt-Prüfung und Übernahme per Klick; Preis-Leistungs-Diagramm für Grafikkarten, Prozessoren, RAM und SSDs.
@@ -51,6 +51,12 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Konsolen** (PS5 Slim Digital, Xbox Series X, PS5 Pro) im Preis-FPS-Diagramm, im Ranking und als eigene Tabelle.
 - **Mehr Prüfungen:** RAM-Höhe unter Doppelturm-Kühlern, kurze SFX-Kabel in großen Gehäusen, Zahl der Lüfteranschlüsse, USB-C-Front bei Einsteiger-Boards, Radiator im Deckel bei hohem RAM.
 - **Preisalter:** Hero und Steckbriefe zeigen, wie alt die Preise sind, und warnen ab 7 bzw. 21 Tagen.
+
+## Alternate
+- **Zweiter Preis je Teil:** Neben dem Bestpreis (Geizhals-Daten) zeigt jedes Teil den Preis bei **alternate.de** mit Lieferstatus (grüner Punkt = sofort lieferbar) und direktem Produktlink, ebenso im Auswahlfenster, als Spalte im Vergleich und in der Einkaufsliste.
+- **„Alles bei Alternate“:** Zusammenfassung und Einkaufsliste rechnen die Summe bei einem Shop aus und zeigen den Aufpreis gegenüber den Bestpreisen. Teile, die es dort nicht gibt, gehen mit dem Bestpreis ein und werden genannt.
+- **Alternate-Fertig-PCs:** 11 Systeme von 1.199 € bis 4.999 € (Alternate-eigene Gaming-PCs, Gigabyte Aorus, MSI, Thermaltake, ASUS ROG) im Fertig-PC-Vergleich, im Diagramm und im Ranking.
+- Die Zuordnung zu den Teilen läuft automatisch über Modellnummer, Kapazität, Kit und Latenz; generalüberholte Ware und abweichende Varianten werden ausgeschlossen. Stand der Alternate-Preise: 21.11.2026.
 
 ## Tests
 `node pc-konfigurator/tests/run.js` prüft mit Playwright (Chromium):
@@ -83,7 +89,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
 - **Kostenverteilung als Ringdiagramm**, Preis-Leistungs-Diagramm mit gestrichelter Preis-Leistungs-Grenze.
-- **Gegen Fertig-PCs** (33 Systeme von 999 € bis 11.499 €: Komplettsysteme aus Geizhals-Sammelkategorien (als „Preis nicht belegt“ markiert, Ausstattung schwankt je Shop), MSI MAG Infinite S3, MPG Infinite X3 und Trident, Lenovo LOQ Tower, Legion T5/T7/Tower 5i, HP Omen 16L/35L, Acer Nitro und Predator Orion, ASUS ROG G700 und ROG NUC, Zotac Magnus One, Medion Erazer Hunter X30, Captiva bis RTX 5090, Dubaro; Fazit nur mit belegten Preisen)
+- **Gegen Fertig-PCs** (44 Systeme von 999 € bis 11.499 €: Komplettsysteme aus Geizhals-Sammelkategorien (als „Preis nicht belegt“ markiert, Ausstattung schwankt je Shop), MSI MAG Infinite S3, MPG Infinite X3 und Trident, Lenovo LOQ Tower, Legion T5/T7/Tower 5i, HP Omen 16L/35L, Acer Nitro und Predator Orion, ASUS ROG G700 und ROG NUC, Zotac Magnus One, Medion Erazer Hunter X30, Captiva bis RTX 5090, Dubaro; Fazit nur mit belegten Preisen)
 - **Detailvergleich mit einem Fertig-PC:** Zeile anklicken oder auswählen; Bauteil für Bauteil mit Preis, FPS, Prozessor, RAM, SSD, Mainboard, Netzteil, Kühlung, Garantie und Aufbau, dazu Ersparnis bzw. Mehrpreis.
 - **Preis gegen Leistung:** ein Diagramm mit deinem PC, allen Fertig-PCs und Laptops sowie der Grenze „meiste FPS je Preis“.
 - **Ranking aller Systeme:** Punkte aus Leistung, Preis-Leistung, Multi-Core, Ausstattung und Aufrüstbarkeit, gewichtet nach dem Gaming/Kreativ-Regler. und **gegen Laptops** (11 Geräte vom Lenovo LOQ 15 bis zum ROG Strix Scar 18 und MacBook Pro), jeweils mit Preis je FPS und Filter „ähnliche Leistung“, „günstiger als deiner“, „alle“. Windows wird mit dem echten Preis der System-Builder-Lizenz eingerechnet, sofern kein Betriebssystem gewählt ist.
@@ -93,7 +99,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
-Teile mit „Preis geprüft“ wurden zwischen dem 9. und 14. November 2026 recherchiert; am 14.11. wurden alle Teilepreise der Datenbank, Fertig-PCs und Laptops aktualisiert, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
+Teile mit „Preis geprüft“ wurden zwischen dem 9. und 21. November 2026 recherchiert; am 21.11. wurden alle Teilepreise, Grafikkarten-Modelle, Fertig-PCs, Laptops und Konsolen erneut aktualisiert und 30 neue Teile ergänzt, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
