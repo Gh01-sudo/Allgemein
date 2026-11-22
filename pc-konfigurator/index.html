@@ -1585,9 +1585,17 @@ function prefer(cat,pool,parts,T){
     else if(pr!=="office"){const fast=r.filter(p=>p.speed>=6000&&p.cl<=30);if(fast.length)r=fast;}
     return r;
   }
-  if(cat==="ssd"){let r=pool.filter(p=>p.cap===pa.storage);if(!r.length)r=pool.filter(p=>p.cap>=pa.storage);return r.length?r:pool;}
+  if(cat==="ssd"){let r=pool.filter(p=>p.cap===pa.storage);if(!r.length)r=pool.filter(p=>p.cap>=pa.storage);if(!r.length)r=pool;
+    const fast=r.filter(p=>p.read>=6500);if(fast.length&&Math.min(...fast.map(x=>x.price))<=Math.min(...r.map(x=>x.price))*1.1)r=fast;
+    if(!(parts.board&&parts.board.gen5m2&&pr==="creator")){const g4=r.filter(p=>p.gen<5);if(g4.length)r=g4;}
+    return r;}
   if(cat==="cooler")return (pr==="office"&&parts.cpu&&parts.cpu.box)?f(p=>p.kind==="boxed"):f(p=>p.kind!=="boxed");
-  if(cat==="board"){const r=pool.filter(p=>p.form===pa.size);return r.length?r:f(p=>FORM_FIT[pa.size].includes(p.form));}
+  if(cat==="board"){let r=pool.filter(p=>p.form===pa.size);if(!r.length)r=f(p=>FORM_FIT[pa.size].includes(p.form));
+    const soft=(arr,pred)=>{const x=arr.filter(pred);return x.length?x:arr;};
+    r=soft(r,p=>p.wifi);
+    if(parts.cpu&&parts.cpu.power>=200)r=soft(r,p=>p.tier>=3);
+    if(pr==="creator"||pa.storage>=4000||state.picks.ssd2)r=soft(r,p=>p.m2>=3);
+    return r;}
   if(cat==="case")return f(p=>p.form===pa.size);
   if(cat==="monitor"){const r=f(p=>p.res===RES[pa.res].k);const fast=r.filter(p=>p.hz>=Math.min(pa.fps,165));return fast.length?fast:r;}
   if(cat==="os")return f(p=>pr==="office"?p.ed==="Home":p.ed==="Pro");
@@ -1597,7 +1605,10 @@ function pickCooler(pool,parts,T){
   const need=parts.cpu?parts.cpu.cool:120,margin=1.1+P().quiet/100*0.5;
   let c=pool.filter(p=>p.cap>=need*margin);if(!c.length)c=pool.filter(p=>p.cap>=need);
   if(!c.length)return pool.slice().sort((a,b)=>b.cap-a.cap)[0];
-  if(c.every(p=>p.cap<need*margin)){const mn=Math.min(...c.map(p=>p.price));return c.filter(p=>p.price<=mn+40).sort((a,b)=>b.cap-a.cap||a.price-b.price)[0];}
+  const cs=parts["case"],mn=Math.min(...c.map(p=>p.price));
+  if(need>=200&&P().quiet>=70&&cs){const a=c.filter(p=>p.kind==="aio"&&p.rad>=280&&cs.rads.includes(p.rad)&&!(cs.radFrontOnly&&cs.radFrontOnly.includes(p.rad))).sort((x,y)=>y.cap-x.cap||x.price-y.price)[0];if(a&&a.price<=mn+40)return a;}
+  if(c.every(p=>p.cap<need*margin)){return c.filter(p=>p.price<=mn+40).sort((a,b)=>b.cap-a.cap||a.price-b.price)[0];}
+  if(need<=150){const air=c.filter(p=>p.kind==="air");if(air.length)c=air;}
   return c.slice().sort((a,b)=>a.price-b.price)[0];
 }
 function pickPsu(pool,parts,T){
@@ -1605,10 +1616,15 @@ function pickPsu(pool,parts,T){
   let c=pool.filter(p=>p.watt>=want);if(!c.length)c=pool.filter(p=>p.watt>=rec);
   if(!c.length)return pool.slice().sort((a,b)=>b.watt-a.watt)[0];
   if(parts.gpu&&parts.gpu.conn==="12V-2x6"){const a=c.filter(p=>p.atx3);if(a.length)c=a;}
+  const mn=Math.min(...c.map(p=>p.price));
+  if(estLoad(parts)>=450){const q=c.filter(p=>p.tier>=3).sort((a,b)=>a.price-b.price)[0];if(q&&q.price<=mn+15)return q;}
   return c.slice().sort((a,b)=>a.price-b.price)[0];
 }
-function pickCase(pool){
-  const want=1+P().quiet/50;
+function pickCase(pool,parts){
+  parts=parts||{};let want=1+P().quiet/50;
+  const gpu=parts.gpu&&!parts.gpu.none?parts.gpu:null;
+  if(gpu){const room=pool.filter(p=>p.gpu>=gpu.len+20);if(room.length)pool=room;}
+  if((parts.cpu||gpu)&&estLoad(parts)>500&&P().quiet<85)want=Math.min(want,2);
   return pool.slice().sort((a,b)=>Math.abs((a.silent||1)-want)-Math.abs((b.silent||1)-want)||a.price-b.price)[0];
 }
 function platformCost(cpu){
@@ -1665,7 +1681,7 @@ function choose(cat,picks,T,alloc){
   if(cat==="cooler")return pickCooler(pool,parts,T);
   if(cat==="psu")return pickPsu(pool,parts,T);
   if(pool.length===1)return pool[0];
-  if(cat==="case")return pickCase(pool);
+  if(cat==="case")return pickCase(pool,parts);
   if(cat==="cpu"&&state.profile!=="office")return pickCpu(pool,alloc,parts);
   if(cat==="gpu"&&state.profile!=="office")return quietGpu(pickGpu(pool,alloc),pool);
   if(cat==="ram"||cat==="ssd")return pool.slice().sort((a,b)=>a.price-b.price)[0];
@@ -1745,6 +1761,34 @@ function fillMissing(base){
       if(!done)break;
     }};
     enforce();
+    /* Restbudget nutzen: Bleibt mehr als 3 % übrig, schrittweise das Upgrade mit dem größten Nutzen je Euro nehmen (nur ohne Warnungen) */
+    const w=mixW(),pri=["gpu","cpu","ram","ssd","cooler","psu","case","board"];
+    for(let it=0;it<12;it++){
+      const left=state.budget-tot(p);if(left<Math.max(30,state.budget*0.03))break;
+      const rp0=resolve(p),fps0=Math.max(1,buildFps(rp0,P().res));let best=null;
+      for(const cat of pri){
+        if(!p[cat]||p[cat].src!=="auto")continue;
+        const cur=get(cat,p[cat].id);if(!cur||cur.none||cur.kind==="boxed")continue;
+        const ctx=Object.assign({},rp0);delete ctx[cat];
+        for(const o of betterOptions(cat,cur,ctx,3)){
+          if(o.price-cur.price>left)continue;
+          const trial=Object.assign({},p,{[cat]:{id:o.id,src:"auto"}});
+          if((cat==="gpu"||cat==="cpu")&&trial.psu&&trial.psu.src==="auto"){const r2=Object.assign({},trial);delete r2.psu;const c2=choose("psu",r2,T,null);if(c2)trial.psu={id:c2.id,src:"auto"};}
+          const cost=tot(trial)-tot(p);if(cost<=0||tot(trial)>state.budget)continue;
+          const rt=resolve(trial);if(checkAll(rt,state.profile).some(i=>i.level==="error"||i.level==="warn"))continue;
+          let gain=0;
+          if(cat==="gpu")gain=(buildFps(rt,P().res)/fps0-1)*(state.profile==="office"?0.1:1.2-0.5*w);
+          else if(cat==="cpu")gain=(cpuBlend(o)/cpuBlend(cur)-1)*(0.3+w)+(buildFps(rt,P().res)/fps0-1)*(1-w)*0.8;
+          else if(cat==="ram")gain=(o.cap/cur.cap-1)*(state.profile==="creator"?0.35:0.06);
+          else if(cat==="ssd")gain=(o.cap/cur.cap-1)*0.1+(o.read>cur.read*1.3?0.02:0);
+          else gain=0.012*(1+P().quiet/100);
+          if(gain<=0.004)continue;
+          const val=gain/cost;if(!best||val>best.val)best={trial,val};
+        }
+      }
+      if(!best)break;
+      for(const k in p)delete p[k];Object.assign(p,best.trial);
+    }
   }
   /* Nachkontrolle: automatisch gewählte Grafikkarte, die der Prozessor spürbar ausbremst, eine Stufe tiefer wählen */
   if(p.gpu&&p.gpu.src==="auto"&&state.profile!=="office"){const rest=Object.assign({},p);delete rest.gpu;const rp=resolve(rest);
