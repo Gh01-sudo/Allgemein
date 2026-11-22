@@ -106,7 +106,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
-Teile mit „Preis geprüft“ wurden zwischen dem 9. und 21. November 2026 recherchiert; am 21. und 22.11. wurden alle Teilepreise, Grafikkarten-Modelle, Fertig-PCs, Laptops und Konsolen erneut aktualisiert und 60 neue Teile ergänzt, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
+Teile mit „Preis geprüft“ wurden zwischen dem 9. und 22. November 2026 recherchiert; am 21. und 22.11. wurden alle Teilepreise, Grafikkarten-Modelle, Fertig-PCs, Laptops und Konsolen erneut aktualisiert und 60 neue Teile ergänzt, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
