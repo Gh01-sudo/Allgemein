@@ -437,6 +437,24 @@ label.btn{display:inline-flex;align-items:center}
 .lvl.f0{background:var(--bad-soft);color:var(--bad)}.lvl.f1{background:var(--warn-soft);color:var(--warn)}.lvl.f2{background:var(--ok-soft);color:var(--ok)}.lvl.f3{background:var(--accent-soft);color:var(--accent)}
 .bar-row.cur .bar-track{border-color:var(--accent);border-width:2px}
 .bar-row .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rc-drives{display:flex;flex-wrap:wrap;gap:8px}
+.rc-d{display:flex;flex-direction:column;align-items:center;gap:4px;border:1px solid var(--line);background:var(--sunk);border-radius:8px;padding:8px 6px;width:86px}
+.rc-d b{font-family:var(--f-mono);font-size:11px;color:var(--muted)}
+.rc-d select{font-size:13px;padding:3px 4px;border:1px solid var(--line);border-radius:6px;background:var(--surface);max-width:78px}
+.rc-d button{border:0;background:transparent;color:var(--muted);cursor:pointer;font-size:12px}
+.rc-d button:hover{color:var(--bad)}
+.rctab{width:100%;border-collapse:collapse;font-size:13.5px;min-width:760px}
+.rctab th,.rctab td{padding:8px;border-top:1px solid var(--line);text-align:left;vertical-align:middle}
+.rctab th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0}
+.rctab td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.rctab tr{cursor:pointer}.rctab tr:hover td{background:var(--sunk)}
+.rctab tr.sel td{background:var(--accent-soft)}
+.rctab tr.na td{opacity:.5}
+.rcbar{display:flex;height:14px;border-radius:4px;overflow:hidden;border:1px solid var(--line);min-width:140px}
+.rcbar span{display:block;height:100%}
+.rc-col{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-end}
+.rc-stack{display:flex;flex-direction:column-reverse;width:54px;border:1px solid var(--line);border-radius:6px;overflow:hidden;background:var(--surface)}
+.rc-stack span{display:block;width:100%}
 </style>
 
 <div class="wrap">
@@ -453,6 +471,7 @@ label.btn{display:inline-flex;align-items:center}
     <button type="button" role="tab" id="tab-dash" aria-controls="viewDash" data-view="dash">Dashboard</button>
     <button type="button" role="tab" id="tab-ov" aria-controls="viewOv" data-view="ov">Übersicht</button>
     <button type="button" role="tab" id="tab-cmp" aria-controls="viewCmp" data-view="cmp">Vergleich</button>
+    <button type="button" role="tab" id="tab-raid" aria-controls="viewRaid" data-view="raid">RAID-Rechner</button>
   </nav>
 
   <div class="view" id="viewDash" role="tabpanel" aria-labelledby="tab-dash" hidden>
@@ -540,6 +559,18 @@ label.btn{display:inline-flex;align-items:center}
     <section class="card" aria-label="Teileliste"><h2>Alle Teile <span class="eyebrow" id="oSum"></span></h2><div class="scroll" id="oTable"></div></section>
   </div>
 
+  <div class="view" id="viewRaid" role="tabpanel" aria-labelledby="tab-raid" hidden>
+    <section class="card" aria-label="Platten für den RAID-Rechner">
+      <h2>RAID-Rechner <span class="eyebrow">Platten auch unterschiedlich groß</span></h2>
+      <p class="subline" style="margin:0">Platten hinzufügen, Größe je Platte wählen. Die Tabelle zeigt für jede RAID-Art Nutzkapazität, Ausfallsicherheit, ungenutzten Platz und Tempo. Klick auf eine Zeile zeigt die Aufteilung.</p>
+      <div class="rc-drives" id="rcDrives"></div>
+      <div class="row-btns"><button type="button" class="btn" data-act="rcAdd">+ Platte</button><button type="button" class="btn" data-act="rcFromCfg">Platten aus meiner Konfiguration</button><button type="button" class="btn ghost" data-act="rcClear">Alle entfernen</button>
+        <label class="ctl-label" for="rcSize" style="margin-left:8px">Größe für neue Platten</label><select id="rcSize" class="sel"></select></div>
+    </section>
+    <section class="card" aria-label="Ergebnis RAID-Rechner"><div class="scroll" id="rcTable"></div><p class="subline" id="rcNote"></p></section>
+    <section class="card" aria-label="Aufteilung"><h2>Aufteilung <span class="eyebrow" id="rcSelName"></span></h2><div id="rcViz"></div><div id="rcExplain" class="verdict"></div></section>
+  </div>
+
   <div class="view" id="viewCmp" role="tabpanel" aria-labelledby="tab-cmp" hidden>
     <section class="card" aria-label="Kategorie">
       <h2>Vergleich <span class="eyebrow">alle Teile einer Kategorie, sortierbar</span></h2>
@@ -577,14 +608,21 @@ label.btn{display:inline-flex;align-items:center}
       </div>
     </div>
     <div class="ctl">
+      <span class="ctl-label" id="brandLabel">Hersteller</span>
+      <div class="seg" role="radiogroup" aria-labelledby="brandLabel" id="brandSeg">
+        <button type="button" role="radio" data-brand="syno">Synology</button>
+        <button type="button" role="radio" data-brand="all">alle</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label class="ctl-label" for="qBays">Schächte</label>
+      <select id="qBays" class="sel"></select>
+    </div>
+    <div class="ctl">
       <label class="switch"><input type="checkbox" id="autofill" checked> Fehlende Teile automatisch ergänzen</label>
     </div>
   </section>
 
-  <section class="presets" aria-label="Vorlagen">
-    <span class="ctl-label">Vorlagen</span>
-    <div class="presets" id="presets"></div>
-  </section>
 
   <main class="grid">
     <section aria-label="Komponenten"><div class="slots" id="slots"></div></section>
@@ -781,6 +819,11 @@ ups:[
  {id:"apc-br900",name:"APC Back-UPS Pro BR900MI",va:900,w:540,wh:120,sine:true,self:7,tier:3,price:240},
  {id:"apc-smt750",name:"APC Smart-UPS SMT750IC",va:750,w:500,wh:168,sine:true,self:9,tier:5,price:470}
 ],
+exp:[
+ {id:"none",name:"Keine Erweiterungseinheit",none:true,price:0,tier:0},
+ {id:"DX517",name:"Synology DX517 (5 Schächte)",bays:5,tier:3,price:520},
+ {id:"DX525",name:"Synology DX525 (5 Schächte)",bays:5,tier:3,price:560}
+],
 bak:[
  {id:"none",name:"Kein Backup",none:true,price:0,tier:0,tb:0},
  {id:"usb-8",name:"WD Elements Desktop 8 TB (USB)",kind:"usb",tb:8,mo:0,offsite:false,tier:1,price:300},
@@ -808,6 +851,7 @@ const CLOUD=[
 const CATS=[
  {k:"nas",label:"NAS-System",code:"SYS"},
  {k:"hdd",label:"Festplatten",code:"HDD"},
+ {k:"exp",label:"Erweiterungseinheit",code:"DX"},
  {k:"ssd",label:"SSD-Cache",code:"M.2"},
  {k:"ram",label:"Arbeitsspeicher",code:"RAM"},
  {k:"nic",label:"Netzwerk",code:"LAN"},
@@ -816,18 +860,9 @@ const CATS=[
 ];
 const CATK=CATS.map(c=>c.k);
 const CAT_LABEL=Object.fromEntries(CATS.map(c=>[c.k,c.label]));
-const QTY_CATS=["hdd","ssd"];
+const QTY_CATS=["hdd","ssd","exp"];
 const PROFILE_NAME={backup:"Dateien & Backup",media:"Medien & Fotos",lab:"Homelab & VMs"};
 const PROFILE_DEF={backup:{streams:0,vms:0},media:{streams:2,vms:0},lab:{streams:1,vms:3}};
-const PRESETS=[
- {id:"family",name:"Familien-NAS",hint:"Fotos, Backups, 16 TB",profile:"media",budget:2000,params:{cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:70,bak:2}},
- {id:"starter",name:"Einstieg Backup",hint:"2 Platten gespiegelt",profile:"backup",budget:1000,params:{cap:8,red:1,data:2,streams:0,vms:0,net:1,quiet:70,bak:1}},
- {id:"media",name:"Medienserver",hint:"Plex/Jellyfin, 48 TB",profile:"media",budget:4200,params:{cap:48,red:1,data:16,streams:3,vms:0,net:2.5,quiet:50,bak:1}},
- {id:"lab",name:"Homelab",hint:"Docker, VMs, 10 GbE",profile:"lab",budget:4500,params:{cap:24,red:1,data:8,streams:1,vms:4,net:10,quiet:40,bak:2}},
- {id:"truenas",name:"Selbstbau TrueNAS",hint:"ECC, RAIDZ2",profile:"lab",budget:null,user:{nas:"diy-ryzen"},params:{cap:64,red:2,data:24,streams:1,vms:2,net:2.5,quiet:30,bak:2}},
- {id:"quiet",name:"Leise im Wohnzimmer",hint:"2 Bays, flüsterleise",profile:"backup",budget:1300,params:{cap:8,red:1,data:3,streams:0,vms:0,net:2.5,quiet:100,bak:2}},
- {id:"archive",name:"Datenarchiv",hint:"96 TB, 2 Platten Reserve",profile:"backup",budget:null,params:{cap:96,red:2,data:40,streams:0,vms:0,net:10,quiet:20,bak:2}}
-];
 const BY={};for(const c in DB){BY[c]={};for(const p of DB[c])BY[c][p.id]=p;}
 const get=(cat,id)=>BY[cat]&&BY[cat][id];
 const NONE=c=>get(c,"none");
@@ -844,7 +879,7 @@ function lanText(l){const c={};l.forEach(x=>{c[x]=(c[x]||0)+1;});return Object.k
 
 /* ---------- Zustand ---------- */
 const KEY="naswerkbank.v1";
-const DEF_PARAMS={cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:60,bak:2,kwh:0.35,spin:0,upl:40};
+const DEF_PARAMS={brand:"syno",bays:0,cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:60,bak:2,kwh:0.35,spin:0,upl:40};
 let state={profile:"media",budget:null,auto:true,picks:{},params:Object.assign({},DEF_PARAMS),view:"konfig"};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
 function load(){
@@ -855,7 +890,7 @@ function load(){
     state.view=["konfig","dash","ov","cmp"].includes(s.view)?s.view:"konfig";return true;}catch(e){return false;}
 }
 const P=()=>state.params;
-function resolve(picks){const o={q:{hdd:0,ssd:0}};for(const c in picks){const v=picks[c],p=v&&get(c,v.id);if(p){o[c]=p;if(QTY_CATS.includes(c))o.q[c]=p.none?0:Math.max(1,v.qty||1);}}return o;}
+function resolve(picks){const o={q:{hdd:0,ssd:0,exp:0}};for(const c in picks){const v=picks[c],p=v&&get(c,v.id);if(p){o[c]=p;if(QTY_CATS.includes(c))o.q[c]=p.none?0:Math.max(1,v.qty||1);}}return o;}
 function withPart(parts,cat,p,qty){const o=Object.assign({},parts,{q:Object.assign({},parts.q)});if(!p){delete o[cat];if(QTY_CATS.includes(cat))o.q[cat]=0;return o;}o[cat]=p;if(QTY_CATS.includes(cat))o.q[cat]=p.none?0:(qty!=null?qty:(parts.q[cat]||1));return o;}
 const userOnly=()=>{const o={};for(const c in state.picks)if(state.picks[c].src==="user")o[c]=state.picks[c];return o;};
 function partCost(parts,c){const p=parts[c];return p?p.price*(QTY_CATS.includes(c)?parts.q[c]:1):0;}
@@ -872,6 +907,16 @@ function raidName(nas,n,red){
   return syn?"SHR-2 / RAID 6":zfs?"RAIDZ2":"RAID 6";
 }
 function ramFits(nas,ram){return !!(nas&&ram&&!ram.none&&nas.ramT.includes(ram.t)&&nas.slots>=ram.mods);}
+/* Schächte: Gerät plus passende Erweiterungseinheiten */
+function expFits(nas,exp){return !!(nas&&exp&&!exp.none&&nas.expUnit===exp.id);}
+function expMax(nas){return nas&&nas.expUnit?Math.round((nas.exp-nas.bays)/5):0;}
+function bayTotal(parts){const nas=parts.nas;if(!nas)return 0;const e=parts.exp;return nas.bays+(expFits(nas,e)?Math.min(parts.q.exp,expMax(nas))*e.bays:0);}
+function nasPoolFiltered(){
+  const p=P();let pool=DB.nas.filter(x=>!x.eol);
+  if(p.brand==="syno"){const f=pool.filter(x=>x.brand==="Synology");if(f.length)pool=f;}
+  if(p.bays){const f=pool.filter(x=>p.bays>=12?x.bays>=12:x.bays===p.bays);if(f.length)pool=f;}
+  return pool;
+}
 function ramTotal(nas,ram){
   if(!nas)return 0;if(!ramFits(nas,ram))return nas.ram;
   if(nas.free>=ram.mods)return nas.ram+ram.gb;
@@ -936,7 +981,7 @@ function lossRisk(parts){
   else pr=n*afr*(n-1)*afr*w*(n-2)*afr*w*3+n*afr*(n-1)*afr*w*0.01;
   return pr;
 }
-function vmCap(nas,ramT){return !nas||!nas.vm?0:Math.max(0,Math.min(Math.floor((ramT-2)/4),Math.floor(nas.cs/10)));}
+function vmCap(nas,ramT){return !nas||!nas.vm?0:Math.max(0,Math.min(Math.floor((ramT-2)/4),Math.floor(nas.thr/2)));}
 function contCap(nas,ramT){return !nas||!nas.docker?0:Math.max(0,Math.min(Math.floor(ramT*2.5),nas.cs*2));}
 function calc(parts){
   const p=P(),nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0;
@@ -944,7 +989,7 @@ function calc(parts){
   const total=cost(parts),run=running(parts),rt=ramTotal(nas,parts.ram);
   return {raw,usable,tib:usable*0.909,raid:raidName(nas,n,p.red),total,run,ram:rt,sp:speedInfo(parts),pw:powerInfo(parts),nz:noiseInfo(parts),
     t4:nas?nas.t4:0,vms:vmCap(nas,rt),cont:contCap(nas,rt),rb:rebuildH(h),risk:lossRisk(parts),perTB:usable?total/usable:0,fill:usable?p.data/usable:0,
-    free:nas?nas.bays-n:0,m2:m2Slots(parts)};
+    free:nas?bayTotal(parts)-n:0,bays:bayTotal(parts),m2:m2Slots(parts)};
 }
 
 /* ---------- Prüfung ---------- */
@@ -953,7 +998,8 @@ function checkAll(parts){
   const nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0,ssd=parts.ssd,ram=parts.ram,nic=parts.nic,ups=parts.ups,bak=parts.bak;
   const red=p.red;
   if(h&&nas){
-    if(n>nas.bays)add("error",["hdd","nas"],`${n} Platten, aber ${nas.name} hat nur ${nas.bays} Schächte.`);
+    const bt=bayTotal(parts);
+    if(n>bt)add("error",["hdd","nas"],`${n} Platten, aber ${nas.name} hat nur ${bt} Schächte${bt>nas.bays?" (mit Erweiterung)":""}${nas.expUnit&&bt===nas.bays?`; mit ${nas.expUnit} sind bis zu ${nas.exp} möglich`:""}.`);
     if(red>0&&n<minN(red))add("error",["hdd"],red===1?"Ausfallsicherheit für 1 Platte braucht mindestens 2 Platten (Spiegel).":"Ausfallsicherheit für 2 Platten (RAID 6 / SHR-2 / RAIDZ2) braucht mindestens 4 Platten.");
     if(h.rated&&nas.bays>h.rated)add("warn",["hdd","nas"],`${h.name} ist für Gehäuse bis ${h.rated} Schächte ausgelegt, ${nas.name} hat ${nas.bays}. Vibrationen verkürzen die Lebensdauer; besser NAS-Pro- oder Enterprise-Platten.`);
     if(nas.lock&&!h.cert)add("info",["hdd","nas"],`${nas.name} gehört zur 2025er Plus-Serie. Seit DSM 7.3 (Oktober 2025) lassen sich Fremd-Festplatten wieder für Speicherpools nutzen; die Kompatibilitätsliste führt aber weiterhin vor allem Synology-Platten. DSM auf 7.3 oder neuer aktualisieren.`);
@@ -993,6 +1039,15 @@ function checkAll(parts){
     const sp=speedInfo(parts);if(sp.disk&&sp.net&&sp.disk<sp.net*0.7)add("info",["hdd"],`Die Platten liefern zusammen nur ca. ${sp.disk} MB/s; das Netzwerk könnte ${sp.net} MB/s.`);
     if(nas.arch==="arm"&&lm>=2.5)add("info",["nas"],"Der schwache ARM-Prozessor erreicht mit Verschlüsselung oder vielen kleinen Dateien nicht das volle 2,5-GbE-Tempo.");
   }
+  const exp=parts.exp;
+  if(exp&&!exp.none&&nas){
+    if(!nas.expUnit)add("error",["exp","nas"],`${nas.name} lässt sich nicht mit einer Erweiterungseinheit erweitern.`);
+    else if(nas.expUnit!==exp.id)add("error",["exp","nas"],`${nas.name} braucht die ${nas.expUnit}, nicht die ${exp.id}.`);
+    else{if(parts.q.exp>expMax(nas))add("error",["exp"],`${nas.name} unterstützt höchstens ${expMax(nas)} ${exp.id}.`);
+      if(n<=nas.bays)add("info",["exp"],"Die Erweiterungseinheit ist leer: alle Platten passen ins Gerät.");
+      else add("info",["exp"],`Speicherpools nicht über Gerät und ${exp.id} verteilen: Wird die Einheit getrennt (Kabel, Stromausfall), fällt der Pool aus. Besser eigener Pool in der Erweiterung.`);}
+  }
+  if(nas&&p.bays&&!(p.bays>=12?nas.bays>=12:nas.bays===p.bays))add("info",["nas"],`${nas.name} hat ${nas.bays} Schächte, gewünscht sind ${p.bays>=12?"12 oder mehr":p.bays}.`);
   if(ram&&!ram.none&&nas){
     if(!nas.slots)add("error",["ram"],`Der Arbeitsspeicher von ${nas.name} ist fest verlötet und nicht erweiterbar.`);
     else if(!nas.ramT.includes(ram.t))add("error",["ram"],`${ram.name} (${RAM_T[ram.t]}) passt nicht: ${nas.name} braucht ${nas.ramT.map(t=>RAM_T[t]).join(" oder ")}.`);
@@ -1042,6 +1097,7 @@ function issuesFor(cat,p,parts,qty){const test=withPart(parts,cat,p,qty);return 
 /* ---------- Automatische Auswahl ---------- */
 function autoPick(c,parts,lowUp){
   const p=P(),nas=parts.nas;if(!nas)return [NONE(c),0];
+  if(c==="exp"){const n=parts.q.hdd||0;if(n<=nas.bays||!nas.expUnit)return [NONE("exp"),0];const u=get("exp",nas.expUnit);return [u,Math.min(expMax(nas),Math.ceil((n-nas.bays)/u.bays))];}
   if(c==="ram"){
     const need=ramNeed(nas),cur=nas.ram;if(cur>=need)return [NONE("ram"),0];
     let cand=DB.ram.filter(r=>!r.none&&ramFits(nas,r));
@@ -1081,9 +1137,9 @@ function autoPick(c,parts,lowUp){
   }
   return [NONE(c),0];
 }
-const EXTRA_ORDER=["ram","nic","bak","ups","ssd"];
+const EXTRA_ORDER=["exp","ram","nic","bak","ups","ssd"];
 const DROP_ORDER=["ssd","ups","nic","bak"];
-function evalCombo(fixed,nas,hdd,n){
+function evalCombo(fixed,nas,hdd,n,quick){
   const p=P();
   let parts=withPart(withPart(fixed,"nas",nas),"hdd",hdd,n);
   const autoC=EXTRA_ORDER.filter(c=>!fixed[c]);
@@ -1103,13 +1159,15 @@ function evalCombo(fixed,nas,hdd,n){
   if(lanMax(parts)<p.net)pen*=0.75;
   const nz=noiseInfo(parts),qt=quietTarget();if(nz.db>qt)pen*=Math.max(0.45,1-(nz.db-qt)*0.12);
   if(hdd.rated&&nas.bays>hdd.rated)pen*=0.7;
+  /* Kompatibilität der fertigen Kombination: Konflikte praktisch ausschließen, Warnungen spürbar abwerten */
+  if(!quick){const iss=checkAll(parts);let e=0,w=0;for(const i of iss){if(i.level==="error")e++;else if(i.level==="warn")w++;}pen*=Math.pow(0.03,e)*Math.pow(0.82,w);}
   if(nas.bare&&(!parts.ram||parts.ram.none))pen*=0.2;
   if(rt<ramNeed(nas))pen*=0.8;
   let Q=1+0.06*nas.tier;
   if(state.profile==="lab")Q+=nas.cs/100*0.6+(nas.ecc?0.12:0)+(nas.m2?0.06:0)+(nas.pcie||nas.mini?0.04:0);
   if(state.profile==="media")Q+=Math.min(nas.t4,4)/4*0.25+(nas.av1?0.05:0);
   if(state.profile==="backup")Q+=(nas.brand==="Synology"?0.12:0)+(nas.idle<=10?0.04:0);
-  Q+=Math.min(0.15,0.05*Math.max(0,nas.bays-n));
+  Q+=Math.min(0.15,0.05*Math.max(0,nas.bays-n));if(n>nas.bays)Q-=0.06;
   if(hdd.warr>=5)Q+=0.05;if(nas.kind==="diy")Q-=0.08;
   const over=state.budget&&total>state.budget?Math.pow(state.budget/total,8):1;
   const c5=total+5*running(parts)*0.7;
@@ -1117,19 +1175,20 @@ function evalCombo(fixed,nas,hdd,n){
 }
 function chooseAll(fixed){
   const p=P();
-  const nasPool=fixed.nas?[fixed.nas]:DB.nas.filter(x=>!x.eol);
+  const nasPool=fixed.nas?[fixed.nas]:nasPoolFiltered();
   const hddPool=fixed.hdd?[fixed.hdd]:DB.hdd.filter(h=>!h.eol&&!h.smr&&h.cls!=="desktop");
-  let best=null;
+  let best=null;const cand=[];
   for(const nas of nasPool)for(const hdd of hddPool){
     let ns;
     if(fixed.hdd){ns=[fixed.q.hdd];}
-    else{const lo=Math.min(minN(p.red),nas.bays);ns=[];for(let n=lo;n<=nas.bays;n++)ns.push(n);}
+    else{const top=fixed.exp&&!fixed.exp.none?bayTotal(Object.assign({},fixed,{nas})):(nas.expUnit&&!p.bays?nas.exp:nas.bays);const lo=Math.min(minN(p.red),top);ns=[];for(let n=lo;n<=top;n++)ns.push(n);}
     for(const n of ns){
-      if(!fixed.nas&&n>nas.bays)continue;
-      const r=evalCombo(fixed,nas,hdd,n);
-      if(!best||r.val>best.val)best=r;
+      cand.push({nas,hdd,n,val:evalCombo(fixed,nas,hdd,n,true).val});
     }
   }
+  /* zweite Runde: nur die besten Kandidaten mit vollständiger Kompatibilitätsprüfung bewerten */
+  cand.sort((a,b)=>b.val-a.val);
+  for(const c of cand.slice(0,40)){const r=evalCombo(fixed,c.nas,c.hdd,c.n);if(!best||r.val>best.val)best=r;}
   if(!best&&fixed.hdd){const nas=nasPool.slice().sort((a,b)=>b.bays-a.bays)[0];best=evalCombo(fixed,nas,fixed.hdd,fixed.q.hdd);}
   return best;
 }
@@ -1141,10 +1200,10 @@ function fillMissing(base){
   return out;
 }
 /* Beste Stückzahl für ein Plattenmodell im aktuellen Gerät */
-function bestQty(nas,hdd){
-  const p=P();if(!nas)return Math.max(minN(p.red),2);
-  for(let n=Math.min(minN(p.red),nas.bays);n<=nas.bays;n++)if(usableTB(n,hdd.tb,p.red)>=p.cap)return n;
-  return nas.bays;
+function bestQty(nas,hdd,bays){
+  const p=P();if(!nas)return Math.max(minN(p.red),2);const top=bays||nas.bays;
+  for(let n=Math.min(minN(p.red),top);n<=top;n++)if(usableTB(n,hdd.tb,p.red)>=p.cap)return n;
+  return top;
 }
 let prevIds={};
 function recompute(){
@@ -1157,10 +1216,11 @@ function recompute(){
 const CLS_LABEL={nas:"NAS-Platte",naspro:"NAS-Pro-Platte",ent:"Enterprise-Platte",desktop:"Desktop-Platte",consumer:"Consumer-SSD",syno:"Synology-SSD"};
 function perMonth(b){const m=bakMonthly(b);return m?eur2(m)+"/Monat":"";}
 function spec(cat,p){
-  if(!p)return "";if(p.none)return {ssd:"M.2-Plätze bleiben frei",ram:"Werksausstattung",nic:"eingebaute Netzwerkports",ups:"direkt am Stromnetz",bak:"nur die Daten im NAS"}[cat]||"";
+  if(!p)return "";if(p.none)return {exp:"nur die Schächte im Gerät",ssd:"M.2-Plätze bleiben frei",ram:"Werksausstattung",nic:"eingebaute Netzwerkports",ups:"direkt am Stromnetz",bak:"nur die Daten im NAS"}[cat]||"";
   switch(cat){
     case "nas":return `${p.bays} Schächte${p.exp?` (bis ${p.exp} mit Erweiterung)`:""} · ${p.cpu} · ${p.ram?p.ram+" GB":"ohne"} RAM${p.slots?` (max. ${p.ramMax})`:" fest"} · ${p.m2}× M.2 · ${lanText(p.lan)}${p.pcie?" · PCIe":p.mini?" · 10-GbE-Steckplatz":""} · ${p.os}`;
     case "hdd":return `${p.tb} TB · ${p.rpm} U/min · ${p.smr?"SMR":"CMR"} · ${CLS_LABEL[p.cls]} · ${p.warr} J. Garantie · ${num(p.price/p.tb,0)} €/TB`;
+    case "exp":return `+${p.bays} Schächte · eSATA/Erweiterungsport · für ${DB.nas.filter(x=>x.expUnit===p.id).map(x=>x.name.replace("Synology ","")).join(", ")}`;
     case "ssd":return `${fmtTB(p.tb)} · NVMe · ${p.tbw} TBW · ${CLS_LABEL[p.cls]||"NAS-SSD"}`;
     case "ram":return `${p.gb} GB${p.mods>1?` (${p.mods}× ${p.gb/p.mods} GB)`:""} · ${RAM_T[p.t]}${p.syno?" · Synology-Original":""}`;
     case "nic":return `${fmtG(p.sp)} · ${p.t==="pcie"?"PCIe-Karte":p.t==="mini"?"Synology-Steckmodul":"USB-Adapter"}${p.m2?` · +${p.m2} M.2`:""}`;
@@ -1177,6 +1237,7 @@ function specRows(cat,p,parts){
   switch(cat){
     case "nas":return [["Hersteller",p.brand],["Bauart",p.kind==="diy"?"Selbstbau":p.bare?"Barebone (ohne RAM)":"Fertig-NAS"],["Schächte",p.bays+(p.exp?` (bis ${p.exp})`:"")],["Prozessor",`${p.cpu}, ${p.cores} Kerne / ${p.thr} Threads`],["CPU-Index",p.cs+" (N100 = 25)"],["4K-Transcodes",p.t4?"ca. "+p.t4:"keine (nur Software)"],["AV1-Decoding",p.av1?"ja":"nein"],["Arbeitsspeicher",`${p.ram} GB, max. ${p.ramMax} GB${p.ecc?" · ECC":""}`],["RAM-Plätze",p.slots?`${p.slots} (${p.free} frei)`:"fest verlötet"],["M.2",`${p.m2}× ${p.m2p==="ja"?"Cache oder Speicherpool":p.m2p==="syno"?"Cache, Pool nur mit Synology-SSD":"Cache"}`],["Netzwerk",lanText(p.lan)],["Erweiterung",p.pcie?p.pcie+"× PCIe":p.mini?"Synology-10-GbE-Modul":"keine"],["Leerlauf ohne Platten",`ca. ${p.idle} W`],["System",p.os],["Docker / VMs",`${p.docker?"ja":"nein"} / ${p.vm?"ja":"nein"}`],["Richtpreis",eur(p.price)]];
     case "hdd":return [["Kapazität",p.tb+" TB"],["Drehzahl",p.rpm+" U/min"],["Aufzeichnung",p.smr?"SMR (Shingled)":"CMR"],["Klasse",CLS_LABEL[p.cls]],["Freigabe",p.rated?`bis ${p.rated} Schächte`:"unbegrenzt (Rechenzentrum)"],["Dauertransfer",`bis ${p.mbs} MB/s`],["Leistung Ruhe / Zugriff",`${num(p.idle)} W / ${num(p.act)} W`],["Geräusch Zugriff",`ca. ${p.db} dB(A)`],["Garantie",p.warr+" Jahre"],["Preis je TB",num(p.price/p.tb,1)+" €"],["Richtpreis",eur(p.price)]];
+    case "exp":return [["Zusätzliche Schächte",p.bays],["Passt zu",DB.nas.filter(x=>x.expUnit===p.id).map(x=>x.name).join(", ")],["Richtpreis",eur(p.price)]];
     case "ssd":return [["Kapazität",fmtTB(p.tb)],["Schreibfestigkeit",p.tbw+" TBW"],["Lesen",`bis ${p.mbs} MB/s (im NAS meist durch PCIe-Anbindung begrenzt)`],["Klasse",CLS_LABEL[p.cls]||"NAS-SSD"],["Richtpreis",eur(p.price)]];
     case "ram":return [["Kapazität",p.gb+" GB"],["Module",p.mods],["Typ",RAM_T[p.t]],["Herkunft",p.syno?"Synology-Original":"Fremdmodul"],["Danach im NAS",parts.nas?ramTotal(parts.nas,p)+" GB":"–"],["Richtpreis",eur(p.price)]];
     case "nic":return [["Tempo",fmtG(p.sp)],["Anschluss",p.t==="pcie"?"PCIe":p.t==="mini"?"Synology-Steckplatz":"USB"],["Treiber",p.vendor==="syno"?"nur Synology":p.vendor==="qnap"?"nur QNAP":"Standard"],["Zusätzliche M.2",p.m2||"–"],["Leistung",`ca. ${p.w} W`],["Richtpreis",eur(p.price)]];
@@ -1304,8 +1365,9 @@ function slotPrice(cat,p,parts){
   if(QTY_CATS.includes(cat)&&!p.none){const q=parts.q[cat];return `${eur(p.price*q)}${q>1?`<small>${q} × ${eur(p.price)}</small>`:""}`;}
   return p.price?eur(p.price):"0 €";
 }
+function qtyMax(cat,parts){return cat==="hdd"?(parts.nas?bayTotal(parts):12):cat==="exp"?Math.max(1,expMax(parts.nas)):Math.max(1,m2Slots(parts));}
 function qtyCtl(cat,parts){
-  const q=parts.q[cat],max=cat==="hdd"?(parts.nas?parts.nas.bays:12):Math.max(1,m2Slots(parts));
+  const q=parts.q[cat],max=qtyMax(cat,parts);
   return `<span class="qty" role="group" aria-label="Anzahl ${esc(CAT_LABEL[cat])}"><button type="button" data-act="qty" data-cat="${cat}" data-d="-1" aria-label="eine weniger"${q<=1?" disabled":""}>−</button><output>${q}×</output><button type="button" data-act="qty" data-cat="${cat}" data-d="1" aria-label="eine mehr"${q>=max?" disabled":""}>+</button></span>`;
 }
 function renderSlots(parts,issues){
@@ -1345,7 +1407,7 @@ function renderSummary(parts,issues){
       <div class="kv"><span>Ziel / Daten heute</span><span class="num">${fmtTB(p.cap)} / ${fmtTB(p.data)}</span></div>
       <div class="meter ${cls}" role="img" aria-label="Nutzkapazität gegen Ziel"><span style="width:${Math.min(100,m.usable/Math.max(p.cap,0.1)*100)}%"></span></div>
       <div class="kv"><span>Ausfallsicherheit</span><span class="num">${p.red?p.red+" Platte"+(p.red>1?"n":""):"keine"}</span></div>
-      <div class="kv"><span>Freie Schächte</span><span class="num">${Math.max(0,m.free)}${parts.nas.exp?` (+${parts.nas.exp-parts.nas.bays} mit Erweiterung)`:""}</span></div>
+      <div class="kv"><span>Freie Schächte</span><span class="num">${Math.max(0,m.free)}${parts.nas.exp>bayTotal(parts)?` (+${parts.nas.exp-bayTotal(parts)} mit ${parts.nas.expUnit})`:""}</span></div>
       <div class="kv"><span>Rebuild nach Plattentausch</span><span class="num">ca. ${Math.round(m.rb)} h</span></div>
       <div class="kv"><span>Risiko Datenverlust / Jahr*</span><span class="num">${riskText(m.risk)}</span></div>
       <span class="subline">* grobe Modellrechnung ohne Backup, aus Ausfallraten und Rebuild-Dauer</span></div>`;
@@ -1391,6 +1453,8 @@ function render(){
   const parts=resolve(state.picks),issues=checkAll(parts);
   renderSlots(parts,issues);renderSummary(parts,issues);
   document.querySelectorAll("#profileSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.profile===state.profile)));
+  document.querySelectorAll("#brandSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.brand===P().brand)));
+  const qb=$("#qBays");if(document.activeElement!==qb)qb.value=String(P().bays);
   document.querySelectorAll("#redSeg button").forEach(b=>b.setAttribute("aria-checked",String(Number(b.dataset.red)===P().red)));
   const bi=$("#budget");if(document.activeElement!==bi)bi.value=state.budget||"";
   const qc=$("#qCap");if(document.activeElement!==qc)qc.value=String(P().cap);
@@ -1399,15 +1463,16 @@ function render(){
   if(state.view==="dash"){SLIDERS.forEach(d=>{const el=$("#sl-"+d.k);if(el&&document.activeElement!==el)el.value=sliderPos(d.k);const o=$("#out-"+d.k);if(o)o.textContent=sliderText(d.k);});renderDash(parts,issues);}
   if(state.view==="ov")renderOverview(parts,issues);
   if(state.view==="cmp")renderCompare(parts);
+  if(state.view==="raid")renderRaidCalc();
 }
 function renderView(){
-  const map={konfig:"#viewKonfig",dash:"#viewDash",ov:"#viewOv",cmp:"#viewCmp"};
+  const map={konfig:"#viewKonfig",dash:"#viewDash",ov:"#viewOv",cmp:"#viewCmp",raid:"#viewRaid"};
   for(const k in map)$(map[k]).hidden=state.view!==k;
   document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===state.view)));
 }
 
 /* ---------- Dashboard ---------- */
-const CAT_COLOR={nas:"--c1",hdd:"--c2",ssd:"--c5",ram:"--c4",nic:"--c3",ups:"--c7",bak:"--c6"};
+const CAT_COLOR={exp:"--c8",nas:"--c1",hdd:"--c2",ssd:"--c5",ram:"--c4",nic:"--c3",ups:"--c7",bak:"--c6"};
 const CAP_STEPS=[2,4,8,12,16,24,32,48,64,96,128];
 const SLIDERS=[
  {k:"budget",label:"Budget",steps:[400,600,800,1000,1200,1500,2000,2500,3000,4000,5000,0],ends:["400 €","ohne Limit"],aff:"alle ergänzten Teile"},
@@ -1508,7 +1573,7 @@ function renderApps(parts,m){
   h+=g("Foto-KI (Gesichter, Objekte)",!nas?"–":ai<10?"sehr langsam":ai<20?"langsam":ai<35?"ordentlich":"schnell",!nas?"f0":ai<10?"f0":ai<20?"f1":ai<35?"f2":"f3","Immich, Synology Photos, QuMagie; erster Durchlauf dauert bei großen Bibliotheken Tage");
   h+=grp("Homelab");
   h+=g("Docker-Container (leicht)",nas&&nas.docker?"ca. "+m.cont:"nicht möglich",!nas||!nas.docker?"f0":m.cont>=20?"f3":m.cont>=8?"f2":"f1","z. B. Home Assistant, Pi-hole, Paperless, Nextcloud");
-  h+=g("Virtuelle Maschinen",nas&&nas.vm?String(m.vms):"nicht möglich",!nas||!nas.vm?"f0":m.vms>=Math.max(1,p.vms)?(m.vms>=4?"f3":"f2"):"f1",`je ca. 4 GB RAM und 1 Kern; ${m.ram} GB RAM vorhanden`);
+  h+=g("Virtuelle Maschinen",nas&&nas.vm?String(m.vms):"nicht möglich",!nas||!nas.vm?"f0":m.vms>=Math.max(1,p.vms)?(m.vms>=4?"f3":"f2"):"f1",`je ca. 4 GB RAM und 2 Threads; ${m.ram} GB RAM vorhanden`);
   h+=grp("Datensicherheit");
   h+=g("Plattenausfälle verkraftbar",String(p.red),p.red===0?"f0":p.red===1?"f2":"f3",m.raid);
   h+=g("Rebuild nach Plattentausch",m.rb?"ca. "+Math.round(m.rb)+" h":"–",m.rb>36?"f1":"f2","Platten laufen in dieser Zeit unter Volllast");
@@ -1544,14 +1609,12 @@ function radarSvg(series){
 const VKEY="naswerkbank.variants";
 function loadVariants(){try{return JSON.parse(localStorage.getItem(VKEY)||"{}")||{};}catch(e){return {};}}
 function saveVariant(slot){const v=loadVariants();v[slot]={picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,saved:new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})};try{localStorage.setItem(VKEY,JSON.stringify(v));}catch(e){}}
-let cmpSel="preset:starter";
+let cmpSel="auto:best";
 function withTemp(tmp,fn){const s=state;state=Object.assign({},s,tmp);try{return fn();}finally{state=s;}}
 function buildConfig(key){
-  if(key.startsWith("preset:")){const pr=PRESETS.find(x=>x.id===key.slice(7));if(!pr)return null;
-    const params=Object.assign({},DEF_PARAMS,pr.params,{kwh:P().kwh,spin:P().spin,upl:P().upl});
-    const user={};for(const c in pr.user||{})user[c]={id:pr.user[c],src:"user"};
-    const picks=withTemp({params,profile:pr.profile,budget:pr.budget},()=>fillMissing(user));
-    return {name:"Vorlage „"+pr.name+"“",picks,params,profile:pr.profile,budget:pr.budget};}
+  if(key.startsWith("auto:")){const k=key.slice(5),params=Object.assign({},P(),k==="best"?{}:{brand:k==="syno"?"syno":"all",bays:0});
+    const picks=withTemp({params},()=>fillMissing({}));
+    return {name:k==="best"?"Empfehlung ohne deine festen Teile":k==="syno"?"beste Synology-Lösung":"beste Lösung aller Hersteller",picks,params,profile:state.profile,budget:state.budget};}
   if(key.startsWith("var:")){const v=loadVariants()[key.slice(4)];return v?{name:"Variante "+key.slice(4)+" ("+v.saved+")",picks:v.picks,params:Object.assign({},DEF_PARAMS,v.params),profile:v.profile,budget:v.budget}:null;}
   if(key.startsWith("save:")){const x=loadSaves().find(y=>y.id===key.slice(5));return x?{name:x.name,picks:x.picks,params:Object.assign({},DEF_PARAMS,x.params),profile:x.profile,budget:x.budget}:null;}
   return null;
@@ -1559,7 +1622,7 @@ function buildConfig(key){
 function cfgMetrics(cfg){return withTemp({params:cfg.params,profile:cfg.profile,budget:cfg.budget},()=>{const parts=resolve(cfg.picks);return {parts,m:calc(parts),sc:profileScores(parts),iss:checkAll(parts)};});}
 function renderRadarAndCompare(parts){
   const v=loadVariants(),saves=loadSaves();
-  const opts=PRESETS.map(p=>[`preset:${p.id}`,`Vorlage: ${p.name}`]).concat(["A","B"].filter(s=>v[s]).map(s=>[`var:${s}`,`Variante ${s} (${v[s].saved})`])).concat(saves.map(x=>[`save:${x.id}`,`Gespeichert: ${x.name}`]));
+  const opts=[["auto:best","Empfehlung ohne deine festen Teile"],["auto:syno","Beste Synology-Lösung"],["auto:all","Beste Lösung aller Hersteller"]].concat(["A","B"].filter(s=>v[s]).map(s=>[`var:${s}`,`Variante ${s} (${v[s].saved})`])).concat(saves.map(x=>[`save:${x.id}`,`Gespeichert: ${x.name}`]));
   if(!opts.some(o=>o[0]===cmpSel))cmpSel=opts[0][0];
   $("#dCmpSel").innerHTML=opts.map(o=>`<option value="${esc(o[0])}"${o[0]===cmpSel?" selected":""}>${esc(o[1])}</option>`).join("");
   const cfg=buildConfig(cmpSel),mine={parts,m:calc(parts),sc:profileScores(parts),iss:checkAll(parts)},other=cfg?cfgMetrics(cfg):null;
@@ -1595,8 +1658,8 @@ function renderRadarAndCompare(parts){
 function renderAlt(parts){
   const h=parts.hdd,n=parts.q.hdd;if(!h){$("#dAlt").innerHTML=`<p class="subline">Erst Festplatten wählen.</p>`;return;}
   const keepBak={bak:parts.bak,ups:parts.ups};
-  const rows=DB.nas.filter(x=>!x.eol&&x.bays>=n).map(x=>{
-    const base={q:{hdd:n,ssd:0},hdd:h};if(keepBak.bak)base.bak=keepBak.bak;if(keepBak.ups)base.ups=keepBak.ups;
+  const rows=DB.nas.filter(x=>!x.eol&&(x.expUnit?x.exp:x.bays)>=n&&(P().brand!=="syno"||x.brand==="Synology"||x.id===(parts.nas&&parts.nas.id))).map(x=>{
+    const base={q:{hdd:n,ssd:0,exp:0},hdd:h};if(keepBak.bak)base.bak=keepBak.bak;if(keepBak.ups)base.ups=keepBak.ups;
     const r=evalCombo(base,x,h,n),iss=checkAll(r.parts);return {x,r,m:calc(r.parts),e:iss.filter(i=>i.level==="error").length,w:iss.filter(i=>i.level==="warn").length};
   }).sort((a,b)=>b.r.val-a.r.val);
   const cur=parts.nas&&parts.nas.id,top=rows.slice(0,8);if(cur&&!top.some(r=>r.x.id===cur)){const c=rows.find(r=>r.x.id===cur);if(c)top.push(c);}
@@ -1673,7 +1736,7 @@ function renderSteps(parts){
   if(i>0){const x=cheapest(sizes[i-1]);add(`${n}× ${x.name}`,n*(x.price-h.price),usableTB(n,x.tb,red)-u0,`data-act="take" data-cat="hdd" data-id="${x.id}"`);}
   if(i>=0&&i<sizes.length-1){const x=cheapest(sizes[i+1]);add(`${n}× ${x.name}`,n*(x.price-h.price),usableTB(n,x.tb,red)-u0,`data-act="take" data-cat="hdd" data-id="${x.id}"`);}
   if(n>Math.max(1,minN(red)))add(`${n-1}× ${h.name}`,-h.price,usableTB(n-1,h.tb,red)-u0,`data-act="qty" data-cat="hdd" data-d="-1"`);
-  if(n<nas.bays)add(`${n+1}× ${h.name}`,h.price,usableTB(n+1,h.tb,red)-u0,`data-act="qty" data-cat="hdd" data-d="1"`);
+  if(n<bayTotal(parts))add(`${n+1}× ${h.name}`,h.price,usableTB(n+1,h.tb,red)-u0,`data-act="qty" data-cat="hdd" data-d="1"`);
   rows.sort((a,b)=>a.dp-b.dp);
   $("#dSteps").innerHTML=`<div class="up"><span class="h">Variante</span><span class="h">Preis</span><span class="h">Nutzbar</span><span class="h"></span>${rows.map(r=>`<span>${esc(r.lbl)}</span><span class="${r.dp>0?"delta-neg":"delta-pos"}">${r.dp>0?"+":""}${eur(r.dp)}</span><span class="${r.du>=0?"delta-pos":"delta-neg"}">${r.du>=0?"+":"−"}${fmtTB(Math.abs(r.du))}</span><button type="button" class="btn" ${r.act}>Wählen</button>`).join("")}</div>
    <p class="subline">Ausgehend von ${n}× ${esc(h.name)} (${fmtTB(u0)} nutzbar).</p>`;
@@ -1722,7 +1785,7 @@ document.addEventListener("click",e=>{
 
 /* ---------- Übersicht ---------- */
 function schemaSvg(parts,errCats){
-  const nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0,red=P().red,bays=nas?nas.bays:Math.max(n,4);
+  const nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0,red=P().red,bays=nas?Math.max(bayTotal(parts),Math.min(n,bayTotal(parts)+5)):Math.max(n,4);
   const W=660,cols=Math.min(bays,5),rowsN=Math.ceil(bays/cols),bw=58,bh=92,gap=10,x0=34,y0=48;
   const boxW=cols*(bw+gap)+gap+44,boxH=rowsN*(bh+gap)+gap+96;
   const e=c=>errCats.has(c)?" err":"";
@@ -1756,7 +1819,7 @@ function schemaSvg(parts,errCats){
 function renderOverview(parts,issues){
   const m=calc(parts);$("#oKpis").innerHTML=kpiHtml(parts,m,issues);
   const errCats=new Set();issues.filter(i=>i.level==="error").forEach(i=>i.cats.forEach(c=>errCats.add(c)));
-  $("#oCase").textContent=parts.nas?`${m.raid} · ${parts.nas.bays} Schächte`:"";
+  $("#oCase").textContent=parts.nas?`${m.raid} · ${bayTotal(parts)} Schächte${bayTotal(parts)>parts.nas.bays?" mit Erweiterung":""}`:"";
   $("#oSchema").innerHTML=schemaSvg(parts,errCats);
   const pros=[],cons=[];
   if(m.usable>=P().cap)pros.push(`${fmtTB(m.usable)} nutzbar, Ziel erreicht`);
@@ -1778,16 +1841,108 @@ function renderOverview(parts,issues){
     <tr><td colspan="3"><b>Summe einmalig</b></td><td class="num"><b>${eur(m.total)}</b></td></tr></tbody></table>`;
 }
 
+/* ---------- RAID-Rechner ---------- */
+const RC_SIZES=[1,2,3,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32];
+const RCKEY="naswerkbank.raidcalc";
+let rc=(()=>{try{const o=JSON.parse(localStorage.getItem(RCKEY)||"null");if(o&&Array.isArray(o.d)&&o.d.every(x=>typeof x==="number"&&x>0))return {d:o.d.slice(0,24),sel:o.sel||"shr1",size:o.size||8};}catch(e){}return null;})();
+function rcSave(){try{localStorage.setItem(RCKEY,JSON.stringify(rc));}catch(e){}}
+function rcInit(){if(rc)return;const parts=resolve(state.picks);rc={d:parts.hdd?Array(parts.q.hdd).fill(parts.hdd.tb):[8,8,8,8],sel:"shr1",size:parts.hdd?parts.hdd.tb:8};}
+/* Schichten: je Größenstufe Höhe h und Zahl k der Platten, die mindestens so groß sind (Grundlage von SHR) */
+function rcLayers(d){const s=[...d].sort((a,b)=>a-b),out=[];let prev=0;for(let i=0;i<s.length;i++){const h=s[i]-prev;if(h>0){out.push({from:prev,h,k:s.length-i});prev=s[i];}}return out;}
+const RC_TYPES=[
+ {id:"shr1",name:"SHR",fam:"syno",min:1,desc:"Synology Hybrid RAID: nutzt unterschiedlich große Platten aus, 1 Platte Redundanz (bei 2 Platten Spiegel)."},
+ {id:"shr2",name:"SHR-2",fam:"syno",min:4,desc:"Wie SHR, aber 2 Platten Redundanz. Ab 4 Platten."},
+ {id:"basic",name:"Basic",fam:"all",min:1,max:1,desc:"Eine einzelne Platte ohne Schutz."},
+ {id:"jbod",name:"JBOD",fam:"all",min:1,desc:"Platten werden aneinandergehängt. Fällt eine aus, ist der ganze Verbund verloren."},
+ {id:"raid0",name:"RAID 0",fam:"all",min:2,desc:"Striping: schnell, aber ohne jeden Schutz."},
+ {id:"raid1",name:"RAID 1",fam:"all",min:2,desc:"Spiegel: alle Platten enthalten dieselben Daten."},
+ {id:"raid5",name:"RAID 5",fam:"all",min:3,desc:"Verteilte Parität über alle Platten, 1 Platte Redundanz."},
+ {id:"raid6",name:"RAID 6",fam:"all",min:4,desc:"Doppelte Parität, 2 Platten Redundanz."},
+ {id:"raid10",name:"RAID 10",fam:"all",min:4,even:true,desc:"Gespiegelte Paare, die gestriped werden. Verkraftet 1 Ausfall sicher, bis zu einem je Paar."},
+ {id:"z1",name:"RAIDZ1",fam:"zfs",min:3,desc:"ZFS (TrueNAS) mit 1 Platte Parität."},
+ {id:"z2",name:"RAIDZ2",fam:"zfs",min:4,desc:"ZFS mit 2 Platten Parität."},
+ {id:"z3",name:"RAIDZ3",fam:"zfs",min:5,desc:"ZFS mit 3 Platten Parität."}
+];
+function rcCalc(t,d){
+  const n=d.length,sum=d.reduce((a,b)=>a+b,0),mn=n?Math.min(...d):0,mx=n?Math.max(...d):0;
+  const r={t,n,sum,ok:n>=t.min&&(!t.max||n<=t.max)&&(!t.even||n%2===0),use:0,par:0,unused:0,tol:0,rd:1,wr:1,per:[]};
+  if(!r.ok){r.why=t.max&&n>t.max?`nur mit genau ${t.max} Platte`:t.even&&n%2?"braucht eine gerade Anzahl Platten":`ab ${t.min} Platten`;return r;}
+  const classic=(dataN,parN,tol,rd,wr)=>{r.use=dataN*mn;r.par=parN*mn;r.unused=sum-n*mn;r.tol=tol;r.rd=rd;r.wr=wr;r.per=d.map(x=>({data:mn*dataN/n,par:mn*parN/n,unused:x-mn}));};
+  switch(t.id){
+    case "basic":case "jbod":r.use=sum;r.rd=1;r.wr=1;r.per=d.map(x=>({data:x,par:0,unused:0}));break;
+    case "raid0":classic(n,0,0,n,n);break;
+    case "raid1":classic(1,n-1,n-1,n,1);break;
+    case "raid5":case "z1":classic(n-1,1,1,n-1,n-1);break;
+    case "raid6":case "z2":classic(n-2,2,2,n-2,n-2);break;
+    case "z3":classic(n-3,3,3,n-3,n-3);break;
+    case "raid10":classic(n/2,n/2,1,n,n/2);r.tolMax=n/2;break;
+    case "shr1":case "shr2":{
+      const need=t.id==="shr1"?2:3,parOf=k=>t.id==="shr1"?(k===2?1:1):(k===3?2:2);
+      if(n===1){r.use=sum;r.per=[{data:sum,par:0,unused:0}];r.tol=0;break;}
+      const per=d.map(()=>({data:0,par:0,unused:0})),idx=d.map((x,i)=>i).sort((a,b)=>d[a]-d[b]);
+      for(const L of rcLayers(d)){const members=idx.filter(i=>d[i]>L.from);
+        if(L.k<need){members.forEach(i=>per[i].unused+=L.h);r.unused+=L.h*L.k;continue;}
+        const p=parOf(L.k),data=L.k-p;r.use+=L.h*data;r.par+=L.h*p;members.forEach(i=>{per[i].data+=L.h*data/L.k;per[i].par+=L.h*p/L.k;});}
+      r.per=per;r.tol=t.id==="shr1"?1:2;r.rd=Math.max(1,n-r.tol);r.wr=n<=2?1:Math.max(1,n-r.tol);break;}
+  }
+  r.eff=sum?r.use/sum:0;return r;
+}
+function rcRecommend(d){
+  const n=d.length,mixed=new Set(d).size>1,mx=n?Math.max(...d):0;
+  if(n<=1)return "basic";if(n===2)return "shr1";
+  if(n>=6||(n>=5&&mx>=16))return "shr2";
+  return "shr1";
+}
+function renderRaidCalc(){
+  rcInit();const d=rc.d;
+  $("#rcSize").innerHTML=RC_SIZES.map(v=>`<option value="${v}"${v===rc.size?" selected":""}>${v} TB</option>`).join("");
+  $("#rcDrives").innerHTML=d.map((x,i)=>`<div class="rc-d"><b>Platte ${i+1}</b><select data-rcidx="${i}" aria-label="Größe Platte ${i+1}">${RC_SIZES.concat(RC_SIZES.includes(x)?[]:[x]).sort((a,b)=>a-b).map(v=>`<option value="${v}"${v===x?" selected":""}>${v} TB</option>`).join("")}</select><button type="button" data-act="rcDel" data-i="${i}" aria-label="Platte ${i+1} entfernen">entfernen</button></div>`).join("")||`<p class="subline">Noch keine Platten. Mit „+ Platte“ hinzufügen.</p>`;
+  const rec=rcRecommend(d),res=RC_TYPES.map(t=>rcCalc(t,d));
+  if(!res.some(r=>r.t.id===rc.sel&&r.ok)){const f=res.find(r=>r.t.id===rec&&r.ok)||res.find(r=>r.ok);if(f)rc.sel=f.t.id;}
+  const sum=d.reduce((a,b)=>a+b,0),fam={syno:"Synology",all:"Synology & andere",zfs:"TrueNAS (ZFS)"};
+  const bar=r=>{const t=r.sum||1;return `<span class="rcbar" role="img" aria-label="Nutzbar ${num(r.use)} TB, Redundanz ${num(r.par)} TB, ungenutzt ${num(r.unused)} TB"><span style="width:${r.use/t*100}%;background:var(--c1)"></span><span style="width:${r.par/t*100}%;background:var(--c3)"></span><span style="width:${r.unused/t*100}%;background:var(--line)"></span></span>`;};
+  $("#rcTable").innerHTML=d.length?`<table class="rctab"><thead><tr><th>RAID-Art</th><th>System</th><th class="n">Nutzbar</th><th class="n">≈ TiB</th><th class="n">Ausfälle ok</th><th class="n">Redundanz</th><th class="n">Ungenutzt</th><th class="n">Effizienz</th><th class="n">Lesen / Schreiben</th><th>Aufteilung</th></tr></thead><tbody>${res.map(r=>`<tr class="${r.t.id===rc.sel?"sel":""}${r.ok?"":" na"}" data-act="rcSel" data-id="${r.t.id}" tabindex="0" role="button" aria-label="${esc(r.t.name)} auswählen">
+     <td><b>${esc(r.t.name)}</b>${r.t.id===rec?' <span class="tag rec">Empfohlen</span>':""}</td><td class="subline">${esc(fam[r.t.fam])}</td>
+     ${r.ok?`<td class="n"><b>${num(r.use)} TB</b></td><td class="n">${num(r.use*0.909)}</td><td class="n">${r.tol}${r.tolMax?` (bis ${r.tolMax})`:""}</td><td class="n">${num(r.par)} TB</td><td class="n">${r.unused?num(r.unused)+" TB":"–"}</td><td class="n">${Math.round(r.eff*100)} %</td><td class="n">≈ ${num(r.rd,1)}× / ${num(r.wr,1)}×</td><td>${bar(r)}</td>`:`<td colspan="8" class="subline">nicht möglich: ${esc(r.why)}</td>`}</tr>`).join("")}</tbody></table>`:"";
+  $("#rcNote").innerHTML=d.length?`${d.length} Platten, zusammen ${num(sum)} TB roh. <span class="legend" style="display:inline-flex;margin-left:6px"><span><i style="background:var(--c1)"></i>nutzbar</span><span><i style="background:var(--c3)"></i>Redundanz</span><span><i style="background:var(--line)"></i>ungenutzt</span></span><br>Tempo als Vielfaches einer Platte bei großen Dateien, ohne Netzwerkgrenze; „≈ TiB“ ist das, was das Betriebssystem anzeigt (1 TB = 0,909 TiB). RAID ersetzt kein Backup.`:"";
+  const sel=res.find(r=>r.t.id===rc.sel);
+  if(!sel||!sel.ok){$("#rcViz").innerHTML="";$("#rcExplain").innerHTML="";$("#rcSelName").textContent="";return;}
+  $("#rcSelName").textContent=sel.t.name;
+  const mx=Math.max(...d),H=170;
+  $("#rcViz").innerHTML=`<div class="rc-col">${sel.per.map((x,i)=>`<div style="display:flex;flex-direction:column;align-items:center;gap:4px"><div class="rc-stack" style="height:${Math.max(24,d[i]/mx*H)}px" role="img" aria-label="Platte ${i+1}: ${num(x.data)} TB Daten, ${num(x.par)} TB Redundanz, ${num(x.unused)} TB ungenutzt" data-tip="Platte ${i+1} (${d[i]} TB): ${num(x.data)} TB Daten · ${num(x.par)} TB Redundanz · ${num(x.unused)} TB ungenutzt"><span style="height:${x.data/d[i]*100}%;background:var(--c1)"></span><span style="height:${x.par/d[i]*100}%;background:var(--c3)"></span><span style="height:${x.unused/d[i]*100}%;background:var(--line)"></span></div><span class="subline">${d[i]} TB</span></div>`).join("")}</div>`;
+  const rb=mx*1e6/(230*0.55)/3600,mixed=new Set(d).size>1,hasSyn=sel.t.fam!=="zfs";
+  const tips=[];
+  tips.push(`<b>${num(sel.use)} TB nutzbar</b> (≈ ${num(sel.use*0.909)} TiB) von ${num(sel.sum)} TB roh, Effizienz ${Math.round(sel.eff*100)} %.`);
+  tips.push(sel.tol?`Verkraftet ${sel.tol===1?"den Ausfall einer Platte":sel.tol+" gleichzeitige Plattenausfälle"}${sel.tolMax?` (im besten Fall bis zu ${sel.tolMax}, wenn je Spiegelpaar nur eine ausfällt)`:""}. Der Neuaufbau nach einem Tausch dauert bei ${mx} TB grob ${Math.round(rb)} Stunden.`:"Kein Schutz: Fällt eine Platte aus, sind die Daten weg.");
+  if(sel.unused&&mixed)tips.push(`${num(sel.unused)} TB bleiben ungenutzt, weil die Platten unterschiedlich groß sind.${["raid1","raid5","raid6","raid10","z1","z2","z3"].includes(sel.t.id)?" SHR (Synology) würde mehr davon nutzen.":" Eine weitere große Platte würde sie nutzbar machen."}`);
+  if(sel.t.id==="raid5"&&mx>=12)tips.push("Bei großen Platten ist RAID 5 riskant: Während des langen Rebuilds darf keine zweite Platte ausfallen. RAID 6 oder SHR-2 sind sicherer.");
+  if(sel.t.fam==="zfs")tips.push("ZFS: Ein vdev lässt sich je nach Version nur eingeschränkt um einzelne Platten erweitern; unterschiedlich große Platten werden auf die kleinste gekürzt.");
+  if(sel.t.fam==="syno")tips.push("SHR gibt es nur bei Synology (nicht bei allen Rackstation- und Business-Modellen). Später lässt sich SHR mit größeren Platten Stück für Stück vergrößern.");
+  tips.push(sel.tol>=1&&sel.tol<=2?`<button type="button" class="btn" data-act="rcApply" data-red="${sel.tol}">Ausfallsicherheit ${sel.tol} in die Konfiguration übernehmen</button>`:sel.tol===0?`<button type="button" class="btn" data-act="rcApply" data-red="0">„keine Redundanz“ übernehmen</button>`:"");
+  $("#rcExplain").innerHTML=tips.map(t=>`<p style="margin:6px 0">${t}</p>`).join("");
+}
+document.addEventListener("change",e=>{const t=e.target;if(t.dataset&&t.dataset.rcidx!==undefined){rcInit();rc.d[Number(t.dataset.rcidx)]=Number(t.value);rcSave();renderRaidCalc();}else if(t.id==="rcSize"){rcInit();rc.size=Number(t.value);rcSave();}});
+document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if(!el)return;const a=el.dataset.act;if(!a.startsWith("rc"))return;rcInit();
+  if(a==="rcAdd"){if(rc.d.length<24)rc.d.push(rc.size);}
+  else if(a==="rcDel")rc.d.splice(Number(el.dataset.i),1);
+  else if(a==="rcClear")rc.d=[];
+  else if(a==="rcSel")rc.sel=el.dataset.id;
+  else if(a==="rcFromCfg"){const parts=resolve(state.picks);if(parts.hdd)rc.d=Array(parts.q.hdd).fill(parts.hdd.tb);}
+  else if(a==="rcApply"){setRed(Number(el.dataset.red));rcSave();return;}
+  rcSave();renderRaidCalc();});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches(".rctab tr[data-act]")){e.preventDefault();e.target.click();}});
+
 /* ---------- Vergleich ---------- */
 let cmpCat="nas",cmpSort={k:"perf",dir:-1};
-const PERF_LABEL={nas:"Leistung (CPU-Index)",hdd:"Kapazität TB",ssd:"Kapazität TB",ram:"GB",nic:"GbE",ups:"Akku Wh",bak:"Kapazität TB"};
-function perfOf(cat,p){if(p.none)return 0;return {nas:p.cs,hdd:p.tb,ssd:p.tb,ram:p.gb,nic:p.sp,ups:p.wh,bak:Math.min(p.tb,100)}[cat];}
+const PERF_LABEL={exp:"Schächte",nas:"Leistung (CPU-Index)",hdd:"Kapazität TB",ssd:"Kapazität TB",ram:"GB",nic:"GbE",ups:"Akku Wh",bak:"Kapazität TB"};
+function perfOf(cat,p){if(p.none)return 0;return {exp:p.bays,nas:p.cs,hdd:p.tb,ssd:p.tb,ram:p.gb,nic:p.sp,ups:p.wh,bak:Math.min(p.tb,100)}[cat];}
 function cmpCols(cat){
   const c=(k,l,v,f,best)=>({k,l,v,f:f||(x=>String(x)),best});
   const base=[c("name","Modell",p=>p.name)];
   const per={
     nas:[c("bays","Schächte",p=>p.bays,null,"max"),c("perf","CPU-Index",p=>p.cs,null,"max"),c("t4","4K-Transc.",p=>p.t4,null,"max"),c("ram","RAM",p=>p.ram,x=>x+" GB","max"),c("lan","LAN",p=>Math.max(...p.lan),x=>fmtG(x),"max"),c("m2","M.2",p=>p.m2,null,"max"),c("idle","Leerlauf",p=>p.idle,x=>x+" W","min")],
     hdd:[c("perf","TB",p=>p.tb,null,"max"),c("ptb","€/TB",p=>p.price/p.tb,x=>num(x,1),"min"),c("rpm","U/min",p=>p.rpm),c("cls","Klasse",p=>CLS_LABEL[p.cls]),c("warr","Garantie",p=>p.warr,x=>x+" J.","max"),c("mbs","MB/s",p=>p.mbs,null,"max"),c("db","dB(A)",p=>p.db,null,"min")],
+    exp:[c("perf","Schächte",p=>p.bays||0,null,"max")],
     ssd:[c("perf","Kapazität",p=>p.tb||0,x=>fmtTB(x),"max"),c("tbw","TBW",p=>p.tbw||0,null,"max"),c("cls","Klasse",p=>CLS_LABEL[p.cls]||"–")],
     ram:[c("perf","GB",p=>p.gb||0,null,"max"),c("t","Typ",p=>p.t?RAM_T[p.t]:"–"),c("syno","Synology",p=>p.syno?"ja":"–")],
     nic:[c("perf","Tempo",p=>p.sp||0,x=>x?fmtG(x):"–","max"),c("t","Anschluss",p=>p.t||"–"),c("vendor","Treiber",p=>p.vendor||"–")],
@@ -1830,7 +1985,8 @@ function closePicker(){$("#picker").hidden=true;pickerCat=null;if(lastFocus&&las
 function pickQty(cat,p){
   if(!QTY_CATS.includes(cat)||p.none)return undefined;
   const parts=resolve(state.picks),cur=state.picks[cat];
-  if(cat==="hdd"){if(cur&&cur.src==="user")return Math.min(cur.qty||1,parts.nas?parts.nas.bays:99);return bestQty(parts.nas,p);}
+  if(cat==="hdd"){if(cur&&cur.src==="user")return Math.min(cur.qty||1,parts.nas?bayTotal(parts):99);return bestQty(parts.nas,p,parts.nas?bayTotal(parts):0);}
+  if(cat==="exp"){const n=parts.q.hdd||0,nas=parts.nas;return Math.max(1,Math.min(expMax(nas)||1,nas?Math.ceil((n-nas.bays)/(p.bays||5)):1));}
   return Math.min(Math.max(1,(cur&&cur.qty)||Math.min(2,m2Slots(parts)||1)),Math.max(1,m2Slots(parts)));
 }
 function renderPicker(){
@@ -2005,13 +2161,9 @@ $("#saveDlg").addEventListener("click",e=>{if(e.target.id==="saveDlg")closeSave(
 document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("#printDlg").hidden)closePrint();else if(!$("#saveDlg").hidden)closeSave();});
 
 /* ---------- Ereignisse ---------- */
-function applyPreset(id){
-  const pr=PRESETS.find(x=>x.id===id);if(!pr)return;
-  state.profile=pr.profile;state.budget=pr.budget;state.auto=true;state.picks={};
-  const k=state.params.kwh,s=state.params.spin,u=state.params.upl;state.params=Object.assign({},DEF_PARAMS,pr.params,{kwh:k,spin:s,upl:u});
-  for(const c in pr.user||{})state.picks[c]={id:pr.user[c],src:"user"};
-  recompute();renderSliders();render();
-}
+/* Gerät, Platten und Erweiterung freigeben, wenn sie ergänzt waren (Hersteller- oder Schächte-Wunsch geändert) */
+function releaseCore(){for(const c of ["nas","exp","hdd"])if(state.picks[c]&&state.picks[c].src==="auto")delete state.picks[c];
+  if(!state.auto){const f=fillMissing(state.picks);for(const c of ["nas","exp","hdd"])if(!state.picks[c]&&f[c])state.picks[c]=f[c];}}
 /* Ergänzte Platten freigeben; ohne Automatik nur die Platten neu wählen, statt den Platz leer zu lassen */
 function releaseHdd(){
   if(!state.picks.hdd||state.picks.hdd.src!=="auto")return;
@@ -2021,21 +2173,21 @@ function releaseHdd(){
 function setRed(r){
   state.params.red=r;const pk=state.picks.hdd;
   if(pk&&pk.src==="auto")releaseHdd();
-  else if(pk){const n=pk.qty||1,mn=minN(r),nas=resolve(state.picks).nas;if(n<mn)pk.qty=Math.min(mn,nas?nas.bays:mn);}
+  else if(pk){const n=pk.qty||1,mn=minN(r),pp=resolve(state.picks);if(n<mn)pk.qty=Math.min(mn,pp.nas?bayTotal(pp):mn);}
   recompute();
 }
 function setQty(cat,d){
   const pk=state.picks[cat];if(!pk)return;const parts=resolve(state.picks);
-  const max=cat==="hdd"?(parts.nas?parts.nas.bays:12):Math.max(1,m2Slots(parts));
+  const max=qtyMax(cat,parts);
   pk.qty=clamp((pk.qty||1)+d,1,max);pk.src="user";
   if(cat==="hdd"&&state.picks.nas&&state.picks.nas.src==="auto")state.picks.nas.src="user";
   recompute();
 }
 document.addEventListener("click",e=>{
-  const el=e.target.closest("[data-act],[data-profile],[data-preset],[data-view],[data-red],[data-cmpcat],th[data-sort]");if(!el)return;
+  const el=e.target.closest("[data-act],[data-profile],[data-brand],[data-view],[data-red],[data-cmpcat],th[data-sort]");if(!el)return;
   if(el.dataset.profile){state.profile=el.dataset.profile;Object.assign(state.params,PROFILE_DEF[state.profile]);if(state.profile==="lab"&&state.params.net<2.5)state.params.net=2.5;recompute();renderSliders();render();return;}
   if(el.dataset.view){state.view=el.dataset.view;save();if(state.view==="dash")renderSliders();render();return;}
-  if(el.dataset.preset){applyPreset(el.dataset.preset);return;}
+  if(el.dataset.brand){state.params.brand=el.dataset.brand;releaseCore();recompute();return;}
   if(el.dataset.cmpcat){cmpCat=el.dataset.cmpcat;cmpSort={k:"perf",dir:-1};render();return;}
   if(el.dataset.sort){const k=el.dataset.sort;cmpSort=cmpSort.k===k?{k,dir:-cmpSort.dir}:{k,dir:k==="name"||k==="price"||k==="ptb"||k==="idle"||k==="db"||k==="c5"?1:-1};render();return;}
   if(el.dataset.red!==undefined&&!el.dataset.act){setRed(Number(el.dataset.red));return;}
@@ -2043,7 +2195,8 @@ document.addEventListener("click",e=>{
   if(act==="pick")openPicker(cat);
   else if(act==="close")closePicker();
   else if(act==="choose"){const p=get(pickerCat,el.dataset.id),q=pickQty(pickerCat,p);state.picks[pickerCat]={id:el.dataset.id,src:"user",qty:q};const c=pickerCat;closePicker();
-    if(c==="hdd"&&state.picks.nas&&state.picks.nas.src==="auto"&&q>get("nas",state.picks.nas.id).bays)delete state.picks.nas;recompute();}
+    if(c==="hdd"&&state.picks.nas&&state.picks.nas.src==="auto"){const nn=get("nas",state.picks.nas.id);if(q>(nn.expUnit?nn.exp:nn.bays))delete state.picks.nas;}
+    if(c==="nas"||c==="hdd")for(const k of ["exp"])if(state.picks[k]&&state.picks[k].src==="auto")delete state.picks[k];recompute();}
   else if(act==="keep"){state.picks[cat].src="user";save();render();}
   else if(act==="remove"){delete state.picks[cat];recompute();}
   else if(act==="qty")setQty(cat,Number(el.dataset.d));
@@ -2057,8 +2210,8 @@ document.addEventListener("click",e=>{
   else if(act==="take"){const p=get(cat,el.dataset.id);if(!p)return;const old=state.picks[cat];
     let q;if(cat==="hdd")q=old&&old.src==="user"?old.qty:(old?old.qty:bestQty(resolve(state.picks).nas,p));else if(cat==="ssd")q=old&&old.qty?old.qty:pickQty(cat,p);
     state.picks[cat]={id:p.id,src:"user",qty:q};
-    if(cat==="nas"&&state.picks.hdd&&(state.picks.hdd.qty||1)>p.bays){state.picks.hdd.qty=p.bays;}
-    if(cat==="nas")for(const c of ["ram","nic","ssd"])if(state.picks[c]&&state.picks[c].src==="auto")delete state.picks[c];
+    if(cat==="nas"&&state.picks.hdd&&(state.picks.hdd.qty||1)>(p.expUnit?p.exp:p.bays)){state.picks.hdd.qty=p.expUnit?p.exp:p.bays;}
+    if(cat==="nas")for(const c of ["ram","nic","ssd","exp"])if(state.picks[c]&&state.picks[c].src==="auto")delete state.picks[c];
     recompute();}
   else if(act==="undo"){if(undoSnap&&undoKey()===undoAfter){state=JSON.parse(undoSnap);save();renderSliders();render();}undoSnap=null;undoAfter=null;$("#dUndo").innerHTML="";}
 });
@@ -2091,14 +2244,15 @@ $("#qCap").innerHTML=CAP_STEPS.map(v=>`<option value="${v}">${fmtTB(v)}</option>
 $("#qCap").addEventListener("change",e=>{state.params.cap=Number(e.target.value);releaseHdd();recompute();});
 let bt=null;
 $("#budget").addEventListener("input",e=>{clearTimeout(bt);bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=200)?v:null;recompute();},450);});
-$("#presets").innerHTML=PRESETS.map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)} <small>${esc(p.hint)}</small></button>`).join("");
+$("#qBays").innerHTML=[0,1,2,4,5,6,8,12].map(v=>`<option value="${v}">${v?(v>=12?"12 und mehr":v):"beliebig"}</option>`).join("");
+$("#qBays").addEventListener("change",e=>{state.params.bays=Number(e.target.value);releaseCore();recompute();});
 const PFMT={kwh:v=>num(v,2)+" €/kWh",spin:v=>v?v+" Stunden pro Tag":"nie (laufen durch)",upl:v=>v+" Mbit/s"};
 document.addEventListener("input",e=>{
   const t=e.target;
   if(t.dataset&&t.dataset.slider){onSlider(t.dataset.slider,t.value);$("#dUndo").innerHTML=`<div class="undo"><span>Regler geändert: betroffene Teile werden automatisch neu gewählt.</span><button type="button" class="btn" data-act="undo">Rückgängig</button></div>`;}
   else if(t.dataset&&t.dataset.param){state.params[t.dataset.param]=Number(t.value);const o=$("#pso-"+t.dataset.param);if(o)o.textContent=PFMT[t.dataset.param](Number(t.value));if(state.auto)recompute();else{save();render();}}
 });
-if(!load())applyPreset("family");else recompute();
+load();recompute();
 renderSliders();render();
 })();
 </script>
