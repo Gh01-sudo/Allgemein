@@ -9,6 +9,17 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Zubehör und Software (optional):** Monitor, Zusatzlüfter, Betriebssystem (Windows 11 Home/Pro als System-Builder-Lizenz, Linux) und Tastatur & Maus. Werden nie automatisch ergänzt, zählen aber zu Gesamtpreis und Budget; der Monitor wird gegen Auflösung und Bildrate geprüft.
 - **Automatisch ergänzen:** fehlende Teile werden passend zu Einsatz (Gaming, Büro, Kreativ/Workstation),
   Budget und der Leistungsklasse deiner gewählten Teile gewählt. „Behalten“ hält ein ergänztes Teil fest.
+- **Budget ist bindend:** Die Summe aller Teile (auch Zubehör) bleibt im Budget. Die Automatik prüft dafür alle sinnvollen
+  Paare aus Prozessor und Grafikkarte, ergänzt jedes mit passenden Restteilen und nimmt die Kombination mit dem höchsten
+  Nutzen (Bildrate bis zum Ziel, Kreativleistung) ohne Konflikte und ohne neue Warnungen. Übriges Budget fließt in das
+  Upgrade mit dem größten Nutzen je Euro. Reicht das Budget nicht, werden zuerst SSD, dann RAM und zuletzt die eigene
+  Grafikkarte zurückgenommen, jeweils mit Hinweis. Nur wenn behaltene Teile oder die Baugröße es unmöglich machen,
+  wird die günstigste passende Zusammenstellung mit der nötigen Mindestsumme gezeigt. Beim Büro-Profil ist das Budget
+  eine Obergrenze, kein Ausgabeziel.
+- **Behalten und Freigeben:** Jedes Teil ist entweder „🔒 Behalten“ (eigene Wahl, wird nie automatisch geändert,
+  auch nicht durch Budget oder Regler) oder „Automatisch“. Selbst ausgewählte Teile werden behalten; „Freigeben“ gibt
+  ein Teil wieder an die Automatik. Eine Leiste über den Teilen zeigt, wie viele Kernteile behalten sind, mit
+  „Alle behalten“ und „Alle freigeben“.
 - **Kompatibilitätsprüfung:** Sockel, RAM-Typ und Steckplätze, Formfaktor, GPU-Länge, Kühlerhöhe und Radiator,
   Kühlleistung, Netzteil-Leistung und Bauform (SFX/ATX), 12V-2x6, iGPU-Pflicht ohne Grafikkarte,
   CPU-Flaschenhals, VRAM- und RAM-Empfehlungen
@@ -63,12 +74,13 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Zweiter Preis je Teil:** Neben dem Bestpreis (Geizhals-Daten) zeigt jedes Teil den Preis bei **alternate.de** mit Lieferstatus (grüner Punkt = sofort lieferbar) und direktem Produktlink, ebenso im Auswahlfenster, als Spalte im Vergleich und in der Einkaufsliste.
 - **„Alles bei Alternate“:** Zusammenfassung und Einkaufsliste rechnen die Summe bei einem Shop aus und zeigen den Aufpreis gegenüber den Bestpreisen. Teile, die es dort nicht gibt, gehen mit dem Bestpreis ein und werden genannt.
 - **Alternate-Fertig-PCs:** 10 Systeme von 1.199 € bis 4.999 € (Alternate-eigene Gaming-PCs, Gigabyte Aorus, MSI, Thermaltake, ASUS ROG) im Fertig-PC-Vergleich, im Diagramm und im Ranking.
-- Die Zuordnung zu den Teilen läuft automatisch über Modellnummer, Kapazität, Kit und Latenz; generalüberholte Ware und abweichende Varianten werden ausgeschlossen. Stand der Alternate-Preise: 21.11.2026.
+- Die Zuordnung zu den Teilen läuft automatisch über Modellnummer, Kapazität, Kit und Latenz; generalüberholte Ware und abweichende Varianten werden ausgeschlossen. Stand der Alternate-Preise: 25.11.2026 (221 Zuordnungen).
 
 ## Tests
 `node pc-konfigurator/tests/run.js` prüft mit Playwright (Chromium):
 - Start ohne JavaScript-Fehler, alle Ansichten
 - 54 Regler-Kombinationen ohne Konflikt oder Warnung
+- Budget bindend (900–4.000 €), behaltene Teile bleiben bei Budget- und Regleränderungen, Freigeben
 - alle Vergleiche, Aufrüst-Berater, Bauanleitung, Einkauf, zweite SSD, Speichern
 - Handy-Breite 390 px ohne horizontales Scrollen
 
@@ -91,7 +103,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 
 ## Dashboard (Cockpit)
 - **Instrumente:** Rundinstrumente für Bildrate gegen Ziel, Netzteil-Last, Kühlreserve, Budget, Lautstärke und Preis pro FPS, darunter Kennzahlen (Preis, Leistungsklasse, Multi-Core, Leistungsaufnahme, Stromkosten pro Jahr, Kompatibilität).
-- **8 Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße; die betroffenen Bauteile werden live neu gewählt, mit „Rückgängig“.
+- **8 Schieberegler** für Budget, Gaming/Kreativ, Auflösung, Ziel-FPS, RAM, SSD, Lautstärke und Gehäusegröße; die freigegebenen Bauteile werden live neu gewählt (behaltene bleiben), mit „Rückgängig“.
 - **Leistungsprofil (Netzdiagramm):** Gaming, Kreativ, Leise, Effizienz, Zukunft, Preis-Leistung, mit Vergleichs-Konfiguration als zweiter Fläche.
 - **Spiele und Anwendungen:** geschätzte FPS für eSports, AAA, Raytracing, Upscaling und Frame Generation in vier Auflösungen; Leistungsindizes für Blender, Video-Export, Kompilieren, Foto und lokale KI (Modellgröße nach Grafikspeicher).
 - **Zwei Konfigurationen nebeneinander:** gegen gespeicherte Konfigurationen oder Varianten A/B, mit allen Kennzahlen, Profilwerten und Bauteilen.
@@ -106,7 +118,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - Reihenfolge: Wichtigstes zuerst; jeder Abschnitt lässt sich einklappen, der Zustand wird gemerkt.
 
 ## Preise
-Teile mit „Preis geprüft“ wurden zwischen dem 9. und 22. November 2026 recherchiert; am 21. und 22.11. wurden alle Teilepreise, Grafikkarten-Modelle, Fertig-PCs, Laptops und Konsolen erneut aktualisiert und 60 neue Teile ergänzt, alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
+Teile mit „Preis geprüft“ wurden zwischen dem 9. und 25. November 2026 recherchiert; am 25.11. wurden alle Teilepreise und Grafikkarten-Modelle erneut geprüft (62 Preise angepasst) und 15 aktuelle Teile ergänzt (u. a. günstigere ITX- und mATX-Mainboards, Fractal Ridge, Jonsbo Z20, NZXT H6 Flow, Crucial T710, 128-GB-Kit); Fertig-PCs, Laptops und Konsolen stammen vom 21./22.11., alle anderen Preise sind daraus hochgerechnete Schätzungen. RAM und SSDs sind seit
 Ende 2025 wegen knapper Speicherproduktion deutlich teurer und schwanken stark. Vor dem Kauf aktuelle Preise prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
 
