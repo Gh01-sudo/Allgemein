@@ -1,0 +1,2081 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+</head>
+<body>
+<title>NAS-Werkbank</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<style>
+/* NAS-Werkbank: Steckplätze links, Prüfprotokoll rechts, Auswahl als Schublade */
+:root{
+  --bg:#ECEFF3; --surface:#FFFFFF; --sunk:#F4F6F9; --ink:#121821; --muted:#586273; --line:#D3D9E2;
+  --accent:#2446C4; --accent-ink:#FFFFFF; --accent-soft:#E0E6FB;
+  --auto:#0B7480; --auto-soft:#D5EEF0;
+  --ok:#22783A; --ok-soft:#DCEFE1; --warn:#9A5B00; --warn-soft:#F7E9D2; --bad:#B42318; --bad-soft:#F9DEDB;
+  --scrim:rgba(14,20,32,.48);
+  --panel:#141B26; --panel-2:#1B2431; --panel-line:#2C3747; --panel-ink:#E8EDF4; --panel-muted:#93A0B4;
+  --g-ok:#4CC38A; --g-warn:#F2B04C; --g-bad:#F07A6E; --g-acc:#7FA2FF;
+  --f-display:"Bahnschrift","DIN Alternate","Roboto Condensed","Arial Narrow",system-ui,sans-serif;
+  --f-body:system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --f-mono:ui-monospace,"Cascadia Mono","SF Mono",Menlo,Consolas,monospace;
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0E1218; --surface:#161B24; --sunk:#11151C; --ink:#E5E9F0; --muted:#97A1B2; --line:#283040;
+  --accent:#8EA5FF; --accent-ink:#0E1218; --accent-soft:#1D2850;
+  --auto:#5FC9D3; --auto-soft:#12343A;
+  --ok:#74C98A; --ok-soft:#173222; --warn:#F0B35A; --warn-soft:#3A2A12; --bad:#F38B80; --bad-soft:#3E1C19;
+  --scrim:rgba(0,0,0,.6); color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0E1218; --surface:#161B24; --sunk:#11151C; --ink:#E5E9F0; --muted:#97A1B2; --line:#283040;
+  --accent:#8EA5FF; --accent-ink:#0E1218; --accent-soft:#1D2850;
+  --auto:#5FC9D3; --auto-soft:#12343A;
+  --ok:#74C98A; --ok-soft:#173222; --warn:#F0B35A; --warn-soft:#3A2A12; --bad:#F38B80; --bad-soft:#3E1C19;
+  --scrim:rgba(0,0,0,.6); color-scheme:dark}
+
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 40px}
+h1,h2,h3{font-family:var(--f-display);line-height:1.1;margin:0;text-wrap:balance;font-weight:700}
+a{color:var(--accent)}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px;border-radius:6px}
+.wrap{max-width:1240px;margin:0 auto;display:flex;flex-direction:column;gap:18px}
+.mono,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.eyebrow{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+
+/* Kopf */
+.head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px 32px}
+.head h1{font-size:clamp(30px,4.6vw,46px);letter-spacing:-.01em}
+.head p{margin:6px 0 0;max-width:62ch;color:var(--muted)}
+
+/* Steuerleiste */
+.controls{display:flex;flex-wrap:wrap;gap:14px 26px;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:14px 16px}
+.ctl{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ctl-label{font-family:var(--f-mono);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--sunk)}
+.seg button{border:0;background:transparent;padding:7px 12px;cursor:pointer;font-weight:600;font-size:14px}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button[aria-checked="true"]{background:var(--accent);color:var(--accent-ink)}
+.budget-in{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:8px;background:var(--sunk);padding:0 10px}
+.budget-in input{border:0;background:transparent;width:8.5em;padding:7px 4px;font-family:var(--f-mono)}
+.budget-in input:focus{outline:none}
+.budget-in:focus-within{outline:3px solid var(--accent);outline-offset:1px}
+.switch{display:inline-flex;align-items:center;gap:10px;cursor:pointer;font-weight:600;font-size:14px}
+.switch input{appearance:none;width:38px;height:22px;border-radius:11px;background:var(--line);position:relative;cursor:pointer;flex:none;margin:0;transition:background .15s}
+.switch input::after{content:"";position:absolute;top:3px;left:3px;width:16px;height:16px;border-radius:50%;background:var(--surface);transition:transform .15s}
+.switch input:checked{background:var(--auto)}
+.switch input:checked::after{transform:translateX(16px)}
+.presets{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chip{border:1px solid var(--line);background:var(--surface);border-radius:999px;padding:6px 12px;cursor:pointer;font-size:13.5px;font-weight:600;display:inline-flex;gap:6px;align-items:baseline}
+.chip small{font-weight:400;color:var(--muted);font-size:12px}
+.chip:hover{border-color:var(--accent)}
+
+/* Raster */
+.grid{display:grid;grid-template-columns:minmax(0,1fr) 370px;gap:18px;align-items:start}
+@media (max-width:980px){.grid{grid-template-columns:minmax(0,1fr)}}
+
+/* Steckplätze */
+.slots{display:flex;flex-direction:column;background:var(--surface);border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.slot{display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:6px 16px;padding:14px 16px;align-items:center}
+.slot+.slot{border-top:1px solid var(--line)}
+.slot-cat{display:flex;flex-direction:column;gap:3px}
+.slot-cat b{font-family:var(--f-display);font-size:15px;font-weight:700}
+.slot-cat .eyebrow{font-size:10.5px}
+.slot-main{min-width:0;display:flex;flex-direction:column;gap:3px}
+.slot-name{font-weight:650;font-size:15.5px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center}
+.slot-spec{font-family:var(--f-mono);font-size:12.5px;color:var(--muted);overflow-wrap:anywhere}
+.slot-empty{color:var(--muted);font-style:italic}
+.slot-msg{font-size:13px;display:flex;gap:6px;align-items:baseline}
+.slot-msg.error{color:var(--bad)} .slot-msg.warn{color:var(--warn)}
+.slot-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.price{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600;font-size:15px;white-space:nowrap}
+.actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}
+.btn{border:1px solid var(--line);background:var(--surface);border-radius:7px;padding:5px 10px;font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.btn.primary:hover{color:var(--accent-ink);filter:brightness(1.08)}
+.btn.ghost{border-color:transparent;background:transparent;color:var(--muted)}
+.btn.ghost:hover{color:var(--bad);border-color:transparent}
+.tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;font-weight:600;white-space:nowrap}
+.tag.user{background:var(--accent-soft);color:var(--accent)}
+.tag.auto{background:var(--auto-soft);color:var(--auto)}
+.tag.rec{background:var(--ok-soft);color:var(--ok)}
+.tier{display:inline-flex;gap:2px;vertical-align:middle}
+.tier i{width:6px;height:6px;border-radius:50%;background:var(--line)}
+.tier i.on{background:var(--muted)}
+.links a{font-size:12.5px;white-space:nowrap}
+@media (max-width:640px){
+  .slot{grid-template-columns:minmax(0,1fr) auto}
+  .slot-cat{grid-column:1/-1;flex-direction:row;align-items:baseline;gap:8px}
+  .slot-side{grid-column:1/-1;flex-direction:row;justify-content:space-between;align-items:center}
+}
+
+/* Zusammenfassung */
+.summary{display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px)}
+@media (max-width:980px){.summary{position:static}}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:16px;display:flex;flex-direction:column;gap:10px}
+.total{font-family:var(--f-display);font-size:40px;font-weight:700;font-variant-numeric:tabular-nums;line-height:1}
+.subline{font-size:13px;color:var(--muted)}
+.meter{height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:hidden}
+.meter span{display:block;height:100%;background:var(--accent)}
+.meter.ok span{background:var(--ok)} .meter.warn span{background:var(--warn)} .meter.bad span{background:var(--bad)}
+.kv{display:flex;justify-content:space-between;gap:10px;font-size:13.5px}
+.kv .num{font-weight:600}
+.perf-label{font-family:var(--f-display);font-size:19px;font-weight:700}
+.issues{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.issues li{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px;font-size:13.5px;align-items:start}
+.sev{font-family:var(--f-mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;padding:2px 6px;border-radius:4px;margin-top:2px;white-space:nowrap}
+.sev.error{background:var(--bad-soft);color:var(--bad)}
+.sev.warn{background:var(--warn-soft);color:var(--warn)}
+.sev.info{background:var(--sunk);color:var(--muted);border:1px solid var(--line)}
+.sev.ok{background:var(--ok-soft);color:var(--ok)}
+.card h2{font-size:16px;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.card h2 .eyebrow{font-family:var(--f-mono);font-weight:400}
+.row-btns{display:flex;flex-wrap:wrap;gap:8px}
+#copyFallback{width:100%;min-height:150px;font-family:var(--f-mono);font-size:12px;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:8px}
+.toast{font-size:13px;color:var(--ok);font-weight:600}
+.note{font-size:13px;color:var(--muted);max-width:90ch;line-height:1.55}
+.note b{color:var(--ink)}
+
+/* Auswahl-Schublade */
+.picker{position:fixed;inset:0;z-index:50;background:var(--scrim);display:flex;justify-content:flex-end}
+.panel{background:var(--surface);width:min(620px,100%);height:100%;display:flex;flex-direction:column;border-left:1px solid var(--line);
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);padding-right:env(safe-area-inset-right,0px)}
+.panel-head{padding:16px 18px 12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--line)}
+.panel-title{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.panel-title h2{font-size:22px}
+.panel-tools{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center}
+.panel-tools input[type=search],.panel-tools select{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:6px 9px;font-size:14px}
+.panel-tools input[type=search]{flex:1 1 180px;min-width:0}
+.panel-tools label{font-size:13.5px;display:inline-flex;gap:6px;align-items:center;cursor:pointer}
+.panel-note{font-size:12.5px;color:var(--muted);margin:0}
+.plist{overflow-y:auto;flex:1;padding:8px 10px 16px}
+.opt{width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:9px;padding:11px 10px;cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 14px}
+.opt:hover{background:var(--sunk);border-color:var(--line)}
+.opt[aria-current="true"]{border-color:var(--accent);background:var(--accent-soft)}
+.opt .slot-name{font-size:15px}
+.opt .status{grid-column:1/-1;font-size:12.5px;display:flex;gap:6px;align-items:baseline}
+.opt .status.ok{color:var(--ok)} .opt .status.warn{color:var(--warn)} .opt .status.error{color:var(--bad)}
+.opt.dim{opacity:.62}
+.opt-price{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.empty-list{padding:20px 10px;color:var(--muted)}
+
+/* Ansichten + Dashboard */
+:root{--c1:#2446C4;--c2:#0B7480;--c3:#B4531A;--c4:#7A3FB0;--c5:#2E7D32;--c6:#B42367;--c7:#6B6F12;--c8:#55606E}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--c1:#8EA5FF;--c2:#5FC9D3;--c3:#F0A060;--c4:#C59BF2;--c5:#7BC67F;--c6:#F28AB8;--c7:#D4D46A;--c8:#A7B0BD}}
+:root[data-theme="dark"]{--c1:#8EA5FF;--c2:#5FC9D3;--c3:#F0A060;--c4:#C59BF2;--c5:#7BC67F;--c6:#F28AB8;--c7:#D4D46A;--c8:#A7B0BD}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--line)}
+.tabs button{border:0;background:transparent;padding:10px 16px;font-family:var(--f-display);font-size:17px;font-weight:700;cursor:pointer;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--accent)}
+.view{display:flex;flex-direction:column;gap:18px}
+.dash{display:grid;grid-template-columns:repeat(12,minmax(0,1fr));gap:14px}
+.dash>*{min-width:0}
+.span12{grid-column:span 12}.span8{grid-column:span 8}.span7{grid-column:span 7}.span6{grid-column:span 6}.span5{grid-column:span 5}.span4{grid-column:span 4}
+@media (max-width:1000px){.span8,.span7,.span6,.span5,.span4{grid-column:span 12}}
+.kpis{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+@media (max-width:1000px){.kpis{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.kpis{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.kpi{background:var(--surface);border:1px solid var(--line);border-radius:var(--r);padding:12px 14px;display:flex;flex-direction:column;gap:4px;min-width:0}
+.kpi b{font-family:var(--f-display);font-size:26px;line-height:1.05;font-variant-numeric:tabular-nums}
+.kpi small{font-size:12px;color:var(--muted)}
+.pill{display:inline-block;font-family:var(--f-mono);font-size:10.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:5px;width:fit-content}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--warn-soft);color:var(--warn)}.pill.bad{background:var(--bad-soft);color:var(--bad)}
+.sliders{display:flex;flex-direction:column;gap:14px}
+.sl{display:flex;flex-direction:column;gap:4px}
+.sl-top{display:flex;justify-content:space-between;gap:10px;align-items:baseline;font-size:14px}
+.sl-top label{font-weight:650}
+.sl-top output{font-family:var(--f-mono);font-size:13px;font-weight:600;color:var(--accent);text-align:right}
+.sl input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0}
+.sl-ends{display:flex;justify-content:space-between;font-size:11.5px;color:var(--muted)}
+.sl-aff{font-size:11.5px;color:var(--muted)}
+.undo{display:flex;gap:10px;align-items:center;font-size:13px;background:var(--auto-soft);color:var(--ink);border-radius:8px;padding:8px 10px;flex-wrap:wrap}
+.plist2{display:flex;flex-direction:column}
+.prow{display:grid;grid-template-columns:118px minmax(0,1fr) auto;gap:8px;padding:7px 0;border-top:1px solid var(--line);align-items:baseline;font-size:13.5px}
+.prow:first-child{border-top:0}
+.prow .eyebrow{font-size:10px}
+.prow .nm{overflow-wrap:anywhere}
+.prow.changed .nm{color:var(--auto);font-weight:650}
+.chart{display:flex;flex-direction:column;gap:9px}
+.bar-row{display:grid;grid-template-columns:128px minmax(0,1fr) 64px;gap:10px;align-items:center;font-size:13px}
+.bar-track{position:relative;height:18px;background:var(--sunk);border:1px solid var(--line);border-radius:4px}
+.bar-fill{position:absolute;inset:0 auto 0 0;border-radius:3px;background:var(--accent)}
+.bar-fill.limited{background:var(--warn)}
+.vline{position:absolute;top:-4px;bottom:-4px;width:2px;background:var(--ink)}
+.vline.cpu{background:var(--bad);width:2px;opacity:.8}
+.legend{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--muted)}
+.legend i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.stack{display:flex;height:26px;border-radius:5px;overflow:hidden;border:1px solid var(--line)}
+.stack span{display:block;height:100%}
+.ctable{width:100%;border-collapse:collapse;font-size:13.5px;min-width:640px}
+.ctable th,.ctable td{text-align:left;padding:9px 8px;border-top:1px solid var(--line);vertical-align:top}
+.ctable th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0}
+.ctable td.num{text-align:right;white-space:nowrap}
+.ctable td.num small{white-space:normal;display:inline-block;max-width:200px;font-family:var(--f-body)}
+.ctable th:last-child{text-align:right}
+.ctable tr.me td{background:var(--accent-soft)}
+.ctable tr.best td{background:var(--ok-soft)}
+.mini{height:8px;border-radius:4px;background:var(--sunk);border:1px solid var(--line);overflow:hidden;margin-top:4px;min-width:90px}
+.mini span{display:block;height:100%;background:var(--accent)}
+.scroll{overflow-x:auto}
+.verdict{font-size:14px;line-height:1.55}
+.up{display:grid;grid-template-columns:minmax(0,1fr) auto auto auto;gap:6px 12px;align-items:center;font-size:13.5px}
+.up .h{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.delta-pos{color:var(--ok);font-weight:600}.delta-neg{color:var(--bad);font-weight:600}
+.tag.up{background:var(--ok-soft);color:var(--ok)}
+.up-tip{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;font-size:13px;margin-top:4px;padding:6px 8px;border:1px dashed var(--line);border-radius:7px;background:var(--sunk)}
+.up-tip>span:nth-child(2){flex:1 1 220px;min-width:0}
+.up-tip .tag{flex:none;align-self:center}
+.better{border:1px solid var(--ok);border-radius:10px;padding:8px;margin-bottom:10px;background:var(--ok-soft)}
+.better-h{display:flex;gap:8px;align-items:baseline;flex-wrap:wrap;padding:2px 4px 6px}
+.better-opt{background:var(--surface)}
+.better-opt:hover{background:var(--surface)}
+
+/* Steckbrief */
+.brief{margin-top:4px}
+.brief>summary{cursor:pointer;font-size:13px;font-weight:600;color:var(--accent);list-style:none;display:inline-flex;gap:6px;align-items:center}
+.brief>summary::-webkit-details-marker{display:none}
+.brief>summary::before{content:"▸";transition:transform .15s}
+.brief[open]>summary::before{transform:rotate(90deg)}
+.brief-body{margin-top:8px;display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:10px 18px;background:var(--sunk);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+@media (max-width:640px){.brief-body{grid-template-columns:minmax(0,1fr)}}
+.kvt{width:100%;border-collapse:collapse;font-size:12.5px}
+.kvt td{padding:3px 0;border-top:1px solid var(--line);vertical-align:top}
+.kvt tr:first-child td{border-top:0}
+.kvt td:first-child{color:var(--muted);padding-right:10px;white-space:nowrap}
+.kvt td:last-child{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.pc{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:4px;font-size:13px}
+.pc li{display:grid;grid-template-columns:16px minmax(0,1fr);gap:4px}
+.pc .p::before{content:"+";color:var(--ok);font-weight:700}
+.pc .c::before{content:"−";color:var(--bad);font-weight:700}
+.pc .n::before{content:"i";color:var(--muted);font-weight:700;font-family:var(--f-mono)}
+.brief h4{margin:0 0 4px;font-size:11px;font-family:var(--f-mono);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:600}
+/* Vergleich */
+.tabs{overflow-x:auto;scrollbar-width:thin}
+@media (max-width:560px){.tabs button{padding:8px 10px;font-size:15px;white-space:nowrap}}
+.cat-chips{display:flex;flex-wrap:wrap;gap:6px}
+.cat-chips button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink)}
+.vtable{width:100%;border-collapse:collapse;font-size:13px;min-width:760px}
+.vtable th,.vtable td{padding:7px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:middle}
+.vtable th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0;cursor:pointer;white-space:nowrap;user-select:none}
+.vtable th[aria-sort="ascending"]::after{content:" ▲"}.vtable th[aria-sort="descending"]::after{content:" ▼"}
+.vtable td.n{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.vtable tr.cur td{background:var(--accent-soft)}
+.vtable tr.bad td{opacity:.55}
+.vtable .best{color:var(--ok);font-weight:700}
+.scatter{width:100%;height:auto;display:block}
+.scatter text{fill:var(--muted);font-family:var(--f-mono);font-size:10px}
+.scatter .ax{stroke:var(--line)}
+.scatter .lbl{fill:var(--ink);font-size:10.5px}
+/* Übersicht */
+.ov{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px}
+@media (max-width:1000px){.ov{grid-template-columns:minmax(0,1fr)}}
+.schema{width:100%;height:auto;display:block}
+.schema .box{fill:var(--sunk);stroke:var(--line);stroke-width:1.5}
+.schema .part{stroke-width:1.5}
+.schema text{font-family:var(--f-body);font-size:11px;fill:var(--ink)}
+.schema text.sub{fill:var(--muted);font-size:9.5px;font-family:var(--f-mono)}
+.plist3{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px;font-size:13.5px}
+.plist3 li{display:grid;grid-template-columns:18px minmax(0,1fr);gap:6px}
+.plist3.p li::before{content:"+";color:var(--ok);font-weight:700}
+.plist3.c li::before{content:"!";color:var(--warn);font-weight:700}
+
+/* Cockpit */
+.cockpit-head{background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;color:var(--panel-ink)}
+.gauges{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:10px}
+@media (max-width:1000px){.gauges{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:560px){.gauges{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.gauge{background:var(--panel-2);border:1px solid var(--panel-line);border-radius:10px;padding:8px 8px 10px;display:flex;flex-direction:column;align-items:center;gap:2px;min-width:0}
+.gauge svg{width:100%;max-width:170px;height:auto;display:block}
+.gauge .g-track{stroke:var(--panel-line);fill:none}
+.gauge .g-tick{stroke:var(--panel-muted);stroke-width:1}
+.gauge .g-val{font-family:var(--f-display);font-weight:700;font-size:22px;fill:var(--panel-ink);font-variant-numeric:tabular-nums}
+.gauge .g-unit{font-family:var(--f-mono);font-size:9px;fill:var(--panel-muted)}
+.gauge .g-lbl{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--panel-muted);text-align:center}
+.gauge .g-sub{font-size:11.5px;color:var(--panel-muted);text-align:center;line-height:1.3}
+.kpis-slim .kpi{background:var(--panel-2);border-color:var(--panel-line);color:var(--panel-ink)}
+.kpis-slim .kpi .eyebrow,.kpis-slim .kpi small{color:var(--panel-muted)}
+.kpis-slim .kpi b{font-size:20px}
+.cpanel h2{font-size:15px}
+.ph-dot{display:inline-block;width:8px;height:8px;border-radius:2px;background:var(--accent);margin-right:8px;vertical-align:1px}
+.cpanel h2{justify-content:flex-start}
+.cpanel h2 .eyebrow{margin-left:auto}
+.sliders.grid2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 18px}
+@media (max-width:640px){.sliders.grid2{grid-template-columns:minmax(0,1fr)}}
+.radar-wrap{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:760px){.radar-wrap{grid-template-columns:minmax(0,1fr)}}
+.radar{width:100%;height:auto;display:block;max-width:420px;margin:0 auto}
+.radar .r-grid{fill:none;stroke:var(--line)}
+.radar .r-axis{stroke:var(--line)}
+.radar text{font-family:var(--f-body);font-size:11px;fill:var(--ink)}
+.radar text.r-num{font-family:var(--f-mono);font-size:9.5px;fill:var(--muted)}
+.radar-side{display:flex;flex-direction:column;gap:10px;min-width:0}
+.sel{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:7px 9px;font-size:14px;max-width:100%}
+.rl{display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:4px 10px;font-size:13px;align-items:center}
+.rl .h{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.rl .num{text-align:right}
+.sw{display:inline-block;width:12px;height:3px;border-radius:2px;vertical-align:middle;margin-right:6px}
+.apps{width:100%;border-collapse:collapse;font-size:13px;min-width:720px}
+.apps th,.apps td{padding:7px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:middle}
+.apps th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0}
+.apps td.c{text-align:center;font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600}
+.apps .grp td{background:var(--sunk);font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.fps{display:inline-block;min-width:54px;padding:3px 6px;border-radius:5px}
+.fps.f0{background:var(--bad-soft);color:var(--bad)}.fps.f1{background:var(--warn-soft);color:var(--warn)}.fps.f2{background:var(--ok-soft);color:var(--ok)}.fps.f3{background:var(--accent-soft);color:var(--accent)}
+.apps td.cur{outline:2px solid var(--accent);outline-offset:-2px}
+.ix{display:flex;align-items:center;gap:8px}
+.ix .mini{flex:1 1 120px;margin:0}
+.cmp{width:100%;border-collapse:collapse;font-size:13px;min-width:680px}
+.cmp th,.cmp td{padding:7px 8px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.cmp th{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;border-top:0}
+.cmp td.num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cmp tr.diff td{background:var(--warn-soft)}
+.cmp .grp td{background:var(--sunk);font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.power-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.4fr);gap:18px}
+@media (max-width:760px){.power-grid{grid-template-columns:minmax(0,1fr)}}
+.verdict-box{border-left:3px solid var(--accent);padding:6px 10px;background:var(--sunk);border-radius:0 8px 8px 0;font-size:14px;margin:0 0 10px}
+
+.dash-tools{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
+.cpanel>h2{cursor:pointer;user-select:none}
+.cpanel>h2 .tg{margin-left:10px;border:1px solid var(--line);background:var(--sunk);border-radius:6px;width:26px;height:24px;display:inline-grid;place-items:center;font-size:12px;cursor:pointer;color:var(--ink);flex:none}
+.cpanel>h2 .tg::before{content:"▾"}
+.cpanel.collapsed>h2 .tg::before{content:"▸"}
+.cpanel.collapsed>*:not(h2){display:none!important}
+.cpanel.collapsed{padding-bottom:12px}
+.trend-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:18px}
+@media (max-width:900px){.trend-grid{grid-template-columns:minmax(0,1fr)}}
+.trend svg{width:100%;height:auto;display:block}
+.trend text{font-family:var(--f-mono);font-size:10px;fill:var(--muted)}
+.trend .ax{stroke:var(--line)}
+.pchg{display:grid;grid-template-columns:minmax(0,1.4fr) auto auto auto;gap:6px 12px;font-size:13px;align-items:center}
+.pchg .h{font-family:var(--f-mono);font-size:10px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted)}
+.pchg .num{text-align:right;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.tip-box{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:12px}
+@media (max-width:760px){.tip-box{grid-template-columns:minmax(0,1fr)}}
+.tip-box>div{border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--sunk);font-size:13px}
+.tip-box b{display:block;margin-bottom:4px;font-family:var(--f-display)}
+
+.tip-float{position:fixed;z-index:80;max-width:min(320px,calc(100vw - 16px));background:var(--ink);color:var(--bg);font-size:12.5px;line-height:1.35;padding:6px 9px;border-radius:7px;pointer-events:none;box-shadow:0 4px 14px var(--scrim)}
+.schema text{pointer-events:none}
+.schema .sp{cursor:pointer;transition:fill-opacity .12s,stroke-width .12s}
+.schema .part.sp:hover,.schema .part.sp:focus-visible{fill-opacity:.5;stroke-width:3;outline:none}
+.schema .box.sp:hover,.schema .box.sp:focus-visible{stroke:var(--accent);stroke-width:2.5;outline:none}
+.schema .sp.err{stroke:var(--bad);stroke-width:3;stroke-dasharray:6 3}
+.scatter .pt{cursor:pointer;transition:r .12s}
+.scatter .pt:hover,.scatter .pt:focus-visible{r:8;stroke:var(--ink);stroke-width:2;outline:none}
+.click{cursor:pointer}
+.bar-row.click:hover .bar-track{border-color:var(--accent)}
+.stack .click:hover{filter:brightness(1.15)}
+.opt .live{grid-column:1/-1;font-size:12.5px;color:var(--muted);font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.save-sec{display:flex;flex-direction:column;gap:8px;padding:12px 8px;border-bottom:1px solid var(--line)}
+.save-sec h3{font-family:var(--f-display);font-size:16px;margin:0;display:flex;justify-content:space-between;gap:8px;align-items:baseline}
+.save-row{display:flex;gap:8px;flex-wrap:wrap}
+.save-row input,#codeIn{border:1px solid var(--line);background:var(--sunk);border-radius:7px;padding:8px 10px;font-size:14px;flex:1 1 200px;min-width:0;color:var(--ink)}
+#codeIn{width:100%;font-family:var(--f-mono);font-size:12px;resize:vertical;flex:none;height:76px}
+.save-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 10px;padding:10px;border:1px solid var(--line);border-radius:9px;background:var(--surface);margin-bottom:8px}
+.save-item .nm{font-weight:650;overflow-wrap:anywhere}
+.save-item .meta{font-size:12.5px;color:var(--muted);font-family:var(--f-mono)}
+.save-item .acts{grid-row:1/3;grid-column:2;display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
+.save-item.cur{border-color:var(--accent);background:var(--accent-soft)}
+.btn.danger{color:var(--bad);border-color:var(--bad)}
+label.btn{display:inline-flex;align-items:center}
+.print-wrap{position:fixed;inset:0;z-index:60;background:var(--bg);overflow:auto;padding:0 max(16px,env(safe-area-inset-right,0px)) 32px max(16px,env(safe-area-inset-left,0px))}
+.print-bar{position:sticky;top:0;z-index:2;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:calc(10px + env(safe-area-inset-top,0px)) 0 10px;background:var(--bg);border-bottom:1px solid var(--line);margin-bottom:16px}
+.print-bar-btns{display:flex;gap:8px;flex-wrap:wrap;margin-left:auto}
+.sheet{max-width:800px;margin:0 auto;background:#fff;color:#111;border:1px solid #d8dce2;border-radius:8px;padding:28px 30px;font-family:var(--f-body);font-size:13px;line-height:1.45}
+.sheet h1{font-family:var(--f-display);font-size:24px;margin:0 0 2px;color:#111}
+.sheet h2{font-family:var(--f-display);font-size:15px;margin:18px 0 6px;color:#111;border-bottom:2px solid #111;padding-bottom:3px}
+.sheet .meta{color:#555;font-size:12px}
+.sheet table{width:100%;border-collapse:collapse}
+.sheet th,.sheet td{text-align:left;padding:5px 6px;border-bottom:1px solid #ddd;vertical-align:top}
+.sheet th{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:#555;font-weight:600}
+.sheet td.r,.sheet th.r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.sheet tr.sum td{font-weight:700;border-bottom:2px solid #111;border-top:2px solid #111}
+.sheet .kv4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+@media (max-width:560px){.sheet{padding:18px 14px}.sheet .kv4{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.sheet .kv4 div{border:1px solid #ddd;border-radius:6px;padding:6px 8px}
+.sheet .kv4 b{display:block;font-size:16px;font-family:var(--f-display)}
+.sheet .kv4 span{font-size:10.5px;color:#555;text-transform:uppercase;letter-spacing:.05em}
+.sheet ul{margin:4px 0;padding-left:18px}
+.sheet .small{font-size:11px;color:#666;margin-top:14px}
+.sheet .chk{display:inline-block;width:11px;height:11px;border:1.5px solid #333;border-radius:2px;margin-right:6px;vertical-align:-1px}
+@media print{
+  @page{size:A4;margin:14mm}
+  body{background:#fff!important;padding:0!important}
+  body>*:not(#printDlg){display:none!important}
+  #printDlg{position:static!important;display:block!important;padding:0!important;background:#fff!important;overflow:visible!important}
+  .print-bar{display:none!important}
+  .sheet{border:0;border-radius:0;padding:0;max-width:none}
+  .sheet tr,.sheet .kv4 div{break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+<style>
+/* NAS-spezifisch */
+.qty{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:7px;overflow:hidden;background:var(--sunk)}
+.qty button{border:0;background:transparent;width:28px;height:28px;cursor:pointer;font-weight:700;font-size:15px}
+.qty button:hover{background:var(--accent-soft);color:var(--accent)}
+.qty button:disabled{opacity:.35;cursor:default;background:transparent;color:inherit}
+.qty output{min-width:2.2em;text-align:center;font-family:var(--f-mono);font-weight:700;font-size:13.5px}
+.price small{display:block;font-weight:400;font-size:11.5px;color:var(--muted);text-align:right}
+.raid{font-family:var(--f-display);font-size:19px;font-weight:700}
+.schema .bay{stroke-width:1.5}
+.schema .bay.empty{fill:var(--surface);stroke:var(--line);stroke-dasharray:5 4}
+.schema .bay.data{fill:var(--c1);fill-opacity:.22;stroke:var(--c1)}
+.schema .bay.par{fill:var(--c3);fill-opacity:.25;stroke:var(--c3)}
+.schema .wire{stroke:var(--muted);stroke-width:1.5;fill:none}
+.schema .wire.dash{stroke-dasharray:5 4}
+.vals td.v{font-family:var(--f-mono);font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap;text-align:right}
+.vals td.m{width:38%}
+.lvl{display:inline-block;padding:2px 7px;border-radius:5px;font-family:var(--f-mono);font-size:12.5px;font-weight:600;white-space:nowrap}
+.lvl.f0{background:var(--bad-soft);color:var(--bad)}.lvl.f1{background:var(--warn-soft);color:var(--warn)}.lvl.f2{background:var(--ok-soft);color:var(--ok)}.lvl.f3{background:var(--accent-soft);color:var(--accent)}
+.bar-row.cur .bar-track{border-color:var(--accent);border-width:2px}
+.bar-row .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+</style>
+
+<div class="wrap">
+  <header class="head">
+    <div>
+      <div class="eyebrow">NAS-Konfigurator · Preise Deutschland, Stand November 2026</div>
+      <h1>NAS-Werkbank</h1>
+      <p>Wähle Gerät, Festplatten oder Zubehör, das dir wichtig ist. Die Werkbank ergänzt den Rest passend zu Kapazität, Ausfallsicherheit, Streaming und Budget und prüft Schächte, RAID, Speicher, Netzwerk, USV und Backup.</p>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Ansicht">
+    <button type="button" role="tab" id="tab-konfig" aria-controls="viewKonfig" data-view="konfig">Konfigurator</button>
+    <button type="button" role="tab" id="tab-dash" aria-controls="viewDash" data-view="dash">Dashboard</button>
+    <button type="button" role="tab" id="tab-ov" aria-controls="viewOv" data-view="ov">Übersicht</button>
+    <button type="button" role="tab" id="tab-cmp" aria-controls="viewCmp" data-view="cmp">Vergleich</button>
+  </nav>
+
+  <div class="view" id="viewDash" role="tabpanel" aria-labelledby="tab-dash" hidden>
+    <section class="cockpit-head" aria-label="Instrumente">
+      <div class="gauges" id="dGauges"></div>
+      <div class="kpis kpis-slim" id="dKpis"></div>
+    </section>
+    <div class="dash-tools"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="openAll">Alle Abschnitte öffnen</button><button type="button" class="btn" data-act="closeAll">Alle schließen</button></div>
+    <div class="dash">
+      <section class="card span12 cpanel" aria-label="Aufgaben und Dienste">
+        <h2><span class="ph-dot"></span>Aufgaben und Dienste <span class="eyebrow">geschätzte Werte für deine Konfiguration</span></h2>
+        <div class="scroll" id="dApps"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Leistungsprofil">
+        <h2><span class="ph-dot"></span>Leistungsprofil <span class="eyebrow">0–100 je Achse</span></h2>
+        <div class="radar-wrap">
+          <div id="dRadar"></div>
+          <div class="radar-side">
+            <label class="ctl-label" for="dCmpSel">Vergleichen mit</label>
+            <select id="dCmpSel" class="sel"></select>
+            <div class="row-btns"><button type="button" class="btn" data-act="saveVar" data-slot="A">Als Variante A speichern</button><button type="button" class="btn" data-act="saveVar" data-slot="B">Als Variante B speichern</button></div>
+            <div id="dRadarLegend"></div>
+          </div>
+        </div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Zwei Konfigurationen">
+        <h2><span class="ph-dot"></span>Zwei Konfigurationen nebeneinander <span class="eyebrow" id="dCmpName"></span></h2>
+        <div class="scroll" id="dCompare"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Andere Geräte">
+        <h2><span class="ph-dot"></span>Andere Geräte für deine Platten <span class="eyebrow">Fertig-NAS und Selbstbau</span></h2>
+        <div class="scroll" id="dAlt"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Cloud-Vergleich">
+        <h2><span class="ph-dot"></span>Gegen Cloud-Speicher <span class="eyebrow">Kosten über 5 Jahre</span></h2>
+        <div id="dCloud"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Sparpotenzial">
+        <h2><span class="ph-dot"></span>Sparen ohne Nachteile <span class="eyebrow">gleichwertige, günstigere Teile</span></h2>
+        <div id="dSave"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Regler">
+        <h2><span class="ph-dot"></span>Regler <span class="eyebrow">ändern die Bauteile</span></h2>
+        <div class="sliders grid2" id="dSliders"></div>
+        <div id="dUndo"></div>
+      </section>
+      <section class="card span7 cpanel" aria-label="Ausfallsicherheit">
+        <h2><span class="ph-dot"></span>Kapazität je Ausfallsicherheit <span class="eyebrow">mit deinen Platten</span></h2>
+        <div class="chart" id="dRaid"></div>
+      </section>
+      <section class="card span5 cpanel" aria-label="Kosten">
+        <h2><span class="ph-dot"></span>Kostenverteilung <span class="eyebrow" id="dCostSum"></span></h2>
+        <div id="dCost"></div>
+      </section>
+      <section class="card span7 cpanel" aria-label="Preis pro TB">
+        <h2><span class="ph-dot"></span>Preis pro Terabyte <span class="eyebrow">alle Festplatten, Klick übernimmt</span></h2>
+        <div class="chart" id="dPerTb"></div>
+      </section>
+      <section class="card span5 cpanel" aria-label="Upgrade-Pfade">
+        <h2><span class="ph-dot"></span>Eine Stufe rauf oder runter</h2>
+        <div id="dSteps"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Aktuelle Bauteile">
+        <h2><span class="ph-dot"></span>Aktuelle Bauteile <span class="eyebrow" id="dPartsSum"></span></h2>
+        <div class="plist2" id="dParts"></div>
+      </section>
+      <section class="card span12 cpanel" aria-label="Strom und Prüfung">
+        <h2><span class="ph-dot"></span>Strom (24/7), Lautstärke, Prüfung</h2>
+        <div class="power-grid"><div class="sliders" id="dPowerSl"></div><div id="dPower"></div></div>
+      </section>
+    </div>
+  </div>
+
+  <div class="view" id="viewOv" role="tabpanel" aria-labelledby="tab-ov" hidden>
+    <div class="kpis" id="oKpis"></div>
+    <div class="ov">
+      <section class="card" aria-label="Schema"><h2>Dein NAS im Schema <span class="eyebrow" id="oCase"></span></h2><div id="oSchema"></div><p class="subline">Blau: Datenplatten, orange: Anteil für Redundanz, gestrichelt: freie Schächte. Anklicken zum Tauschen.</p></section>
+      <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+        <section class="card" aria-label="Stärken"><h2>Stärken</h2><ul class="plist3 p" id="oPros"></ul></section>
+        <section class="card" aria-label="Schwachstellen"><h2>Schwachstellen und Hinweise</h2><ul class="plist3 c" id="oCons"></ul></section>
+      </div>
+    </div>
+    <section class="card" aria-label="Upgrade-Pfad"><h2>Upgrade-Pfad <span class="eyebrow">sortiert nach Nutzen pro Euro</span></h2><div id="oPath"></div></section>
+    <div class="dash-tools"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button></div>
+    <section class="card" aria-label="Teileliste"><h2>Alle Teile <span class="eyebrow" id="oSum"></span></h2><div class="scroll" id="oTable"></div></section>
+  </div>
+
+  <div class="view" id="viewCmp" role="tabpanel" aria-labelledby="tab-cmp" hidden>
+    <section class="card" aria-label="Kategorie">
+      <h2>Vergleich <span class="eyebrow">alle Teile einer Kategorie, sortierbar</span></h2>
+      <div class="cat-chips" id="cChips"></div>
+      <label class="switch" style="font-weight:500"><input type="checkbox" id="cOnlyOk"> Nur Teile zeigen, die zu meinem System passen</label>
+    </section>
+    <section class="card" aria-label="Preis-Leistung" id="cScatterCard"><h2>Preis-Leistung <span class="eyebrow" id="cScatterSub"></span></h2><div id="cScatter"></div></section>
+    <section class="card" aria-label="Tabelle"><div class="scroll" id="cTable"></div><p class="subline" id="cNote"></p></section>
+  </div>
+
+  <div class="view" id="viewKonfig" role="tabpanel" aria-labelledby="tab-konfig">
+  <section class="controls" aria-label="Einstellungen">
+    <div class="ctl">
+      <span class="ctl-label" id="profLabel">Einsatz</span>
+      <div class="seg" role="radiogroup" aria-labelledby="profLabel" id="profileSeg">
+        <button type="button" role="radio" data-profile="backup">Dateien &amp; Backup</button>
+        <button type="button" role="radio" data-profile="media">Medien &amp; Fotos</button>
+        <button type="button" role="radio" data-profile="lab">Homelab &amp; VMs</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label class="ctl-label" for="budget">Budget</label>
+      <span class="budget-in"><input id="budget" type="number" inputmode="numeric" min="200" step="50" placeholder="ohne Limit"><span class="mono">€</span></span>
+    </div>
+    <div class="ctl">
+      <label class="ctl-label" for="qCap">Nutzkapazität</label>
+      <select id="qCap" class="sel"></select>
+    </div>
+    <div class="ctl">
+      <span class="ctl-label" id="redLabel">Ausfallsicherheit</span>
+      <div class="seg" role="radiogroup" aria-labelledby="redLabel" id="redSeg">
+        <button type="button" role="radio" data-red="0">keine</button>
+        <button type="button" role="radio" data-red="1">1 Platte</button>
+        <button type="button" role="radio" data-red="2">2 Platten</button>
+      </div>
+    </div>
+    <div class="ctl">
+      <label class="switch"><input type="checkbox" id="autofill" checked> Fehlende Teile automatisch ergänzen</label>
+    </div>
+  </section>
+
+  <section class="presets" aria-label="Vorlagen">
+    <span class="ctl-label">Vorlagen</span>
+    <div class="presets" id="presets"></div>
+  </section>
+
+  <main class="grid">
+    <section aria-label="Komponenten"><div class="slots" id="slots"></div></section>
+    <aside class="summary" id="summary" aria-label="Zusammenfassung"></aside>
+  </main>
+  </div>
+
+  <p class="note"><b>Zu den Preisen und Daten:</b> Alle Preise sind Richtpreise (günstige Straßenpreise in Deutschland, Stand November 2026) und noch nicht durch eine Red-Team-Prüfung gegengecheckt. Festplatten, SSDs und Arbeitsspeicher sind seit 2025 wegen der Nachfrage aus KI-Rechenzentren deutlich teurer und schwanken stark. Leistungs-, Strom- und Lautstärkewerte sind aus Datenblättern abgeleitete Schätzungen, keine Messungen. Vor dem Kauf Tagespreise, Kompatibilitätslisten der Hersteller und das Datenblatt prüfen.</p>
+</div>
+
+<div class="picker" id="saveDlg" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="saveTitle">
+    <div class="panel-head">
+      <div class="panel-title"><h2 id="saveTitle">Konfigurationen</h2><button type="button" class="btn" data-act="closeSave">Schließen</button></div>
+      <p class="panel-note">Gespeichert wird in diesem Browser. Für andere Geräte den Konfigurations-Code kopieren und dort einfügen.</p>
+    </div>
+    <div class="plist">
+      <section class="save-sec" aria-label="Aktuelle Konfiguration speichern">
+        <h3>Aktuelle Konfiguration speichern</h3>
+        <form id="saveForm" class="save-row">
+          <label class="sr" for="saveName">Name</label>
+          <input id="saveName" type="text" maxlength="60" placeholder="z. B. Familien-NAS 4× 8 TB" autocomplete="off">
+          <button type="submit" class="btn primary">Speichern</button>
+        </form>
+        <p class="toast" id="saveToast" role="status" aria-live="polite"></p>
+      </section>
+      <section class="save-sec" aria-label="Gespeicherte Konfigurationen">
+        <h3>Gespeicherte Konfigurationen <span class="eyebrow" id="saveCount"></span></h3>
+        <div id="saveList"></div>
+      </section>
+      <section class="save-sec" aria-label="Code teilen">
+        <h3>Konfigurations-Code</h3>
+        <p class="subline">Enthält alle Teile, Stückzahlen und Regler. Zum Sichern, Teilen oder auf einem anderen Gerät laden.</p>
+        <div class="row-btns"><button type="button" class="btn" data-act="copyCode">Code der aktuellen Konfiguration kopieren</button><button type="button" class="btn" data-act="downloadJson" id="dlBtn">Als Datei herunterladen</button></div>
+        <label class="ctl-label" for="codeIn" style="margin-top:10px;display:block">Code einfügen und laden</label>
+        <textarea id="codeIn" rows="3" spellcheck="false" placeholder="NAS1:…"></textarea>
+        <div class="row-btns"><button type="button" class="btn" data-act="loadCode">Code laden</button><label class="btn" id="fileLbl">Datei öffnen<input type="file" id="fileIn" accept=".json,application/json" hidden></label></div>
+        <p class="toast" id="codeToast" role="status" aria-live="polite"></p>
+      </section>
+    </div>
+  </div>
+</div>
+
+<div class="print-wrap" id="printDlg" hidden>
+  <div class="print-bar">
+    <b>Druckansicht</b>
+    <span class="subline" id="printHint"></span>
+    <span class="print-bar-btns"><button type="button" class="btn primary" data-act="doPrint" id="printBtn">Drucken</button><button type="button" class="btn" data-act="copyPrint">Als Text kopieren</button><button type="button" class="btn" data-act="closePrint">Schließen</button></span>
+  </div>
+  <article class="sheet" id="printSheet" aria-label="Druckbare Zusammenfassung"></article>
+</div>
+
+<div class="picker" id="picker" hidden>
+  <div class="panel" role="dialog" aria-modal="true" aria-labelledby="pickerTitle">
+    <div class="panel-head">
+      <div class="panel-title">
+        <h2 id="pickerTitle">Teil wählen</h2>
+        <button type="button" class="btn" data-act="close">Schließen</button>
+      </div>
+      <div class="panel-tools">
+        <input type="search" id="pSearch" placeholder="Suchen, z. B. DS925 oder 16 TB" aria-label="Teile durchsuchen">
+        <select id="pSort" aria-label="Sortierung">
+          <option value="rec">Empfehlung zuerst</option>
+          <option value="price">Preis aufsteigend</option>
+          <option value="priceDesc">Preis absteigend</option>
+          <option value="perf">Leistung / Klasse</option>
+        </select>
+        <label><input type="checkbox" id="pCompat" checked> Nur passende</label>
+      </div>
+      <p class="panel-note" id="pNote"></p>
+    </div>
+    <div class="plist" id="plist"></div>
+  </div>
+</div>
+<script>
+(function(){
+"use strict";
+/* ---------- Teiledatenbank (Richtpreise EUR, Stand 11/2026, Schätzungen) ----------
+   NAS: bays = Laufwerksschächte 3,5", exp = Schächte mit Erweiterungseinheit, cs = CPU-Index (Intel N100 = 25),
+   t4 = gleichzeitige 4K→1080p-Transcodes per Hardware, ram/ramMax in GB, ramT = passende Modultypen,
+   slots/free = RAM-Steckplätze gesamt/frei, solder = fest verlöteter Anteil, m2 = M.2-Plätze,
+   m2p = M.2 als Speicherpool ("ja", "syno" = nur mit Synology-SSDs, "nein"), lan = Ports in Gbit/s,
+   pcie/mini = Erweiterungssteckplatz, idle = Leistungsaufnahme ohne Platten in W, db = Grundgeräusch dB(A).
+   HDD: rated = freigegeben für Gehäuse bis n Schächte (0 = unbegrenzt), idle/act in W, db = Zugriffsgeräusch, mbs = MB/s. */
+const DB={
+nas:[
+ {id:"syn-ds124",name:"Synology DS124",brand:"Synology",kind:"fertig",bays:1,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:5,db:19,os:"DSM 7",lock:false,docker:false,vm:false,tier:1,price:165},
+ {id:"syn-ds223j",name:"Synology DS223j",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:false,docker:false,vm:false,tier:1,price:195},
+ {id:"syn-ds225p",name:"Synology DS225+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:340},
+ {id:"syn-ds224p",name:"Synology DS224+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[1,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:false,docker:true,vm:true,tier:2,price:330,eol:true},
+ {id:"syn-ds425p",name:"Synology DS425+",brand:"Synology",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:10,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:490},
+ {id:"syn-ds923p",name:"Synology DS923+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1],pcie:0,mini:true,ecc:true,idle:13,db:22,os:"DSM 7",lock:false,docker:true,vm:true,tier:3,price:600},
+ {id:"syn-ds925p",name:"Synology DS925+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:false,ecc:true,idle:14,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:650},
+ {id:"syn-ds1525p",name:"Synology DS1525+",brand:"Synology",kind:"fertig",bays:5,exp:15,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:18,db:23,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:870},
+ {id:"syn-ds1825p",name:"Synology DS1825+",brand:"Synology",kind:"fertig",bays:8,exp:18,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:25,db:24,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1080},
+ {id:"qnap-ts233",name:"QNAP TS-233",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"ARM Cortex-A55",cores:4,thr:4,cs:7,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:6,db:20,os:"QTS 5",lock:false,docker:true,vm:false,tier:1,price:185},
+ {id:"qnap-ts433",name:"QNAP TS-433",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"ARM Cortex-A55",cores:4,thr:4,cs:7,t4:0,av1:false,arch:"arm",ram:4,solder:4,ramMax:4,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:9,db:22,os:"QTS 5",lock:false,docker:true,vm:false,tier:1,price:340},
+ {id:"qnap-ts264",name:"QNAP TS-264-8G",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:8,ramMax:8,ramT:[],slots:0,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:11,db:21,os:"QTS 5",lock:false,docker:true,vm:true,tier:2,price:420,hdmi:true},
+ {id:"qnap-ts464",name:"QNAP TS-464-8G",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:14,db:23,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:560,hdmi:true},
+ {id:"qnap-ts664",name:"QNAP TS-664-8G",brand:"QNAP",kind:"fertig",bays:6,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:18,db:24,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:820,hdmi:true},
+ {id:"qnap-ts473a",name:"QNAP TS-473A-8G",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:2,mini:false,ecc:false,idle:20,db:24,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:760},
+ {id:"ug-dxp2800",name:"UGREEN NASync DXP2800",brand:"UGREEN",kind:"fertig",bays:2,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5],pcie:0,mini:false,ecc:false,idle:9,db:21,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:2,price:340,hdmi:true},
+ {id:"ug-dxp4800",name:"UGREEN NASync DXP4800",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:12,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:2,price:480,hdmi:true},
+ {id:"ug-dxp4800p",name:"UGREEN NASync DXP4800 Plus",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel Pentium Gold 8505",cores:5,thr:6,cs:30,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,2.5],pcie:0,mini:false,ecc:false,idle:15,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:3,price:640,hdmi:true},
+ {id:"ug-dxp6800pro",name:"UGREEN NASync DXP6800 Pro",brand:"UGREEN",kind:"fertig",bays:6,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:1,mini:false,ecc:false,idle:22,db:25,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:4,price:980,hdmi:true},
+ {id:"ug-dxp8800p",name:"UGREEN NASync DXP8800 Plus",brand:"UGREEN",kind:"fertig",bays:8,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:1,mini:false,ecc:false,idle:28,db:26,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:5,price:1350},
+ {id:"tm-f2-424",name:"TerraMaster F2-424",brand:"TerraMaster",kind:"fertig",bays:2,exp:0,cpu:"Intel N95",cores:4,thr:4,cs:22,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:10,db:22,os:"TOS 6",lock:false,docker:true,vm:true,tier:2,price:330},
+ {id:"tm-f4-424",name:"TerraMaster F4-424",brand:"TerraMaster",kind:"fertig",bays:4,exp:0,cpu:"Intel N95",cores:4,thr:4,cs:22,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:13,db:23,os:"TOS 6",lock:false,docker:true,vm:true,tier:2,price:460},
+ {id:"tm-f4-424pro",name:"TerraMaster F4-424 Pro",brand:"TerraMaster",kind:"fertig",bays:4,exp:0,cpu:"Intel Core i3-N300",cores:8,thr:8,cs:32,t4:3,av1:true,arch:"x86",ram:32,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:2,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:15,db:23,os:"TOS 6",lock:false,docker:true,vm:true,tier:3,price:650},
+ {id:"tm-f6-424max",name:"TerraMaster F6-424 Max",brand:"TerraMaster",kind:"fertig",bays:6,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:0,mini:false,ecc:false,idle:22,db:25,os:"TOS 6",lock:false,docker:true,vm:true,tier:4,price:960},
+ {id:"asu-as3304t2",name:"Asustor Drivestor 4 Pro Gen2 (AS3304T v2)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[2.5],pcie:0,mini:false,ecc:false,idle:9,db:22,os:"ADM 5",lock:false,docker:true,vm:false,tier:1,price:350},
+ {id:"asu-as5404t",name:"Asustor Nimbustor 4 Gen2 (AS5404T)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron N5105",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:16,solder:0,ramMax:32,ramT:["DDR4-SO"],slots:2,free:0,m2:4,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:16,db:23,os:"ADM 5",lock:false,docker:true,vm:true,tier:3,price:590,hdmi:true},
+ {id:"asu-as6804t",name:"Asustor Lockerstor 4 Gen3 (AS6804T)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"AMD Ryzen Embedded V3C14",cores:4,thr:8,cs:40,t4:0,av1:false,arch:"x86",ram:16,solder:0,ramMax:64,ramT:["DDR5-ECC-SO"],slots:2,free:1,m2:4,m2p:"ja",lan:[10,10],pcie:0,mini:false,ecc:true,idle:25,db:24,os:"ADM 5",lock:false,docker:true,vm:true,tier:4,price:950},
+ {id:"mf-n5pro",name:"Minisforum N5 Pro (Barebone)",brand:"Minisforum",kind:"fertig",bays:5,exp:0,cpu:"AMD Ryzen AI 9 HX PRO 370",cores:12,thr:24,cs:100,t4:6,av1:true,arch:"x86",ram:0,solder:0,ramMax:96,ramT:["DDR5-SO","DDR5-ECC-SO"],slots:2,free:2,m2:3,m2p:"ja",lan:[10,5],pcie:1,mini:false,ecc:true,idle:28,db:25,os:"eigenes System (z. B. TrueNAS, Unraid)",lock:false,docker:true,vm:true,tier:5,price:1150,bare:true,amdgpu:true},
+ {id:"diy-n100",name:"Selbstbau 5-Bay N100 (Jonsbo N2)",brand:"Selbstbau",kind:"diy",bays:5,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:16,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5,2.5,2.5],pcie:0,mini:false,ecc:false,idle:12,db:24,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:2,price:560,
+  parts:"Gehäuse Jonsbo N2, N100-NAS-Mainboard (6× SATA, 4× 2,5 GbE), 16 GB DDR5, SFX-Netzteil 450 W, USB-Stick bzw. Boot-SSD"},
+ {id:"diy-i3",name:"Selbstbau 8-Bay Core i3-14100 (Jonsbo N3)",brand:"Selbstbau",kind:"diy",bays:8,exp:0,cpu:"Intel Core i3-14100",cores:4,thr:8,cs:45,t4:6,av1:false,arch:"x86",ram:32,solder:0,ramMax:96,ramT:["DDR5-DIMM"],slots:2,free:0,m2:1,m2p:"ja",lan:[2.5],pcie:1,mini:false,ecc:false,idle:20,db:25,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:4,price:900,
+  parts:"Gehäuse Jonsbo N3, Mini-ITX-Board B760, Core i3-14100, 32 GB DDR5, SATA-Karte (M.2), SFX-Netzteil 550 W"},
+ {id:"diy-ryzen",name:"Selbstbau 10-Bay Ryzen PRO mit ECC (Node 804)",brand:"Selbstbau",kind:"diy",bays:10,exp:0,cpu:"AMD Ryzen 5 PRO 8500G",cores:6,thr:12,cs:60,t4:4,av1:true,arch:"x86",ram:32,solder:0,ramMax:192,ramT:["DDR5-ECC-DIMM"],slots:4,free:2,m2:2,m2p:"ja",lan:[2.5],pcie:1,mini:false,ecc:true,idle:30,db:25,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:4,price:1050,amdgpu:true,
+  parts:"Gehäuse Fractal Node 804, mATX-Board B650 mit ECC-Freigabe, Ryzen 5 PRO 8500G, 32 GB DDR5 ECC, HBA-Karte 8× SATA, ATX-Netzteil 550 W Gold"}
+],
+hdd:[
+ {id:"wd-rp4",name:"WD Red Plus 4 TB",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.4,act:4.8,db:23,mbs:180,warr:3,tier:1,price:109},
+ {id:"wd-rp8",name:"WD Red Plus 8 TB",brand:"WD",tb:8,rpm:5640,cls:"nas",smr:false,rated:8,idle:5.3,act:6.2,db:25,mbs:215,warr:3,tier:2,price:205},
+ {id:"wd-rp12",name:"WD Red Plus 12 TB",brand:"WD",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:6.9,db:28,mbs:196,warr:3,tier:2,price:285},
+ {id:"wd-rpro16",name:"WD Red Pro 16 TB",brand:"WD",tb:16,rpm:7200,cls:"naspro",smr:false,rated:24,idle:5.0,act:6.6,db:29,mbs:259,warr:5,tier:3,price:380},
+ {id:"wd-rpro24",name:"WD Red Pro 24 TB",brand:"WD",tb:24,rpm:7200,cls:"naspro",smr:false,rated:24,idle:6.0,act:7.0,db:30,mbs:287,warr:5,tier:4,price:560},
+ {id:"wd-hc580",name:"WD Ultrastar DC HC580 24 TB",brand:"WD",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.0,act:7.0,db:32,mbs:298,warr:5,tier:4,price:480},
+ {id:"sg-iw4",name:"Seagate IronWolf 4 TB",brand:"Seagate",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.8,act:4.8,db:22,mbs:180,warr:3,tier:1,price:105},
+ {id:"sg-iw8",name:"Seagate IronWolf 8 TB",brand:"Seagate",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.7,act:7.9,db:28,mbs:210,warr:3,tier:2,price:195},
+ {id:"sg-iw12",name:"Seagate IronWolf 12 TB",brand:"Seagate",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.8,db:28,mbs:210,warr:3,tier:2,price:275},
+ {id:"sg-iwp16",name:"Seagate IronWolf Pro 16 TB",brand:"Seagate",tb:16,rpm:7200,cls:"naspro",smr:false,rated:24,idle:5.3,act:7.8,db:28,mbs:255,warr:5,tier:3,price:365},
+ {id:"sg-iwp24",name:"Seagate IronWolf Pro 24 TB",brand:"Seagate",tb:24,rpm:7200,cls:"naspro",smr:false,rated:24,idle:6.0,act:8.0,db:30,mbs:285,warr:5,tier:4,price:530},
+ {id:"sg-x20",name:"Seagate Exos X20 20 TB",brand:"Seagate",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.4,act:9.4,db:32,mbs:272,warr:5,tier:3,price:390},
+ {id:"sg-x24",name:"Seagate Exos X24 24 TB",brand:"Seagate",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.4,act:9.0,db:32,mbs:285,warr:5,tier:4,price:470},
+ {id:"sg-m30",name:"Seagate Exos M 30 TB",brand:"Seagate",tb:30,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.5,act:8.9,db:32,mbs:275,warr:5,tier:5,price:690},
+ {id:"tosh-n300-8",name:"Toshiba N300 8 TB",brand:"Toshiba",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:6.9,act:8.4,db:30,mbs:240,warr:3,tier:2,price:185},
+ {id:"tosh-n300-18",name:"Toshiba N300 18 TB",brand:"Toshiba",tb:18,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.1,act:7.7,db:30,mbs:281,warr:3,tier:3,price:360},
+ {id:"tosh-mg10-20",name:"Toshiba MG10 20 TB",brand:"Toshiba",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:4.4,act:8.2,db:32,mbs:268,warr:5,tier:3,price:395},
+ {id:"syn-hat8",name:"Synology HAT3300 Plus 8 TB",brand:"Synology",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:27,mbs:230,warr:3,tier:2,price:235,cert:true},
+ {id:"syn-hat12",name:"Synology HAT3300 Plus 12 TB",brand:"Synology",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:28,mbs:242,warr:3,tier:2,price:330,cert:true},
+ {id:"syn-hat16",name:"Synology HAT3310 Plus 16 TB",brand:"Synology",tb:16,rpm:7200,cls:"nas",smr:false,rated:16,idle:5.0,act:7.3,db:29,mbs:262,warr:5,tier:3,price:440,cert:true},
+ {id:"wd-red4",name:"WD Red 4 TB (SMR, WD40EFAX)",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:true,rated:8,idle:3.1,act:4.1,db:22,mbs:180,warr:3,tier:1,price:95,eol:true},
+ {id:"sg-bc8",name:"Seagate BarraCuda 8 TB (SMR)",brand:"Seagate",tb:8,rpm:5400,cls:"desktop",smr:true,rated:2,idle:3.4,act:5.3,db:24,mbs:190,warr:2,tier:1,price:165}
+],
+ssd:[
+ {id:"none",name:"Kein SSD-Cache",none:true,price:0,tier:0},
+ {id:"kin-nv3-1",name:"Kingston NV3 1 TB",tb:1,tbw:320,cls:"consumer",mbs:6000,tier:1,price:85},
+ {id:"sam-990ep-1",name:"Samsung 990 EVO Plus 1 TB",tb:1,tbw:600,cls:"consumer",mbs:7150,tier:2,price:115},
+ {id:"sam-990ep-2",name:"Samsung 990 EVO Plus 2 TB",tb:2,tbw:1200,cls:"consumer",mbs:7250,tier:3,price:205},
+ {id:"wd-sn700-500",name:"WD Red SN700 500 GB",tb:0.5,tbw:1000,cls:"nas",mbs:3430,tier:2,price:95},
+ {id:"wd-sn700-1",name:"WD Red SN700 1 TB",tb:1,tbw:2000,cls:"nas",mbs:3430,tier:3,price:145},
+ {id:"wd-sn700-2",name:"WD Red SN700 2 TB",tb:2,tbw:2500,cls:"nas",mbs:3430,tier:4,price:230},
+ {id:"syn-snv3410-400",name:"Synology SNV3410 400 GB",tb:0.4,tbw:500,cls:"syno",mbs:3000,tier:2,price:150},
+ {id:"syn-snv3410-800",name:"Synology SNV3410 800 GB",tb:0.8,tbw:1000,cls:"syno",mbs:3100,tier:3,price:240}
+],
+ram:[
+ {id:"none",name:"Keine Erweiterung",none:true,price:0,tier:0},
+ {id:"syn-d4neso4",name:"Synology D4NESO-2666-4G",gb:4,mods:1,t:"DDR4-SO",syno:true,tier:2,price:95},
+ {id:"cr-d4-8",name:"Crucial 8 GB DDR4-3200 SO-DIMM",gb:8,mods:1,t:"DDR4-SO",tier:1,price:45},
+ {id:"cr-d4-16",name:"Crucial 16 GB DDR4-3200 SO-DIMM",gb:16,mods:1,t:"DDR4-SO",tier:2,price:75},
+ {id:"cr-d4-32",name:"Crucial 32 GB DDR4-3200 SO-DIMM",gb:32,mods:1,t:"DDR4-SO",tier:3,price:150},
+ {id:"syn-d4es02-4",name:"Synology D4ES02-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:110},
+ {id:"syn-d4es01-8",name:"Synology D4ES01-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:160},
+ {id:"syn-d4es01-16",name:"Synology D4ES01-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:260},
+ {id:"kin-d4e-16",name:"Kingston Server Premier 16 GB DDR4-3200 ECC SO-DIMM",gb:16,mods:1,t:"DDR4-ECC-SO",tier:3,price:125},
+ {id:"cr-d5-16",name:"Crucial 16 GB DDR5-5600 SO-DIMM",gb:16,mods:1,t:"DDR5-SO",tier:2,price:85},
+ {id:"cr-d5-32",name:"Crucial 32 GB DDR5-5600 SO-DIMM",gb:32,mods:1,t:"DDR5-SO",tier:3,price:165},
+ {id:"cr-d5-48",name:"Crucial 48 GB DDR5-5600 SO-DIMM",gb:48,mods:1,t:"DDR5-SO",tier:4,price:250},
+ {id:"cr-d5-64k",name:"Crucial 64 GB (2× 32 GB) DDR5-5600 SO-DIMM",gb:64,mods:2,t:"DDR5-SO",tier:4,price:330},
+ {id:"kin-d5e-32",name:"Kingston Server Premier 32 GB DDR5-5600 ECC SO-DIMM",gb:32,mods:1,t:"DDR5-ECC-SO",tier:4,price:230},
+ {id:"kin-d5e-64k",name:"Kingston Server Premier 64 GB (2× 32 GB) DDR5 ECC SO-DIMM",gb:64,mods:2,t:"DDR5-ECC-SO",tier:5,price:450},
+ {id:"kf-d5-64k",name:"Kingston FURY Beast 64 GB (2× 32 GB) DDR5-5600",gb:64,mods:2,t:"DDR5-DIMM",tier:4,price:360},
+ {id:"kin-d5eu-64k",name:"Kingston Server Premier 64 GB (2× 32 GB) DDR5-4800 ECC UDIMM",gb:64,mods:2,t:"DDR5-ECC-DIMM",tier:5,price:480}
+],
+nic:[
+ {id:"none",name:"Keine Netzwerkkarte",none:true,price:0,tier:0},
+ {id:"usb-25",name:"UGREEN USB-C-Adapter 2,5 GbE",sp:2.5,t:"usb",vendor:"any",m2:0,w:1,tier:1,price:25},
+ {id:"qnap-uc5g",name:"QNAP QNA-UC5G1T (USB, 5 GbE)",sp:5,t:"usb",vendor:"any",m2:0,w:3,tier:2,price:85},
+ {id:"tp-tx401",name:"TP-Link TX401 (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"any",m2:0,w:6,tier:3,price:95},
+ {id:"qnap-qxg10g",name:"QNAP QXG-10G1T (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"any",m2:0,w:6,tier:3,price:140},
+ {id:"qnap-qm2",name:"QNAP QM2-2P10G1TB (10 GbE + 2× M.2)",sp:10,t:"pcie",vendor:"qnap",m2:2,w:9,tier:4,price:290},
+ {id:"syn-e10g22",name:"Synology E10G22-T1-Mini (10 GbE)",sp:10,t:"mini",vendor:"syno",m2:0,w:6,tier:3,price:200},
+ {id:"syn-e10g18",name:"Synology E10G18-T1 (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"syno",m2:0,w:7,tier:3,price:210},
+ {id:"syn-e25g30",name:"Synology E25G30-F2 (2× 25 GbE SFP28)",sp:25,t:"pcie",vendor:"syno",m2:0,w:10,tier:5,price:400}
+],
+ups:[
+ {id:"none",name:"Keine USV",none:true,price:0,tier:0},
+ {id:"eaton-eco650",name:"Eaton Ellipse ECO 650 USB DIN",va:650,w:400,wh:84,sine:false,self:3,tier:1,price:110},
+ {id:"eaton-3s700",name:"Eaton 3S 700 DIN",va:700,w:420,wh:84,sine:false,self:4,tier:1,price:115},
+ {id:"apc-bx950",name:"APC Back-UPS BX950MI",va:950,w:520,wh:108,sine:false,self:6,tier:2,price:125},
+ {id:"cp-900",name:"CyberPower CP900EPFCLCD",va:900,w:540,wh:108,sine:true,self:7,tier:3,price:175},
+ {id:"apc-br900",name:"APC Back-UPS Pro BR900MI",va:900,w:540,wh:120,sine:true,self:7,tier:3,price:240},
+ {id:"apc-smt750",name:"APC Smart-UPS SMT750IC",va:750,w:500,wh:168,sine:true,self:9,tier:5,price:470}
+],
+bak:[
+ {id:"none",name:"Kein Backup",none:true,price:0,tier:0,tb:0},
+ {id:"usb-8",name:"WD Elements Desktop 8 TB (USB)",kind:"usb",tb:8,mo:0,offsite:false,tier:1,price:185},
+ {id:"usb-12",name:"WD Elements Desktop 12 TB (USB)",kind:"usb",tb:12,mo:0,offsite:false,tier:2,price:245},
+ {id:"usb-20",name:"Seagate Expansion Desktop 20 TB (USB)",kind:"usb",tb:20,mo:0,offsite:false,tier:3,price:380},
+ {id:"usb-2x16",name:"2× WD Elements Desktop 16 TB im Wechsel",kind:"rot",tb:16,mo:0,offsite:true,tier:3,price:600},
+ {id:"hz-bx11",name:"Hetzner Storage Box BX11 (1 TB)",kind:"cloud",tb:1,mo:3.9,offsite:true,tier:1,price:0},
+ {id:"hz-bx21",name:"Hetzner Storage Box BX21 (5 TB)",kind:"cloud",tb:5,mo:13.1,offsite:true,tier:2,price:0},
+ {id:"hz-bx31",name:"Hetzner Storage Box BX31 (10 TB)",kind:"cloud",tb:10,mo:24.3,offsite:true,tier:3,price:0},
+ {id:"hz-bx41",name:"Hetzner Storage Box BX41 (20 TB)",kind:"cloud",tb:20,mo:46.4,offsite:true,tier:4,price:0},
+ {id:"b2",name:"Backblaze B2 (nach Verbrauch)",kind:"cloud",tb:999,mo:5.6,perTB:true,offsite:true,tier:3,price:0},
+ {id:"nas2",name:"Zweit-NAS außer Haus (2 Bays, 2× 12 TB gespiegelt)",kind:"nas2",tb:12,mo:0,offsite:true,tier:4,price:860}
+]};
+/* Cloud-Abos für den Vergleich (Listenpreise Jahresabo, Schätzung Stand 2026) */
+const CLOUD=[
+ {n:"Google One 2 TB",tb:2,yr:99.99},
+ {n:"iCloud+ 2 TB",tb:2,yr:119.88},
+ {n:"Dropbox Plus 2 TB",tb:2,yr:119.88},
+ {n:"iCloud+ 6 TB",tb:6,yr:359.88},
+ {n:"Hetzner Storage Box 10 TB",tb:10,yr:291.6},
+ {n:"iCloud+ 12 TB",tb:12,yr:719.88},
+ {n:"Hetzner Storage Box 20 TB",tb:20,yr:556.8},
+ {n:"Google One 30 TB",tb:30,yr:1799.88}
+];
+const CATS=[
+ {k:"nas",label:"NAS-System",code:"SYS"},
+ {k:"hdd",label:"Festplatten",code:"HDD"},
+ {k:"ssd",label:"SSD-Cache",code:"M.2"},
+ {k:"ram",label:"Arbeitsspeicher",code:"RAM"},
+ {k:"nic",label:"Netzwerk",code:"LAN"},
+ {k:"ups",label:"USV",code:"STROM"},
+ {k:"bak",label:"Backup",code:"3-2-1"}
+];
+const CATK=CATS.map(c=>c.k);
+const CAT_LABEL=Object.fromEntries(CATS.map(c=>[c.k,c.label]));
+const QTY_CATS=["hdd","ssd"];
+const PROFILE_NAME={backup:"Dateien & Backup",media:"Medien & Fotos",lab:"Homelab & VMs"};
+const PROFILE_DEF={backup:{streams:0,vms:0},media:{streams:2,vms:0},lab:{streams:1,vms:3}};
+const PRESETS=[
+ {id:"family",name:"Familien-NAS",hint:"Fotos, Backups, 16 TB",profile:"media",budget:1400,params:{cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:70,bak:2}},
+ {id:"starter",name:"Einstieg Backup",hint:"2 Platten gespiegelt",profile:"backup",budget:650,params:{cap:8,red:1,data:2,streams:0,vms:0,net:1,quiet:70,bak:1}},
+ {id:"media",name:"Medienserver",hint:"Plex/Jellyfin, 48 TB",profile:"media",budget:2600,params:{cap:48,red:1,data:16,streams:3,vms:0,net:2.5,quiet:50,bak:1}},
+ {id:"lab",name:"Homelab",hint:"Docker, VMs, 10 GbE",profile:"lab",budget:2800,params:{cap:24,red:1,data:8,streams:1,vms:4,net:10,quiet:40,bak:2}},
+ {id:"truenas",name:"Selbstbau TrueNAS",hint:"ECC, RAIDZ2",profile:"lab",budget:null,user:{nas:"diy-ryzen"},params:{cap:64,red:2,data:24,streams:1,vms:2,net:2.5,quiet:30,bak:2}},
+ {id:"quiet",name:"Leise im Wohnzimmer",hint:"2 Bays, flüsterleise",profile:"backup",budget:900,params:{cap:8,red:1,data:3,streams:0,vms:0,net:2.5,quiet:100,bak:2}},
+ {id:"archive",name:"Datenarchiv",hint:"96 TB, 2 Platten Reserve",profile:"backup",budget:null,params:{cap:96,red:2,data:40,streams:0,vms:0,net:10,quiet:20,bak:2}}
+];
+const BY={};for(const c in DB){BY[c]={};for(const p of DB[c])BY[c][p.id]=p;}
+const get=(cat,id)=>BY[cat]&&BY[cat][id];
+const NONE=c=>get(c,"none");
+const eurFmt=new Intl.NumberFormat("de-DE",{style:"currency",currency:"EUR",maximumFractionDigits:0});
+const eur=n=>eurFmt.format(n);
+const eur2=n=>n.toLocaleString("de-DE",{style:"currency",currency:"EUR",minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=s=>String(s).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+const $=s=>document.querySelector(s);
+const num=(v,d)=>Number(v).toLocaleString("de-DE",{maximumFractionDigits:d==null?1:d});
+const fmtTB=t=>t>=1||t===0?num(t,1)+" TB":Math.round(t*1000)+" GB";
+const fmtG=g=>num(g,1)+" GbE";
+function lanText(l){const c={};l.forEach(x=>{c[x]=(c[x]||0)+1;});return Object.keys(c).map(Number).sort((a,b)=>b-a).map(k=>`${c[k]}× ${fmtG(k)}`).join(" + ");}
+
+/* ---------- Zustand ---------- */
+const KEY="naswerkbank.v1";
+const DEF_PARAMS={cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:60,bak:2,kwh:0.35,spin:0,upl:40};
+let state={profile:"media",budget:null,auto:true,picks:{},params:Object.assign({},DEF_PARAMS),view:"konfig"};
+function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+function load(){
+  try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(!s||!s.picks)return false;
+    const picks={};for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id))picks[c]={id:v.id,src:v.src==="user"?"user":"auto",qty:v.qty};}
+    state.picks=picks;state.profile=PROFILE_NAME[s.profile]?s.profile:"media";state.budget=typeof s.budget==="number"?s.budget:null;state.auto=s.auto!==false;
+    state.params=Object.assign({},DEF_PARAMS);if(s.params)for(const k in DEF_PARAMS)if(typeof s.params[k]==="number")state.params[k]=s.params[k];
+    state.view=["konfig","dash","ov","cmp"].includes(s.view)?s.view:"konfig";return true;}catch(e){return false;}
+}
+const P=()=>state.params;
+function resolve(picks){const o={q:{hdd:0,ssd:0}};for(const c in picks){const v=picks[c],p=v&&get(c,v.id);if(p){o[c]=p;if(QTY_CATS.includes(c))o.q[c]=p.none?0:Math.max(1,v.qty||1);}}return o;}
+function withPart(parts,cat,p,qty){const o=Object.assign({},parts,{q:Object.assign({},parts.q)});if(!p){delete o[cat];if(QTY_CATS.includes(cat))o.q[cat]=0;return o;}o[cat]=p;if(QTY_CATS.includes(cat))o.q[cat]=p.none?0:(qty!=null?qty:(parts.q[cat]||1));return o;}
+const userOnly=()=>{const o={};for(const c in state.picks)if(state.picks[c].src==="user")o[c]=state.picks[c];return o;};
+function partCost(parts,c){const p=parts[c];return p?p.price*(QTY_CATS.includes(c)?parts.q[c]:1):0;}
+function cost(parts){let t=0;for(const c of CATK)t+=partCost(parts,c);return t;}
+
+/* ---------- Rechenmodelle ---------- */
+const minN=red=>red===0?1:red===1?2:4;
+function usableTB(n,tb,red){return n<minN(red)?0:(n-red)*tb;}
+function raidName(nas,n,red){
+  if(!n)return "–";const zfs=nas&&nas.kind==="diy",syn=nas&&nas.brand==="Synology";
+  if(n<minN(red))return "nicht möglich";
+  if(red===0)return n===1?"Einzelplatte":zfs?"Stripe (ohne Redundanz)":"RAID 0 / JBOD";
+  if(red===1)return n===2?(syn?"SHR / RAID 1":zfs?"Mirror":"RAID 1"):(syn?"SHR / RAID 5":zfs?"RAIDZ1":"RAID 5");
+  return syn?"SHR-2 / RAID 6":zfs?"RAIDZ2":"RAID 6";
+}
+function ramFits(nas,ram){return !!(nas&&ram&&!ram.none&&nas.ramT.includes(ram.t)&&nas.slots>=ram.mods);}
+function ramTotal(nas,ram){if(!nas)return 0;if(!ramFits(nas,ram))return nas.ram;return nas.free>=ram.mods?nas.ram+ram.gb:(nas.solder||0)+ram.gb;}
+function ramNeed(nas){const p=P();let need={backup:2,media:4,lab:8}[state.profile]+p.vms*4+(p.streams>2?2:0);if(nas&&nas.kind==="diy")need=Math.max(need,16);if(nas&&nas.bare)need=Math.max(need,8);return need;}
+function nicProblem(nas,nic){
+  if(!nas||!nic||nic.none)return "";
+  if(nic.t==="pcie"&&!nas.pcie)return `${nas.name} hat keinen PCIe-Steckplatz für die Karte.`;
+  if(nic.t==="mini"&&!nas.mini)return `${nic.name} passt nur in Synology-Modelle mit Netzwerk-Upgrade-Steckplatz (z. B. DS923+).`;
+  if(nas.brand==="Synology"&&nic.vendor!=="syno")return `DSM bringt keinen Treiber für ${nic.name} mit; Synology-NAS nehmen nur Synology-Netzwerkkarten.`;
+  if(nic.vendor==="qnap"&&nas.brand!=="QNAP")return `${nic.name} braucht QNAP-Treiber und läuft nur in QNAP-NAS.`;
+  if(nic.vendor==="syno"&&nas.brand!=="Synology")return `${nic.name} ist für Synology-NAS gebaut; in ${nas.brand}-Geräten nicht freigegeben.`;
+  return "";
+}
+function lanMax(parts){const nas=parts.nas;if(!nas)return 0;let m=Math.max(...nas.lan);if(parts.nic&&!parts.nic.none&&!nicProblem(nas,parts.nic))m=Math.max(m,parts.nic.sp);return m;}
+function m2Slots(parts){const nas=parts.nas;if(!nas)return 0;return nas.m2+(parts.nic&&!parts.nic.none&&!nicProblem(nas,parts.nic)?parts.nic.m2||0:0);}
+function speedInfo(parts){
+  const h=parts.hdd,n=parts.q.hdd,red=P().red,nas=parts.nas;
+  const disk=h&&n?Math.round(n<=2?h.mbs:Math.max(1,n-red)*h.mbs*0.85):0;
+  const lan=lanMax(parts),net=Math.round(lan*1000/8*0.92);
+  const cpu=nas?(nas.cs<10?280:nas.cs<20?1000:3000):0;
+  const vals=[disk,net,cpu].filter(v=>v>0);const eff=vals.length?Math.min(...vals):0;
+  const limit=!eff?"":eff===net?"Netzwerk":eff===disk?"Festplatten":"Prozessor";
+  return {disk,net,cpu,eff,lan,limit};
+}
+function powerInfo(parts){
+  const p=P(),nas=parts.nas,h=parts.hdd,n=parts.q.hdd,spin=clamp(p.spin,0,24)/24;
+  const base=nas?nas.idle:0;
+  const drv=h?n*((1-spin)*(0.85*h.idle+0.15*h.act)+spin*0.9):0;
+  const ssd=parts.ssd&&!parts.ssd.none?parts.q.ssd*1.2:0;
+  const nic=parts.nic&&!parts.nic.none?parts.nic.w:0;
+  const ups=parts.ups&&!parts.ups.none?parts.ups.self:0;
+  const bak=parts.bak&&parts.bak.kind==="nas2"?14:0;
+  const avg=base+drv+ssd+nic+ups+bak;
+  const load=(nas?nas.idle*1.5:0)+(h?n*h.act:0)+ssd+nic;
+  const peak=(nas?nas.idle*1.8:0)+(h?n*24:0)+ssd+nic;
+  const kwh=avg*8.76;
+  return {base,drv,ssd,nic,ups,bak,avg,load,peak,kwh,eur:kwh*p.kwh};
+}
+function bakMonthly(b){if(!b||b.none)return 0;return b.perTB?Math.max(0.1,P().data)*b.mo:(b.mo||0);}
+function running(parts){return powerInfo(parts).eur+12*bakMonthly(parts.bak);}
+function quietTarget(){return 38-P().quiet*0.1;}
+function noiseInfo(parts){
+  const nas=parts.nas,h=parts.hdd,n=parts.q.hdd;let L=0;
+  if(nas)L+=Math.pow(10,nas.db/10);if(h&&n)L+=Math.pow(10,(h.db+10*Math.log10(n))/10);
+  const db=L?10*Math.log10(L):0,t=quietTarget();
+  const label=!db?"–":db<26?"flüsterleise":db<30?"leise":db<34?"hörbar":db<38?"deutlich hörbar":"laut";
+  const why=[];if(h&&h.cls==="ent")why.push("Enterprise-Platten mit lauten Kopfbewegungen");else if(h&&h.rpm>=7200)why.push("7200 U/min");if(n>=6)why.push(n+" Platten");
+  const cls=!db?"":db<=t?"ok":db<=t+4?"warn":"bad";
+  return {db,label,why,cls,n:db};
+}
+function rebuildH(h){return h?h.tb*1e6/(h.mbs*0.55)/3600:0;}
+function lossRisk(parts){
+  const h=parts.hdd,n=parts.q.hdd,red=P().red;if(!h||!n||n<minN(red))return null;
+  const afr=h.cls==="desktop"?0.025:h.cls==="ent"||h.cls==="naspro"?0.009:0.012;
+  const w=rebuildH(h)*1.5/24/365;
+  let pr;if(red===0)pr=1-Math.pow(1-afr,n);
+  else if(red===1)pr=n*afr*(n-1)*afr*w*2+n*afr*0.01*h.tb/12;
+  else pr=n*afr*(n-1)*afr*w*(n-2)*afr*w*3+n*afr*(n-1)*afr*w*0.01;
+  return pr;
+}
+function vmCap(nas,ramT){return !nas||!nas.vm?0:Math.max(0,Math.min(Math.floor((ramT-2)/4),Math.floor(nas.cs/10)));}
+function contCap(nas,ramT){return !nas||!nas.docker?0:Math.max(0,Math.min(Math.floor(ramT*2.5),nas.cs*2));}
+function calc(parts){
+  const p=P(),nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0;
+  const raw=h?n*h.tb:0,usable=h?usableTB(n,h.tb,p.red):0;
+  const total=cost(parts),run=running(parts),rt=ramTotal(nas,parts.ram);
+  return {raw,usable,tib:usable*0.909,raid:raidName(nas,n,p.red),total,run,ram:rt,sp:speedInfo(parts),pw:powerInfo(parts),nz:noiseInfo(parts),
+    t4:nas?nas.t4:0,vms:vmCap(nas,rt),cont:contCap(nas,rt),rb:rebuildH(h),risk:lossRisk(parts),perTB:usable?total/usable:0,fill:usable?p.data/usable:0,
+    free:nas?nas.bays-n:0,m2:m2Slots(parts)};
+}
+
+/* ---------- Prüfung ---------- */
+function checkAll(parts){
+  const p=P(),out=[],add=(level,cats,msg)=>out.push({level,cats,msg});
+  const nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0,ssd=parts.ssd,ram=parts.ram,nic=parts.nic,ups=parts.ups,bak=parts.bak;
+  const red=p.red;
+  if(h&&nas){
+    if(n>nas.bays)add("error",["hdd","nas"],`${n} Platten, aber ${nas.name} hat nur ${nas.bays} Schächte.`);
+    if(red>0&&n<minN(red))add("error",["hdd"],red===1?"Ausfallsicherheit für 1 Platte braucht mindestens 2 Platten (Spiegel).":"Ausfallsicherheit für 2 Platten (RAID 6 / SHR-2 / RAIDZ2) braucht mindestens 4 Platten.");
+    if(h.rated&&nas.bays>h.rated)add("warn",["hdd","nas"],`${h.name} ist für Gehäuse bis ${h.rated} Schächte ausgelegt, ${nas.name} hat ${nas.bays}. Vibrationen verkürzen die Lebensdauer; besser NAS-Pro- oder Enterprise-Platten.`);
+    if(nas.lock&&!h.cert)add("info",["hdd","nas"],`${nas.name} gehört zur 2025er Plus-Serie. Synology hat die Sperre für Fremdplatten mit DSM 7.3 wieder gelockert; vor dem Kauf die aktuelle Kompatibilitätsliste prüfen.`);
+    if(h.cls==="ent"&&nas.kind==="fertig"&&nas.bays<=4)add("info",["hdd"],"Enterprise-Platten sind günstig pro TB, aber lauter und wärmer als NAS-Platten. Fürs Wohnzimmer eher ungeeignet.");
+  }
+  if(h){
+    if(h.smr)add(nas&&nas.kind==="diy"?"error":"warn",["hdd"],`${h.name} nutzt SMR: Wiederherstellungen dauern sehr lange${nas&&nas.kind==="diy"?" und ZFS (TrueNAS) kann die Platte aus dem Verbund werfen":""}. Für RAID CMR-Platten nehmen.`);
+    if(h.cls==="desktop")add("warn",["hdd"],"Desktop-Platte: nicht für Dauerbetrieb im RAID-Verbund ausgelegt, kürzere Garantie.");
+    if(red===0&&n>1)add("warn",["hdd"],"Ohne Redundanz sind bei einem Plattendefekt die Daten aller Platten weg.");
+    else if(red===0&&n===1)add("warn",["hdd"],"Einzelplatte: Fällt sie aus, hilft nur noch das Backup.");
+    if(red===1&&h.tb>=16&&n>=5)add("info",["hdd"],`Bei ${n}× ${h.tb} TB dauert ein Rebuild rund ${Math.round(rebuildH(h))} Stunden; in dieser Zeit darf keine zweite Platte ausfallen. Ab 5 großen Platten ist doppelte Redundanz sicherer.`);
+    const us=usableTB(n,h.tb,red);
+    if(n>=minN(red)){
+      if(us<p.data)add("error",["hdd"],`Deine ${fmtTB(p.data)} Daten passen nicht auf ${fmtTB(us)} Nutzkapazität.`);
+      else if(us<p.cap)add("warn",["hdd"],`Nutzkapazität ${fmtTB(us)} liegt unter deinem Ziel von ${fmtTB(p.cap)}.`);
+      if(us>=p.data&&p.data/us>0.8)add("warn",["hdd"],`Das NAS ist schon zu ${Math.round(p.data/us*100)} % voll. Über 80 % werden Dateisysteme langsamer, und es bleibt kein Platz zum Wachsen.`);
+    }
+  }
+  if(nas){
+    if(nas.kind==="diy"){add("info",["nas"],`Selbstbau: ${nas.parts}. Betriebssystem TrueNAS Community Edition ist kostenlos, Unraid kostet je nach Lizenz einmalig ca. 50–250 €.`);
+      if(!nas.ecc)add("info",["nas"],"Ohne ECC-Speicher: für ZFS empfohlen, aber kein Muss. Wichtiger ist ein Backup.");}
+    if(nas.bare&&(!ram||ram.none))add("error",["ram","nas"],`${nas.name} wird ohne Arbeitsspeicher geliefert. Mindestens ein DDR5-SO-DIMM-Modul nötig.`);
+    if(state.profile==="lab"&&!nas.docker)add("error",["nas"],`${nas.name} unterstützt keine Container (Docker).`);
+    if(state.profile==="lab"&&nas.arch==="arm")add("warn",["nas"],"ARM-Prozessor: viele Container-Images und alle VMs laufen nur auf x86.");
+    if(p.vms>0&&!nas.vm)add("error",["nas"],`${nas.name} kann keine virtuellen Maschinen ausführen.`);
+    if(p.streams>0){
+      if(nas.t4===0)add(state.profile==="media"?"warn":"info",["nas"],`${nas.cpu} hat keine Grafikeinheit für Hardware-Transcoding: 4K-Filme nur per Direktwiedergabe, Umrechnen für Handy oder Fernzugriff ruckelt.`);
+      else if(nas.t4<p.streams)add("warn",["nas"],`${nas.cpu} schafft etwa ${nas.t4} gleichzeitige 4K-Transcodes, gewünscht sind ${p.streams}.`);
+      if(nas.amdgpu&&nas.t4>0)add("info",["nas"],"AMD-Grafik: Jellyfin nutzt das Hardware-Transcoding gut, bei Plex ist die Unterstützung eingeschränkter als mit Intel Quick Sync.");
+    }
+    const rt=ramTotal(nas,ram),need=ramNeed(nas);
+    if(rt<need&&!(nas.bare&&(!ram||ram.none)))add("warn",["ram","nas"],`Mit ${rt} GB RAM knapp: für ${PROFILE_NAME[state.profile]}${p.vms?` und ${p.vms} VM${p.vms>1?"s":""}`:""} sind etwa ${need} GB sinnvoll.`);
+    if(p.vms>0&&nas.vm&&vmCap(nas,rt)<p.vms&&rt>=need)add("warn",["nas"],`${nas.cpu} trägt etwa ${vmCap(nas,rt)} VM${vmCap(nas,rt)===1?"":"s"} gleichzeitig, gewünscht sind ${p.vms}.`);
+    const lm=lanMax(parts);
+    if(lm<p.net)add("warn",["nic","nas"],`Netzwerk schafft ${fmtG(lm)}, gewünscht sind ${fmtG(p.net)}.`);
+    if(lm>=10)add("info",["nic","nas"],"10 GbE lohnt nur mit passendem Switch und 10-GbE-Anschluss am PC; sonst läuft es mit 1 bzw. 2,5 GbE.");
+    const sp=speedInfo(parts);if(sp.disk&&sp.net&&sp.disk<sp.net*0.7)add("info",["hdd"],`Die Platten liefern zusammen nur ca. ${sp.disk} MB/s; das Netzwerk könnte ${sp.net} MB/s.`);
+    if(nas.arch==="arm"&&lm>=2.5)add("info",["nas"],"Der schwache ARM-Prozessor erreicht mit Verschlüsselung oder vielen kleinen Dateien nicht das volle 2,5-GbE-Tempo.");
+  }
+  if(ram&&!ram.none&&nas){
+    if(!nas.slots)add("error",["ram"],`Der Arbeitsspeicher von ${nas.name} ist fest verlötet und nicht erweiterbar.`);
+    else if(!nas.ramT.includes(ram.t))add("error",["ram"],`${ram.name} (${RAM_T[ram.t]}) passt nicht: ${nas.name} braucht ${nas.ramT.map(t=>RAM_T[t]).join(" oder ")}.`);
+    else if(nas.slots<ram.mods)add("error",["ram"],`Das Kit hat ${ram.mods} Module, ${nas.name} hat nur ${nas.slots} Steckplatz.`);
+    else{
+      const rt=ramTotal(nas,ram);
+      if(nas.free<ram.mods)add("info",["ram"],`Das Modul ersetzt das eingebaute; danach ${rt} GB.`);
+      if(rt>nas.ramMax)add("warn",["ram"],`${rt} GB liegen über den offiziell unterstützten ${nas.ramMax} GB. Läuft oft, ist aber nicht freigegeben.`);
+      if(nas.brand==="Synology"&&!ram.syno)add("warn",["ram"],"DSM meldet Fremdspeicher als nicht unterstützt, und der Synology-Support kann Hilfe ablehnen. Synology-Module sind teurer, aber offiziell.");
+      if(nas.free>=ram.mods&&nas.ram+ram.gb<=nas.ram)add("info",["ram"],"Keine Wirkung.");
+    }
+  }
+  if(ssd&&!ssd.none){
+    const sl=m2Slots(parts),q=parts.q.ssd;
+    if(!sl)add("error",["ssd"],`${nas?nas.name:"Das NAS"} hat keinen M.2-Steckplatz.`);
+    else if(q>sl)add("error",["ssd"],`${q} SSDs, aber nur ${sl} M.2-Steckplätze.`);
+    if(sl&&q===1)add("info",["ssd"],"Eine SSD taugt nur als Lese-Cache; für Schreib-Cache oder SSD-Speicherpool zwei SSDs im Spiegel nehmen.");
+    if(nas&&nas.m2p==="syno"&&ssd.cls!=="syno")add("info",["ssd"],"Fremd-SSDs nutzt DSM hier nur als Cache; einen SSD-Speicherpool (z. B. für VMs) gibt es nur mit Synology-SSDs.");
+    if(ssd.cls==="consumer"&&ssd.tbw<500)add("info",["ssd"],`${ssd.name} hat nur ${ssd.tbw} TBW Schreibfestigkeit; als Schreib-Cache nutzt sie sich schnell ab.`);
+    if(nas&&nas.m2p==="nein"&&sl)add("info",["ssd"],"M.2-Plätze dienen hier nur als Cache.");
+  }
+  if(nic&&!nic.none){
+    const pr=nicProblem(nas,nic);if(pr)add("error",["nic"],pr);
+    else if(nas&&Math.max(...nas.lan)>=nic.sp)add("info",["nic"],`${nas.name} hat schon ${fmtG(Math.max(...nas.lan))}; die Karte bringt kein Tempo.`);
+  }
+  const pw=powerInfo(parts);
+  if(ups&&!ups.none&&nas){
+    if(ups.w<pw.peak)add("warn",["ups"],`Beim Anlaufen der Platten zieht das System kurz ca. ${Math.round(pw.peak)} W, die USV liefert ${ups.w} W.`);
+    const rtm=ups.wh*0.7/Math.max(1,pw.load)*60;
+    if(rtm<5)add("warn",["ups"],`Nur ca. ${Math.round(rtm)} Minuten Überbrückung; zu knapp zum sauberen Herunterfahren.`);
+    if(nas.kind==="diy"&&!ups.sine)add("info",["ups"],"PC-Netzteile mit aktiver PFC vertragen Stufen-Sinus-USVs nicht immer; eine Sinus-USV ist sicherer.");
+  }else if(nas)add("info",["ups"],"Ohne USV kann ein Stromausfall mitten im Schreiben Dateisystem und RAID beschädigen.");
+  if(!bak||bak.none){if(h)add("warn",["bak"],"Kein Backup: RAID schützt vor Plattenausfall, aber nicht vor Löschen, Ransomware, Brand oder Diebstahl.");}
+  else{
+    const cap=bak.tb;if(cap<p.data)add("warn",["bak"],`Das Backup fasst ${fmtTB(cap)}, du hast ${fmtTB(p.data)} Daten.`);
+    if(!bak.offsite)add("info",["bak"],"3-2-1-Regel: Eine Kopie sollte außer Haus liegen (Cloud, zweite Platte bei Freunden).");
+    if(bak.kind==="cloud"){const days=p.data*8e6/(p.upl*0.85)/86400;add("info",["bak"],`Erst-Upload von ${fmtTB(p.data)} dauert bei ${p.upl} Mbit/s Upload ca. ${days<1?Math.max(1,Math.round(days*24))+" Stunden":Math.round(days)+" Tage"}. Daten vorher im NAS verschlüsseln.`);}
+    if(bak.kind==="rot")add("info",["bak"],"Wechselplatten: eine Platte am NAS, die andere außer Haus; regelmäßig tauschen.");
+  }
+  const nz=noiseInfo(parts);if(nz.db&&nz.db>quietTarget()+2)add("warn",["hdd","nas"],`Mit ca. ${Math.round(nz.db)} dB(A) ${nz.label}; für deine Lautstärke-Vorgabe zu laut${nz.why.length?" ("+nz.why.join(", ")+")":""}.`);
+  return out;
+}
+const RAM_T={"DDR4-SO":"DDR4-SO-DIMM","DDR4-ECC-SO":"DDR4-ECC-SO-DIMM","DDR5-SO":"DDR5-SO-DIMM","DDR5-ECC-SO":"DDR5-ECC-SO-DIMM","DDR5-DIMM":"DDR5-DIMM","DDR5-ECC-DIMM":"DDR5-ECC-UDIMM"};
+function issuesFor(cat,p,parts,qty){const test=withPart(parts,cat,p,qty);return checkAll(test).filter(i=>i.cats.includes(cat));}
+
+/* ---------- Automatische Auswahl ---------- */
+function autoPick(c,parts,lowUp){
+  const p=P(),nas=parts.nas;if(!nas)return [NONE(c),0];
+  if(c==="ram"){
+    const need=ramNeed(nas),cur=nas.ram;if(cur>=need)return [NONE("ram"),0];
+    let cand=DB.ram.filter(r=>!r.none&&ramFits(nas,r));
+    if(nas.brand==="Synology"&&cand.some(r=>r.syno))cand=cand.filter(r=>r.syno);
+    const ok=cand.filter(r=>{const t=ramTotal(nas,r);return t>=need&&t<=nas.ramMax;}).sort((a,b)=>a.price-b.price);
+    if(ok.length)return [ok[0],0];
+    const best=cand.filter(r=>ramTotal(nas,r)<=nas.ramMax&&ramTotal(nas,r)>cur).sort((a,b)=>ramTotal(nas,b)-ramTotal(nas,a)||a.price-b.price)[0];
+    return [best||NONE("ram"),0];
+  }
+  if(c==="nic"){
+    if(Math.max(...nas.lan)>=p.net)return [NONE("nic"),0];
+    const cand=DB.nic.filter(x=>!x.none&&!nicProblem(nas,x)&&x.sp>Math.max(...nas.lan));
+    const ok=cand.filter(x=>x.sp>=p.net&&x.vendor!=="qnap").sort((a,b)=>a.price-b.price);
+    return [ok[0]||cand.sort((a,b)=>b.sp-a.sp||a.price-b.price)[0]||NONE("nic"),0];
+  }
+  if(c==="ssd"){
+    const want=state.profile==="lab"||p.vms>0,sl=m2Slots(parts);
+    if(!want||!sl)return [NONE("ssd"),0];
+    const q=Math.min(2,sl),minTb=p.vms>0?0.8:0.4;
+    let cand=DB.ssd.filter(s=>!s.none&&s.tb>=minTb&&s.cls!=="consumer");
+    if(nas.m2p==="syno")cand=cand.filter(s=>s.cls==="syno");else cand=cand.filter(s=>s.cls!=="syno");
+    cand.sort((a,b)=>a.price-b.price);return [cand[0]||NONE("ssd"),cand[0]?q:0];
+  }
+  if(c==="ups"){
+    const pw=powerInfo(parts);
+    let cand=DB.ups.filter(u=>!u.none&&u.w>=pw.peak&&u.wh*0.7/Math.max(1,pw.load)*60>=8);
+    if(nas.kind==="diy")cand=cand.filter(u=>u.sine);
+    cand.sort((a,b)=>a.price-b.price);return [cand[0]||NONE("ups"),0];
+  }
+  if(c==="bak"){
+    if(!p.bak)return [NONE("bak"),0];
+    const need=p.data*1.15;
+    let cand=DB.bak.filter(b=>!b.none&&(p.bak===2?b.offsite:!b.offsite||b.kind==="rot"));
+    const c5=b=>b.price+60*bakMonthly(b)+(b.kind==="nas2"?5*14*8.76*p.kwh:0);
+    const ok=cand.filter(b=>b.tb>=need).sort((a,b)=>lowUp?a.price-b.price||c5(a)-c5(b):c5(a)-c5(b));
+    return [ok[0]||cand.sort((a,b)=>b.tb-a.tb)[0]||NONE("bak"),0];
+  }
+  return [NONE(c),0];
+}
+const EXTRA_ORDER=["ram","nic","bak","ups","ssd"];
+const DROP_ORDER=["ssd","ups","nic","bak"];
+function evalCombo(fixed,nas,hdd,n){
+  const p=P();
+  let parts=withPart(withPart(fixed,"nas",nas),"hdd",hdd,n);
+  const autoC=EXTRA_ORDER.filter(c=>!fixed[c]);
+  for(const c of autoC){const [x,q]=autoPick(c,parts);parts=withPart(parts,c,x,q);}
+  let total=cost(parts);
+  if(state.budget&&total>state.budget){for(const c of DROP_ORDER){if(!autoC.includes(c)||!parts[c]||parts[c].none)continue;if(c==="bak"&&p.bak)continue;parts=withPart(parts,c,NONE(c),0);total=cost(parts);if(total<=state.budget)break;}
+    if(total>state.budget&&autoC.includes("bak")&&parts.bak&&parts.bak.price>0){const [x]=autoPick("bak",parts,true);parts=withPart(parts,"bak",x,0);total=cost(parts);}
+    for(const c of ["ups","nic"]){if(autoC.includes(c)&&parts[c]&&parts[c].none){const [x,q]=autoPick(c,parts);if(x&&!x.none&&total+x.price<=state.budget){parts=withPart(parts,c,x,q);total=cost(parts);}}}}
+  const usable=usableTB(n,hdd.tb,p.red);
+  let fit=Math.pow(Math.min(1,usable/p.cap),4);if(usable<p.data)fit*=0.05;
+  let pen=1;
+  if(p.streams>0)pen*=nas.t4>=p.streams?1:nas.t4===0?(state.profile==="media"?0.45:0.8):0.75;
+  const rt=ramTotal(nas,parts.ram);
+  if(p.vms>0)pen*=!nas.vm?0.3:vmCap(nas,rt)>=p.vms?1:0.7;
+  if(state.profile==="lab"&&!nas.docker)pen*=0.3;
+  if(state.profile==="lab"&&nas.arch==="arm")pen*=0.6;
+  if(lanMax(parts)<p.net)pen*=0.75;
+  const nz=noiseInfo(parts),qt=quietTarget();if(nz.db>qt)pen*=Math.max(0.45,1-(nz.db-qt)*0.12);
+  if(hdd.rated&&nas.bays>hdd.rated)pen*=0.7;
+  if(nas.bare&&(!parts.ram||parts.ram.none))pen*=0.2;
+  if(rt<ramNeed(nas))pen*=0.8;
+  let Q=1+0.06*nas.tier;
+  if(state.profile==="lab")Q+=nas.cs/100*0.6+(nas.ecc?0.12:0)+(nas.m2?0.06:0)+(nas.pcie||nas.mini?0.04:0);
+  if(state.profile==="media")Q+=Math.min(nas.t4,4)/4*0.25+(nas.av1?0.05:0);
+  if(state.profile==="backup")Q+=(nas.brand==="Synology"?0.12:0)+(nas.idle<=10?0.04:0);
+  Q+=Math.min(0.15,0.05*Math.max(0,nas.bays-n));
+  if(hdd.warr>=5)Q+=0.05;if(nas.kind==="diy")Q-=0.08;
+  const over=state.budget&&total>state.budget?Math.pow(state.budget/total,8):1;
+  const c5=total+5*running(parts)*0.7;
+  return {parts,total,val:(fit+1e-6)*pen*over*Q*Q/c5};
+}
+function chooseAll(fixed){
+  const p=P();
+  const nasPool=fixed.nas?[fixed.nas]:DB.nas.filter(x=>!x.eol);
+  const hddPool=fixed.hdd?[fixed.hdd]:DB.hdd.filter(h=>!h.eol&&!h.smr&&h.cls!=="desktop");
+  let best=null;
+  for(const nas of nasPool)for(const hdd of hddPool){
+    let ns;
+    if(fixed.hdd){ns=[fixed.q.hdd];}
+    else{const lo=Math.min(minN(p.red),nas.bays);ns=[];for(let n=lo;n<=nas.bays;n++)ns.push(n);}
+    for(const n of ns){
+      if(!fixed.nas&&n>nas.bays)continue;
+      const r=evalCombo(fixed,nas,hdd,n);
+      if(!best||r.val>best.val)best=r;
+    }
+  }
+  if(!best&&fixed.hdd){const nas=nasPool.slice().sort((a,b)=>b.bays-a.bays)[0];best=evalCombo(fixed,nas,fixed.hdd,fixed.q.hdd);}
+  return best;
+}
+function fillMissing(base){
+  const out=JSON.parse(JSON.stringify(base));
+  const fixed=resolve(out);
+  const best=chooseAll(fixed);if(!best)return out;
+  for(const c of CATK){if(!out[c]&&best.parts[c]){out[c]={id:best.parts[c].id,src:"auto"};if(QTY_CATS.includes(c))out[c].qty=best.parts.q[c]||1;}}
+  return out;
+}
+/* Beste Stückzahl für ein Plattenmodell im aktuellen Gerät */
+function bestQty(nas,hdd){
+  const p=P();if(!nas)return Math.max(minN(p.red),2);
+  for(let n=Math.min(minN(p.red),nas.bays);n<=nas.bays;n++)if(usableTB(n,hdd.tb,p.red)>=p.cap)return n;
+  return nas.bays;
+}
+let prevIds={};
+function recompute(){
+  prevIds={};for(const c in state.picks)prevIds[c]=state.picks[c].id+"×"+(state.picks[c].qty||1);
+  if(state.auto)state.picks=fillMissing(userOnly());
+  save();render();
+}
+
+/* ---------- Darstellung: Bauteile ---------- */
+const CLS_LABEL={nas:"NAS-Platte",naspro:"NAS-Pro-Platte",ent:"Enterprise-Platte",desktop:"Desktop-Platte",consumer:"Consumer-SSD",syno:"Synology-SSD"};
+function perMonth(b){const m=bakMonthly(b);return m?eur2(m)+"/Monat":"";}
+function spec(cat,p){
+  if(!p)return "";if(p.none)return {ssd:"M.2-Plätze bleiben frei",ram:"Werksausstattung",nic:"eingebaute Netzwerkports",ups:"direkt am Stromnetz",bak:"nur die Daten im NAS"}[cat]||"";
+  switch(cat){
+    case "nas":return `${p.bays} Schächte${p.exp?` (bis ${p.exp} mit Erweiterung)`:""} · ${p.cpu} · ${p.ram?p.ram+" GB":"ohne"} RAM${p.slots?` (max. ${p.ramMax})`:" fest"} · ${p.m2}× M.2 · ${lanText(p.lan)}${p.pcie?" · PCIe":p.mini?" · 10-GbE-Steckplatz":""} · ${p.os}`;
+    case "hdd":return `${p.tb} TB · ${p.rpm} U/min · ${p.smr?"SMR":"CMR"} · ${CLS_LABEL[p.cls]} · ${p.warr} J. Garantie · ${num(p.price/p.tb,0)} €/TB`;
+    case "ssd":return `${fmtTB(p.tb)} · NVMe · ${p.tbw} TBW · ${CLS_LABEL[p.cls]||"NAS-SSD"}`;
+    case "ram":return `${p.gb} GB${p.mods>1?` (${p.mods}× ${p.gb/p.mods} GB)`:""} · ${RAM_T[p.t]}${p.syno?" · Synology-Original":""}`;
+    case "nic":return `${fmtG(p.sp)} · ${p.t==="pcie"?"PCIe-Karte":p.t==="mini"?"Synology-Steckmodul":"USB-Adapter"}${p.m2?` · +${p.m2} M.2`:""}`;
+    case "ups":return `${p.va} VA / ${p.w} W · ${p.sine?"reiner Sinus":"Stufen-Sinus"} · USB-Abschaltsignal · ca. ${p.wh} Wh Akku`;
+    case "bak":return p.kind==="cloud"?`${p.perTB?"beliebig groß":fmtTB(p.tb)} · ${p.perTB?num(p.mo,2)+" € je TB und Monat":num(p.mo,2)+" €/Monat"} · außer Haus`:p.kind==="nas2"?`${fmtTB(p.tb)} · zweites NAS an anderem Ort · Hyper Backup / rsync`:p.kind==="rot"?`${fmtTB(p.tb)} je Platte · eine davon außer Haus`:`${fmtTB(p.tb)} · USB-Platte am NAS · einmalig`;
+  }
+  return "";
+}
+function tierDots(t){if(!t)return "";let s='<span class="tier" title="Klasse '+t+' von 5" aria-label="Klasse '+t+' von 5">';for(let i=1;i<=5;i++)s+='<i class="'+(i<=t?"on":"")+'"></i>';return s+"</span>";}
+function priceLink(cat,p){if(!p||p.none||!p.price||p.kind==="diy"||cat==="bak"&&p.kind==="nas2")return "";return `<span class="links"><a href="https://geizhals.de/?fs=${encodeURIComponent(p.name.replace(/\s*\(.*\)$/,""))}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
+const SEV_LABEL={error:"Konflikt",warn:"Achtung",info:"Hinweis",ok:"Passt"};
+function specRows(cat,p,parts){
+  if(p.none)return [];
+  switch(cat){
+    case "nas":return [["Hersteller",p.brand],["Bauart",p.kind==="diy"?"Selbstbau":p.bare?"Barebone (ohne RAM)":"Fertig-NAS"],["Schächte",p.bays+(p.exp?` (bis ${p.exp})`:"")],["Prozessor",`${p.cpu}, ${p.cores} Kerne / ${p.thr} Threads`],["CPU-Index",p.cs+" (N100 = 25)"],["4K-Transcodes",p.t4?"ca. "+p.t4:"keine (nur Software)"],["AV1-Decoding",p.av1?"ja":"nein"],["Arbeitsspeicher",`${p.ram} GB, max. ${p.ramMax} GB${p.ecc?" · ECC":""}`],["RAM-Plätze",p.slots?`${p.slots} (${p.free} frei)`:"fest verlötet"],["M.2",`${p.m2}× ${p.m2p==="ja"?"Cache oder Speicherpool":p.m2p==="syno"?"Cache, Pool nur mit Synology-SSD":"Cache"}`],["Netzwerk",lanText(p.lan)],["Erweiterung",p.pcie?p.pcie+"× PCIe":p.mini?"Synology-10-GbE-Modul":"keine"],["Leerlauf ohne Platten",`ca. ${p.idle} W`],["System",p.os],["Docker / VMs",`${p.docker?"ja":"nein"} / ${p.vm?"ja":"nein"}`],["Richtpreis",eur(p.price)]];
+    case "hdd":return [["Kapazität",p.tb+" TB"],["Drehzahl",p.rpm+" U/min"],["Aufzeichnung",p.smr?"SMR (Shingled)":"CMR"],["Klasse",CLS_LABEL[p.cls]],["Freigabe",p.rated?`bis ${p.rated} Schächte`:"unbegrenzt (Rechenzentrum)"],["Dauertransfer",`bis ${p.mbs} MB/s`],["Leistung Ruhe / Zugriff",`${num(p.idle)} W / ${num(p.act)} W`],["Geräusch Zugriff",`ca. ${p.db} dB(A)`],["Garantie",p.warr+" Jahre"],["Preis je TB",num(p.price/p.tb,1)+" €"],["Richtpreis",eur(p.price)]];
+    case "ssd":return [["Kapazität",fmtTB(p.tb)],["Schreibfestigkeit",p.tbw+" TBW"],["Lesen",`bis ${p.mbs} MB/s (im NAS meist durch PCIe-Anbindung begrenzt)`],["Klasse",CLS_LABEL[p.cls]||"NAS-SSD"],["Richtpreis",eur(p.price)]];
+    case "ram":return [["Kapazität",p.gb+" GB"],["Module",p.mods],["Typ",RAM_T[p.t]],["Herkunft",p.syno?"Synology-Original":"Fremdmodul"],["Danach im NAS",parts.nas?ramTotal(parts.nas,p)+" GB":"–"],["Richtpreis",eur(p.price)]];
+    case "nic":return [["Tempo",fmtG(p.sp)],["Anschluss",p.t==="pcie"?"PCIe":p.t==="mini"?"Synology-Steckplatz":"USB"],["Treiber",p.vendor==="syno"?"nur Synology":p.vendor==="qnap"?"nur QNAP":"Standard"],["Zusätzliche M.2",p.m2||"–"],["Leistung",`ca. ${p.w} W`],["Richtpreis",eur(p.price)]];
+    case "ups":{const pw=powerInfo(parts);return [["Leistung",`${p.va} VA / ${p.w} W`],["Ausgang",p.sine?"reiner Sinus":"Stufen-Sinus (approximiert)"],["Akku",`ca. ${p.wh} Wh`],["Überbrückung",pw.load?`ca. ${Math.round(p.wh*0.7/pw.load*60)} min bei ${Math.round(pw.load)} W`:"–"],["Eigenverbrauch",`ca. ${p.self} W`],["Abschaltsignal","USB (NUT, DSM/QTS)"],["Richtpreis",eur(p.price)]];}
+    case "bak":return [["Art",{usb:"USB-Platte",rot:"zwei Wechselplatten",cloud:"Cloud-Speicher",nas2:"zweites NAS"}[p.kind]],["Kapazität",p.perTB?"nach Verbrauch":fmtTB(p.tb)],["Außer Haus",p.offsite?"ja":"nein"],["Einmalig",eur(p.price)],["Laufend",bakMonthly(p)?eur2(bakMonthly(p))+"/Monat":"–"],["5 Jahre",eur(p.price+60*bakMonthly(p))]];
+  }
+  return [];
+}
+function prosCons(cat,p,parts){
+  const P1=[],C=[],N=[];if(!p||p.none)return {P:P1,C,N};
+  const pr=P();
+  switch(cat){
+    case "nas":
+      if(p.brand==="Synology"){P1.push("DSM gilt als ausgereifteste NAS-Software, sehr gute Backup- und Foto-Apps");}
+      if(p.brand==="UGREEN"||p.brand==="TerraMaster")P1.push("viel Hardware fürs Geld, aktuelle Intel-CPU");
+      if(p.brand==="QNAP")P1.push("viele Funktionen, PCIe- und HDMI-Anschluss");
+      if(p.kind==="diy"){P1.push("frei wählbares System, beste Leistung pro Euro bei großen Arrays");C.push("Zusammenbau und Einrichtung selbst, kein Hersteller-Support");}
+      if(p.t4>=3)P1.push(`Hardware-Transcoding für ca. ${p.t4} 4K-Streams (Plex/Jellyfin)`);else if(p.t4===0&&p.arch!=="arm")C.push("keine Grafikeinheit: kein Hardware-Transcoding");
+      if(p.ecc)P1.push("ECC-Speicher schützt vor Bitfehlern im RAM");
+      if(Math.max(...p.lan)>=10)P1.push("10 GbE eingebaut");else if(Math.max(...p.lan)<2.5)C.push("nur 1-GbE-Netzwerk (ca. 115 MB/s)");
+      if(p.arch==="arm")C.push("schwacher ARM-Prozessor: wenig Docker, keine VMs");
+      if(p.lock)N.push("2025er Plus-Serie: vor Kauf Fremdplatten-Kompatibilität für deine DSM-Version prüfen");
+      if(p.slots===0)C.push("Arbeitsspeicher nicht erweiterbar");
+      if(p.exp)P1.push(`erweiterbar auf ${p.exp} Schächte`);
+      if(p.idle<=10)P1.push("sparsam im Leerlauf");
+      if(p.bare)N.push("Barebone: RAM und Betriebssystem kommen extra");
+      if(p.eol)C.push("Auslaufmodell, Nachfolger verfügbar");
+      break;
+    case "hdd":
+      if(!p.smr)P1.push("CMR-Aufzeichnung, RAID-tauglich");else C.push("SMR: sehr langsame Rebuilds, für RAID ungeeignet");
+      if(p.warr>=5)P1.push("5 Jahre Garantie");
+      if(p.cls==="ent"){P1.push("günstigster Preis pro TB in dieser Größe");C.push("laut bei Zugriffen, eher für Keller oder Abstellraum");}
+      if(p.rpm<=5640)P1.push("5400er-Klasse: leise und kühl");
+      if(p.cert)N.push("Synology-eigene Platte (Toshiba-Basis), offiziell kompatibel mit allen Synology-NAS");
+      if(p.cls==="desktop")C.push("nicht für 24/7-Betrieb gebaut");
+      N.push(`Rebuild nach Ausfall ca. ${Math.round(rebuildH(p))} Stunden`);
+      break;
+    case "ssd":
+      if(p.cls==="nas")P1.push("hohe Schreibfestigkeit, für Dauerbetrieb im NAS gebaut");
+      if(p.cls==="syno")P1.push("in DSM als Cache und Speicherpool freigegeben");
+      if(p.cls==="consumer")N.push("Consumer-SSD: als Lese-Cache gut, als Schreib-Cache nutzt sie sich schneller ab");
+      N.push("SSD-Cache beschleunigt vor allem Datenbanken, VMs und viele kleine Dateien, kaum Filme");
+      break;
+    case "ram":
+      if(p.syno)P1.push("offiziell unterstützt");
+      if(parts.nas&&parts.nas.brand==="Synology"&&!p.syno)C.push("Fremd-RAM: DSM warnt, Support kann ablehnen");
+      if(p.t.includes("ECC"))P1.push("ECC: erkennt und korrigiert Speicherfehler");
+      break;
+    case "nic":
+      if(p.sp>=10)P1.push(`bis ca. ${Math.round(p.sp*115)} MB/s, braucht 10-GbE-Switch und -PC`);
+      if(p.t==="usb")N.push("USB-Adapter: einfach, aber nicht von jedem NAS-System unterstützt");
+      if(p.m2)P1.push("bringt zusätzlich zwei M.2-Plätze mit");
+      break;
+    case "ups":
+      P1.push("fährt das NAS bei Stromausfall sauber herunter");if(p.sine)P1.push("reiner Sinus, verträgt jedes Netzteil");else N.push("Stufen-Sinus: für NAS-Netzteile meist kein Problem");
+      N.push(`Eigenverbrauch ca. ${p.self} W rund um die Uhr; Akku alle 3–5 Jahre tauschen`);
+      break;
+    case "bak":
+      if(p.offsite)P1.push("Kopie außer Haus: schützt vor Brand, Diebstahl und Ransomware im Haus");else C.push("liegt am selben Ort wie das NAS");
+      if(p.kind==="cloud")N.push("Daten vor dem Hochladen im NAS verschlüsseln (Hyper Backup, Duplicati, Restic)");
+      if(p.kind==="usb")N.push("Platte nach dem Backup abziehen, sonst trifft Ransomware auch sie");
+      break;
+  }
+  return {P:P1,C,N};
+}
+const openBriefs=new Set();
+function briefHtml(cat,p,parts){
+  if(!p||p.none)return "";const rows=specRows(cat,p,parts),pc=prosCons(cat,p,parts);const key=cat+":"+p.id;
+  return `<details class="brief" data-brief="${esc(key)}"${openBriefs.has(key)?" open":""}><summary>Steckbrief</summary><div class="brief-body">
+   <table class="kvt">${rows.map(r=>`<tr><td>${esc(r[0])}</td><td>${esc(String(r[1]))}</td></tr>`).join("")}</table>
+   <div>${pc.P.length?`<h4>Stärken</h4><ul class="pc">${pc.P.map(x=>`<li class="p"><span></span><span>${esc(x)}</span></li>`).join("")}</ul>`:""}
+   ${pc.C.length?`<h4 style="margin-top:8px">Schwächen</h4><ul class="pc">${pc.C.map(x=>`<li class="c"><span></span><span>${esc(x)}</span></li>`).join("")}</ul>`:""}
+   ${pc.N.length?`<h4 style="margin-top:8px">Hinweise</h4><ul class="pc">${pc.N.map(x=>`<li class="n"><span></span><span>${esc(x)}</span></li>`).join("")}</ul>`:""}</div></div></details>`;
+}
+/* ---------- Bessere Komponenten ---------- */
+function betterMetric(cat,p,parts){
+  if(!p||p.none)return 0;
+  switch(cat){
+    case "nas":return p.bays*12+p.cs*0.6+Math.max(...p.lan)*3+p.t4*4+(p.ecc?6:0)+p.m2*2;
+    case "hdd":return usableTB(parts.q.hdd||1,p.tb,P().red)*10+(p.warr>=5?3:0);
+    case "ssd":return p.tb*100+p.tbw/50;
+    case "ram":return parts.nas?ramTotal(parts.nas,p):p.gb;
+    case "nic":return p.sp;
+    case "ups":return p.wh+(p.sine?20:0);
+    case "bak":return Math.min(p.tb,200)+(p.offsite?100:0);
+  }
+  return p.tier;
+}
+function benefitText(cat,cur,p,parts){
+  const t=[];
+  switch(cat){
+    case "nas":if(p.bays>cur.bays)t.push(`${p.bays} statt ${cur.bays} Schächte`);if(p.cs>cur.cs*1.1)t.push(`CPU +${Math.round((p.cs/cur.cs-1)*100)} %`);if(p.t4>cur.t4)t.push(`${p.t4} statt ${cur.t4} 4K-Transcodes`);if(Math.max(...p.lan)>Math.max(...cur.lan))t.push(fmtG(Math.max(...p.lan)));if(p.ecc&&!cur.ecc)t.push("ECC-RAM");break;
+    case "hdd":{const n=parts.q.hdd||1,a=usableTB(n,cur.tb,P().red),b=usableTB(n,p.tb,P().red);if(b>a)t.push(`+${fmtTB(b-a)} nutzbar`);if(p.warr>cur.warr)t.push(`${p.warr} statt ${cur.warr} Jahre Garantie`);break;}
+    case "ssd":if(p.tb>cur.tb)t.push(`+${fmtTB(p.tb-cur.tb)}`);if(p.tbw>cur.tbw)t.push(`${p.tbw} statt ${cur.tbw} TBW`);break;
+    case "ram":if(parts.nas)t.push(`${ramTotal(parts.nas,p)} statt ${ramTotal(parts.nas,cur)} GB`);break;
+    case "nic":t.push(`${fmtG(p.sp)} statt ${fmtG(cur.sp)}`);break;
+    case "ups":t.push(`${p.wh} statt ${cur.wh} Wh Akku`);if(p.sine&&!cur.sine)t.push("reiner Sinus");break;
+    case "bak":if(p.offsite&&!cur.offsite)t.push("Kopie außer Haus");if(p.tb>cur.tb)t.push(`${p.perTB?"unbegrenzt":fmtTB(p.tb)} statt ${fmtTB(cur.tb)}`);break;
+  }
+  return t.join(" · ")||"bessere Ausstattung";
+}
+function priceOf(cat,p,parts){return p.price*(QTY_CATS.includes(cat)?(parts.q[cat]||1):1)+(cat==="bak"?60*bakMonthly(p):0);}
+function betterOptions(cat,cur,ctx,max){
+  if(!cur||cur.none)return [];
+  const q=ctx.q[cat]||(QTY_CATS.includes(cat)?1:0);
+  const withQ=Object.assign({},ctx,{q:Object.assign({},ctx.q,{[cat]:q||ctx.q[cat]})});
+  const base=betterMetric(cat,cur,withQ);let best=base;const front=[];
+  const list=DB[cat].filter(p=>p.id!==cur.id&&!p.none&&!p.eol)
+    .filter(p=>{const iss=issuesFor(cat,p,ctx,QTY_CATS.includes(cat)?q:undefined);return !iss.some(i=>i.level==="error"||i.level==="warn");})
+    .filter(p=>cat!=="nas"||p.bays>=(ctx.q.hdd||0))
+    .sort((a,b)=>priceOf(cat,a,withQ)-priceOf(cat,b,withQ));
+  const minGain=cat==="nas"?4:0.5;
+  for(const p of list){const m=betterMetric(cat,p,withQ);if(m>best+minGain){front.push(p);best=m;}}
+  return front.slice(0,max);
+}
+function deltaPrice(d){return d>0?`+${eur(d)}`:d<0?`${eur(d)} (günstiger)`:"gleicher Preis";}
+function upgradeTip(cat,p,parts){
+  if(!p||p.none)return "";
+  const ctx=withPart(parts,cat,null);if(QTY_CATS.includes(cat))ctx.q[cat]=parts.q[cat];
+  const o=betterOptions(cat,p,ctx,1)[0];if(!o)return "";
+  return `<div class="up-tip"><span class="tag up">Besser</span><span><b>${esc(o.name)}</b> · ${esc(deltaPrice(priceOf(cat,o,parts)-priceOf(cat,p,parts)))}${cat==="bak"?" über 5 Jahre":""} · ${esc(benefitText(cat,p,o,parts))}</span><button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(o.id)}">Übernehmen</button></div>`;
+}
+function slotPrice(cat,p,parts){
+  if(cat==="bak"&&bakMonthly(p))return `${eur2(bakMonthly(p))}<small>pro Monat</small>`;
+  if(QTY_CATS.includes(cat)&&!p.none){const q=parts.q[cat];return `${eur(p.price*q)}${q>1?`<small>${q} × ${eur(p.price)}</small>`:""}`;}
+  return p.price?eur(p.price):"0 €";
+}
+function qtyCtl(cat,parts){
+  const q=parts.q[cat],max=cat==="hdd"?(parts.nas?parts.nas.bays:12):Math.max(1,m2Slots(parts));
+  return `<span class="qty" role="group" aria-label="Anzahl ${esc(CAT_LABEL[cat])}"><button type="button" data-act="qty" data-cat="${cat}" data-d="-1" aria-label="eine weniger"${q<=1?" disabled":""}>−</button><output>${q}×</output><button type="button" data-act="qty" data-cat="${cat}" data-d="1" aria-label="eine mehr"${q>=max?" disabled":""}>+</button></span>`;
+}
+function renderSlots(parts,issues){
+  $("#slots").innerHTML=CATS.map(c=>{
+    const pick=state.picks[c.k],p=pick&&get(c.k,pick.id);
+    const own=issues.filter(i=>i.cats.includes(c.k)&&(i.level==="error"||i.level==="warn"));
+    const cat=`<div class="slot-cat"><span class="eyebrow">${esc(c.code)}</span><b>${esc(c.label)}</b></div>`;
+    if(!p)return `<div class="slot">${cat}<div class="slot-main"><span class="slot-empty">Noch nichts gewählt</span></div>
+      <div class="slot-side"><span class="price">–</span><div class="actions"><button type="button" class="btn primary" data-act="pick" data-cat="${c.k}">Auswählen</button></div></div></div>`;
+    const tag=pick.src==="user"?'<span class="tag user">Deine Wahl</span>':'<span class="tag auto">Ergänzt</span>';
+    const msgs=own.slice(0,2).map(i=>`<div class="slot-msg ${i.level}"><span class="sev ${i.level}">${SEV_LABEL[i.level]}</span><span>${esc(i.msg)}</span></div>`).join("");
+    const acts=[];if(QTY_CATS.includes(c.k)&&!p.none)acts.push(qtyCtl(c.k,parts));
+    acts.push(`<button type="button" class="btn" data-act="pick" data-cat="${c.k}">Ändern</button>`);
+    if(pick.src==="auto")acts.push(`<button type="button" class="btn" data-act="keep" data-cat="${c.k}" title="Als eigene Wahl festhalten, damit es nicht mehr automatisch getauscht wird">Behalten</button>`);
+    else acts.push(`<button type="button" class="btn ghost" data-act="remove" data-cat="${c.k}" aria-label="${esc(c.label)} entfernen">Entfernen</button>`);
+    const name=(QTY_CATS.includes(c.k)&&!p.none?parts.q[c.k]+"× ":"")+p.name;
+    return `<div class="slot">${cat}
+      <div class="slot-main"><div class="slot-name">${esc(name)} ${tag}${p.eol?' <span class="tag" style="background:var(--warn-soft);color:var(--warn)">Auslaufmodell</span>':""} ${tierDots(p.tier)}</div>
+        <div class="slot-spec">${esc(spec(c.k,p))}</div>${msgs}${upgradeTip(c.k,p,parts)}${priceLink(c.k,p)}${briefHtml(c.k,p,parts)}</div>
+      <div class="slot-side"><span class="price">${slotPrice(c.k,p,parts)}</span><div class="actions">${acts.join("")}</div></div></div>`;
+  }).join("");
+}
+function riskText(r){if(r==null)return "–";if(r<=0)return "praktisch null";const x=1/r;return x>=100000?"unter 1 zu 100.000":"1 zu "+num(x>=1000?Math.round(x/100)*100:x>=100?Math.round(x/10)*10:Math.round(x),0);}
+function renderSummary(parts,issues){
+  const m=calc(parts),p=P();
+  let count=0,autoSum=0;for(const c in state.picks){count++;if(state.picks[c].src==="auto")autoSum+=partCost(parts,c);}
+  const missing=CATS.filter(c=>!state.picks[c.k]).map(c=>c.label);
+  const b=state.budget;let budgetHtml="";
+  if(b){const over=m.total>b;budgetHtml=`<div class="kv"><span>Budget ${eur(b)}</span><span class="num">${over?"+"+eur(m.total-b)+" drüber":eur(b-m.total)+" übrig"}</span></div>
+    <div class="meter ${over?"bad":"ok"}" role="img" aria-label="${Math.round(m.total/b*100)} Prozent des Budgets"><span style="width:${Math.min(100,m.total/b*100)}%"></span></div>`;}
+  let cap="";
+  if(parts.hdd&&parts.nas){
+    const cls=m.usable>=p.cap?"ok":m.usable>=p.data?"warn":"bad";
+    cap=`<div class="card"><h2>Speicher <span class="eyebrow">${esc(m.raid)}</span></h2>
+      <div class="raid">${fmtTB(m.usable)} nutzbar <span class="subline" style="font-family:var(--f-body);font-weight:400">≈ ${num(m.tib)} TiB im Dateisystem</span></div>
+      <div class="kv"><span>Roh</span><span class="num">${parts.q.hdd}× ${parts.hdd.tb} TB = ${fmtTB(m.raw)}</span></div>
+      <div class="kv"><span>Ziel / Daten heute</span><span class="num">${fmtTB(p.cap)} / ${fmtTB(p.data)}</span></div>
+      <div class="meter ${cls}" role="img" aria-label="Nutzkapazität gegen Ziel"><span style="width:${Math.min(100,m.usable/Math.max(p.cap,0.1)*100)}%"></span></div>
+      <div class="kv"><span>Ausfallsicherheit</span><span class="num">${p.red?p.red+" Platte"+(p.red>1?"n":""):"keine"}</span></div>
+      <div class="kv"><span>Freie Schächte</span><span class="num">${Math.max(0,m.free)}${parts.nas.exp?` (+${parts.nas.exp-parts.nas.bays} mit Erweiterung)`:""}</span></div>
+      <div class="kv"><span>Rebuild nach Plattentausch</span><span class="num">ca. ${Math.round(m.rb)} h</span></div>
+      <div class="kv"><span>Risiko Datenverlust / Jahr*</span><span class="num">${riskText(m.risk)}</span></div>
+      <span class="subline">* grobe Modellrechnung ohne Backup, aus Ausfallraten und Rebuild-Dauer</span></div>`;
+  }
+  let perf="";
+  if(parts.nas){
+    perf=`<div class="card"><h2>Leistung und Strom <span class="eyebrow">Richtwerte</span></h2>
+      <div class="kv"><span>Kopieren übers Netz</span><span class="num">ca. ${m.sp.eff} MB/s</span></div>
+      <div class="subline">begrenzt durch: ${esc(m.sp.limit)} (Platten ${m.sp.disk} · Netz ${m.sp.net} MB/s)</div>
+      <div class="kv"><span>4K-Transcodes (Plex/Jellyfin)</span><span class="num">${m.t4||"keine"}</span></div>
+      <div class="kv"><span>RAM · Container · VMs</span><span class="num">${m.ram} GB · ~${m.cont} · ${m.vms}</span></div>
+      <div class="kv"><span>Leistungsaufnahme Ø (24/7)</span><span class="num">ca. ${Math.round(m.pw.avg)} W</span></div>
+      <div class="kv"><span>Strom pro Jahr</span><span class="num">${num(m.pw.kwh,0)} kWh · ${eur(m.pw.eur)}</span></div>
+      <div class="kv"><span>Lautstärke</span><span class="num">ca. ${Math.round(m.nz.db)} dB(A) · ${esc(m.nz.label)}</span></div></div>`;
+  }
+  const order={error:0,warn:1,info:2};const list=issues.slice().sort((a,b)=>order[a.level]-order[b.level]);
+  const errs=list.filter(i=>i.level==="error").length,warns=list.filter(i=>i.level==="warn").length;
+  let items=list.map(i=>`<li><span class="sev ${i.level}">${SEV_LABEL[i.level]}</span><span>${esc(i.msg)}</span></li>`).join("");
+  if(missing.length)items=`<li><span class="sev info">Offen</span><span>Noch nicht gewählt: ${esc(missing.join(", "))}.</span></li>`+items;
+  if(!errs&&!warns&&count)items=`<li><span class="sev ok">Passt</span><span>Alle gewählten Teile passen zusammen.</span></li>`+items;
+  const status=errs?`${errs} Konflikt${errs>1?"e":""}`:warns?`${warns} Hinweis${warns>1?"e":""} zur Abstimmung`:"keine Konflikte";
+  $("#summary").innerHTML=`
+    <div class="card">
+      <span class="eyebrow">Anschaffung · ${count} von ${CATS.length} Positionen</span>
+      <div class="total">${eur(m.total)}</div>
+      <div class="subline">${autoSum?`davon ${eur(autoSum)} für ergänzte Teile · `:""}laufend ca. ${eur(m.run)} pro Jahr · ${esc(PROFILE_NAME[state.profile])}</div>
+      ${budgetHtml}
+      <div class="kv"><span>Preis pro TB nutzbar</span><span class="num">${m.perTB?eur(m.perTB):"–"}</span></div>
+      <div class="row-btns">
+        <button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button>
+        <button type="button" class="btn" data-act="openPrint">Drucken</button>
+        <button type="button" class="btn" data-act="copy">Teileliste kopieren</button>
+        ${!state.auto&&missing.length?`<button type="button" class="btn" data-act="fill">Fehlende ergänzen</button>`:""}
+        <button type="button" class="btn" data-act="reset">Alles leeren</button>
+      </div>
+      <span class="toast" id="toast" role="status" aria-live="polite"></span>
+      <textarea id="copyFallback" hidden readonly aria-label="Teileliste zum Kopieren"></textarea>
+    </div>
+    <div class="card"><h2>Prüfung <span class="eyebrow">${esc(status)}</span></h2><ul class="issues">${items}</ul></div>
+    ${cap}${perf}`;
+}
+function render(){
+  const parts=resolve(state.picks),issues=checkAll(parts);
+  renderSlots(parts,issues);renderSummary(parts,issues);
+  document.querySelectorAll("#profileSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.profile===state.profile)));
+  document.querySelectorAll("#redSeg button").forEach(b=>b.setAttribute("aria-checked",String(Number(b.dataset.red)===P().red)));
+  const bi=$("#budget");if(document.activeElement!==bi)bi.value=state.budget||"";
+  const qc=$("#qCap");if(document.activeElement!==qc)qc.value=String(P().cap);
+  $("#autofill").checked=state.auto;
+  renderView();
+  if(state.view==="dash"){SLIDERS.forEach(d=>{const el=$("#sl-"+d.k);if(el&&document.activeElement!==el)el.value=sliderPos(d.k);const o=$("#out-"+d.k);if(o)o.textContent=sliderText(d.k);});renderDash(parts,issues);}
+  if(state.view==="ov")renderOverview(parts,issues);
+  if(state.view==="cmp")renderCompare(parts);
+}
+function renderView(){
+  const map={konfig:"#viewKonfig",dash:"#viewDash",ov:"#viewOv",cmp:"#viewCmp"};
+  for(const k in map)$(map[k]).hidden=state.view!==k;
+  document.querySelectorAll(".tabs button").forEach(b=>b.setAttribute("aria-selected",String(b.dataset.view===state.view)));
+}
+
+/* ---------- Dashboard ---------- */
+const CAT_COLOR={nas:"--c1",hdd:"--c2",ssd:"--c5",ram:"--c4",nic:"--c3",ups:"--c7",bak:"--c6"};
+const CAP_STEPS=[2,4,8,12,16,24,32,48,64,96,128];
+const SLIDERS=[
+ {k:"budget",label:"Budget",steps:[400,600,800,1000,1200,1500,2000,2500,3000,4000,5000,0],ends:["400 €","ohne Limit"],aff:"alle ergänzten Teile"},
+ {k:"cap",label:"Ziel-Nutzkapazität",steps:CAP_STEPS,ends:["2 TB","128 TB"],aff:"Festplatten, Backup"},
+ {k:"data",label:"Daten heute",steps:[0.5,1,2,3,5,8,12,16,24,32,48],ends:["0,5 TB","48 TB"],aff:"Backup, Festplatten"},
+ {k:"red",label:"Ausfallsicherheit",steps:[0,1,2],ends:["keine","2 Platten"],aff:"Festplatten"},
+ {k:"streams",label:"4K-Streams mit Transcoding",steps:[0,1,2,3,4,5,6],ends:["keine","6 gleichzeitig"],aff:"Arbeitsspeicher (und ergänztes NAS)"},
+ {k:"vms",label:"Virtuelle Maschinen",steps:[0,1,2,3,4,5,6,8],ends:["keine","8"],aff:"Arbeitsspeicher, SSD"},
+ {k:"net",label:"Netzwerk-Tempo",steps:[1,2.5,5,10],ends:["1 GbE","10 GbE"],aff:"Netzwerkkarte"},
+ {k:"quiet",label:"Lautstärke",steps:[0,10,20,30,40,50,60,70,80,90,100],ends:["egal (Keller)","flüsterleise (Wohnzimmer)"],aff:"Festplatten"},
+ {k:"bak",label:"Backup",steps:[0,1,2],ends:["keins","außer Haus"],aff:"Backup"}
+];
+const RELEASE={budget:[],cap:["hdd","bak"],data:["bak","hdd"],red:["hdd"],streams:["ram"],vms:["ram","ssd"],net:["nic"],quiet:["hdd"],bak:["bak"]};
+function sliderVal(k){return k==="budget"?(state.budget||0):P()[k];}
+function sliderPos(k){const d=SLIDERS.find(s=>s.k===k),v=sliderVal(k);let bi=0,bd=Infinity;d.steps.forEach((s,i)=>{const dd=k==="budget"&&!v?(s===0?0:Infinity):Math.abs(s-v);if(dd<bd){bd=dd;bi=i;}});return bi;}
+function sliderText(k){const v=sliderVal(k);
+  switch(k){case "budget":return v?eur(v):"ohne Limit";case "cap":return fmtTB(v)+" nutzbar";case "data":return fmtTB(v);case "red":return v?v+" Platte"+(v>1?"n":"")+" darf ausfallen":"keine Redundanz";
+    case "streams":return v?v+" gleichzeitig":"keine";case "vms":return v?v+" VM"+(v>1?"s":""):"keine";case "net":return fmtG(v);case "quiet":return v>=90?"flüsterleise":v>=60?"leise":v>=30?"normal":"egal";case "bak":return ["kein Backup","lokal (USB-Platte)","außer Haus (3-2-1)"][v];}
+  return String(v);}
+function renderSliders(){
+  $("#dSliders").innerHTML=SLIDERS.map(d=>`<div class="sl"><div class="sl-top"><label for="sl-${d.k}">${esc(d.label)}</label><output id="out-${d.k}">${esc(sliderText(d.k))}</output></div>
+    <input type="range" id="sl-${d.k}" data-slider="${d.k}" min="0" max="${d.steps.length-1}" step="1" value="${sliderPos(d.k)}">
+    <div class="sl-ends"><span>${esc(d.ends[0])}</span><span>${esc(d.ends[1])}</span></div><div class="sl-aff">wirkt auf: ${esc(d.aff)}</div></div>`).join("");
+  const p=P();
+  $("#dPowerSl").innerHTML=[
+    {k:"kwh",label:"Strompreis",min:0.2,max:0.5,step:0.01,f:v=>num(v,2)+" €/kWh"},
+    {k:"spin",label:"Platten im Ruhezustand",min:0,max:20,step:1,f:v=>v?v+" Stunden pro Tag":"nie (laufen durch)"},
+    {k:"upl",label:"Upload deiner Leitung",min:10,max:250,step:10,f:v=>v+" Mbit/s"}
+  ].map(s=>`<div class="sl"><div class="sl-top"><label for="ps-${s.k}">${esc(s.label)}</label><output id="pso-${s.k}">${esc(s.f(p[s.k]))}</output></div>
+    <input type="range" id="ps-${s.k}" data-param="${s.k}" min="${s.min}" max="${s.max}" step="${s.step}" value="${p[s.k]}"></div>`).join("")+`<p class="subline">Ruhezustand spart Strom, weckt die Platten aber bei jedem Zugriff (Wartezeit, mehr Anlaufzyklen).</p>`;
+}
+let undoSnap=null;
+function onSlider(k,raw){
+  if(!undoSnap)undoSnap=JSON.stringify(state);
+  const d=SLIDERS.find(s=>s.k===k),v=d.steps[Number(raw)];
+  if(k==="budget")state.budget=v||null;else state.params[k]=v;
+  for(const c of RELEASE[k])if(state.picks[c]&&state.picks[c].src==="user")delete state.picks[c];
+  if(state.auto)recompute();else{for(const c of RELEASE[k])delete state.picks[c];state.picks=fillMissing(state.picks);save();render();}
+}
+function gaugeSvg(frac,val,unit,color,ticks){
+  frac=Math.max(0,Math.min(1,frac));
+  const cx=80,cy=78,r=62,a0=Math.PI,a=a0-frac*Math.PI;
+  const P2=(ang,rr)=>[cx+rr*Math.cos(ang),cy-rr*Math.sin(ang)];
+  const [x1,y1]=P2(a0,r),[x2,y2]=P2(a,r),[x3,y3]=P2(0,r);
+  let t="";for(let i=0;i<=10;i++){const ang=a0-i/10*Math.PI,[ax,ay]=P2(ang,r+9),[bx,by]=P2(ang,r+(i%5===0?3:6));t+=`<line class="g-tick" x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}"/>`;}
+  (ticks||[]).forEach(tk=>{const ang=a0-Math.max(0,Math.min(1,tk))*Math.PI,[ax,ay]=P2(ang,r+11),[bx,by]=P2(ang,r-11);t+=`<line x1="${ax}" y1="${ay}" x2="${bx}" y2="${by}" stroke="var(--panel-ink)" stroke-width="2"/>`;});
+  return `<svg viewBox="0 0 160 96" aria-hidden="true"><path class="g-track" d="M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x3} ${y3}" stroke-width="11" stroke-linecap="round"/>
+   ${frac>0.005?`<path d="M ${x1} ${y1} A ${r} ${r} 0 0 1 ${x2} ${y2}" stroke="${color}" stroke-width="11" fill="none" stroke-linecap="round"/>`:""}${t}
+   <text class="g-val" x="80" y="74" text-anchor="middle">${val}</text><text class="g-unit" x="80" y="90" text-anchor="middle">${unit}</text></svg>`;
+}
+function stateColor(level){return level==="ok"?"var(--g-ok)":level==="warn"?"var(--g-warn)":level==="bad"?"var(--g-bad)":"var(--g-acc)";}
+function renderGauges(parts,m){
+  const p=P(),items=[],cmax=Math.max(p.cap*1.5,4);
+  items.push({lbl:"Nutzkapazität",frac:m.usable/cmax,val:m.usable?num(m.usable,0):"–",unit:"TB",lv:!m.usable?"bad":m.usable>=p.cap?"ok":m.usable>=p.data?"warn":"bad",sub:`Ziel ${fmtTB(p.cap)}`,ticks:[p.cap/cmax]});
+  items.push({lbl:"Füllstand heute",frac:m.fill,val:m.usable?Math.round(m.fill*100):"–",unit:"%",lv:!m.usable?"":m.fill>0.85?"bad":m.fill>0.7?"warn":"ok",sub:`${fmtTB(p.data)} von ${fmtTB(m.usable)}`,ticks:[0.8]});
+  const bu=state.budget?m.total/state.budget:0;items.push({lbl:"Budget",frac:bu,val:state.budget?Math.round(bu*100):"–",unit:state.budget?"%":"kein Limit",lv:!state.budget?"":bu>1?"bad":bu>0.95?"warn":"ok",sub:state.budget?`${eur(m.total)} von ${eur(state.budget)}`:eur(m.total),ticks:state.budget?[1]:[]});
+  items.push({lbl:"Strom Ø 24/7",frac:m.pw.avg/100,val:Math.round(m.pw.avg),unit:"Watt",lv:m.pw.avg<30?"ok":m.pw.avg<60?"warn":"bad",sub:`${eur(m.pw.eur)} pro Jahr`});
+  items.push({lbl:"Lautstärke",frac:clamp((m.nz.db-18)/22,0,1),val:m.nz.db?Math.round(m.nz.db):"–",unit:"dB(A)",lv:m.nz.cls,sub:m.nz.label,ticks:[clamp((quietTarget()-18)/22,0,1)]});
+  items.push({lbl:"Preis pro TB",frac:m.perTB?Math.min(1,m.perTB/120):0,val:m.perTB?Math.round(m.perTB):"–",unit:"€ je TB",lv:!m.perTB?"":m.perTB<=45?"ok":m.perTB<=75?"warn":"bad",sub:"nutzbar, weniger ist besser"});
+  $("#dGauges").innerHTML=items.map(i=>`<div class="gauge" role="img" aria-label="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)}" data-tip="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)} · ${esc(i.sub)}">${gaugeSvg(i.frac,esc(String(i.val)),esc(i.unit),stateColor(i.lv),i.ticks)}<span class="g-lbl">${esc(i.lbl)}</span><span class="g-sub">${esc(i.sub)}</span></div>`).join("");
+}
+function kpiHtml(parts,m,issues){
+  const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
+  const k=[
+    ["Anschaffung",eur(m.total),state.budget?`Budget ${eur(state.budget)}`:"ohne Budget"],
+    ["Laufend",eur(m.run)+"/J.",`Strom ${eur(m.pw.eur)}${bakMonthly(parts.bak)?" + Cloud":""}`],
+    ["Nutzkapazität",fmtTB(m.usable),`≈ ${num(m.tib)} TiB · ${m.raid}`],
+    ["Ausfallsicherheit",P().red?P().red+" Platte"+(P().red>1?"n":""):"keine",`Rebuild ca. ${Math.round(m.rb)} h`],
+    ["Durchsatz",m.sp.eff+" MB/s",`begrenzt: ${m.sp.limit||"–"}`],
+    ["Prüfung",errs?errs+" Konflikt"+(errs>1?"e":""):warns?warns+" Hinweis"+(warns>1?"e":""):"passt",`<span class="pill ${errs?"bad":warns?"warn":"ok"}">${errs?"Konflikt":warns?"Achtung":"OK"}</span>`]
+  ];
+  return k.map(x=>`<div class="kpi"><span class="eyebrow">${esc(x[0])}</span><b>${esc(x[1])}</b><small>${x[2].startsWith("<span")?x[2]:esc(x[2])}</small></div>`).join("");
+}
+function lvlCls(v,t){return v<t[0]?"f0":v<t[1]?"f1":v<t[2]?"f2":"f3";}
+function renderApps(parts,m){
+  const p=P(),nas=parts.nas,bak=parts.bak,sp=m.sp;
+  const g=(lbl,val,cls,note)=>`<tr><td>${esc(lbl)}</td><td class="v"><span class="lvl ${cls}">${esc(val)}</span></td><td class="subline">${esc(note)}</td></tr>`;
+  const grp=t=>`<tr class="grp"><td colspan="3">${esc(t)}</td></tr>`;
+  const photoMin=sp.eff?100000/(sp.eff*0.55)/60:0;
+  const usbMB=Math.min(sp.disk||180,180),fullH=p.data*1e6/usbMB/3600;
+  const cloudD=p.data*8e6/(p.upl*0.85)/86400;
+  const direct=sp.lan?Math.floor(sp.lan*1000/100):0;
+  const sw=nas?Math.floor(nas.cs/18):0;
+  const ai=nas?nas.cs+(nas.av1?5:0):0;
+  let h=`<table class="apps vals"><thead><tr><th>Aufgabe</th><th style="text-align:right">Wert</th><th>Erläuterung</th></tr></thead><tbody>`;
+  h+=grp("Dateien");
+  h+=g("Große Datei kopieren",sp.eff?sp.eff+" MB/s":"–",lvlCls(sp.eff,[100,250,600]),sp.limit?`begrenzt durch ${sp.limit}`:"");
+  h+=g("100 GB Fotos übertragen",photoMin?Math.max(1,Math.round(photoMin))+" min":"–",photoMin?(photoMin>20?"f0":photoMin>8?"f1":photoMin>3?"f2":"f3"):"f0","viele kleine Dateien, ca. 55 % des Spitzentempos");
+  h+=g("Erst-Backup aller Daten",bak&&!bak.none?(bak.kind==="cloud"?num(cloudD,cloudD<10?1:0)+" Tage":num(fullH,fullH<10?1:0)+" h"):"kein Backup",!bak||bak.none?"f0":bak.kind==="cloud"?(cloudD>14?"f1":"f2"):"f2",bak&&bak.kind==="cloud"?`${fmtTB(p.data)} bei ${p.upl} Mbit/s Upload`:`${fmtTB(p.data)} auf USB-Platte (ca. ${usbMB} MB/s)`);
+  h+=grp("Medien und Fotos");
+  h+=g("4K-Film direkt abspielen",direct?(direct>20?"über 20":direct)+" Streams":"–",direct>=4?"f3":direct?"f2":"f0","ca. 100 Mbit/s je Remux-Stream, Netzwerk begrenzt");
+  h+=g("4K → 1080p umrechnen (Hardware)",m.t4?m.t4+" gleichzeitig":"nicht möglich",m.t4>=p.streams&&m.t4?(m.t4>=4?"f3":"f2"):m.t4?"f1":"f0",nas&&nas.t4?(nas.amdgpu?"AMD-Grafik: Jellyfin gut, Plex eingeschränkt":"Intel Quick Sync, Plex Pass bzw. Jellyfin"):"keine Grafikeinheit");
+  h+=g("1080p umrechnen (Software)",sw?sw+" gleichzeitig":"kaum",sw>=3?"f2":sw?"f1":"f0","nur mit CPU, laut und stromhungrig");
+  h+=g("Foto-KI (Gesichter, Objekte)",!nas?"–":ai<10?"sehr langsam":ai<20?"langsam":ai<35?"ordentlich":"schnell",!nas?"f0":ai<10?"f0":ai<20?"f1":ai<35?"f2":"f3","Immich, Synology Photos, QuMagie; erster Durchlauf dauert bei großen Bibliotheken Tage");
+  h+=grp("Homelab");
+  h+=g("Docker-Container (leicht)",nas&&nas.docker?"ca. "+m.cont:"nicht möglich",!nas||!nas.docker?"f0":m.cont>=20?"f3":m.cont>=8?"f2":"f1","z. B. Home Assistant, Pi-hole, Paperless, Nextcloud");
+  h+=g("Virtuelle Maschinen",nas&&nas.vm?String(m.vms):"nicht möglich",!nas||!nas.vm?"f0":m.vms>=Math.max(1,p.vms)?(m.vms>=4?"f3":"f2"):"f1",`je ca. 4 GB RAM und 1 Kern; ${m.ram} GB RAM vorhanden`);
+  h+=grp("Datensicherheit");
+  h+=g("Plattenausfälle verkraftbar",String(p.red),p.red===0?"f0":p.red===1?"f2":"f3",m.raid);
+  h+=g("Rebuild nach Plattentausch",m.rb?"ca. "+Math.round(m.rb)+" h":"–",m.rb>36?"f1":"f2","Platten laufen in dieser Zeit unter Volllast");
+  h+=g("Risiko Datenverlust pro Jahr",riskText(m.risk),m.risk==null?"f0":m.risk>0.01?"f0":m.risk>0.001?"f1":m.risk>0.0001?"f2":"f3","grobe Modellrechnung ohne Backup");
+  h+=g("Kopie außer Haus",bak&&bak.offsite?"ja":"nein",bak&&bak.offsite?"f3":"f0","schützt vor Brand, Diebstahl, Ransomware");
+  return h+`</tbody></table>`;
+}
+/* Leistungsprofil */
+const RADAR_AX=["Kapazität","Sicherheit","Tempo","Medien","Homelab","Effizienz","Leise","Preis-Leistung"];
+function profileScores(parts){
+  const m=calc(parts),p=P(),nas=parts.nas,bak=parts.bak;
+  const capS=Math.min(100,(p.cap?Math.min(1,m.usable/p.cap)*80:0)+(nas?Math.min(20,Math.max(0,m.free)*7):0));
+  let sec=p.red*30+(bak&&!bak.none?(bak.offsite?30:18):0)+(parts.ups&&!parts.ups.none?10:0)+(nas&&nas.ecc?5:0)+(parts.hdd&&parts.hdd.warr>=5?5:0);sec=Math.min(100,sec);
+  const tempo=Math.min(100,m.sp.eff/600*100);
+  const med=nas?Math.min(100,m.t4/6*70+(nas.av1?10:0)+Math.min(20,m.usable/40*20)):0;
+  const lab=nas?Math.min(100,nas.cs/100*40+Math.min(30,m.ram/64*30)+(nas.vm?10:0)+(nas.docker?5:0)+(parts.ssd&&!parts.ssd.none?10:0)+(nas.ecc?5:0)):0;
+  const eff=m.pw.avg?Math.min(100,m.usable/m.pw.avg*100):0;
+  const leise=m.nz.db?Math.max(0,Math.min(100,100-(m.nz.db-20)*5)):0;
+  const pl=m.total?Math.min(100,m.usable/(m.total/1000)*5):0;
+  return [capS,sec,tempo,med,lab,eff,leise,pl].map(v=>Math.round(v));
+}
+function radarSvg(series){
+  const W=420,H=330,cx=210,cy=168,R=112,n=RADAR_AX.length;
+  const pt=(i,v)=>{const ang=-Math.PI/2+i/n*2*Math.PI;return [cx+Math.cos(ang)*R*v/100,cy+Math.sin(ang)*R*v/100];};
+  let s=`<svg class="radar" viewBox="0 0 ${W} ${H}" role="img" aria-label="Leistungsprofil">`;
+  [25,50,75,100].forEach(l=>{s+=`<polygon class="r-grid" points="${RADAR_AX.map((_,i)=>pt(i,l).join(",")).join(" ")}"/>`;});
+  RADAR_AX.forEach((ax,i)=>{const [x,y]=pt(i,100),[lx,ly]=pt(i,118);s+=`<line class="r-axis" x1="${cx}" y1="${cy}" x2="${x}" y2="${y}"/><text x="${lx}" y="${ly+4}" text-anchor="${Math.abs(lx-cx)<8?"middle":lx<cx?"end":"start"}">${esc(ax)}</text>`;});
+  [50,100].forEach(l=>{const [x,y]=pt(0,l);s+=`<text class="r-num" x="${x+4}" y="${y+3}">${l}</text>`;});
+  series.forEach(se=>{s+=`<polygon points="${se.v.map((v,i)=>pt(i,Math.max(3,v)).join(",")).join(" ")}" fill="${se.color}" fill-opacity="${se.fill}" stroke="${se.color}" stroke-width="2" ${se.dash?'stroke-dasharray="5 4"':""}/>`;
+    se.v.forEach((v,i)=>{const [x,y]=pt(i,Math.max(3,v));s+=`<circle cx="${x}" cy="${y}" r="4" fill="${se.color}" data-tip="${esc(RADAR_AX[i])}: ${v} von 100${se.dash?" (Vergleich)":" (deine Konfiguration)"}"/>`;});});
+  return s+`</svg>`;
+}
+const VKEY="naswerkbank.variants";
+function loadVariants(){try{return JSON.parse(localStorage.getItem(VKEY)||"{}")||{};}catch(e){return {};}}
+function saveVariant(slot){const v=loadVariants();v[slot]={picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,saved:new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"})};try{localStorage.setItem(VKEY,JSON.stringify(v));}catch(e){}}
+let cmpSel="preset:starter";
+function withTemp(tmp,fn){const s=state;state=Object.assign({},s,tmp);try{return fn();}finally{state=s;}}
+function buildConfig(key){
+  if(key.startsWith("preset:")){const pr=PRESETS.find(x=>x.id===key.slice(7));if(!pr)return null;
+    const params=Object.assign({},DEF_PARAMS,pr.params,{kwh:P().kwh,spin:P().spin,upl:P().upl});
+    const user={};for(const c in pr.user||{})user[c]={id:pr.user[c],src:"user"};
+    const picks=withTemp({params,profile:pr.profile,budget:pr.budget},()=>fillMissing(user));
+    return {name:"Vorlage „"+pr.name+"“",picks,params,profile:pr.profile,budget:pr.budget};}
+  if(key.startsWith("var:")){const v=loadVariants()[key.slice(4)];return v?{name:"Variante "+key.slice(4)+" ("+v.saved+")",picks:v.picks,params:Object.assign({},DEF_PARAMS,v.params),profile:v.profile,budget:v.budget}:null;}
+  if(key.startsWith("save:")){const x=loadSaves().find(y=>y.id===key.slice(5));return x?{name:x.name,picks:x.picks,params:Object.assign({},DEF_PARAMS,x.params),profile:x.profile,budget:x.budget}:null;}
+  return null;
+}
+function cfgMetrics(cfg){return withTemp({params:cfg.params,profile:cfg.profile,budget:cfg.budget},()=>{const parts=resolve(cfg.picks);return {parts,m:calc(parts),sc:profileScores(parts),iss:checkAll(parts)};});}
+function renderRadarAndCompare(parts){
+  const v=loadVariants(),saves=loadSaves();
+  const opts=PRESETS.map(p=>[`preset:${p.id}`,`Vorlage: ${p.name}`]).concat(["A","B"].filter(s=>v[s]).map(s=>[`var:${s}`,`Variante ${s} (${v[s].saved})`])).concat(saves.map(x=>[`save:${x.id}`,`Gespeichert: ${x.name}`]));
+  if(!opts.some(o=>o[0]===cmpSel))cmpSel=opts[0][0];
+  $("#dCmpSel").innerHTML=opts.map(o=>`<option value="${esc(o[0])}"${o[0]===cmpSel?" selected":""}>${esc(o[1])}</option>`).join("");
+  const cfg=buildConfig(cmpSel),mine={parts,m:calc(parts),sc:profileScores(parts),iss:checkAll(parts)},other=cfg?cfgMetrics(cfg):null;
+  const series=[{v:mine.sc,color:"var(--accent)",fill:0.22}];if(other)series.push({v:other.sc,color:"var(--c3)",fill:0.06,dash:true});
+  $("#dRadar").innerHTML=radarSvg(series);
+  $("#dRadarLegend").innerHTML=`<div class="rl"><span class="h">Achse</span><span class="h">Du</span><span class="h">Vergleich</span>${RADAR_AX.map((a,i)=>`<span>${esc(a)}</span><span class="num">${mine.sc[i]}</span><span class="num">${other?other.sc[i]:"–"}</span>`).join("")}</div>
+    <div class="legend" style="margin-top:6px"><span><i style="background:var(--accent)"></i>deine Konfiguration</span><span><i style="background:var(--c3)"></i>${esc(cfg?cfg.name:"–")}</span></div>`;
+  $("#dCmpName").textContent=cfg?"gegen "+cfg.name:"";
+  if(!other){$("#dCompare").innerHTML="";return;}
+  const a=mine.m,b=other.m;
+  const row=(l,x,y,diff)=>`<tr${diff?' class="diff"':""}><td>${esc(l)}</td><td class="num">${esc(x)}</td><td class="num">${esc(y)}</td></tr>`;
+  let h=`<table class="cmp"><thead><tr><th>Kennzahl</th><th style="text-align:right">Deine Konfiguration</th><th style="text-align:right">${esc(cfg.name)}</th></tr></thead><tbody>`;
+  h+=`<tr class="grp"><td colspan="3">Kennzahlen</td></tr>`;
+  h+=row("Anschaffung",eur(a.total),eur(b.total),Math.abs(a.total-b.total)>a.total*0.1);
+  h+=row("Laufend pro Jahr",eur(a.run),eur(b.run),Math.abs(a.run-b.run)>20);
+  h+=row("Gesamt über 5 Jahre",eur(a.total+5*a.run),eur(b.total+5*b.run),false);
+  h+=row("Nutzkapazität",fmtTB(a.usable),fmtTB(b.usable),Math.abs(a.usable-b.usable)>=4);
+  h+=row("RAID",a.raid,b.raid,a.raid!==b.raid);
+  h+=row("Durchsatz",a.sp.eff+" MB/s",b.sp.eff+" MB/s",Math.abs(a.sp.eff-b.sp.eff)>100);
+  h+=row("4K-Transcodes",String(a.t4),String(b.t4),a.t4!==b.t4);
+  h+=row("VMs / RAM",`${a.vms} / ${a.ram} GB`,`${b.vms} / ${b.ram} GB`,a.ram!==b.ram);
+  h+=row("Strom Ø",Math.round(a.pw.avg)+" W",Math.round(b.pw.avg)+" W",Math.abs(a.pw.avg-b.pw.avg)>8);
+  h+=row("Lautstärke",Math.round(a.nz.db)+" dB(A)",Math.round(b.nz.db)+" dB(A)",Math.abs(a.nz.db-b.nz.db)>3);
+  h+=row("Preis pro TB",a.perTB?eur(a.perTB):"–",b.perTB?eur(b.perTB):"–",false);
+  h+=row("Konflikte / Hinweise",`${mine.iss.filter(i=>i.level==="error").length} / ${mine.iss.filter(i=>i.level==="warn").length}`,`${other.iss.filter(i=>i.level==="error").length} / ${other.iss.filter(i=>i.level==="warn").length}`,false);
+  h+=`<tr class="grp"><td colspan="3">Profil</td></tr>`;
+  RADAR_AX.forEach((ax,i)=>{h+=row(ax,String(mine.sc[i]),String(other.sc[i]),Math.abs(mine.sc[i]-other.sc[i])>=15);});
+  h+=`<tr class="grp"><td colspan="3">Bauteile</td></tr>`;
+  const nm=(pp,c)=>{const x=pp[c];if(!x)return "–";return (QTY_CATS.includes(c)&&!x.none?pp.q[c]+"× ":"")+x.name;};
+  CATS.forEach(c=>{const x=nm(parts,c.k),y=nm(other.parts,c.k);h+=`<tr${x!==y?' class="diff"':""}><td>${esc(c.label)}</td><td>${esc(x)}</td><td>${esc(y)}</td></tr>`;});
+  $("#dCompare").innerHTML=h+`</tbody></table>`;
+}
+function renderAlt(parts){
+  const h=parts.hdd,n=parts.q.hdd;if(!h){$("#dAlt").innerHTML=`<p class="subline">Erst Festplatten wählen.</p>`;return;}
+  const keepBak={bak:parts.bak,ups:parts.ups};
+  const rows=DB.nas.filter(x=>!x.eol&&x.bays>=n).map(x=>{
+    const base={q:{hdd:n,ssd:0},hdd:h};if(keepBak.bak)base.bak=keepBak.bak;if(keepBak.ups)base.ups=keepBak.ups;
+    const r=evalCombo(base,x,h,n),iss=checkAll(r.parts);return {x,r,m:calc(r.parts),e:iss.filter(i=>i.level==="error").length,w:iss.filter(i=>i.level==="warn").length};
+  }).sort((a,b)=>b.r.val-a.r.val);
+  const cur=parts.nas&&parts.nas.id,top=rows.slice(0,8);if(cur&&!top.some(r=>r.x.id===cur)){const c=rows.find(r=>r.x.id===cur);if(c)top.push(c);}
+  const t0=cost(parts);
+  $("#dAlt").innerHTML=`<p class="subline" style="margin:0 0 8px">Mit ${n}× ${esc(h.name)}; RAM, SSD und Netzwerkkarte werden je Gerät passend ergänzt. Sortiert nach Eignung für ${esc(PROFILE_NAME[state.profile])}.</p>
+   <table class="ctable"><thead><tr><th>Gerät</th><th>CPU / 4K-Transcodes</th><th>Netzwerk</th><th class="num">Strom/Jahr</th><th class="num">Gesamtpreis</th><th></th></tr></thead><tbody>${top.map(r=>`<tr class="${r.x.id===cur?"me":""}">
+     <td><b>${esc(r.x.name)}</b><br><span class="subline">${r.x.bays} Schächte · ${esc(r.x.os)}${r.e?` · <span style="color:var(--bad)">${r.e} Konflikt${r.e>1?"e":""}</span>`:r.w?` · <span style="color:var(--warn)">${r.w} Hinweis${r.w>1?"e":""}</span>`:""}</span></td>
+     <td>${esc(r.x.cpu)}<br><span class="subline">${r.x.t4?r.x.t4+" gleichzeitig":"keine"} · ${r.m.ram} GB RAM</span></td>
+     <td>${esc(lanText(r.x.lan))}</td><td class="num">${eur(r.m.pw.eur)}</td>
+     <td class="num">${eur(r.r.total)}<br><small class="${r.r.total>t0?"delta-neg":r.r.total<t0?"delta-pos":""}">${r.x.id===cur?"aktuell":deltaPrice(r.r.total-t0)}</small></td>
+     <td class="num">${r.x.id===cur?"":`<button type="button" class="btn" data-act="take" data-cat="nas" data-id="${esc(r.x.id)}">Übernehmen</button>`}</td></tr>`).join("")}</tbody></table>`;
+}
+function renderCloud(parts,m){
+  const p=P(),nas5=m.total+5*m.run;
+  const rows=CLOUD.map(c=>{const fits=c.tb>=p.data;const c5=c.yr*5;const be=fits&&c.yr>m.run?m.total/(c.yr-m.run):null;return {c,fits,c5,be};});
+  const best=rows.filter(r=>r.fits).sort((a,b)=>a.c5-b.c5)[0];
+  const verdict=!best?`Für ${fmtTB(p.data)} gibt es kaum bezahlbare Privat-Abos; ein NAS ist hier praktisch alternativlos.`:best.c5>nas5?`Über 5 Jahre ist dein NAS (${eur(nas5)}) günstiger als das günstigste passende Abo (${esc(best.c.n)}, ${eur(best.c5)})${best.be?`; es hat sich nach ca. ${num(best.be,1)} Jahren bezahlt gemacht`:""}.`:`Über 5 Jahre ist ${esc(best.c.n)} (${eur(best.c5)}) günstiger als dein NAS (${eur(nas5)}). Das NAS bietet dafür ${fmtTB(m.usable)} Platz, lokales Tempo und volle Datenhoheit.`;
+  $("#dCloud").innerHTML=`<p class="verdict-box">${verdict}</p>
+   <div class="scroll"><table class="ctable"><thead><tr><th>Angebot</th><th class="num">Speicher</th><th class="num">pro Jahr</th><th class="num">5 Jahre</th><th>passt für ${esc(fmtTB(p.data))}?</th></tr></thead><tbody>
+   <tr class="me"><td><b>Dein NAS</b> (inkl. Strom${bakMonthly(parts.bak)?" und Cloud-Backup":""})</td><td class="num">${fmtTB(m.usable)}</td><td class="num">${eur(m.run)} + ${eur(m.total)} einmalig</td><td class="num">${eur(nas5)}</td><td>${m.usable>=p.data?"ja":"nein"}</td></tr>
+   ${rows.map(r=>`<tr${r===best?' class="best"':""}><td>${esc(r.c.n)}</td><td class="num">${fmtTB(r.c.tb)}</td><td class="num">${eur(r.c.yr)}</td><td class="num">${eur(r.c5)}</td><td>${r.fits?(r.be?`ja · NAS günstiger ab Jahr ${num(r.be,1)}`:"ja"):"zu klein"}</td></tr>`).join("")}</tbody></table></div>
+   <p class="subline">Abo-Preise sind Listenpreise im Jahresabo (Schätzung, Stand 2026). Ein Cloud-Abo ersetzt kein Backup des NAS, ein NAS ohne Kopie außer Haus aber auch kein Cloud-Backup.</p>`;
+}
+function savingsList(parts){
+  const out=[];
+  for(const c of CATK){const cur=parts[c];if(!cur||cur.none)continue;
+    const ctx=withPart(parts,c,null);if(QTY_CATS.includes(c))ctx.q[c]=parts.q[c];
+    const base=betterMetric(c,cur,parts),own=checkAll(parts).filter(i=>i.cats.includes(c)&&(i.level==="error"||i.level==="warn")).length;
+    DB[c].forEach(p=>{if(p.id===cur.id||p.none||p.eol)return;
+      const d=priceOf(c,cur,parts)-priceOf(c,p,parts);if(d<10)return;
+      const test=withPart(parts,c,p,QTY_CATS.includes(c)?parts.q[c]:undefined);
+      if(betterMetric(c,p,test)<base-0.01)return;
+      if(c==="nas"&&(p.t4<Math.min(cur.t4,Math.max(P().streams,1))||Math.max(...p.lan)<Math.max(...cur.lan)||p.cs<cur.cs*0.9||p.ecc<cur.ecc))return;
+      const iss=checkAll(test).filter(i=>i.cats.includes(c)&&(i.level==="error"||i.level==="warn")).length;if(iss>own)return;
+      out.push({c,cur,p,d});});}
+  const best={};out.forEach(o=>{if(!best[o.c]||o.d>best[o.c].d)best[o.c]=o;});
+  return Object.values(best).sort((a,b)=>b.d-a.d);
+}
+function renderSave(parts){
+  const l=savingsList(parts);
+  $("#dSave").innerHTML=l.length?`<div class="up"><span class="h">Statt</span><span class="h">Lieber</span><span class="h">Ersparnis</span><span class="h"></span>${l.map(o=>`<span>${esc(CAT_LABEL[o.c])}: ${esc(o.cur.name)}</span><span><b>${esc(o.p.name)}</b><br><span class="subline">${esc(spec(o.c,o.p))}</span></span><span class="delta-pos">−${eur(o.d)}${o.c==="bak"?" (5 J.)":""}</span><button type="button" class="btn" data-act="take" data-cat="${o.c}" data-id="${esc(o.p.id)}">Tauschen</button>`).join("")}</div>
+   <p class="subline">Nur Teile, die mindestens gleich viel bieten und keinen neuen Konflikt bringen. Summe: ${eur(l.reduce((s,o)=>s+o.d,0))}.</p>`:`<p class="subline">Keine gleichwertigen günstigeren Teile gefunden. Die Auswahl ist schon preiswert.</p>`;
+}
+function renderRaid(parts){
+  const h=parts.hdd,n=parts.q.hdd;if(!h){$("#dRaid").innerHTML="";return;}
+  const raw=n*h.tb;
+  $("#dRaid").innerHTML=[0,1,2].map(r=>{const u=usableTB(n,h.tb,r),ok=n>=minN(r),cur=r===P().red;
+    return `<div class="bar-row click${cur?" cur":""}" data-act="setred" data-red="${r}" role="button" tabindex="0" data-tip="${esc(raidName(parts.nas,n,r))}: ${esc(fmtTB(u))} nutzbar">
+      <span class="lbl">${r?r+" Platte"+(r>1?"n":""):"keine"}</span><span class="bar-track"><span class="bar-fill${ok?"":" limited"}" style="width:${raw?u/raw*100:0}%;background:${cur?"var(--accent)":"var(--c8)"}"></span></span><span class="num">${ok?fmtTB(u):"–"}</span></div>`;}).join("")+
+    `<p class="subline">${n}× ${h.tb} TB = ${fmtTB(raw)} roh. ${n<4?"Doppelte Redundanz braucht mindestens 4 Platten. ":""}Klick wählt die Stufe.</p>`;
+}
+function renderCost(parts,m){
+  const segs=CATS.map(c=>({c,v:partCost(parts,c.k)})).filter(s=>s.v>0);
+  $("#dCostSum").textContent=eur(m.total)+" einmalig";
+  $("#dCost").innerHTML=`<div class="stack" role="img" aria-label="Kostenverteilung">${segs.map(s=>`<span class="click" data-act="pick" data-cat="${s.c.k}" style="width:${s.v/m.total*100}%;background:var(${CAT_COLOR[s.c.k]})" data-tip="${esc(s.c.label)}: ${esc(eur(s.v))} (${Math.round(s.v/m.total*100)} %)"></span>`).join("")}</div>
+   <div class="legend" style="margin-top:8px">${segs.map(s=>`<span><i style="background:var(${CAT_COLOR[s.c.k]})"></i>${esc(s.c.label)} ${esc(eur(s.v))}</span>`).join("")}</div>
+   <div class="kv" style="margin-top:10px"><span>Strom pro Jahr</span><span class="num">${eur(m.pw.eur)}</span></div>
+   ${bakMonthly(parts.bak)?`<div class="kv"><span>Cloud-Backup pro Jahr</span><span class="num">${eur(12*bakMonthly(parts.bak))}</span></div>`:""}
+   <div class="kv"><span>Gesamt über 5 Jahre</span><span class="num">${eur(m.total+5*m.run)}</span></div>`;
+}
+function renderPerTb(parts){
+  const list=DB.hdd.filter(h=>!h.eol).map(h=>({h,v:h.price/h.tb})).sort((a,b)=>a.v-b.v),max=Math.max(...list.map(x=>x.v));
+  const cur=parts.hdd&&parts.hdd.id;
+  $("#dPerTb").innerHTML=list.map(x=>`<div class="bar-row click${x.h.id===cur?" cur":""}" data-act="take" data-cat="hdd" data-id="${esc(x.h.id)}" role="button" tabindex="0" data-tip="${esc(x.h.name)}: ${esc(eur(x.h.price))} · ${esc(CLS_LABEL[x.h.cls])}${x.h.smr?" · SMR":""}">
+    <span class="lbl">${esc(x.h.name.replace(/^(Seagate|Toshiba|Synology|WD) /,""))}</span><span class="bar-track"><span class="bar-fill" style="width:${x.v/max*100}%;background:var(${x.h.cls==="ent"?"--c8":x.h.cls==="naspro"?"--c2":x.h.smr?"--c6":"--c1"})"></span></span><span class="num">${num(x.v,1)} €</span></div>`).join("")+
+   `<div class="legend"><span><i style="background:var(--c1)"></i>NAS</span><span><i style="background:var(--c2)"></i>NAS-Pro</span><span><i style="background:var(--c8)"></i>Enterprise</span><span><i style="background:var(--c6)"></i>SMR</span></div>`;
+}
+function renderSteps(parts){
+  const h=parts.hdd,n=parts.q.hdd,nas=parts.nas,rows=[];if(!h||!nas){$("#dSteps").innerHTML="";return;}
+  const red=P().red,u0=usableTB(n,h.tb,red),pool=DB.hdd.filter(x=>!x.eol&&!x.smr&&x.cls!=="desktop"&&!(x.rated&&nas.bays>x.rated));
+  const cheapest=tb=>pool.filter(x=>x.tb===tb).sort((a,b)=>a.price-b.price)[0];
+  const sizes=[...new Set(pool.map(x=>x.tb))].sort((a,b)=>a-b),i=sizes.indexOf(h.tb);
+  const add=(lbl,dp,du,act)=>rows.push({lbl,dp,du,act});
+  if(i>0){const x=cheapest(sizes[i-1]);add(`${n}× ${x.name}`,n*(x.price-h.price),usableTB(n,x.tb,red)-u0,`data-act="take" data-cat="hdd" data-id="${x.id}"`);}
+  if(i>=0&&i<sizes.length-1){const x=cheapest(sizes[i+1]);add(`${n}× ${x.name}`,n*(x.price-h.price),usableTB(n,x.tb,red)-u0,`data-act="take" data-cat="hdd" data-id="${x.id}"`);}
+  if(n>Math.max(1,minN(red)))add(`${n-1}× ${h.name}`,-h.price,usableTB(n-1,h.tb,red)-u0,`data-act="qty" data-cat="hdd" data-d="-1"`);
+  if(n<nas.bays)add(`${n+1}× ${h.name}`,h.price,usableTB(n+1,h.tb,red)-u0,`data-act="qty" data-cat="hdd" data-d="1"`);
+  rows.sort((a,b)=>a.dp-b.dp);
+  $("#dSteps").innerHTML=`<div class="up"><span class="h">Variante</span><span class="h">Preis</span><span class="h">Nutzbar</span><span class="h"></span>${rows.map(r=>`<span>${esc(r.lbl)}</span><span class="${r.dp>0?"delta-neg":"delta-pos"}">${r.dp>0?"+":""}${eur(r.dp)}</span><span class="${r.du>=0?"delta-pos":"delta-neg"}">${r.du>=0?"+":"−"}${fmtTB(Math.abs(r.du))}</span><button type="button" class="btn" ${r.act}>Wählen</button>`).join("")}</div>
+   <p class="subline">Ausgehend von ${n}× ${esc(h.name)} (${fmtTB(u0)} nutzbar).</p>`;
+}
+function renderParts(parts,m){
+  $("#dPartsSum").textContent=eur(m.total);
+  $("#dParts").innerHTML=CATS.map(c=>{const pk=state.picks[c.k],x=parts[c.k];const ch=pk&&prevIds[c.k]&&prevIds[c.k]!==pk.id+"×"+(pk.qty||1);
+    return `<div class="prow${ch?" changed":""}"><span class="eyebrow">${esc(c.label)}</span><span class="nm">${x?esc((QTY_CATS.includes(c.k)&&!x.none?parts.q[c.k]+"× ":"")+x.name):"–"}${ch?" · neu":""}</span><span class="num">${x?(c.k==="bak"&&bakMonthly(x)?eur2(bakMonthly(x))+"/M.":eur(partCost(parts,c.k))):""}</span></div>`;}).join("");
+}
+function renderPower(parts,m,issues){
+  const pw=m.pw,p=P(),r=[["NAS-Grundlast",pw.base],["Festplatten",pw.drv],["SSDs",pw.ssd],["Netzwerkkarte",pw.nic],["USV-Eigenverbrauch",pw.ups],["Zweit-NAS (Backup)",pw.bak]].filter(x=>x[1]>0);
+  const imp=issues.filter(i=>i.level!=="info");
+  $("#dPower").innerHTML=`<table class="ctable" style="min-width:0"><thead><tr><th>Verbraucher</th><th class="num">Ø Watt</th><th class="num">kWh/Jahr</th><th class="num">€/Jahr</th></tr></thead><tbody>
+    ${r.map(x=>`<tr><td>${esc(x[0])}</td><td class="num">${num(x[1],1)}</td><td class="num">${num(x[1]*8.76,0)}</td><td class="num">${eur(x[1]*8.76*p.kwh)}</td></tr>`).join("")}
+    <tr><td><b>Summe 24/7</b></td><td class="num"><b>${num(pw.avg,1)}</b></td><td class="num"><b>${num(pw.kwh,0)}</b></td><td class="num"><b>${eur(pw.eur)}</b></td></tr></tbody></table>
+    <div class="kv" style="margin-top:10px"><span>Spitze beim Anlaufen der Platten</span><span class="num">ca. ${Math.round(pw.peak)} W</span></div>
+    <div class="kv"><span>Lautstärke</span><span class="num">ca. ${Math.round(m.nz.db)} dB(A) · ${esc(m.nz.label)}${m.nz.why.length?" ("+esc(m.nz.why.join(", "))+")":""}</span></div>
+    ${parts.ups&&!parts.ups.none?`<div class="kv"><span>USV-Überbrückung</span><span class="num">ca. ${Math.round(parts.ups.wh*0.7/Math.max(1,pw.load)*60)} min</span></div>`:""}
+    <h2 style="font-size:15px;margin-top:12px">Prüfung</h2><ul class="issues" style="margin-top:6px">${imp.length?imp.map(i=>`<li><span class="sev ${i.level}">${SEV_LABEL[i.level]}</span><span>${esc(i.msg)}</span></li>`).join(""):`<li><span class="sev ok">Passt</span><span>Keine Konflikte.</span></li>`}</ul>`;
+}
+function renderDash(parts,issues){
+  const m=calc(parts);
+  renderGauges(parts,m);$("#dKpis").innerHTML=kpiHtml(parts,m,issues);
+  $("#dApps").innerHTML=renderApps(parts,m);
+  renderRadarAndCompare(parts);renderAlt(parts);renderCloud(parts,m);renderSave(parts);renderRaid(parts);renderCost(parts,m);renderPerTb(parts);renderSteps(parts);renderParts(parts,m);renderPower(parts,m,issues);
+  initCollapse();
+}
+const CKEY="naswerkbank.collapsed";
+function loadCollapsed(){try{return new Set(JSON.parse(localStorage.getItem(CKEY)||"[]"));}catch(e){return new Set();}}
+function saveCollapsed(set){try{localStorage.setItem(CKEY,JSON.stringify([...set]));}catch(e){}}
+function initCollapse(){
+  const set=loadCollapsed();
+  document.querySelectorAll("#viewDash .cpanel").forEach(sec=>{
+    const h=sec.querySelector(":scope>h2");if(!h)return;
+    if(!h.querySelector(".tg")){const b=document.createElement("button");b.type="button";b.className="tg";b.setAttribute("aria-label","Abschnitt ein- oder ausklappen");h.appendChild(b);}
+    const key=sec.getAttribute("aria-label");sec.classList.toggle("collapsed",set.has(key));
+    h.querySelector(".tg").setAttribute("aria-expanded",String(!set.has(key)));
+  });
+}
+document.addEventListener("click",e=>{
+  if(e.target.closest("select,input,a,.row-btns,button:not(.tg)"))return;
+  const h=e.target.closest("#viewDash .cpanel>h2");if(!h)return;
+  const sec=h.parentElement,key=sec.getAttribute("aria-label"),set=loadCollapsed();
+  if(set.has(key))set.delete(key);else set.add(key);saveCollapsed(set);initCollapse();
+});
+
+/* ---------- Übersicht ---------- */
+function schemaSvg(parts,errCats){
+  const nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0,red=P().red,bays=nas?nas.bays:Math.max(n,4);
+  const W=660,cols=Math.min(bays,5),rowsN=Math.ceil(bays/cols),bw=58,bh=92,gap=10,x0=34,y0=48;
+  const boxW=cols*(bw+gap)+gap+44,boxH=rowsN*(bh+gap)+gap+96;
+  const e=c=>errCats.has(c)?" err":"";
+  const sp=(c,lbl)=>`class="sp" data-act="pick" data-cat="${c}" tabindex="0" role="button" aria-label="${esc(lbl)}"`;
+  let s=`<svg class="schema" viewBox="0 0 ${W} ${Math.max(boxH+60,300)}" role="img" aria-label="Schema des NAS">`;
+  s+=`<rect x="20" y="30" width="${boxW}" height="${boxH}" rx="14" class="box sp${e("nas")}" data-act="pick" data-cat="nas" tabindex="0" role="button" aria-label="NAS-System tauschen" data-tip="${esc(nas?nas.name+" · "+nas.cpu:"NAS wählen")}"/>`;
+  s+=`<text x="34" y="46" style="font-weight:700">${esc(nas?nas.name:"NAS-System")}</text>`;
+  const parN=n>=minN(red)?red:0;
+  for(let i=0;i<bays;i++){const r=Math.floor(i/cols),c=i%cols,x=x0+gap+c*(bw+gap),y=y0+gap+r*(bh+gap);
+    const used=i<n,par=used&&i>=n-parN;
+    s+=`<rect x="${x}" y="${y}" width="${bw}" height="${bh}" rx="6" class="bay ${used?(par?"par":"data"):"empty"} sp${used?e("hdd"):""}" data-act="pick" data-cat="hdd" tabindex="0" role="button" aria-label="Schacht ${i+1}" data-tip="Schacht ${i+1}: ${used?esc(h.name)+(par?" (Anteil Redundanz)":" (Daten)"):"frei"}"/>`;
+    s+=`<text x="${x+bw/2}" y="${y+bh/2-4}" text-anchor="middle">${used?h.tb+" TB":"frei"}</text><text class="sub" x="${x+bw/2}" y="${y+bh/2+12}" text-anchor="middle">${used?(par?"Parität":"Daten"):(i+1)}</text>`;}
+  const yb=y0+gap+rowsN*(bh+gap)+8;
+  const m2=m2Slots(parts),sq=parts.ssd&&!parts.ssd.none?parts.q.ssd:0;
+  for(let i=0;i<Math.max(m2,0);i++){const x=x0+gap+i*70;s+=`<rect x="${x}" y="${yb}" width="62" height="20" rx="4" class="part sp${e("ssd")}" data-act="pick" data-cat="ssd" tabindex="0" role="button" aria-label="M.2-Platz ${i+1}" fill="var(--c5)" fill-opacity="${i<sq?0.35:0.06}" stroke="var(--c5)" data-tip="M.2 ${i+1}: ${i<sq?esc(parts.ssd.name):"frei"}"/><text x="${x+31}" y="${yb+14}" text-anchor="middle" class="sub">${i<sq?"SSD":"M.2"}</text>`;}
+  const yr=yb+30;
+  s+=`<rect x="${x0+gap}" y="${yr}" width="120" height="22" rx="4" class="part sp${e("ram")}" data-act="pick" data-cat="ram" tabindex="0" role="button" aria-label="Arbeitsspeicher" fill="var(--c4)" fill-opacity=".25" stroke="var(--c4)" data-tip="RAM: ${calc(parts).ram} GB${parts.ram&&!parts.ram.none?" mit "+esc(parts.ram.name):""}"/><text x="${x0+gap+60}" y="${yr+15}" text-anchor="middle">RAM ${calc(parts).ram} GB</text>`;
+  const lm=lanMax(parts);
+  s+=`<rect x="${x0+gap+130}" y="${yr}" width="120" height="22" rx="4" class="part sp${e("nic")}" data-act="pick" data-cat="nic" tabindex="0" role="button" aria-label="Netzwerk" fill="var(--c3)" fill-opacity=".25" stroke="var(--c3)" data-tip="Netzwerk: ${nas?esc(lanText(nas.lan)):""}${parts.nic&&!parts.nic.none?" + "+esc(parts.nic.name):""}"/><text x="${x0+gap+190}" y="${yr+15}" text-anchor="middle">LAN ${esc(fmtG(lm))}</text>`;
+  const rx=boxW+60,cy=60;
+  s+=`<rect x="${rx}" y="${cy}" width="150" height="46" rx="8" class="box sp${e("nic")}" data-act="pick" data-cat="nic" tabindex="0" role="button" aria-label="Netzwerk" data-tip="Router / Switch, ${esc(fmtG(lm))}"/><text x="${rx+75}" y="${cy+20}" text-anchor="middle">Router / Switch</text><text class="sub" x="${rx+75}" y="${cy+36}" text-anchor="middle">${esc(fmtG(lm))}</text>`;
+  s+=`<path class="wire" d="M ${20+boxW} ${cy+23} L ${rx} ${cy+23}"/>`;
+  const ups=parts.ups&&!parts.ups.none?parts.ups:null,uy=cy+80;
+  s+=`<rect x="${rx}" y="${uy}" width="150" height="46" rx="8" class="part sp${e("ups")}" data-act="pick" data-cat="ups" tabindex="0" role="button" aria-label="USV" fill="var(--c7)" fill-opacity="${ups?0.25:0.05}" stroke="var(--c7)" data-tip="${ups?esc(ups.name):"keine USV"}"/><text x="${rx+75}" y="${uy+20}" text-anchor="middle">${ups?"USV":"keine USV"}</text><text class="sub" x="${rx+75}" y="${uy+36}" text-anchor="middle">${ups?ups.w+" W":"Stromnetz direkt"}</text>`;
+  s+=`<path class="wire${ups?"":" dash"}" d="M ${20+boxW} ${uy+23} L ${rx} ${uy+23}"/>`;
+  const bak=parts.bak&&!parts.bak.none?parts.bak:null,by=uy+80;
+  s+=`<rect x="${rx}" y="${by}" width="150" height="46" rx="8" class="part sp${e("bak")}" data-act="pick" data-cat="bak" tabindex="0" role="button" aria-label="Backup" fill="var(--c6)" fill-opacity="${bak?0.25:0.05}" stroke="var(--c6)" data-tip="${bak?esc(bak.name):"kein Backup"}"/><text x="${rx+75}" y="${by+20}" text-anchor="middle">${bak?(bak.offsite?"Backup außer Haus":"Backup lokal"):"kein Backup"}</text><text class="sub" x="${rx+75}" y="${by+36}" text-anchor="middle">${bak?(bak.perTB?"Cloud":fmtTB(bak.tb)):"!"}</text>`;
+  s+=`<path class="wire dash" d="M ${20+boxW} ${by+23} L ${rx} ${by+23}"/>`;
+  return s+`</svg>`;
+}
+function renderOverview(parts,issues){
+  const m=calc(parts);$("#oKpis").innerHTML=kpiHtml(parts,m,issues);
+  const errCats=new Set();issues.filter(i=>i.level==="error").forEach(i=>i.cats.forEach(c=>errCats.add(c)));
+  $("#oCase").textContent=parts.nas?`${m.raid} · ${parts.nas.bays} Schächte`:"";
+  $("#oSchema").innerHTML=schemaSvg(parts,errCats);
+  const pros=[],cons=[];
+  if(m.usable>=P().cap)pros.push(`${fmtTB(m.usable)} nutzbar, Ziel erreicht`);
+  if(P().red>=1&&m.usable)pros.push(`verkraftet ${P().red===1?"einen":"zwei"} Plattenausfall${P().red===2?"e":""}`);
+  if(parts.bak&&parts.bak.offsite)pros.push("Backup außer Haus nach 3-2-1-Regel");
+  if(m.pw.avg<30)pros.push(`sparsam: ca. ${Math.round(m.pw.avg)} W im Schnitt`);
+  CATS.forEach(c=>{const x=parts[c.k];if(!x)return;const pc=prosCons(c.k,x,parts);pc.P.slice(0,2).forEach(t=>pros.push(`${c.label}: ${t}`));pc.C.forEach(t=>cons.push(`${c.label}: ${t}`));});
+  issues.filter(i=>i.level!=="info").forEach(i=>cons.push(i.msg));
+  $("#oPros").innerHTML=pros.map(t=>`<li>${esc(t)}</li>`).join("")||"<li>–</li>";
+  $("#oCons").innerHTML=[...new Set(cons)].map(t=>`<li>${esc(t)}</li>`).join("")||"<li>Keine Schwachstellen gefunden.</li>";
+  const path=[];
+  CATS.forEach(c=>{const x=parts[c.k];if(!x||x.none)return;const ctx=withPart(parts,c.k,null);if(QTY_CATS.includes(c.k))ctx.q[c.k]=parts.q[c.k];
+    const o=betterOptions(c.k,x,ctx,1)[0];if(!o)return;const d=priceOf(c.k,o,parts)-priceOf(c.k,x,parts);
+    const g=(betterMetric(c.k,o,parts)-betterMetric(c.k,x,parts))/Math.max(1,betterMetric(c.k,x,parts));path.push({c:c.k,cur:x,o,d,v:g/Math.max(20,d)});});
+  path.sort((a,b)=>b.v-a.v);
+  $("#oPath").innerHTML=path.length?`<div class="up"><span class="h">Bauteil</span><span class="h">Upgrade</span><span class="h">Aufpreis</span><span class="h"></span>${path.map(x=>`<span>${esc(CAT_LABEL[x.c])}</span><span><b>${esc(x.o.name)}</b><br><span class="subline">${esc(benefitText(x.c,x.cur,x.o,parts))}</span></span><span class="${x.d>0?"delta-neg":"delta-pos"}">${esc(deltaPrice(x.d))}${x.c==="bak"?" über 5 Jahre":""}</span><button type="button" class="btn" data-act="take" data-cat="${x.c}" data-id="${esc(x.o.id)}">Übernehmen</button>`).join("")}</div>`:`<p class="subline">Kein sinnvolles Upgrade ohne neue Konflikte gefunden.</p>`;
+  $("#oSum").textContent=eur(m.total)+" · laufend "+eur(m.run)+"/Jahr";
+  $("#oTable").innerHTML=`<table class="ctable"><thead><tr><th>Bauteil</th><th>Modell</th><th>Eckdaten</th><th class="num">Preis</th></tr></thead><tbody>${CATS.map(c=>{const x=parts[c.k];return `<tr><td>${esc(c.label)}</td><td>${x?esc((QTY_CATS.includes(c.k)&&!x.none?parts.q[c.k]+"× ":"")+x.name):"–"}</td><td class="subline">${x?esc(spec(c.k,x)):""}</td><td class="num">${x?(c.k==="bak"&&bakMonthly(x)?eur2(bakMonthly(x))+"/Monat":eur(partCost(parts,c.k))):""}</td></tr>`;}).join("")}
+    <tr><td colspan="3"><b>Summe einmalig</b></td><td class="num"><b>${eur(m.total)}</b></td></tr></tbody></table>`;
+}
+
+/* ---------- Vergleich ---------- */
+let cmpCat="nas",cmpSort={k:"perf",dir:-1};
+const PERF_LABEL={nas:"Leistung (CPU-Index)",hdd:"Kapazität TB",ssd:"Kapazität TB",ram:"GB",nic:"GbE",ups:"Akku Wh",bak:"Kapazität TB"};
+function perfOf(cat,p){if(p.none)return 0;return {nas:p.cs,hdd:p.tb,ssd:p.tb,ram:p.gb,nic:p.sp,ups:p.wh,bak:Math.min(p.tb,100)}[cat];}
+function cmpCols(cat){
+  const c=(k,l,v,f,best)=>({k,l,v,f:f||(x=>String(x)),best});
+  const base=[c("name","Modell",p=>p.name)];
+  const per={
+    nas:[c("bays","Schächte",p=>p.bays,null,"max"),c("perf","CPU-Index",p=>p.cs,null,"max"),c("t4","4K-Transc.",p=>p.t4,null,"max"),c("ram","RAM",p=>p.ram,x=>x+" GB","max"),c("lan","LAN",p=>Math.max(...p.lan),x=>fmtG(x),"max"),c("m2","M.2",p=>p.m2,null,"max"),c("idle","Leerlauf",p=>p.idle,x=>x+" W","min")],
+    hdd:[c("perf","TB",p=>p.tb,null,"max"),c("ptb","€/TB",p=>p.price/p.tb,x=>num(x,1),"min"),c("rpm","U/min",p=>p.rpm),c("cls","Klasse",p=>CLS_LABEL[p.cls]),c("warr","Garantie",p=>p.warr,x=>x+" J.","max"),c("mbs","MB/s",p=>p.mbs,null,"max"),c("db","dB(A)",p=>p.db,null,"min")],
+    ssd:[c("perf","Kapazität",p=>p.tb||0,x=>fmtTB(x),"max"),c("tbw","TBW",p=>p.tbw||0,null,"max"),c("cls","Klasse",p=>CLS_LABEL[p.cls]||"–")],
+    ram:[c("perf","GB",p=>p.gb||0,null,"max"),c("t","Typ",p=>p.t?RAM_T[p.t]:"–"),c("syno","Synology",p=>p.syno?"ja":"–")],
+    nic:[c("perf","Tempo",p=>p.sp||0,x=>x?fmtG(x):"–","max"),c("t","Anschluss",p=>p.t||"–"),c("vendor","Treiber",p=>p.vendor||"–")],
+    ups:[c("perf","Akku Wh",p=>p.wh||0,null,"max"),c("w","Watt",p=>p.w||0,null,"max"),c("sine","Sinus",p=>p.sine?"ja":"–")],
+    bak:[c("perf","TB",p=>p.perTB?999:p.tb,x=>x>=999?"beliebig":fmtTB(x),"max"),c("off","Außer Haus",p=>p.offsite?"ja":"–"),c("c5","5 Jahre",p=>p.price+60*bakMonthly(p),x=>eur(x),"min")]
+  }[cat];
+  return base.concat(per,[c("price","Preis",p=>p.price,x=>eur(x),"min")]);
+}
+function renderCompare(parts){
+  $("#cChips").innerHTML=CATS.map(c=>`<button type="button" class="chip" data-cmpcat="${c.k}" aria-pressed="${c.k===cmpCat}">${esc(c.label)}</button>`).join("");
+  const cols=cmpCols(cmpCat),onlyOk=$("#cOnlyOk").checked,cur=parts[cmpCat];
+  const ctx=withPart(parts,cmpCat,null);if(QTY_CATS.includes(cmpCat))ctx.q[cmpCat]=parts.q[cmpCat]||(cmpCat==="hdd"?bestQty(parts.nas,DB.hdd[1]):1);
+  let rows=DB[cmpCat].map(p=>{const iss=issuesFor(cmpCat,p,ctx,QTY_CATS.includes(cmpCat)?ctx.q[cmpCat]||1:undefined);return {p,err:iss.some(i=>i.level==="error"),warn:iss.some(i=>i.level==="warn")};});
+  if(onlyOk)rows=rows.filter(r=>!r.err);
+  const col=cols.find(c=>c.k===cmpSort.k)||cols[1];
+  rows.sort((a,b)=>{const x=col.v(a.p),y=col.v(b.p);return (typeof x==="string"?x.localeCompare(y):x-y)*cmpSort.dir;});
+  const best={};cols.forEach(c=>{if(!c.best)return;const vals=rows.filter(r=>!r.p.none).map(r=>c.v(r.p));if(vals.length)best[c.k]=c.best==="max"?Math.max(...vals):Math.min(...vals);});
+  $("#cTable").innerHTML=`<table class="vtable"><thead><tr>${cols.map(c=>`<th data-sort="${c.k}"${cmpSort.k===c.k?` aria-sort="${cmpSort.dir>0?"ascending":"descending"}"`:""}>${esc(c.l)}</th>`).join("")}<th></th></tr></thead><tbody>${rows.map(r=>`<tr class="${cur&&r.p.id===cur.id?"cur":""}${r.err?" bad":""}">${cols.map((c,i)=>{const v=c.v(r.p);return i===0?`<td><b>${esc(v)}</b>${r.p.eol?' <span class="subline">(Auslauf)</span>':""}${r.err?' <span class="subline" style="color:var(--bad)">passt nicht</span>':r.warn?' <span class="subline" style="color:var(--warn)">Hinweis</span>':""}</td>`:`<td class="n${best[c.k]===v&&!r.p.none?" best":""}">${esc(c.f(v))}</td>`;}).join("")}<td class="n">${cur&&r.p.id===cur.id?"aktuell":`<button type="button" class="btn" data-act="take" data-cat="${cmpCat}" data-id="${esc(r.p.id)}">Übernehmen</button>`}</td></tr>`).join("")}</tbody></table>`;
+  $("#cNote").textContent=`Grün: Bestwert der Spalte. Spaltenkopf anklicken zum Sortieren.${QTY_CATS.includes(cmpCat)?` Stückpreise; geprüft mit ${ctx.q[cmpCat]} Stück.`:""}${cmpCat==="hdd"?" Festplatten-Preise ändern sich derzeit wöchentlich.":""}`;
+  const pts=rows.filter(r=>!r.p.none).map(r=>({p:r.p,x:cmpCat==="bak"?r.p.price+60*bakMonthly(r.p):r.p.price,y:perfOf(cmpCat,r.p),bad:r.err}));
+  $("#cScatterSub").textContent=`${PERF_LABEL[cmpCat]} gegen ${cmpCat==="bak"?"Kosten über 5 Jahre":"Preis"}`;
+  $("#cScatter").innerHTML=scatterSvg(pts,cur);
+}
+function niceTicks(max,n){const raw=max/n,mag=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=raw);const t=[];for(let v=0;v<=max+1e-9;v+=step)t.push(Math.round(v*100)/100);return t;}
+function scatterSvg(pts,cur){
+  if(!pts.length)return "";
+  const W=720,H=300,l=56,r=16,t=14,b=36,mx=Math.max(...pts.map(p=>p.x))*1.08||1,my=Math.max(...pts.map(p=>p.y))*1.1||1;
+  const X=v=>l+v/mx*(W-l-r),Y=v=>H-b-v/my*(H-t-b);
+  let s=`<svg class="scatter" viewBox="0 0 ${W} ${H}" role="img" aria-label="Preis-Leistungs-Diagramm">`;
+  niceTicks(mx,6).forEach(v=>{s+=`<line class="ax" x1="${X(v)}" y1="${t}" x2="${X(v)}" y2="${H-b}" stroke-opacity=".4"/><text x="${X(v)}" y="${H-b+14}" text-anchor="middle">${num(v,0)} €</text>`;});
+  niceTicks(my,5).forEach(v=>{s+=`<line class="ax" x1="${l}" y1="${Y(v)}" x2="${W-r}" y2="${Y(v)}" stroke-opacity=".4"/><text x="${l-6}" y="${Y(v)+3}" text-anchor="end">${num(v,1)}</text>`;});
+  pts.forEach(p=>{const me=cur&&p.p.id===cur.id;s+=`<circle class="pt" cx="${X(p.x)}" cy="${Y(p.y)}" r="${me?7:5}" fill="${me?"var(--accent)":p.bad?"var(--line)":"var(--c2)"}" fill-opacity="${me?1:0.8}" data-act="take" data-cat="${cmpCat}" data-id="${esc(p.p.id)}" tabindex="0" role="button" aria-label="${esc(p.p.name)} übernehmen" data-tip="${esc(p.p.name)}: ${esc(eur(p.x))} · ${esc(num(p.y,1))}${p.bad?" · passt nicht":""}"/>`;});
+  return s+`</svg>`;
+}
+
+/* ---------- Auswahl-Schublade ---------- */
+let pickerCat=null,lastFocus=null;
+function openPicker(cat){pickerCat=cat;lastFocus=document.activeElement;$("#pickerTitle").textContent=CAT_LABEL[cat]+" wählen";$("#pSearch").value="";$("#picker").hidden=false;renderPicker();setTimeout(()=>$("#pSearch").focus(),0);}
+function closePicker(){$("#picker").hidden=true;pickerCat=null;if(lastFocus&&lastFocus.focus)lastFocus.focus();}
+function pickQty(cat,p){
+  if(!QTY_CATS.includes(cat)||p.none)return undefined;
+  const parts=resolve(state.picks),cur=state.picks[cat];
+  if(cat==="hdd"){if(cur&&cur.src==="user")return Math.min(cur.qty||1,parts.nas?parts.nas.bays:99);return bestQty(parts.nas,p);}
+  return Math.min(Math.max(1,(cur&&cur.qty)||Math.min(2,m2Slots(parts)||1)),Math.max(1,m2Slots(parts)));
+}
+function renderPicker(){
+  const cat=pickerCat;if(!cat)return;
+  const ctxPicks=state.auto?userOnly():Object.assign({},state.picks);delete ctxPicks[cat];
+  const live=resolve(state.picks),ctx=resolve(ctxPicks);
+  for(const c of ["nas","hdd"])if(c!==cat&&!ctx[c]&&live[c]){ctx[c]=live[c];if(QTY_CATS.includes(c))ctx.q[c]=live.q[c];}
+  const cur=state.picks[cat]&&state.picks[cat].id;
+  let rec=null;if(state.picks[cat]&&state.picks[cat].src==="auto")rec=get(cat,cur);
+  $("#pNote").textContent=cat==="hdd"?"Geprüft gegen dein NAS. Die Stückzahl wird passend zum Kapazitätsziel gesetzt und lässt sich danach mit − / + ändern.":"Geprüft gegen deine Teile. „Wirkung“ zeigt die Änderung gegenüber jetzt.";
+  const q=$("#pSearch").value.trim().toLowerCase(),onlyOk=$("#pCompat").checked,sort=$("#pSort").value;
+  let rows=DB[cat].map(p=>{const qq=pickQty(cat,p),iss=issuesFor(cat,p,ctx,qq);const lvl=iss.some(i=>i.level==="error")?"error":iss.some(i=>i.level==="warn")?"warn":"ok";return {p,iss,lvl,qq};});
+  if(q)rows=rows.filter(r=>(r.p.name+" "+spec(cat,r.p)).toLowerCase().includes(q));
+  const hidden=onlyOk?rows.filter(r=>r.lvl==="error").length:0;if(onlyOk)rows=rows.filter(r=>r.lvl!=="error");
+  rows.sort((a,b)=>{if(sort==="price")return a.p.price-b.p.price;if(sort==="priceDesc")return b.p.price-a.p.price;if(sort==="perf")return perfOf(cat,b.p)-perfOf(cat,a.p);
+    const ra=a.p===rec?0:1,rb=b.p===rec?0:1,lv={ok:0,warn:1,error:2};return ra-rb||lv[a.lvl]-lv[b.lvl]||(a.p.none?-1:0)-(b.p.none?-1:0)||a.p.price-b.p.price;});
+  const m0=calc(live),dl=(d,txt,moreIsBad)=>`<span class="${!d?"":(d>0)===!moreIsBad?"delta-pos":"delta-neg"}">${d>0?"+":d<0?"−":"±"}${txt}</span>`;
+  const preview=(p,qq)=>{if(p.id===cur)return "";const test=withPart(live,cat,p,qq),m=calc(test),bits=[];
+    const dP=m.total-m0.total;bits.push(`<b>${dl(dP,eur(Math.abs(dP)),true)}</b>`);
+    if(cat==="hdd"||cat==="nas"){const du=m.usable-m0.usable;bits.push(`nutzbar ${fmtTB(m.usable)}${du?` (${dl(du,fmtTB(Math.abs(du)))})`:""}`);}
+    if(cat==="nas"){bits.push(`4K ${m.t4}`);bits.push(`${m.sp.eff} MB/s`);}
+    if(cat==="ram")bits.push(`${m.ram} GB`);if(cat==="nic")bits.push(`${m.sp.eff} MB/s`);
+    const dw=Math.round(m.pw.eur-m0.pw.eur);if(dw)bits.push(`Strom ${dl(dw,eur(Math.abs(dw))+"/J.",true)}`);
+    if(cat==="hdd"||cat==="nas"){const dn=Math.round(m.nz.db-m0.nz.db);if(dn)bits.push(`${dl(dn,Math.abs(dn)+" dB",true)}`);}
+    return `<span class="live">Wirkung: ${bits.join(" · ")}</span>`;};
+  const html=rows.map(r=>{const p=r.p,first=r.iss.find(i=>i.level==="error")||r.iss.find(i=>i.level==="warn");
+    const st=r.lvl==="ok"?`<span class="status ok">✓ Passt zu deinen Teilen</span>`:`<span class="status ${r.lvl}"><span class="sev ${r.lvl}">${SEV_LABEL[r.lvl]}</span>${esc(first.msg)}</span>`;
+    return `<button type="button" class="opt${r.lvl==="error"?" dim":""}" data-act="choose" data-id="${esc(p.id)}" aria-current="${p.id===cur}">
+      <span class="slot-main"><span class="slot-name">${esc((r.qq?r.qq+"× ":"")+p.name)} ${p===rec?'<span class="tag rec">Empfohlen</span>':""}${p.eol?'<span class="tag" style="background:var(--warn-soft);color:var(--warn)">Auslauf</span>':""} ${tierDots(p.tier)}</span>
+      <span class="slot-spec">${esc(spec(cat,p))}</span></span>
+      <span class="opt-price"><span class="price">${cat==="bak"&&bakMonthly(p)?eur2(bakMonthly(p))+"/M.":p.price?eur(p.price):"0 €"}</span>${r.qq>1?`<span class="subline">je Stück</span>`:""}</span>
+      ${st}${preview(p,r.qq)}</button>`;}).join("");
+  const curP=state.picks[cat]&&get(cat,state.picks[cat].id);
+  const full=withPart(live,cat,null);if(QTY_CATS.includes(cat))full.q[cat]=live.q[cat];
+  const bo=curP&&!q?betterOptions(cat,curP,full,3):[];
+  const betterHtml=bo.length?`<div class="better"><div class="better-h"><span class="tag up">Bessere Wahl</span><span class="subline">passend zu deinem System, nach Aufpreis sortiert</span></div>${bo.map(o=>`<button type="button" class="opt better-opt" data-act="choose" data-id="${esc(o.id)}">
+      <span class="slot-main"><span class="slot-name">${esc(o.name)} ${tierDots(o.tier)}</span><span class="slot-spec">${esc(spec(cat,o))}</span></span>
+      <span class="opt-price"><span class="price">${eur(o.price)}</span><span class="subline">${esc(deltaPrice(priceOf(cat,o,live)-priceOf(cat,curP,live)))}</span></span>
+      <span class="status ok">▲ ${esc(benefitText(cat,curP,o,live))}</span></button>`).join("")}</div>`:"";
+  $("#plist").innerHTML=betterHtml+(html||`<div class="empty-list">Nichts gefunden.</div>`)+(hidden?`<div class="empty-list">${hidden} unpassende Teile ausgeblendet. „Nur passende“ abwählen, um sie zu sehen.</div>`:"");
+}
+
+/* ---------- Teileliste kopieren ---------- */
+function buildText(){
+  const parts=resolve(state.picks),m=calc(parts),p=P();
+  const lines=[`NAS-Konfiguration (NAS-Werkbank, ${PROFILE_NAME[state.profile]})`,""];
+  CATS.forEach(c=>{const x=parts[c.k];if(!x)return;lines.push(`${c.label}: ${(QTY_CATS.includes(c.k)&&!x.none?parts.q[c.k]+"× ":"")+x.name}${x.price||bakMonthly(x)?" – "+(c.k==="bak"&&bakMonthly(x)?eur2(bakMonthly(x))+"/Monat":eur(partCost(parts,c.k))):""}`);});
+  lines.push("",`Anschaffung: ${eur(m.total)} · laufend ca. ${eur(m.run)} pro Jahr`,`Nutzkapazität: ${fmtTB(m.usable)} (${m.raid}, ${p.red} Platte(n) Ausfallsicherheit)`,`Durchsatz ca. ${m.sp.eff} MB/s · Strom Ø ${Math.round(m.pw.avg)} W · ${Math.round(m.nz.db)} dB(A)`);
+  const iss=checkAll(parts).filter(i=>i.level!=="info");if(iss.length){lines.push("","Prüfung:");iss.forEach(i=>lines.push(`- ${SEV_LABEL[i.level]}: ${i.msg}`));}
+  lines.push("","Richtpreise Stand November 2026, Schätzungen. Vor dem Kauf prüfen.");
+  return lines.join("\n");
+}
+function copyList(){copyTextTo(buildText(),"Teileliste kopiert.","#toast",$("#copyFallback"));const fb=$("#copyFallback");if(fb&&fb.value)fb.hidden=false;}
+
+/* ---------- Speichern, Laden, Drucken ---------- */
+const SKEY="naswerkbank.saves";
+const embedded=(()=>{try{return window.self!==window.top;}catch(e){return true;}})();
+function loadSaves(){try{const a=JSON.parse(localStorage.getItem(SKEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
+function writeSaves(a){try{localStorage.setItem(SKEY,JSON.stringify(a));return true;}catch(e){return false;}}
+function snapshot(){return {v:1,picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,auto:state.auto};}
+function cfgTotal(picks){return cost(resolve(picks));}
+function applySnapshot(o){
+  if(!o||typeof o!=="object"||!o.picks)return false;
+  const picks={};for(const c in o.picks){const v=o.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src,qty:typeof v.qty==="number"?v.qty:undefined};}
+  if(!Object.keys(picks).length)return false;
+  const params=Object.assign({},DEF_PARAMS);if(o.params)for(const k in DEF_PARAMS){if(typeof o.params[k]===typeof DEF_PARAMS[k])params[k]=o.params[k];}
+  state.picks=picks;state.params=params;state.profile=PROFILE_NAME[o.profile]?o.profile:state.profile;
+  state.budget=(typeof o.budget==="number"&&o.budget>0)?o.budget:null;state.auto=o.auto!==false;
+  recompute();renderSliders();render();return true;
+}
+function encodeCfg(o){const j=JSON.stringify({v:1,p:Object.fromEntries(Object.entries(o.picks).map(([c,v])=>[c,(v.src==="user"?"u:":"a:")+v.id+(v.qty?":"+v.qty:"")])),r:o.params,f:o.profile,b:o.budget,a:o.auto});return "NAS1:"+btoa(unescape(encodeURIComponent(j)));}
+function decodeCfg(code){
+  code=String(code||"").trim();
+  try{
+    if(code.startsWith("{")){const o=JSON.parse(code);return o.picks?o:null;}
+    if(!code.startsWith("NAS1:"))return null;
+    const o=JSON.parse(decodeURIComponent(escape(atob(code.slice(5).replace(/\s+/g,"")))));
+    const picks={};for(const c in o.p||{}){const [src,id,qty]=String(o.p[c]).split(":");picks[c]={id,src:src==="u"?"user":"auto",qty:qty?Number(qty):undefined};}
+    return {picks,params:o.r,profile:o.f,budget:o.b,auto:o.a};
+  }catch(e){return null;}
+}
+let pendingDelete=null,saveLastFocus=null;
+function openSave(){saveLastFocus=document.activeElement;pendingDelete=null;$("#saveDlg").hidden=false;$("#saveToast").textContent="";$("#codeToast").textContent="";
+  const parts=resolve(state.picks);$("#saveName").value=parts.nas&&parts.hdd?`${parts.nas.name.replace(/^(Synology|QNAP|UGREEN NASync|TerraMaster|Asustor|Minisforum) /,"")} · ${parts.q.hdd}× ${parts.hdd.tb} TB`:"";
+  $("#dlBtn").hidden=embedded;renderSaves();setTimeout(()=>$("#saveName").focus(),0);}
+function closeSave(){$("#saveDlg").hidden=true;if(saveLastFocus&&saveLastFocus.focus)saveLastFocus.focus();}
+function renderSaves(){
+  const a=loadSaves(),curKey=JSON.stringify(state.picks);
+  $("#saveCount").textContent=a.length?a.length+" gespeichert":"";
+  $("#saveList").innerHTML=a.length?a.slice().reverse().map(x=>`<div class="save-item${JSON.stringify(x.picks)===curKey?" cur":""}">
+     <span class="nm">${esc(x.name)}</span>
+     <span class="meta">${eur(cfgTotal(x.picks))} · ${esc(PROFILE_NAME[x.profile]||"")} · ${esc(x.saved)}</span>
+     <span class="acts">${pendingDelete===x.id?`<span class="subline">Wirklich löschen?</span><button type="button" class="btn danger" data-act="delSave" data-id="${esc(x.id)}">Ja, löschen</button><button type="button" class="btn" data-act="cancelDel">Nein</button>`:`<button type="button" class="btn primary" data-act="loadSave" data-id="${esc(x.id)}">Laden</button><button type="button" class="btn" data-act="cmpSave" data-id="${esc(x.id)}">Vergleichen</button><button type="button" class="btn ghost" data-act="askDel" data-id="${esc(x.id)}" aria-label="${esc(x.name)} löschen">Löschen</button>`}</span></div>`).join(""):`<p class="subline">Noch nichts gespeichert. Gib oben einen Namen ein und tippe auf „Speichern“.</p>`;
+}
+function doSave(name){
+  name=(name||"").trim()||"Konfiguration "+new Date().toLocaleDateString("de-DE");
+  const a=loadSaves(),snap=snapshot(),now=new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"});
+  const ex=a.find(x=>x.name===name);
+  if(ex)Object.assign(ex,snap,{saved:now});else a.push(Object.assign({id:"s"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,saved:now},snap));
+  if(writeSaves(a))$("#saveToast").textContent=ex?`„${name}“ aktualisiert.`:`„${name}“ gespeichert.`;else $("#saveToast").textContent="Speichern nicht möglich: Der Browser blockiert den lokalen Speicher. Nutze den Konfigurations-Code.";
+  renderSaves();
+}
+function flash(id,msg){const t=$(id);if(t)t.textContent=msg;}
+function copyTextTo(txt,okMsg,toastId,fallbackEl){
+  const fb=()=>{if(fallbackEl){fallbackEl.value=txt;fallbackEl.hidden=false;fallbackEl.focus();fallbackEl.select();}flash(toastId,"Text markiert: mit Strg+C bzw. ⌘+C kopieren.");};
+  try{if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(()=>flash(toastId,okMsg),fb);else fb();}catch(e){fb();}
+}
+function printHtml(){
+  const parts=resolve(state.picks),p=P(),m=calc(parts),issues=checkAll(parts);
+  const today=new Date().toLocaleDateString("de-DE",{day:"2-digit",month:"long",year:"numeric"});
+  const rows=CATS.map(c=>{const x=parts[c.k];return x?`<tr><td><span class="chk"></span>${esc(c.label)}</td><td><b>${esc((QTY_CATS.includes(c.k)&&!x.none?parts.q[c.k]+"× ":"")+x.name)}</b><br><span class="meta">${esc(spec(c.k,x))}</span></td><td class="r">${c.k==="bak"&&bakMonthly(x)?eur2(bakMonthly(x))+"/Monat":eur(partCost(parts,c.k))}</td></tr>`:`<tr><td>${esc(c.label)}</td><td colspan="2" class="meta">nicht gewählt</td></tr>`;}).join("");
+  const warn=issues.filter(i=>i.level!=="info"),info=issues.filter(i=>i.level==="info");
+  const tips=[];CATS.forEach(c=>{const x=parts[c.k];if(!x)return;prosCons(c.k,x,parts).N.forEach(n=>tips.push(`${c.label}: ${n}`));});
+  return `<h1>NAS-Konfiguration</h1>
+   <div class="meta">NAS-Werkbank · erstellt am ${esc(today)} · Einsatz: ${esc(PROFILE_NAME[state.profile])}${state.budget?" · Budget "+eur(state.budget):""} · Richtpreise Stand November 2026</div>
+   <div class="kv4" style="margin-top:12px">
+     <div><span>Anschaffung</span><b>${eur(m.total)}</b></div>
+     <div><span>Laufend pro Jahr</span><b>${eur(m.run)}</b></div>
+     <div><span>Nutzkapazität</span><b>${fmtTB(m.usable)}</b></div>
+     <div><span>RAID</span><b>${esc(m.raid)}</b></div>
+   </div>
+   <h2>Bauteile</h2>
+   <table><thead><tr><th>Position</th><th>Modell und Eckdaten</th><th class="r">Euro</th></tr></thead><tbody>${rows}
+   <tr class="sum"><td colspan="2">Summe einmalig</td><td class="r">${eur(m.total)}</td></tr></tbody></table>
+   <h2>Kennzahlen (Richtwerte)</h2>
+   <table><tbody>
+    <tr><td>Durchsatz übers Netz</td><td class="r">ca. ${m.sp.eff} MB/s (begrenzt durch ${esc(m.sp.limit||"–")})</td></tr>
+    <tr><td>4K-Transcodes / VMs / RAM</td><td class="r">${m.t4} / ${m.vms} / ${m.ram} GB</td></tr>
+    <tr><td>Strom Ø 24/7</td><td class="r">${Math.round(m.pw.avg)} W · ${num(m.pw.kwh,0)} kWh · ${eur(m.pw.eur)} pro Jahr bei ${num(p.kwh,2)} €/kWh</td></tr>
+    <tr><td>Lautstärke</td><td class="r">ca. ${Math.round(m.nz.db)} dB(A), ${esc(m.nz.label)}</td></tr>
+    <tr><td>Rebuild nach Plattentausch</td><td class="r">ca. ${Math.round(m.rb)} Stunden</td></tr>
+    <tr><td>Ziel / Daten heute</td><td class="r">${fmtTB(p.cap)} / ${fmtTB(p.data)}</td></tr>
+   </tbody></table>
+   <h2>Prüfung</h2>
+   ${warn.length?`<ul>${warn.map(i=>`<li><b>${SEV_LABEL[i.level]}:</b> ${esc(i.msg)}</li>`).join("")}</ul>`:"<p>Alle Teile passen zusammen, keine Konflikte.</p>"}
+   ${info.length?`<p class="meta" style="margin-top:6px">Hinweise:</p><ul>${info.map(i=>`<li>${esc(i.msg)}</li>`).join("")}</ul>`:""}
+   ${tips.length?`<h2>Beim Kauf und Einrichten beachten</h2><ul>${tips.map(t=>`<li>${esc(t)}</li>`).join("")}</ul>`:""}
+   <p class="small">Preise sind geschätzte Straßenpreise in Deutschland; Leistungs-, Strom- und Lautstärkewerte sind aus Datenblättern abgeleitet und keine Messungen. Vor dem Kauf Tagespreise und Kompatibilitätslisten prüfen. Konfigurations-Code zum Wiederherstellen: <span style="font-family:var(--f-mono);word-break:break-all">${esc(encodeCfg(snapshot()))}</span></p>`;
+}
+let printLastFocus=null;
+function openPrint(){printLastFocus=document.activeElement;$("#printSheet").innerHTML=printHtml();$("#printDlg").hidden=false;
+  $("#printHint").textContent=embedded?"Im eingebetteten Viewer blockiert der Browser das Drucken. Öffne nas-konfigurator/index.html direkt im Browser, um zu drucken oder als PDF zu speichern; hier kannst du den Text kopieren.":"Als PDF speichern: im Druckdialog „Als PDF speichern“ wählen.";
+  $("#printBtn").hidden=embedded;setTimeout(()=>$(embedded?"[data-act='copyPrint']":"#printBtn").focus(),0);}
+function closePrint(){$("#printDlg").hidden=true;if(printLastFocus&&printLastFocus.focus)printLastFocus.focus();}
+function downloadJson(){
+  try{const blob=new Blob([JSON.stringify(Object.assign({name:"NAS-Werkbank-Konfiguration",saved:new Date().toISOString()},snapshot()),null,2)],{type:"application/json"});
+    const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="nas-konfiguration.json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);flash("#codeToast","Datei nas-konfiguration.json wird heruntergeladen.");}
+  catch(e){flash("#codeToast","Herunterladen nicht möglich. Kopiere stattdessen den Code.");}
+}
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act]");if(!el)return;const act=el.dataset.act;
+  if(act==="openSave")openSave();
+  else if(act==="closeSave")closeSave();
+  else if(act==="loadSave"){const x=loadSaves().find(y=>y.id===el.dataset.id);if(x&&applySnapshot(x)){flash("#saveToast",`„${x.name}“ geladen.`);renderSaves();}}
+  else if(act==="cmpSave"){cmpSel="save:"+el.dataset.id;closeSave();state.view="dash";save();renderSliders();render();const sec=document.querySelector('[aria-label="Zwei Konfigurationen"]');if(sec)sec.scrollIntoView({block:"start"});}
+  else if(act==="askDel"){pendingDelete=el.dataset.id;renderSaves();}
+  else if(act==="cancelDel"){pendingDelete=null;renderSaves();}
+  else if(act==="delSave"){writeSaves(loadSaves().filter(y=>y.id!==el.dataset.id));pendingDelete=null;flash("#saveToast","Gelöscht.");renderSaves();}
+  else if(act==="copyCode")copyTextTo(encodeCfg(snapshot()),"Code kopiert. Auf dem anderen Gerät unter „Code einfügen“ laden.","#codeToast",$("#codeIn"));
+  else if(act==="loadCode"){const o=decodeCfg($("#codeIn").value);if(o&&applySnapshot(o)){flash("#codeToast","Konfiguration aus dem Code geladen.");renderSaves();}else flash("#codeToast","Der Code ist ungültig oder unvollständig. Er beginnt mit „NAS1:“.");}
+  else if(act==="downloadJson")downloadJson();
+  else if(act==="openPrint")openPrint();
+  else if(act==="closePrint")closePrint();
+  else if(act==="doPrint"){try{window.print();}catch(err){}}
+  else if(act==="copyPrint")copyTextTo(buildText()+"\n\nKonfigurations-Code: "+encodeCfg(snapshot()),"Zusammenfassung kopiert.","#printHint",null);
+});
+$("#saveForm").addEventListener("submit",e=>{e.preventDefault();doSave($("#saveName").value);});
+$("#fileIn").addEventListener("change",e=>{const f=e.target.files&&e.target.files[0];if(!f)return;const r=new FileReader();r.onload=()=>{let o=null;try{o=JSON.parse(r.result);}catch(err){}if(o&&applySnapshot(o)){flash("#codeToast",`Datei „${f.name}“ geladen.`);renderSaves();}else flash("#codeToast","Die Datei enthält keine gültige Konfiguration.");e.target.value="";};r.readAsText(f);});
+$("#saveDlg").addEventListener("click",e=>{if(e.target.id==="saveDlg")closeSave();});
+document.addEventListener("keydown",e=>{if(e.key!=="Escape")return;if(!$("#printDlg").hidden)closePrint();else if(!$("#saveDlg").hidden)closeSave();});
+
+/* ---------- Ereignisse ---------- */
+function applyPreset(id){
+  const pr=PRESETS.find(x=>x.id===id);if(!pr)return;
+  state.profile=pr.profile;state.budget=pr.budget;state.auto=true;state.picks={};
+  const k=state.params.kwh,s=state.params.spin,u=state.params.upl;state.params=Object.assign({},DEF_PARAMS,pr.params,{kwh:k,spin:s,upl:u});
+  for(const c in pr.user||{})state.picks[c]={id:pr.user[c],src:"user"};
+  recompute();renderSliders();render();
+}
+function setQty(cat,d){
+  const pk=state.picks[cat];if(!pk)return;const parts=resolve(state.picks);
+  const max=cat==="hdd"?(parts.nas?parts.nas.bays:24):Math.max(1,m2Slots(parts));
+  pk.qty=clamp((pk.qty||1)+d,1,max);pk.src="user";
+  if(cat==="hdd"&&state.picks.nas&&state.picks.nas.src==="auto")state.picks.nas.src="user";
+  recompute();
+}
+document.addEventListener("click",e=>{
+  const el=e.target.closest("[data-act],[data-profile],[data-preset],[data-view],[data-red],[data-cmpcat],th[data-sort]");if(!el)return;
+  if(el.dataset.profile){state.profile=el.dataset.profile;Object.assign(state.params,PROFILE_DEF[state.profile]);if(state.profile==="lab"&&state.params.net<2.5)state.params.net=2.5;recompute();renderSliders();render();return;}
+  if(el.dataset.view){state.view=el.dataset.view;save();if(state.view==="dash")renderSliders();render();return;}
+  if(el.dataset.preset){applyPreset(el.dataset.preset);return;}
+  if(el.dataset.cmpcat){cmpCat=el.dataset.cmpcat;cmpSort={k:"perf",dir:-1};render();return;}
+  if(el.dataset.sort){const k=el.dataset.sort;cmpSort=cmpSort.k===k?{k,dir:-cmpSort.dir}:{k,dir:k==="name"||k==="price"||k==="ptb"||k==="idle"||k==="db"||k==="c5"?1:-1};render();return;}
+  if(el.dataset.red!==undefined&&!el.dataset.act){state.params.red=Number(el.dataset.red);delete state.picks.hdd;recompute();return;}
+  const act=el.dataset.act,cat=el.dataset.cat;
+  if(act==="pick")openPicker(cat);
+  else if(act==="close")closePicker();
+  else if(act==="choose"){const p=get(pickerCat,el.dataset.id),q=pickQty(pickerCat,p);state.picks[pickerCat]={id:el.dataset.id,src:"user",qty:q};const c=pickerCat;closePicker();
+    if(c==="hdd"&&state.picks.nas&&state.picks.nas.src==="auto"&&q>get("nas",state.picks.nas.id).bays)delete state.picks.nas;recompute();}
+  else if(act==="keep"){state.picks[cat].src="user";save();render();}
+  else if(act==="remove"){delete state.picks[cat];recompute();}
+  else if(act==="qty")setQty(cat,Number(el.dataset.d));
+  else if(act==="setred"){state.params.red=Number(el.dataset.red);if(state.picks.hdd&&state.picks.hdd.src==="auto")delete state.picks.hdd;else if(state.picks.hdd){const n=state.picks.hdd.qty||1,mn=minN(state.params.red),nas=resolve(state.picks).nas;if(n<mn)state.picks.hdd.qty=Math.min(mn,nas?nas.bays:mn);}recompute();}
+  else if(act==="fill"){state.picks=fillMissing(state.picks);save();render();}
+  else if(act==="reset"){state.picks={};state.budget=null;save();render();}
+  else if(act==="copy")copyList();
+  else if(act==="openAll"){saveCollapsed(new Set());initCollapse();}
+  else if(act==="closeAll"){saveCollapsed(new Set([...document.querySelectorAll("#viewDash .cpanel")].map(x=>x.getAttribute("aria-label"))));initCollapse();}
+  else if(act==="saveVar"){saveVariant(el.dataset.slot);cmpSel="var:"+el.dataset.slot;render();}
+  else if(act==="take"){const p=get(cat,el.dataset.id);if(!p)return;const old=state.picks[cat];
+    let q;if(cat==="hdd")q=old&&old.src==="user"?old.qty:(old?old.qty:bestQty(resolve(state.picks).nas,p));else if(cat==="ssd")q=old&&old.qty?old.qty:pickQty(cat,p);
+    state.picks[cat]={id:p.id,src:"user",qty:q};
+    if(cat==="nas"&&state.picks.hdd&&(state.picks.hdd.qty||1)>p.bays){state.picks.hdd.qty=p.bays;}
+    if(cat==="nas")for(const c of ["ram","nic","ssd"])if(state.picks[c]&&state.picks[c].src==="auto")delete state.picks[c];
+    recompute();}
+  else if(act==="undo"){if(undoSnap){state=JSON.parse(undoSnap);undoSnap=null;save();renderSliders();render();$("#dUndo").innerHTML="";}}
+});
+$("#picker").addEventListener("click",e=>{if(e.target.id==="picker")closePicker();});
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidden)closePicker();});
+$("#pSearch").addEventListener("input",renderPicker);
+$("#pSort").addEventListener("change",renderPicker);
+$("#pCompat").addEventListener("change",renderPicker);
+document.addEventListener("toggle",e=>{const d=e.target;if(d&&d.dataset&&d.dataset.brief){if(d.open)openBriefs.add(d.dataset.brief);else openBriefs.delete(d.dataset.brief);}},true);
+const tipEl=document.createElement("div");tipEl.className="tip-float";tipEl.hidden=true;tipEl.setAttribute("role","tooltip");document.body.appendChild(tipEl);
+const hideTip=()=>{tipEl.hidden=true;};
+let tipW=0,tipH=0;
+function showTip(t,x,y){
+  if(tipEl.hidden||tipEl.textContent!==t){tipEl.style.left=tipEl.style.top="0px";tipEl.textContent=t;tipEl.hidden=false;tipW=tipEl.offsetWidth;tipH=tipEl.offsetHeight;}
+  tipEl.style.left=Math.max(8,Math.min(window.innerWidth-tipW-8,x+12))+"px";tipEl.style.top=(y-tipH-12<8?y+18:y-tipH-12)+"px";
+}
+function tipFrom(e){const el=e.target&&e.target.closest&&e.target.closest("[data-tip]");if(el)showTip(el.getAttribute("data-tip"),e.clientX,e.clientY);else hideTip();}
+document.addEventListener("pointermove",tipFrom);
+document.addEventListener("pointerdown",tipFrom);
+document.addEventListener("focusin",e=>{const el=e.target.closest&&e.target.closest("[data-tip]");if(el){const r=el.getBoundingClientRect();showTip(el.getAttribute("data-tip"),r.left+r.width/2,r.top);}});
+document.addEventListener("focusout",hideTip);
+window.addEventListener("scroll",hideTip,true);
+document.addEventListener("pointerout",e=>{if(e.pointerType==="mouse"&&!e.relatedTarget)hideTip();});
+document.addEventListener("click",e=>{const el=e.target.closest&&e.target.closest("[data-tip]");if(!el||el.closest("[data-act]"))hideTip();});
+document.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target.matches&&e.target.matches("svg [data-act][tabindex],.bar-row[data-act][tabindex]")){e.preventDefault();e.target.dispatchEvent(new MouseEvent("click",{bubbles:true}));}});
+$("#cOnlyOk").addEventListener("change",()=>render());
+$("#dCmpSel").addEventListener("change",e=>{cmpSel=e.target.value;render();});
+$("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
+$("#qCap").innerHTML=CAP_STEPS.map(v=>`<option value="${v}">${fmtTB(v)}</option>`).join("");
+$("#qCap").addEventListener("change",e=>{state.params.cap=Number(e.target.value);if(state.picks.hdd&&state.picks.hdd.src==="auto")delete state.picks.hdd;recompute();});
+let bt=null;
+$("#budget").addEventListener("input",e=>{clearTimeout(bt);bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=200)?v:null;recompute();},450);});
+$("#presets").innerHTML=PRESETS.map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)} <small>${esc(p.hint)}</small></button>`).join("");
+const PFMT={kwh:v=>num(v,2)+" €/kWh",spin:v=>v?v+" Stunden pro Tag":"nie (laufen durch)",upl:v=>v+" Mbit/s"};
+document.addEventListener("input",e=>{
+  const t=e.target;
+  if(t.dataset&&t.dataset.slider){onSlider(t.dataset.slider,t.value);$("#dUndo").innerHTML=`<div class="undo"><span>Regler geändert: betroffene Teile werden automatisch neu gewählt.</span><button type="button" class="btn" data-act="undo">Rückgängig</button></div>`;}
+  else if(t.dataset&&t.dataset.param){state.params[t.dataset.param]=Number(t.value);const o=$("#pso-"+t.dataset.param);if(o)o.textContent=PFMT[t.dataset.param](Number(t.value));if(state.auto)recompute();else{save();render();}}
+});
+if(!load())applyPreset("family");else recompute();
+renderSliders();render();
+})();
+</script>
+
+</body>
+</html>
