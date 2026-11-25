@@ -919,8 +919,8 @@ function load(){
   try{const s=JSON.parse(localStorage.getItem(KEY)||"null");if(!s||!s.picks)return false;
     const picks={};for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id))picks[c]={id:v.id,src:v.src==="user"?"user":"auto",qty:v.qty};}
     state.picks=picks;state.profile=PROFILE_NAME[s.profile]?s.profile:"media";state.budget=typeof s.budget==="number"?s.budget:null;state.auto=s.auto!==false;
-    state.params=Object.assign({},DEF_PARAMS);if(s.params)for(const k in DEF_PARAMS)if(typeof s.params[k]==="number")state.params[k]=s.params[k];
-    state.view=["konfig","dash","ov","cmp"].includes(s.view)?s.view:"konfig";return true;}catch(e){return false;}
+    state.params=Object.assign({},DEF_PARAMS);if(s.params)for(const k in DEF_PARAMS)if(typeof s.params[k]===typeof DEF_PARAMS[k])state.params[k]=s.params[k];
+    state.view=["konfig","dash","ov","cmp","raid"].includes(s.view)?s.view:"konfig";return true;}catch(e){return false;}
 }
 const P=()=>state.params;
 function resolve(picks){const o={q:{hdd:0,ssd:0,exp:0}};for(const c in picks){const v=picks[c],p=v&&get(c,v.id);if(p){o[c]=p;if(QTY_CATS.includes(c))o.q[c]=p.none?0:Math.max(1,v.qty||1);}}return o;}
@@ -1093,7 +1093,7 @@ function checkAll(parts){
       if(nas.free<ram.mods)add("info",["ram"],`Das Modul ersetzt das eingebaute; danach ${rt} GB.`);
       if(rt>nas.ramMax)add("warn",["ram"],`${rt} GB liegen über den offiziell unterstützten ${nas.ramMax} GB. Läuft oft, ist aber nicht freigegeben.`);
       if(ram.syno&&nas.synoRam&&!nas.synoRam.includes(ram.id))add("error",["ram"],`${ram.name} ist für ${nas.name} nicht freigegeben. Passend: ${nas.synoRam.map(i=>get("ram",i).name.replace("Synology ","")).join(", ")||"keins (nicht erweiterbar)"}.`);
-      if(nas.free>=ram.mods&&nas.ramT.length>1&&ram.t!==nas.ramT[0])add("warn",["ram"],`${nas.name} hat ab Werk ${RAM_T[nas.ramT[0]]}; ECC und Nicht-ECC zu mischen unterstützt Synology nicht. Für ECC beide Plätze mit ECC-Modulen bestücken.`);
+      if(nas.neo&&nas.ram>0&&nas.free>=ram.mods&&ram.t!==nas.ramT[0])add("warn",["ram"],`${nas.name} hat ab Werk ${RAM_T[nas.ramT[0]]}; ECC und Nicht-ECC zu mischen unterstützt Synology nicht. Für ECC beide Plätze mit ECC-Modulen bestücken.`);
       if(nas.brand==="Synology"&&!ram.syno)add("warn",["ram"],"DSM meldet Fremdspeicher als nicht unterstützt, und der Synology-Support kann Hilfe ablehnen. Synology-Module sind teurer, aber offiziell.");
       if(rt<=nas.ram)add("info",["ram"],"Keine Wirkung: danach nicht mehr Arbeitsspeicher als ab Werk.");
     }
@@ -1141,7 +1141,7 @@ function autoPick(c,parts,lowUp){
     const need=ramNeed(nas),cur=nas.ram;if(cur>=need)return [NONE("ram"),0];
     let cand=DB.ram.filter(r=>!r.none&&!r.eol&&ramFits(nas,r));
     if(nas.brand==="Synology"&&cand.some(r=>r.syno))cand=cand.filter(r=>r.syno&&(!nas.synoRam||nas.synoRam.includes(r.id)));
-    if(nas.ramT.length>1){const same=cand.filter(r=>r.t===nas.ramT[0]||nas.free<r.mods);if(same.length)cand=same;}
+    if(nas.neo&&nas.ram>0){const same=cand.filter(r=>r.t===nas.ramT[0]||nas.free<r.mods);if(same.length)cand=same;}
     const ok=cand.filter(r=>{const t=ramTotal(nas,r);return t>=need&&t<=nas.ramMax;}).sort((a,b)=>a.price-b.price);
     if(ok.length)return [ok[0],0];
     const best=cand.filter(r=>ramTotal(nas,r)<=nas.ramMax&&ramTotal(nas,r)>cur).sort((a,b)=>ramTotal(nas,b)-ramTotal(nas,a)||a.price-b.price)[0];
@@ -1223,6 +1223,7 @@ function chooseAll(fixed){
     if(fixed.hdd){ns=[fixed.q.hdd];}
     else{const top=fixed.exp&&!fixed.exp.none?bayTotal(Object.assign({},fixed,{nas})):(nas.expUnit&&!p.bays?nas.exp:nas.bays);const lo=Math.min(minN(p.red),top);ns=[];for(let n=lo;n<=top;n++)ns.push(n);}
     for(const n of ns){
+      if(!fixed.nas&&n>(nas.expUnit?nas.exp:nas.bays))continue;
       cand.push({nas,hdd,n,val:evalCombo(fixed,nas,hdd,n,true).val});
     }
   }
@@ -1923,7 +1924,7 @@ function rcCalc(t,d){
       for(const L of rcLayers(d)){const members=idx.filter(i=>d[i]>L.from);
         if(L.k<need){members.forEach(i=>per[i].unused+=L.h);r.unused+=L.h*L.k;continue;}
         const p=parOf(L.k),data=L.k-p;r.use+=L.h*data;r.par+=L.h*p;members.forEach(i=>{per[i].data+=L.h*data/L.k;per[i].par+=L.h*p/L.k;});}
-      r.per=per;r.tol=t.id==="shr1"?1:2;r.rd=Math.max(1,n-r.tol);r.wr=n<=2?1:Math.max(1,n-r.tol);break;}
+      r.per=per;r.tol=t.id==="shr1"?1:2;r.rd=n===2?2:Math.max(1,n-r.tol);r.wr=n<=2?1:Math.max(1,n-r.tol);break;}
   }
   r.eff=sum?r.use/sum:0;return r;
 }
@@ -1966,7 +1967,7 @@ document.addEventListener("click",e=>{const el=e.target.closest("[data-act]");if
   if(a==="rcAdd"){if(rc.d.length<24)rc.d.push(rc.size);}
   else if(a==="rcDel")rc.d.splice(Number(el.dataset.i),1);
   else if(a==="rcClear")rc.d=[];
-  else if(a==="rcSel")rc.sel=el.dataset.id;
+  else if(a==="rcSel"){const t=RC_TYPES.find(x=>x.id===el.dataset.id);if(!t||!rcCalc(t,rc.d).ok)return;rc.sel=t.id;}
   else if(a==="rcFromCfg"){const parts=resolve(state.picks);if(parts.hdd)rc.d=Array(parts.q.hdd).fill(parts.hdd.tb);}
   else if(a==="rcApply"){setRed(Number(el.dataset.red));rcSave();return;}
   rcSave();renderRaidCalc();});
