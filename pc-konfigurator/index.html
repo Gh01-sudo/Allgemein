@@ -118,6 +118,7 @@ button,input,select{font:inherit;color:inherit}
 .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;font-weight:600;white-space:nowrap}
 .tag.user{background:var(--accent-soft);color:var(--accent)}
 .tag.auto{background:var(--auto-soft);color:var(--auto)}
+.budget-hint{display:block;color:var(--warn);font-size:12px;margin-top:4px;max-width:260px}
 .slot-bar{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;margin-bottom:10px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);font-size:13.5px}
 .slot-bar small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.slot-bar .actions{display:flex;gap:6px;flex-wrap:wrap}
 .tag.rec{background:var(--ok-soft);color:var(--ok)}
@@ -877,6 +878,7 @@ label.btn{display:inline-flex;align-items:center}
     <div class="ctl">
       <label class="ctl-label" for="budget">Budget</label>
       <span class="budget-in"><input id="budget" type="number" inputmode="numeric" min="300" step="50" placeholder="ohne Limit"><span class="mono">€</span></span>
+      <small id="budgetHint" class="budget-hint" hidden>Mindestens 300 € – darunter gibt es keinen sinnvollen PC. Das Budget bleibt leer.</small>
     </div>
     <div class="ctl">
       <label class="switch"><input type="checkbox" id="autofill" checked> Fehlende Teile automatisch ergänzen</label>
@@ -2464,7 +2466,7 @@ function onSlider(k,raw){
   const v=Number(raw),p=P();
   switch(k){
     case "budget":state.budget=v>=8050?null:v;break;
-    case "mix":p.mix=v;if(state.profile!=="office"||true)state.profile=v>=50?"creator":"gaming";break;
+    case "mix":p.mix=v;if(state.profile!=="office")state.profile=v>=50?"creator":"gaming";break;
     case "fps":p.fps=FPS_STEPS[v];break;
     case "ram":p.ram=RAM_STEPS[v];break;
     case "storage":p.storage=SSD_STEPS[v];break;
@@ -4104,7 +4106,9 @@ $("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompu
 let bt=null;
 $("#budget").addEventListener("input",e=>{
   clearTimeout(bt);
-  bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=300)?v:null;recompute();},450);
+  bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=300)?v:null;
+    {const h=$("#budgetHint");if(h)h.hidden=!(v>0&&v<300);}
+    recompute();},450);
 });
 
 document.addEventListener("input",e=>{
