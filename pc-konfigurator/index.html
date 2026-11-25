@@ -1543,7 +1543,9 @@ function checkAll(parts,profile){
   if(cpu&&ram&&cpu.socket==="LGA1851"&&ram.speed<6400)add("info",["ram","cpu"],`Core Ultra profitiert von DDR5-6400 oder schneller.`);
   if(cpu&&ram&&cpu.brand==="AMD"&&ram.speed>6000)add("info",["ram","cpu"],`Bei Ryzen ist DDR5-6000 CL30 der Sweet Spot; schneller bringt kaum mehr.`);
   if(cpu&&board&&cpu.socket==="AM5"&&/^(A620|B650)$/.test(board.chipset)&&/^AMD Ryzen \d 9\d{3}/.test(cpu.name))add("info",["cpu","board"],`Ryzen 9000 auf ${board.chipset}: Das Board braucht ein BIOS mit AGESA 1.2 oder neuer. Bei älterer Lagerware vorher per Flash-BIOS-Taste (ohne CPU) aktualisieren.`);
-  if(state.budget){const tt=Object.values(parts).reduce((s2,x)=>s2+(x?x.price:0),0);if(tt>state.budget){const nK=CORE.filter(c=>state.picks[c.k]&&state.picks[c.k].src==="user").length;add("warn",[],`Budget um ${eur(tt-state.budget)} überschritten.`+(!state.auto?` Schalte die Automatik ein oder wähle günstigere Teile.`:nK?` Die Automatik ändert nur freigegebene Teile – gib behaltene Teile frei oder erhöhe das Budget.`:` Für diese Vorgaben gibt es keine günstigere passende Zusammenstellung.`));}}
+  /* Plattform ohne lieferbare Mainboards (z. B. LGA1700) */
+  if(cpu&&!DB.board.some(b=>b.socket===cpu.socket&&!b.eol))add("info",["cpu","board"],`Für Sockel ${cpu.socket} sind kaum noch neue Mainboards lieferbar (nur Restbestände, oft teuer). Ohne vorhandenes Board ist ein aktueller Prozessor meist die bessere Wahl.`);
+  if(state.budget){const tt=Object.values(parts).reduce((s2,x)=>s2+(x?x.price:0),0);if(tt>state.budget){const nK=CORE.filter(c=>state.picks[c.k]&&state.picks[c.k].src==="user").length;add("warn",[],`Budget um ${eur(tt-state.budget)} überschritten.`+(I.some(i=>i.level==="error")?` Zuerst den Konflikt oben lösen – mit nicht zusammenpassenden Teilen lässt sich das Budget nicht planen.`:!state.auto?` Schalte die Automatik ein oder wähle günstigere Teile.`:nK?` Die Automatik ändert nur freigegebene Teile – gib behaltene Teile frei oder erhöhe das Budget.`:` Für diese Vorgaben gibt es keine günstigere passende Zusammenstellung.`));}}
   if(profile!=="office"&&cpu&&hasGpu&&buildFps(parts,P().res)<P().fps*0.9)add("info",["gpu"],`Ziel-Bildrate nicht erreicht: ca. ${buildFps(parts,P().res)} statt ${P().fps} FPS in ${RES[P().res].label} (AAA, ohne Upscaling).`);
   /* RAM-Höhe unter großen Doppelturm-Kühlern */
   if(ram&&cooler&&cooler.kind==="air"&&cooler.cap>=270&&ram.h&&ram.h>40)add("info",["ram","cooler"],`Der ${ram.h} mm hohe RAM (mit Heatspreader/RGB) stößt beim ${cooler.name} an den vorderen Lüfter: Lüfter einige Millimeter höher setzen oder flacheren RAM wählen.`);
@@ -1940,7 +1942,13 @@ function budgetFill(base){
     }
     if(!res){pa.storage=base.ssd?saved.storage:minSsd;pa.ram=base.ram?saved.ram:minRam;res=budgetSearch(base,T,{igpu:state.profile!=="office"},B,true);used=null;}
   }finally{pa.ram=saved.ram;pa.storage=saved.storage;}
-  if(!res)return null;
+  if(!res){
+    /* Keine passende Zusammenstellung: Ursache bei den behaltenen Teilen nennen */
+    const err=checkAll(resolve(base),state.profile).find(i=>i.level==="error");
+    budgetNotes.push(err?`Deine behaltenen Teile passen nicht zusammen: ${err.msg} Darum lässt sich das Budget von ${eur(B)} nicht planen – gib eines davon frei.`
+      :`Mit deinen behaltenen Teilen findet die Automatik keine passende Zusammenstellung. Gib Teile frei.`);
+    return null;
+  }
   const rp=resolve(res);
   if(used){
     if(used.storage&&rp.ssd&&rp.ssd.cap<saved.storage)budgetNotes.push(`Budget bindend: SSD auf ${capTxt(rp.ssd.cap)} statt ${capTxt(saved.storage)} gesenkt, sonst wäre das Budget von ${eur(B)} überschritten.`);
