@@ -849,7 +849,7 @@ function buildJump(){
   active().forEach(function(ch){var o=document.createElement("option");o.value=ch.id;o.textContent=(CH.indexOf(ch)+1)+". "+ch.t;jump.appendChild(o);});
   [["profil","Schutzstufe wählen"],["grenzen","Grenzen des Schutzes"],["architektur","Schutz-Schichten"],["tricks","Versteckte Tricks"],["matrix","Härtungsmatrix"],["routine","Wartungsroutine"],["quiz","Phishing-Quiz"],["notfall","Notfallplan"],["glossar","Glossar"],["checkliste","Checkliste"]].forEach(function(x){var o=document.createElement("option");o.value=x[0];o.textContent=x[1];jump.appendChild(o);});
 }
-jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
+jump.addEventListener("change",function(){var el=document.getElementById(jump.value);if(el){if(el.hidden){filter="all";threat="";document.querySelectorAll(".filter .chip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.f==="all"?"true":"false");});document.querySelectorAll(".tchip").forEach(function(c){c.setAttribute("aria-pressed",c.dataset.t===""?"true":"false");});applyFilter();}el.scrollIntoView({behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});}jump.value="";});
 
 /* Fortschritt */
 function syncProgress(){
@@ -868,7 +868,7 @@ function syncProgress(){
   document.getElementById("stBar").style.width=(100*n/TOT)+"%";
   document.getElementById("mbText").textContent=n+"/"+TOT+" · "+LVL[PROFILE];
   var rem=A.filter(function(c){return !done[c.id];}).reduce(function(x,c){return x+META[c.id][0];},0);
-  document.getElementById("stTime").textContent=rem?"Noch ca. "+(rem>=60?Math.floor(rem/60)+" Std. "+(rem%60?rem%60+" Min.":""):rem+" Min.")+" Arbeit in dieser Stufe":"Keine offenen Kapitel in dieser Stufe";
+  document.getElementById("stTime").textContent=rem?"Noch ca. "+(rem>=60?Math.floor(rem/60)+" Std."+(rem%60?" "+rem%60+" Min.":""):rem+" Min.")+" Arbeit in dieser Stufe":"Keine offenen Kapitel in dieser Stufe";
   document.querySelector(".status .eyebrow").textContent="Sicherheitsstatus · Stufe "+LVL[PROFILE];
   var t=document.getElementById("progTitle"),s=document.getElementById("progSub");
   if(n===0){t.textContent="Gefährdet: noch nichts eingerichtet";s.textContent="Starten Sie mit den Kapiteln, die als „Pflicht“ markiert sind.";}

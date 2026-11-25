@@ -26,8 +26,8 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   ok('Kopfleiste zeigt FPS',/FPS/.test(await p.textContent('#hud')));
 
   console.log('Ansichten');
-  for(const v of ['dash','ov','cmp','konfig']){await p.click('#tab-'+v);await p.waitForTimeout(250);}
-  ok('alle vier Ansichten ohne Fehler',errs.length===0,errs);
+  for(const v of ['dash','ov','cmp','up','konfig']){await p.click('#tab-'+v);await p.waitForTimeout(250);}
+  ok('alle fünf Ansichten ohne Fehler',errs.length===0,errs);
 
   console.log('Regler-Kombinationen (Budget, Auflösung, Gaming/Kreativ, Größe)');
   await p.click('#tab-konfig');await p.waitForTimeout(200);

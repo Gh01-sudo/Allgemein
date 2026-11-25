@@ -1475,14 +1475,24 @@ const KEY="pcwerkbank.v1";
 const DEF_PARAMS={mix:60,res:3,fps:60,ram:32,storage:1000,quiet:80,size:"ATX",hours:4,kwh:0.35};
 let state={profile:"gaming",budget:null,auto:true,picks:{},params:Object.assign({},DEF_PARAMS),view:"konfig"};
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
+/* Parameter aus Speicher, Link, Code oder Datei: nur gültige Werte übernehmen (sonst stürzen Auswahl und Darstellung ab) */
+function cleanParams(src){
+  const params=Object.assign({},DEF_PARAMS);
+  if(src&&typeof src==="object")for(const k in DEF_PARAMS){const v=src[k];if(typeof v===typeof DEF_PARAMS[k]&&(typeof v!=="number"||isFinite(v)))params[k]=v;}
+  if(!FORM_FIT[params.size])params.size=DEF_PARAMS.size;
+  if(!(Number.isInteger(params.res)&&params.res>=0&&params.res<RES.length))params.res=DEF_PARAMS.res;
+  params.mix=clamp(params.mix,0,100);params.quiet=clamp(params.quiet,0,100);
+  if(!(params.fps>0))params.fps=DEF_PARAMS.fps;if(!(params.ram>0))params.ram=DEF_PARAMS.ram;if(!(params.storage>0))params.storage=DEF_PARAMS.storage;
+  if(!(params.hours>0))params.hours=DEF_PARAMS.hours;if(!(params.kwh>0))params.kwh=DEF_PARAMS.kwh;
+  return params;
+}
 function load(){
   try{
     const s=JSON.parse(localStorage.getItem(KEY)||"null");
     if(!s||!s.picks)return false;
     const picks={};
     for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
-    const params=Object.assign({},DEF_PARAMS);
-    if(s.params)for(const k in DEF_PARAMS){if(typeof s.params[k]===typeof DEF_PARAMS[k])params[k]=s.params[k];}
+    const params=cleanParams(s.params);
     state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks,params,view:["dash","ov","cmp","up"].includes(s.view)?s.view:"konfig"};
     return true;
   }catch(e){return false;}
@@ -2054,7 +2064,8 @@ function fillCore(base){
       const left=state.budget-tot(p);if(left<Math.max(30,state.budget*0.03))break;
       const rp0=resolve(p),fps0=Math.max(1,buildFps(rp0,P().res));let best=null;
       /* Bereits vorhandene Warnungen (z. B. durch eigene Teile) blockieren keine Aufwertung, nur neue */
-      const known=new Set(checkAll(rp0,state.profile).filter(i=>i.level==="error"||i.level==="warn").map(i=>i.msg));
+      const wkey=i=>i.level+"|"+i.cats.join(",");
+      const known=new Set(checkAll(rp0,state.profile).filter(i=>i.level==="error"||i.level==="warn").map(wkey));
       for(const cat of pri){
         if(!p[cat]||p[cat].src!=="auto")continue;
         const cur=get(cat,p[cat].id);if(!cur||cur.none||cur.kind==="boxed")continue;
@@ -2068,7 +2079,7 @@ function fillCore(base){
           const trial=Object.assign({},p,{[cat]:{id:o.id,src:"auto"}});
           if((cat==="gpu"||cat==="cpu")&&trial.psu&&trial.psu.src==="auto"){const r2=Object.assign({},trial);delete r2.psu;const c2=choose("psu",r2,T,null);if(c2)trial.psu={id:c2.id,src:"auto"};}
           const cost=tot(trial)-tot(p);if(cost<=0||tot(trial)>state.budget)continue;
-          const rt=resolve(trial);if(checkAll(rt,state.profile).some(i=>(i.level==="error"||i.level==="warn")&&!known.has(i.msg)))continue;
+          const rt=resolve(trial);if(checkAll(rt,state.profile).some(i=>(i.level==="error"||i.level==="warn")&&!known.has(wkey(i))))continue;
           let gain=0;
           if(cat==="gpu")gain=(buildFps(rt,P().res)/fps0-1)*(state.profile==="office"?0.1:1.2-0.5*w);
           else if(cat==="cpu")gain=(cpuBlend(o)/cpuBlend(cur)-1)*(0.3+w)+(buildFps(rt,P().res)/fps0-1)*(1-w)*0.8;
@@ -2675,7 +2686,7 @@ function renderUp(){
     let psuN=null;if(psuW<Math.max(need,g.rec||0)){psuN=psuFor(Math.max(need,g.rec||0));if(psuN){cost+=psuN.price;notes.push(`neues Netzteil ${psuN.name} (${eur(psuN.price)})`);}}
     if(g.conn==="12V-2x6"&&!psuN)notes.push("12V-2x6-Adapter der Karte nutzen");
     if(nf<g.g*RES[ri].f*0.85)notes.push("Prozessor bremst die neue Karte");
-    opts.push({kind:"GPU",what:g.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""),cost,nf,notes,mc:oc.m});});
+    opts.push({kind:"GPU",what:g.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""),ref:g,cost,nf,notes,mc:oc.m});});
   // B) Prozessor/Plattform
   DB.cpu.filter(c=>!c.eol&&c.g>oc.g*1.08).forEach(c=>{
     let cost=c.price;const notes=[];const same=c.socket===oc.socket;
@@ -2684,11 +2695,11 @@ function renderUp(){
     if(same)notes.push("passt in dein Mainboard (vorher BIOS aktualisieren)");
     if(!c.box)notes.push("Kühler nötig, falls der alte nicht passt");
     const nf=fps(og.g,c.g);
-    opts.push({kind:"CPU",what:c.name.replace(/^(AMD|Intel) /,""),cost,nf,notes,mc:c.m});});
+    opts.push({kind:"CPU",what:c.name.replace(/^(AMD|Intel) /,""),ref:c,cost,nf,notes,mc:c.m});});
   // C) beides: beste GPU-Option + beste CPU-Option kombiniert
   const vf=o=>(o.nf-now)/Math.max(50,o.cost);
   const bg=opts.filter(o=>o.kind==="GPU"&&o.cost<=bud).sort((a,b)=>vf(b)-vf(a))[0],bc=opts.filter(o=>o.kind==="CPU"&&o.cost<=bud).sort((a,b)=>vf(b)-vf(a))[0];
-  if(bg&&bc){const g=DB.gpu.find(x=>x.name.endsWith(bg.what)||x.name.includes(bg.what)),c=DB.cpu.find(x=>x.name.includes(bc.what));
+  if(bg&&bc){const g=bg.ref,c=bc.ref;
     if(g&&c){const nf=fps(g.g,c.g);opts.push({kind:"Beides",what:bc.what+" + "+bg.what,cost:bg.cost+bc.cost,nf,notes:["Plattform und Grafikkarte zusammen",...bc.notes.filter(n=>!/Kühler/.test(n))],mc:c.m});}}
   const list=opts.filter(o=>o.cost<=bud&&o.nf>now).sort((a,b)=>vf(b)-vf(a)).slice(0,10);
   $("#upSub").textContent=`jetzt ca. ${now} FPS in ${RES[ri].label} (AAA)`;
@@ -2721,10 +2732,13 @@ function shopText(parts){
 function shareUrl(){const base=location.href.split("#")[0];return base+"#cfg="+encodeURIComponent(encodeCfg(snapshot()));}
 function importFromHash(){
   const h=location.hash||"";if(!h.startsWith("#cfg="))return;
-  const o=decodeCfg(decodeURIComponent(h.slice(5)));if(!o)return;
-  try{doSave("Gesichert vor geteiltem Link "+new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"short"}));}catch(e){}
-  applySnapshot(o);
+  let o=null;try{o=decodeCfg(decodeURIComponent(h.slice(5)));}catch(e){}
+  const usable=o&&o.picks&&typeof o.picks==="object"&&Object.keys(o.picks).some(c=>o.picks[c]&&get(c,o.picks[c].id));
+  if(!usable){try{history.replaceState(null,"",location.href.split("#")[0]);}catch(e){}setTimeout(()=>flash("#heroToast","Der geteilte Link enthält keine gültige Konfiguration."),300);return;}
+  /* Sekunden im Namen: zwei Links in derselben Minute dürfen die erste Sicherung nicht überschreiben */
+  try{doSave("Gesichert vor geteiltem Link "+new Date().toLocaleString("de-DE",{dateStyle:"short",timeStyle:"medium"}));}catch(e){}
   try{history.replaceState(null,"",location.href.split("#")[0]);}catch(e){}
+  if(!applySnapshot(o))return;
   setTimeout(()=>flash("#heroToast","Konfiguration aus dem Link geladen. Deine vorige ist unter „Speichern / Laden“ gesichert."),300);
 }
 
@@ -3791,9 +3805,9 @@ function renderTrend(){
    <p class="subline">Datenpunkte aus Preisvergleichen und Fachartikeln (PCGH, 3DCenter, elitegear/Geizhals, computingforgeeks, Herstellerpreise). Zwischen den Punkten ist der Verlauf vereinfacht; der SSD-Wert vom Oktober 2026 ist ein US-Preis, umgerechnet.</p>`;
 }
 /* ---------- Auswahl-Schublade ---------- */
-let pickerCat=null,lastFocus=null;
+let pickerCat=null,lastFocus=null,pickerOf=null;
 function openPicker(cat){
-  pickerCat=cat;lastFocus=document.activeElement;
+  pickerCat=cat;pickerOf=null;lastFocus=document.activeElement;
   $("#pickerTitle").innerHTML=icon(cat)+esc(CAT_LABEL[cat]+" wählen");
   $("#pSearch").value="";
   $("#picker").hidden=false;
@@ -3819,7 +3833,8 @@ function renderPicker(){
     const lvl=iss.some(i=>i.level==="error")?"error":iss.some(i=>i.level==="warn")?"warn":"ok";
     return {p,iss,lvl};
   });
-  if(q)rows=rows.filter(r=>(r.p.name+" "+spec(cat,r.p)).toLowerCase().includes(q));
+  if(pickerOf)rows=rows.filter(r=>r.p.id===pickerOf||r.p.of===pickerOf);
+  else if(q)rows=rows.filter(r=>(r.p.name+" "+spec(cat,r.p)).toLowerCase().includes(q));
   const hidden=onlyOk?rows.filter(r=>r.lvl==="error").length:0;
   if(onlyOk)rows=rows.filter(r=>r.lvl!=="error");
   const perf=p=>cat==="cpu"?score("cpu",p):cat==="gpu"?p.g:p.tier*1000+score(cat,p);
@@ -3900,7 +3915,7 @@ function applySnapshot(o){
   if(!o||typeof o!=="object"||!o.picks)return false;
   const picks={};for(const c in o.picks){const v=o.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
   if(!Object.keys(picks).length)return false;
-  const params=Object.assign({},DEF_PARAMS);if(o.params)for(const k in DEF_PARAMS){if(typeof o.params[k]===typeof DEF_PARAMS[k])params[k]=o.params[k];}
+  const params=cleanParams(o.params);
   state.picks=picks;state.params=params;state.profile=WEIGHTS[o.profile]?o.profile:state.profile;
   state.budget=(typeof o.budget==="number"&&o.budget>0)?o.budget:null;state.auto=o.auto!==false;
   recompute();renderSliders&&renderSliders();render();return true;
@@ -4036,7 +4051,7 @@ document.addEventListener("click",e=>{
   if(act==="pick")openPicker(cat);
   if(act==="theme"){const d=document.documentElement,n=d.dataset.theme==="dark"?"light":"dark";d.dataset.theme=n;try{localStorage.setItem("pcwerkbank.theme",n);}catch(e){}render();return;}
   if(act==="cReset"){cmpF={brand:new Set(),maker:new Set()};$("#cMin").value="";$("#cMax").value="";$("#cQ").value="";$("#cQuiet").checked=false;$("#cAltNow").checked=false;render();return;}
-  if(act==="pickModel"){const g=get("gpu",state.picks.gpu.id);openPicker("gpu");$("#pSearch").value=g.name.replace(/^(NVIDIA|AMD) (GeForce |Radeon )?/,"").replace(/ \d+ GB$/,"");renderPicker();}
+  if(act==="pickModel"){const g=get("gpu",state.picks.gpu.id);openPicker("gpu");pickerOf=g.id;$("#pSearch").value=g.name.replace(/^(NVIDIA|AMD) (GeForce |Radeon )?/,"");renderPicker();}
   else if(act==="close")closePicker();
   else if(act==="choose"){state.picks[pickerCat]={id:el.dataset.id,src:"user"};closePicker();recompute();}
   else if(act==="keep"){state.picks[cat].src="user";save();render();}
@@ -4055,7 +4070,7 @@ document.addEventListener("click",e=>{
 });
 $("#picker").addEventListener("click",e=>{if(e.target.id==="picker")closePicker();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidden)closePicker();});
-$("#pSearch").addEventListener("input",renderPicker);
+$("#pSearch").addEventListener("input",()=>{pickerOf=null;renderPicker();});
 $("#pSort").addEventListener("change",renderPicker);
 $("#pCompat").addEventListener("change",renderPicker);
 const tipEl=document.createElement("div");tipEl.className="tip-float";tipEl.hidden=true;tipEl.setAttribute("role","tooltip");document.body.appendChild(tipEl);
