@@ -67,3 +67,54 @@ Netzwerkkarten, USVs, Synology-RAM und -SSDs, Synology HAT-Platten (Modellnamen 
 - [Geizhals Crucial SO-DIMM 32 GB DDR5](https://geizhals.de/crucial-so-dimm-32gb-ct32g56c46s5-a2988651.html), [Crucial DDR4 16 GB](https://geizhals.de/2326574)
 - [Minisforum N5 Pro (Guru3D)](https://www.guru3d.com/story/minisforum-n5-pro-ai-nas-with-ryzen-ai-9-hx-pro-370-specs-price/)
 - [HDD-Preisentwicklung November 2026](https://hddhunt.com/blog/best-hard-drive-deals-november-2026/)
+
+---
+
+# Runde 2: Synology-Schwerpunkt, neue Modelle, RAID-Rechner (25.11.2026)
+
+Zwei unabhängige Prüfer haben die gesamte Datenbank und alle Regeln geprüft: einer alles mit Synology-Bezug (Datenblätter, Spec-Tabs, Zubehörseiten mit „Applied Models“, DDR4-Modulseite, Paketlisten), einer alles Übrige einschließlich der Rechenmodelle. Grundlage für die neuen Synology-Modelle war eine vorgeschaltete Recherche der aktuellen Synology-Produktliste. Alle Befunde sind eingearbeitet.
+
+## Neu aufgenommen
+- **Synology:** DS124, DS223j, DS223, DS423, DS725+, DS725neo+, DS925neo+, DS1525neo+, DS1825neo+, DS2422+, RS422+, RS1221+; Auslaufmodelle DS224+, DS423+, DS923+, DS1522+, DS1621+, DS1821+ (Phase Out, werden nicht automatisch gewählt). „neo+“ = gleiche Hardware wie „+“, aber 4 GB non-ECC ab Werk (ComputerBase: „non-ECC option“).
+- **Synology-Zubehör:** RAM D4NS01-4G, D4ES04-4G, D4ES03-8G/16G, D4ES02-4G/8G, D4ES01-4G/8G/16G, D4ECSO-2666-16G mit Freigabeliste je Modell; SSD SNV5420-400/800/1600; Karten E10G30-T1/-T2, E10M20-T1, M2D20 mit Freigabeliste je Modell; Erweiterungseinheiten DX517, DX525, DX1222, RX418; HAT3300-4T, HAT3320-8T/20T, HAT3310-12T/16T, HAT5310-20T, HAT5320-24T.
+- **Andere:** UGREEN DXP2800 GT, DXP4800 GT; TerraMaster F2-425 Plus, F4-425 Plus, F4-425 Pro.
+
+## Befunde und Korrekturen (Auswahl)
+
+| Schwere | Eintrag | Feld | vorher | korrigiert | Beleg |
+|---|---|---|---|---|---|
+| hoch | syn-hat12, syn-hat16 | warr | 5 | 3 Jahre (ganze Plus-Serie) | synology.com/products/drives/hdd/plus-hat |
+| hoch | DS225+ | m2 | 2 | 0 (laut Spec-Tab kein M.2) | synology.com/products/DS225+#specs |
+| hoch | 2025er Plus | Regel M.2 | Warnung | Konflikt: Fremd-M.2 nicht für Cache/neuen Pool (KB „Drive compatibility policies“) | kb.synology.com/en-global/DSM/tutorial/Drive_compatibility_policies |
+| mittel | synoRam DS923+, DS1522+, DS1621+, DS1821+, DS2422+, DS423+, RS1221+, neo+ | Freigaben | unvollständig | laut DDR4-Seite ergänzt (D4ES03, D4ES04, D4NS01, D4ECSO) | synology.com/products/DDR4 |
+| mittel | RAM-Regel | – | fehlte | Synology verlangt identische Module; Automatik wählt jetzt z. B. 2× D4ES03-16G statt zu mischen (RAM mit Stückzahl) | Spec-Tabs, Memory Notes |
+| mittel | syn-rs1221p | exp | 0 | 12 mit RX418 | synology.com/products/RS1221+#specs |
+| mittel | syn-e10g30t1 | fits | ohne DS2422+ | DS2422+ ergänzt | synology.com/products/E10G30-T1 |
+| mittel | syn-d4es04-4 | price | 281 | 165 € (Geizhals 01.10.–16.11.2026) | geizhals.de/synology-d4es04-4g-a3480615.html |
+| mittel | tm-f4-424pro | cpu, slots | i3-N300, 2 | i3-N305, 1 Slot | terra-master.com/products/f4-424-pro |
+| mittel | qnap-ts473a | ecc | nein | ECC unterstützt | qnap.com/de-de/product/ts-473a/specs/hardware |
+| mittel | qnap-ts264/464/664/233 | idle | 11/14/18/6 | 16/19/21/3,4 W | QNAP-Spezifikationen |
+| mittel | qnap-ts464, ug-dxp4800p | price/chk | 641/514 „geprüft“ | 760/560 Schätzung (widersprüchliche Belege) | MediaMarkt AT, heise |
+| mittel | sg-iw8, wd-rp8, wd-rp12, wd-rp4, sg-iw4, tosh-n300-8, wd-hc580 | Watt, dB | alte Datenblattwerte | aktuelle Datenblätter WD/Seagate/Toshiba | Herstellerdatenblätter |
+| mittel | b2 | Preis | 5,6 €/TB | ca. 6,4 €/TB (6,95 $ seit 1.5.2026) | backblaze.com/cloud-storage/pricing |
+| mittel | CLOUD Hetzner 10/20 TB | Jahrespreis | 291,60/556,80 | 297,00/579,72 € | hetzner.com/storage/storage-box |
+| niedrig | HAT-Platten, SNV-SSDs | MB/s, Watt, TBW | Schätzwerte | Synology-Datenblätter | Synology HDD-/SSD-Seiten |
+| niedrig | SNV5420-1600G | price | 1.200 | 1.789 € | Geizhals Okt. 2026 |
+| niedrig | ug-dxp4800pro | ramMax | 64 | 96 GB | TechRadar 09.05.2026 |
+| niedrig | mf-n5pro | price | 1.000 | 1.119 € (EU-Shop) | minisforumpc.eu |
+| niedrig | tp-tx401, qnap-qm2 | price | 95/290 | 68/230 € | Geizhals/heise, office-partner.de |
+| niedrig | Crucial-RAM | Verfügbarkeit | – | Marke eingestellt, „Restbestand“ | storagereview.com |
+| niedrig | Unraid-Hinweis | Text | „einmalig 50–250 €“ | 49/109/249 $, nur Lifetime ohne Folgekosten | unraid.net |
+| niedrig | speedInfo | RAID 0 mit 2 Platten | 1× | ca. 1,8× | eigene Analyse |
+
+## Bestätigt
+- SHR-/SHR-2-Schichtmodell (4+4+8+8 TB → 16 bzw. 8 TB wie im Synology RAID Calculator), Mindestanzahl Platten RAID 1/5/6/10 und RAIDZ1/2/3, Ausfalltoleranz, TB→TiB 0,909, 2,5 GbE ≈ 288 MB/s, dB-Addition, kWh-Formel.
+- Synology-Hardware: Schächte, CPUs, RAM-Ausstattung (DS1525+/DS1825+: 1× 8 GB, ein Slot frei), LAN, M.2, PCIe/Upgrade-Slot, Erweiterungseinheiten, Leistungsaufnahme im Ruhezustand, VMM/Container Manager, Phase-Out-Status.
+- TrueNAS Community Edition kostenlos; Plex mit AMD-iGPU eingeschränkt.
+
+## Bewusst abweichend / nicht prüfbar
+- Grundgeräusch der Synology-Geräte liegt bewusst 2–3 dB unter dem Datenblatt, weil das Datenblatt mit eingebauten Platten misst und das Tool das Plattengeräusch separat addiert.
+- Gleichzeitige 4K-Transcodes (t4) sind Schätzungen; kein Hersteller nennt Zahlen.
+- Preise ohne belastbaren Beleg (als Schätzung markiert): DS725+, DS725neo+, DS1525neo+, DS1825neo+, DS2422+, RS422+, RS1221+, Auslaufmodelle, HAT3320-20T, SNV5420-400/800, DX517, DX1222, RX418, ältere RAM-Module.
+- Ob Synology Fremd-Netzwerkkarten offiziell zulässt, ließ sich nicht belegen; das Tool meldet sie als Konflikt (kein Treiber in DSM).
+- DX525: Synology nennt kompatible Laufwerke als Pflicht; ob DSM 7.3 das lockert, ist offen (Hinweis im Tool).
