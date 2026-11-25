@@ -770,6 +770,7 @@ label.btn{display:inline-flex;align-items:center}
       </section>
       <section class="card span12 cpanel" aria-label="Regler">
         <h2><span class="ph-dot"></span>Regler <span class="eyebrow">ändern die Bauteile</span></h2>
+        <div id="dKeep"></div>
         <div class="sliders grid2" id="dSliders"></div>
         <div id="dUndo"></div>
       </section>
@@ -1808,11 +1809,16 @@ function spendLeftover(p,T,B){
   for(let it=0;it<14;it++){
     const left=B-sumPrice(p);if(left<Math.max(25,B*0.02))break;
     const rp0=resolve(p),fps0=Math.max(1,buildFps(rp0,P().res));let best=null;
-    const known=new Set(checkAll(rp0,state.profile).filter(i=>i.level==="error"||i.level==="warn").map(i=>i.msg));
+    /* Bekannte Warnungen nach Art und betroffenen Teilen, nicht nach Wortlaut (der enthält Zahlen, die sich mit jedem Upgrade ändern) */
+    const wkey=i=>i.level+"|"+i.cats.join(",");
+    const known=new Set(checkAll(rp0,state.profile).filter(i=>i.level==="error"||i.level==="warn").map(wkey));
     for(const cat of pri){
       if(!p[cat]||p[cat].src!=="auto")continue;
       const cur=get(cat,p[cat].id);if(!cur||cur.none||cur.kind==="boxed")continue;
       const ctx=Object.assign({},rp0);delete ctx[cat];
+      /* Netzteil und Kühler werden unten passend nachgezogen: sie dürfen die Auswahl nicht vorab begrenzen */
+      if((cat==="gpu"||cat==="cpu")&&p.psu&&p.psu.src==="auto")delete ctx.psu;
+      if(cat==="cpu"&&p.cooler&&p.cooler.src==="auto")delete ctx.cooler;
       for(let o0 of betterOptions(cat,cur,ctx,3)){
         if((cat==="case"||cat==="board")&&o0.form!==cur.form)continue;
         if(cat==="cpu"&&o0.socket!==cur.socket&&p.board&&p.board.src==="user")continue;
@@ -1825,7 +1831,7 @@ function spendLeftover(p,T,B){
         if(cat==="cpu"&&o.socket!==cur.socket){if(trial.board&&trial.board.src==="auto"){const r2=Object.assign({},trial);delete r2.board;const c2=choose("board",r2,T,0);if(!c2)continue;trial.board={id:c2.id,src:"auto"};}}
         for(const dep of (cat==="gpu"||cat==="cpu")?["cooler","psu"]:[]){if(dep==="cooler"&&cat==="gpu")continue;if(trial[dep]&&trial[dep].src==="auto"){const r2=Object.assign({},trial);delete r2[dep];const c2=choose(dep,r2,T,null);if(c2)trial[dep]={id:c2.id,src:"auto"};}}
         const cost=sumPrice(trial)-sumPrice(p);if(cost<=0||sumPrice(trial)>B)continue;
-        const rt=resolve(trial);if(checkAll(rt,state.profile).some(i=>(i.level==="error"||i.level==="warn")&&!known.has(i.msg)))continue;
+        const rt=resolve(trial);if(checkAll(rt,state.profile).some(i=>(i.level==="error"||i.level==="warn")&&!known.has(wkey(i))))continue;
         let gain=0;
         if(cat==="gpu")gain=(buildFps(rt,P().res)/fps0-1)*(state.profile==="office"?0.1:1.2-0.5*w)+(state.profile!=="office"?0.3*w*Math.log(effG(o)/Math.max(5,effG(cur))):0);
         else if(cat==="cpu")gain=(cpuBlend(o)/cpuBlend(cur)-1)*(0.3+w)+(buildFps(rt,P().res)/fps0-1)*(1-w)*0.8;
@@ -1881,14 +1887,14 @@ function budgetSearch(base,T,relax,B,ignoreBudget){
   }
   /* Untergrenze der Restteile für schnelles Aussortieren */
   const restCats=FILL_ORDER.filter(c=>c!=="cpu"&&c!=="gpu"&&!base[c]);
-  const minOf=c=>Math.min(...DB[c].filter(x=>!x.eol&&!(c==="ram"&&x.cap<P().ram)&&!(c==="ssd"&&x.cap<P().storage)&&!(c==="case"&&!FORM_FIT[x.form||"ATX"].includes(P().size)&&x.form!==P().size)).map(x=>x.price).concat([0]));
+  const minOf=c=>{const pr=DB[c].filter(x=>!x.eol&&!(c==="ram"&&x.cap<P().ram)&&!(c==="ssd"&&x.cap<P().storage)&&!(c==="case"&&!FORM_FIT[x.form||"ATX"].includes(P().size)&&x.form!==P().size)).map(x=>x.price);return pr.length?Math.min(...pr):0;};
   const minRest=restCats.reduce((s2,c)=>s2+(c==="cooler"?0:minOf(c)),0)+sumPrice(Object.fromEntries(Object.entries(base).filter(([c])=>c!=="cpu"&&c!=="gpu")));
   const cand=[];
   for(const cpu of cpus)for(const gpu of gpus){
     if(!gpu)continue;
     if(!ignoreBudget&&cpu.price+gpu.price+minRest>B)continue;
     if(gpu.none&&!cpu.igpu)continue;
-    if(!office&&!gpu.none&&cpuCap(cpu)<gpuFps(gpu,cpu,P().res)*0.6)continue;
+    if(!office&&!gpu.none&&!(base.cpu&&base.gpu)&&cpuCap(cpu)<gpuFps(gpu,cpu,P().res)*0.6)continue;
     const p=Object.assign({},base);
     if(!base.cpu)p.cpu={id:cpu.id,src:"auto"};
     if(!base.gpu)p.gpu={id:gpu.id,src:"auto"};
@@ -1956,6 +1962,8 @@ function budgetFill(base){
     if(used.igpu&&rp.gpu&&rp.gpu.none)budgetNotes.push(`Budget bindend: Für eine eigene Grafikkarte reicht ${eur(B)} nicht. Gewählt ist ein Prozessor mit integrierter Grafik, eine Grafikkarte lässt sich später nachrüsten.`);
   }else if(sumPrice(res)>B){
     const lockedSum=sumPrice(base),nCore=CORE.filter(c=>base[c.k]).length;
+    if(!base.ssd&&rp.ssd&&rp.ssd.cap<saved.storage)budgetNotes.push(`SSD auf ${capTxt(rp.ssd.cap)} statt ${capTxt(saved.storage)} gesenkt, um so nah wie möglich an das Budget zu kommen.`);
+    if(!base.ram&&rp.ram&&rp.ram.cap<saved.ram)budgetNotes.push(`${rp.ram.cap} GB statt ${saved.ram} GB Arbeitsspeicher, um so nah wie möglich an das Budget zu kommen.`);
     if(lockedSum>B)budgetNotes.push(`Deine behaltenen Teile kosten zusammen schon ${eur(lockedSum)} und damit mehr als das Budget von ${eur(B)}. Gib Teile frei oder erhöhe das Budget.`);
     else if(nCore)budgetNotes.push(`Mit deinen behaltenen Teilen kostet die günstigste passende Zusammenstellung ${eur(sumPrice(res))}, also mehr als ${eur(B)}. Gib Teile frei oder erhöhe das Budget.`);
     else budgetNotes.push(`Für die Baugröße ${P().size} kostet die günstigste passende Zusammenstellung ${eur(sumPrice(res))}, mehr als das Budget von ${eur(B)}.${P().size!=="ATX"?" Mit einer größeren Baugröße wird es günstiger.":""}`);
@@ -2222,7 +2230,7 @@ function renderSlots(parts,issues){
       <div class="slot-side"><span class="slot-key">${esc(String(kv[0]))}<small>${esc(kv[1])}</small></span><span class="price">${p.price?eur(p.price):"0 €"}</span><div class="actions">${acts.join("")}</div></div></div>`;
   }).join("");
   const nKeep=CORE.filter(c=>state.picks[c.k]&&state.picks[c.k].src==="user").length;
-  const bar=`<div class="slot-bar"><span><b>${nKeep} von ${CORE.length}</b> Kernteilen behalten${state.budget?` · Budget ${eur(state.budget)} ist bindend`:""}<small>Nur freigegebene Teile werden automatisch gewählt. Selbst ausgewählte Teile werden behalten.</small></span><span class="actions"><button type="button" class="btn" data-act="keepAll"${nKeep===CORE.length?" disabled":""}>Alle behalten</button><button type="button" class="btn ghost" data-act="releaseAll"${nKeep===0?" disabled":""}>Alle freigeben</button></span></div>`;
+  const bar=`<div class="slot-bar"><span><b>${nKeep} von ${CORE.length}</b> Kernteilen behalten${state.budget?` · Budget ${eur(state.budget)} ist bindend`:""}<small>Nur freigegebene Teile werden automatisch gewählt. Selbst ausgewählte Teile werden behalten.</small></span><span class="actions"><button type="button" class="btn" data-act="keepAll"${nKeep===CORE.length?" disabled":""}>Alle behalten</button><button type="button" class="btn ghost" data-act="releaseAll"${nKeep===0||!state.auto?" disabled":""}>Alle freigeben</button></span></div>`;
   $("#slots").innerHTML=bar+html;
 }
 function gamingLabel(gpu,cpu){
@@ -2403,7 +2411,6 @@ const SLIDERS=[
  {k:"quiet",label:"Lautstärke",aff:"Kühler, Gehäuse, Netzteil",min:0,max:100,step:10,ends:["egal","flüsterleise"]},
  {k:"size",label:"Gehäusegröße",aff:"Gehäuse, Mainboard, Kühler, Netzteil",min:0,max:2,step:1,ends:["ITX (klein)","ATX (groß)"]}
 ];
-const RELEASE={budget:CORE.map(c=>c.k),mix:CORE.map(c=>c.k),res:["gpu","cpu"],fps:["gpu","cpu"],ram:["ram"],storage:["ssd"],quiet:["cooler","case","psu"],size:["case","board","cooler","psu"]};
 function sliderPos(k){
   const p=P();
   switch(k){
@@ -2438,10 +2445,10 @@ function renderSliders(){
   $("#dPowerSl").innerHTML=`<div class="sl"><div class="sl-top"><label for="sl-hours">Nutzung pro Tag</label><output id="out-hours">${p.hours} h</output></div><input type="range" id="sl-hours" data-param="hours" min="1" max="12" step="1" value="${p.hours}"></div>
      <div class="sl"><div class="sl-top"><label for="sl-kwh">Strompreis</label><output id="out-kwh">${p.kwh.toLocaleString("de-DE",{minimumFractionDigits:2})} €/kWh</output></div><input type="range" id="sl-kwh" data-param="kwh" min="0.20" max="0.50" step="0.01" value="${p.kwh}"></div>`;
 }
-let undoSnap=null,undoTime=0;
+let undoSnap=null,undoTime=0,undoNotes=[];
 function onSlider(k,raw){
   const now=Date.now();
-  if(!undoSnap||now-undoTime>2500)undoSnap=JSON.stringify(state);
+  if(!undoSnap||now-undoTime>2500){undoSnap=JSON.stringify(state);undoNotes=budgetNotes.slice();}
   undoTime=now;
   const v=Number(raw),p=P();
   switch(k){
@@ -2472,6 +2479,8 @@ function noiseInfo(parts){
 }
 function renderDash(parts,issues){
   if(state.view!=="dash")return;
+  {const nK=CORE.filter(c=>state.picks[c.k]&&state.picks[c.k].src==="user").length,el=$("#dKeep");
+   if(el)el.innerHTML=nK?`<div class="slot-bar"><span><b>${nK} von ${CORE.length}</b> Kernteilen sind behalten<small>Die Regler ändern nur freigegebene Teile. ${nK===CORE.length?"Gib Teile frei, damit Budget und Regler wirken.":"Behaltene Teile bleiben, wie sie sind."}</small></span><span class="actions"><button type="button" class="btn" data-act="releaseAll"${state.auto?"":" disabled"}>Alle freigeben</button></span></div>`:"";}
   const p=P();
   let total=0;for(const c in parts)total+=parts[c].price;
   const fps=parts.gpu||parts.cpu?partFps(parts):0;
@@ -4042,7 +4051,7 @@ document.addEventListener("click",e=>{
   else if(act==="closeAll"){saveCollapsed(new Set([...document.querySelectorAll("#viewDash .cpanel")].map(x=>x.getAttribute("aria-label"))));initCollapse();}
   else if(act==="saveVar"){saveVariant(el.dataset.slot);cmpSel="var:"+el.dataset.slot;render();}
   else if(act==="take"){state.picks[cat]={id:el.dataset.id,src:"user"};recompute();}
-  else if(act==="undo"){if(undoSnap){const s0=JSON.parse(undoSnap);state=s0;undoSnap=null;save();renderSliders();render();$("#dUndo").innerHTML="";}}
+  else if(act==="undo"){if(undoSnap){const s0=JSON.parse(undoSnap);state=s0;budgetNotes=undoNotes;undoNotes=[];undoSnap=null;save();renderSliders();render();$("#dUndo").innerHTML="";}}
 });
 $("#picker").addEventListener("click",e=>{if(e.target.id==="picker")closePicker();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidden)closePicker();});
@@ -4085,7 +4094,7 @@ $("#budget").addEventListener("input",e=>{
 
 document.addEventListener("input",e=>{
   const t=e.target;
-  if(t.dataset&&t.dataset.slider){onSlider(t.dataset.slider,t.value);$("#dUndo").innerHTML=`<div class="undo"><span>Regler geändert: betroffene Teile werden automatisch neu gewählt.</span><button type="button" class="btn" data-act="undo">Rückgängig</button></div>`;}
+  if(t.dataset&&t.dataset.slider){onSlider(t.dataset.slider,t.value);$("#dUndo").innerHTML=`<div class="undo"><span>Regler geändert: freigegebene Teile werden automatisch neu gewählt, behaltene bleiben fest.</span><button type="button" class="btn" data-act="undo">Rückgängig</button></div>`;}
   else if(t.dataset&&t.dataset.param){state.params[t.dataset.param]=Number(t.value);save();render();}
 });
 if(!load())applyStart();else recompute();
