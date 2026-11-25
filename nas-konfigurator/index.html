@@ -872,7 +872,13 @@ function raidName(nas,n,red){
   return syn?"SHR-2 / RAID 6":zfs?"RAIDZ2":"RAID 6";
 }
 function ramFits(nas,ram){return !!(nas&&ram&&!ram.none&&nas.ramT.includes(ram.t)&&nas.slots>=ram.mods);}
-function ramTotal(nas,ram){if(!nas)return 0;if(!ramFits(nas,ram))return nas.ram;return nas.free>=ram.mods?nas.ram+ram.gb:(nas.solder||0)+ram.gb;}
+function ramTotal(nas,ram){
+  if(!nas)return 0;if(!ramFits(nas,ram))return nas.ram;
+  if(nas.free>=ram.mods)return nas.ram+ram.gb;
+  /* belegte Steckplätze: so viele eingebaute Module tauschen, wie das Kit über die freien Plätze hinaus braucht */
+  const used=nas.slots-nas.free,per=used?(nas.ram-(nas.solder||0))/used:0;
+  return nas.ram-Math.min(used,ram.mods-nas.free)*per+ram.gb;
+}
 function ramNeed(nas){const p=P();let need={backup:2,media:4,lab:8}[state.profile]+p.vms*4+(p.streams>2?2:0);if(nas&&nas.kind==="diy")need=Math.max(need,16);if(nas&&nas.bare)need=Math.max(need,8);return need;}
 function nicProblem(nas,nic){
   if(!nas||!nic||nic.none)return "";
@@ -996,10 +1002,10 @@ function checkAll(parts){
       if(nas.free<ram.mods)add("info",["ram"],`Das Modul ersetzt das eingebaute; danach ${rt} GB.`);
       if(rt>nas.ramMax)add("warn",["ram"],`${rt} GB liegen über den offiziell unterstützten ${nas.ramMax} GB. Läuft oft, ist aber nicht freigegeben.`);
       if(nas.brand==="Synology"&&!ram.syno)add("warn",["ram"],"DSM meldet Fremdspeicher als nicht unterstützt, und der Synology-Support kann Hilfe ablehnen. Synology-Module sind teurer, aber offiziell.");
-      if(nas.free>=ram.mods&&nas.ram+ram.gb<=nas.ram)add("info",["ram"],"Keine Wirkung.");
+      if(rt<=nas.ram)add("info",["ram"],"Keine Wirkung: danach nicht mehr Arbeitsspeicher als ab Werk.");
     }
   }
-  if(ssd&&!ssd.none){
+  if(ssd&&!ssd.none&&nas){
     const sl=m2Slots(parts),q=parts.q.ssd;
     if(!sl)add("error",["ssd"],`${nas?nas.name:"Das NAS"} hat keinen M.2-Steckplatz.`);
     else if(q>sl)add("error",["ssd"],`${q} SSDs, aber nur ${sl} M.2-Steckplätze.`);
@@ -1433,13 +1439,17 @@ function renderSliders(){
   ].map(s=>`<div class="sl"><div class="sl-top"><label for="ps-${s.k}">${esc(s.label)}</label><output id="pso-${s.k}">${esc(s.f(p[s.k]))}</output></div>
     <input type="range" id="ps-${s.k}" data-param="${s.k}" min="${s.min}" max="${s.max}" step="${s.step}" value="${p[s.k]}"></div>`).join("")+`<p class="subline">Ruhezustand spart Strom, weckt die Platten aber bei jedem Zugriff (Wartezeit, mehr Anlaufzyklen).</p>`;
 }
-let undoSnap=null;
+let undoSnap=null,undoTime=0,undoAfter=null;
+const undoKey=()=>JSON.stringify({picks:state.picks,params:state.params,budget:state.budget,profile:state.profile,auto:state.auto});
 function onSlider(k,raw){
-  if(!undoSnap)undoSnap=JSON.stringify(state);
+  const now=Date.now();
+  if(!undoSnap||now-undoTime>2500||undoKey()!==undoAfter)undoSnap=JSON.stringify(state);
+  undoTime=now;
   const d=SLIDERS.find(s=>s.k===k),v=d.steps[Number(raw)];
   if(k==="budget")state.budget=v||null;else state.params[k]=v;
   for(const c of RELEASE[k])if(state.picks[c]&&state.picks[c].src==="user")delete state.picks[c];
   if(state.auto)recompute();else{for(const c of RELEASE[k])delete state.picks[c];state.picks=fillMissing(state.picks);save();render();}
+  undoAfter=undoKey();
 }
 function gaugeSvg(frac,val,unit,color,ticks){
   frac=Math.max(0,Math.min(1,frac));
@@ -1490,7 +1500,7 @@ function renderApps(parts,m){
   h+=grp("Dateien");
   h+=g("Große Datei kopieren",sp.eff?sp.eff+" MB/s":"–",lvlCls(sp.eff,[100,250,600]),sp.limit?`begrenzt durch ${sp.limit}`:"");
   h+=g("100 GB Fotos übertragen",photoMin?Math.max(1,Math.round(photoMin))+" min":"–",photoMin?(photoMin>20?"f0":photoMin>8?"f1":photoMin>3?"f2":"f3"):"f0","viele kleine Dateien, ca. 55 % des Spitzentempos");
-  h+=g("Erst-Backup aller Daten",bak&&!bak.none?(bak.kind==="cloud"?num(cloudD,cloudD<10?1:0)+" Tage":num(fullH,fullH<10?1:0)+" h"):"kein Backup",!bak||bak.none?"f0":bak.kind==="cloud"?(cloudD>14?"f1":"f2"):"f2",bak&&bak.kind==="cloud"?`${fmtTB(p.data)} bei ${p.upl} Mbit/s Upload`:`${fmtTB(p.data)} auf USB-Platte (ca. ${usbMB} MB/s)`);
+  h+=g("Erst-Backup aller Daten",bak&&!bak.none?(bak.kind==="cloud"?num(cloudD,cloudD<10?1:0)+" Tage":num(fullH,fullH<10?1:0)+" h"):"kein Backup",!bak||bak.none?"f0":bak.kind==="cloud"?(cloudD>14?"f1":"f2"):"f2",bak&&bak.kind==="cloud"?`${fmtTB(p.data)} bei ${p.upl} Mbit/s Upload`:`${fmtTB(p.data)} ${bak&&bak.kind==="nas2"?"aufs Zweit-NAS (Erstsicherung vor Ort)":"auf USB-Platte"} (ca. ${usbMB} MB/s)`);
   h+=grp("Medien und Fotos");
   h+=g("4K-Film direkt abspielen",direct?(direct>20?"über 20":direct)+" Streams":"–",direct>=4?"f3":direct?"f2":"f0","ca. 100 Mbit/s je Remux-Stream, Netzwerk begrenzt");
   h+=g("4K → 1080p umrechnen (Hardware)",m.t4?m.t4+" gleichzeitig":"nicht möglich",m.t4>=p.streams&&m.t4?(m.t4>=4?"f3":"f2"):m.t4?"f1":"f0",nas&&nas.t4?(nas.amdgpu?"AMD-Grafik: Jellyfin gut, Plex eingeschränkt":"Intel Quick Sync, Plex Pass bzw. Jellyfin"):"keine Grafikeinheit");
@@ -1965,6 +1975,8 @@ function openPrint(){printLastFocus=document.activeElement;$("#printSheet").inne
   $("#printHint").textContent=embedded?"Im eingebetteten Viewer blockiert der Browser das Drucken. Öffne nas-konfigurator/index.html direkt im Browser, um zu drucken oder als PDF zu speichern; hier kannst du den Text kopieren.":"Als PDF speichern: im Druckdialog „Als PDF speichern“ wählen.";
   $("#printBtn").hidden=embedded;setTimeout(()=>$(embedded?"[data-act='copyPrint']":"#printBtn").focus(),0);}
 function closePrint(){$("#printDlg").hidden=true;if(printLastFocus&&printLastFocus.focus)printLastFocus.focus();}
+/* Druck-CSS zeigt immer nur das Datenblatt; bei Strg+P ohne geöffnete Druckansicht vorher füllen, sonst bleibt die Seite leer */
+window.addEventListener("beforeprint",()=>{try{$("#printSheet").innerHTML=printHtml();}catch(e){}});
 function downloadJson(){
   try{const blob=new Blob([JSON.stringify(Object.assign({name:"NAS-Werkbank-Konfiguration",saved:new Date().toISOString()},snapshot()),null,2)],{type:"application/json"});
     const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="nas-konfiguration.json";document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},500);flash("#codeToast","Datei nas-konfiguration.json wird heruntergeladen.");}
@@ -2000,9 +2012,21 @@ function applyPreset(id){
   for(const c in pr.user||{})state.picks[c]={id:pr.user[c],src:"user"};
   recompute();renderSliders();render();
 }
+/* Ergänzte Platten freigeben; ohne Automatik nur die Platten neu wählen, statt den Platz leer zu lassen */
+function releaseHdd(){
+  if(!state.picks.hdd||state.picks.hdd.src!=="auto")return;
+  delete state.picks.hdd;
+  if(!state.auto){const f=fillMissing(state.picks);if(f.hdd)state.picks.hdd=f.hdd;}
+}
+function setRed(r){
+  state.params.red=r;const pk=state.picks.hdd;
+  if(pk&&pk.src==="auto")releaseHdd();
+  else if(pk){const n=pk.qty||1,mn=minN(r),nas=resolve(state.picks).nas;if(n<mn)pk.qty=Math.min(mn,nas?nas.bays:mn);}
+  recompute();
+}
 function setQty(cat,d){
   const pk=state.picks[cat];if(!pk)return;const parts=resolve(state.picks);
-  const max=cat==="hdd"?(parts.nas?parts.nas.bays:24):Math.max(1,m2Slots(parts));
+  const max=cat==="hdd"?(parts.nas?parts.nas.bays:12):Math.max(1,m2Slots(parts));
   pk.qty=clamp((pk.qty||1)+d,1,max);pk.src="user";
   if(cat==="hdd"&&state.picks.nas&&state.picks.nas.src==="auto")state.picks.nas.src="user";
   recompute();
@@ -2014,7 +2038,7 @@ document.addEventListener("click",e=>{
   if(el.dataset.preset){applyPreset(el.dataset.preset);return;}
   if(el.dataset.cmpcat){cmpCat=el.dataset.cmpcat;cmpSort={k:"perf",dir:-1};render();return;}
   if(el.dataset.sort){const k=el.dataset.sort;cmpSort=cmpSort.k===k?{k,dir:-cmpSort.dir}:{k,dir:k==="name"||k==="price"||k==="ptb"||k==="idle"||k==="db"||k==="c5"?1:-1};render();return;}
-  if(el.dataset.red!==undefined&&!el.dataset.act){state.params.red=Number(el.dataset.red);delete state.picks.hdd;recompute();return;}
+  if(el.dataset.red!==undefined&&!el.dataset.act){setRed(Number(el.dataset.red));return;}
   const act=el.dataset.act,cat=el.dataset.cat;
   if(act==="pick")openPicker(cat);
   else if(act==="close")closePicker();
@@ -2023,7 +2047,7 @@ document.addEventListener("click",e=>{
   else if(act==="keep"){state.picks[cat].src="user";save();render();}
   else if(act==="remove"){delete state.picks[cat];recompute();}
   else if(act==="qty")setQty(cat,Number(el.dataset.d));
-  else if(act==="setred"){state.params.red=Number(el.dataset.red);if(state.picks.hdd&&state.picks.hdd.src==="auto")delete state.picks.hdd;else if(state.picks.hdd){const n=state.picks.hdd.qty||1,mn=minN(state.params.red),nas=resolve(state.picks).nas;if(n<mn)state.picks.hdd.qty=Math.min(mn,nas?nas.bays:mn);}recompute();}
+  else if(act==="setred")setRed(Number(el.dataset.red));
   else if(act==="fill"){state.picks=fillMissing(state.picks);save();render();}
   else if(act==="reset"){state.picks={};state.budget=null;save();render();}
   else if(act==="copy")copyList();
@@ -2036,7 +2060,7 @@ document.addEventListener("click",e=>{
     if(cat==="nas"&&state.picks.hdd&&(state.picks.hdd.qty||1)>p.bays){state.picks.hdd.qty=p.bays;}
     if(cat==="nas")for(const c of ["ram","nic","ssd"])if(state.picks[c]&&state.picks[c].src==="auto")delete state.picks[c];
     recompute();}
-  else if(act==="undo"){if(undoSnap){state=JSON.parse(undoSnap);undoSnap=null;save();renderSliders();render();$("#dUndo").innerHTML="";}}
+  else if(act==="undo"){if(undoSnap&&undoKey()===undoAfter){state=JSON.parse(undoSnap);save();renderSliders();render();}undoSnap=null;undoAfter=null;$("#dUndo").innerHTML="";}
 });
 $("#picker").addEventListener("click",e=>{if(e.target.id==="picker")closePicker();});
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidden)closePicker();});
@@ -2064,7 +2088,7 @@ $("#cOnlyOk").addEventListener("change",()=>render());
 $("#dCmpSel").addEventListener("change",e=>{cmpSel=e.target.value;render();});
 $("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
 $("#qCap").innerHTML=CAP_STEPS.map(v=>`<option value="${v}">${fmtTB(v)}</option>`).join("");
-$("#qCap").addEventListener("change",e=>{state.params.cap=Number(e.target.value);if(state.picks.hdd&&state.picks.hdd.src==="auto")delete state.picks.hdd;recompute();});
+$("#qCap").addEventListener("change",e=>{state.params.cap=Number(e.target.value);releaseHdd();recompute();});
 let bt=null;
 $("#budget").addEventListener("input",e=>{clearTimeout(bt);bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=200)?v:null;recompute();},450);});
 $("#presets").innerHTML=PRESETS.map(p=>`<button type="button" class="chip" data-preset="${p.id}">${esc(p.name)} <small>${esc(p.hint)}</small></button>`).join("");
