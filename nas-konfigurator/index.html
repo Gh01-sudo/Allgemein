@@ -592,7 +592,7 @@ label.btn{display:inline-flex;align-items:center}
   </main>
   </div>
 
-  <p class="note"><b>Zu den Preisen und Daten:</b> Alle Preise sind Richtpreise (günstige Straßenpreise in Deutschland, Stand November 2026) und noch nicht durch eine Red-Team-Prüfung gegengecheckt. Festplatten, SSDs und Arbeitsspeicher sind seit 2025 wegen der Nachfrage aus KI-Rechenzentren deutlich teurer und schwanken stark. Leistungs-, Strom- und Lautstärkewerte sind aus Datenblättern abgeleitete Schätzungen, keine Messungen. Vor dem Kauf Tagespreise, Kompatibilitätslisten der Hersteller und das Datenblatt prüfen.</p>
+  <p class="note"><b>Zu den Preisen und Daten:</b> Teile mit „Preis geprüft“ wurden am 25. November 2026 per Preisvergleich (überwiegend Geizhals-Daten) recherchiert; alle anderen Preise sind daraus abgeleitete Schätzungen. Red-Team-Bericht: reports/Red Team NAS-Werkbank.md. Festplatten, SSDs und Arbeitsspeicher sind seit 2025 wegen der Nachfrage aus KI-Rechenzentren deutlich teurer und schwanken stark. Leistungs-, Strom- und Lautstärkewerte sind aus Datenblättern abgeleitete Schätzungen, keine Messungen. Vor dem Kauf Tagespreise, Kompatibilitätslisten der Hersteller und das Datenblatt prüfen.</p>
 </div>
 
 <div class="picker" id="saveDlg" hidden>
@@ -673,23 +673,24 @@ const DB={
 nas:[
  {id:"syn-ds124",name:"Synology DS124",brand:"Synology",kind:"fertig",bays:1,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:5,db:19,os:"DSM 7",lock:false,docker:false,vm:false,tier:1,price:165},
  {id:"syn-ds223j",name:"Synology DS223j",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:false,docker:false,vm:false,tier:1,price:195},
- {id:"syn-ds225p",name:"Synology DS225+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:340},
+ {id:"syn-ds225p",name:"Synology DS225+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:355,chk:true},
  {id:"syn-ds224p",name:"Synology DS224+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[1,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:false,docker:true,vm:true,tier:2,price:330,eol:true},
- {id:"syn-ds425p",name:"Synology DS425+",brand:"Synology",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:10,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:490},
- {id:"syn-ds923p",name:"Synology DS923+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1],pcie:0,mini:true,ecc:true,idle:13,db:22,os:"DSM 7",lock:false,docker:true,vm:true,tier:3,price:600},
- {id:"syn-ds925p",name:"Synology DS925+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:false,ecc:true,idle:14,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:650},
- {id:"syn-ds1525p",name:"Synology DS1525+",brand:"Synology",kind:"fertig",bays:5,exp:15,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:18,db:23,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:870},
- {id:"syn-ds1825p",name:"Synology DS1825+",brand:"Synology",kind:"fertig",bays:8,exp:18,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:25,db:24,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1080},
+ {id:"syn-ds425p",name:"Synology DS425+",brand:"Synology",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:10,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:519,chk:true},
+ {id:"syn-ds923p",name:"Synology DS923+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1],pcie:0,mini:true,ecc:true,idle:13,db:22,os:"DSM 7",lock:false,docker:true,vm:true,tier:3,price:720,eol:true},
+ {id:"syn-ds925p",name:"Synology DS925+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:false,ecc:true,idle:14,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:774,chk:true},
+ {id:"syn-ds1525p",name:"Synology DS1525+",brand:"Synology",kind:"fertig",bays:5,exp:15,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:true,ecc:true,idle:18,db:23,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:980},
+ {id:"syn-ds1825p",name:"Synology DS1825+",brand:"Synology",kind:"fertig",bays:8,exp:18,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:25,db:24,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1355,chk:true},
  {id:"qnap-ts233",name:"QNAP TS-233",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"ARM Cortex-A55",cores:4,thr:4,cs:7,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:6,db:20,os:"QTS 5",lock:false,docker:true,vm:false,tier:1,price:185},
  {id:"qnap-ts433",name:"QNAP TS-433",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"ARM Cortex-A55",cores:4,thr:4,cs:7,t4:0,av1:false,arch:"arm",ram:4,solder:4,ramMax:4,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:9,db:22,os:"QTS 5",lock:false,docker:true,vm:false,tier:1,price:340},
- {id:"qnap-ts264",name:"QNAP TS-264-8G",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:8,ramMax:8,ramT:[],slots:0,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:11,db:21,os:"QTS 5",lock:false,docker:true,vm:true,tier:2,price:420,hdmi:true},
- {id:"qnap-ts464",name:"QNAP TS-464-8G",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:14,db:23,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:560,hdmi:true},
+ {id:"qnap-ts264",name:"QNAP TS-264-8G",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:11,db:21,os:"QTS 5",lock:false,docker:true,vm:true,tier:2,price:420,hdmi:true},
+ {id:"qnap-ts464",name:"QNAP TS-464-8G",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:14,db:23,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:641,hdmi:true,chk:true},
  {id:"qnap-ts664",name:"QNAP TS-664-8G",brand:"QNAP",kind:"fertig",bays:6,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:18,db:24,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:820,hdmi:true},
  {id:"qnap-ts473a",name:"QNAP TS-473A-8G",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:2,mini:false,ecc:false,idle:20,db:24,os:"QTS 5",lock:false,docker:true,vm:true,tier:3,price:760},
- {id:"ug-dxp2800",name:"UGREEN NASync DXP2800",brand:"UGREEN",kind:"fertig",bays:2,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5],pcie:0,mini:false,ecc:false,idle:9,db:21,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:2,price:340,hdmi:true},
- {id:"ug-dxp4800",name:"UGREEN NASync DXP4800",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:12,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:2,price:480,hdmi:true},
- {id:"ug-dxp4800p",name:"UGREEN NASync DXP4800 Plus",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel Pentium Gold 8505",cores:5,thr:6,cs:30,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,2.5],pcie:0,mini:false,ecc:false,idle:15,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:3,price:640,hdmi:true},
- {id:"ug-dxp6800pro",name:"UGREEN NASync DXP6800 Pro",brand:"UGREEN",kind:"fertig",bays:6,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:1,mini:false,ecc:false,idle:22,db:25,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:4,price:980,hdmi:true},
+ {id:"ug-dxp2800",name:"UGREEN NASync DXP2800",brand:"UGREEN",kind:"fertig",bays:2,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5],pcie:0,mini:false,ecc:false,idle:9,db:21,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:2,price:323,hdmi:true,chk:true},
+ {id:"ug-dxp4800",name:"UGREEN NASync DXP4800",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:12,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:2,price:480,hdmi:true,eol:true},
+ {id:"ug-dxp4800p",name:"UGREEN NASync DXP4800 Plus",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel Pentium Gold 8505",cores:5,thr:6,cs:30,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,2.5],pcie:0,mini:false,ecc:false,idle:15,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:3,price:514,hdmi:true,chk:true},
+ {id:"ug-dxp4800pro",name:"UGREEN NASync DXP4800 Pro",brand:"UGREEN",kind:"fertig",bays:4,exp:0,cpu:"Intel Core i3-1315U",cores:6,thr:8,cs:40,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,2.5],pcie:0,mini:false,ecc:false,idle:16,db:23,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:4,price:700},
+ {id:"ug-dxp6800pro",name:"UGREEN NASync DXP6800 Pro",brand:"UGREEN",kind:"fertig",bays:6,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:1,mini:false,ecc:false,idle:22,db:25,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:4,price:900,hdmi:true},
  {id:"ug-dxp8800p",name:"UGREEN NASync DXP8800 Plus",brand:"UGREEN",kind:"fertig",bays:8,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:1,mini:false,ecc:false,idle:28,db:26,os:"UGOS Pro",lock:false,docker:true,vm:true,tier:5,price:1350},
  {id:"tm-f2-424",name:"TerraMaster F2-424",brand:"TerraMaster",kind:"fertig",bays:2,exp:0,cpu:"Intel N95",cores:4,thr:4,cs:22,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:10,db:22,os:"TOS 6",lock:false,docker:true,vm:true,tier:2,price:330},
  {id:"tm-f4-424",name:"TerraMaster F4-424",brand:"TerraMaster",kind:"fertig",bays:4,exp:0,cpu:"Intel N95",cores:4,thr:4,cs:22,t4:3,av1:true,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:13,db:23,os:"TOS 6",lock:false,docker:true,vm:true,tier:2,price:460},
@@ -697,68 +698,68 @@ nas:[
  {id:"tm-f6-424max",name:"TerraMaster F6-424 Max",brand:"TerraMaster",kind:"fertig",bays:6,exp:0,cpu:"Intel Core i5-1235U",cores:10,thr:12,cs:50,t4:6,av1:true,arch:"x86",ram:8,solder:0,ramMax:64,ramT:["DDR5-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[10,10],pcie:0,mini:false,ecc:false,idle:22,db:25,os:"TOS 6",lock:false,docker:true,vm:true,tier:4,price:960},
  {id:"asu-as3304t2",name:"Asustor Drivestor 4 Pro Gen2 (AS3304T v2)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[2.5],pcie:0,mini:false,ecc:false,idle:9,db:22,os:"ADM 5",lock:false,docker:true,vm:false,tier:1,price:350},
  {id:"asu-as5404t",name:"Asustor Nimbustor 4 Gen2 (AS5404T)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron N5105",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:16,solder:0,ramMax:32,ramT:["DDR4-SO"],slots:2,free:0,m2:4,m2p:"ja",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:16,db:23,os:"ADM 5",lock:false,docker:true,vm:true,tier:3,price:590,hdmi:true},
- {id:"asu-as6804t",name:"Asustor Lockerstor 4 Gen3 (AS6804T)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"AMD Ryzen Embedded V3C14",cores:4,thr:8,cs:40,t4:0,av1:false,arch:"x86",ram:16,solder:0,ramMax:64,ramT:["DDR5-ECC-SO"],slots:2,free:1,m2:4,m2p:"ja",lan:[10,10],pcie:0,mini:false,ecc:true,idle:25,db:24,os:"ADM 5",lock:false,docker:true,vm:true,tier:4,price:950},
- {id:"mf-n5pro",name:"Minisforum N5 Pro (Barebone)",brand:"Minisforum",kind:"fertig",bays:5,exp:0,cpu:"AMD Ryzen AI 9 HX PRO 370",cores:12,thr:24,cs:100,t4:6,av1:true,arch:"x86",ram:0,solder:0,ramMax:96,ramT:["DDR5-SO","DDR5-ECC-SO"],slots:2,free:2,m2:3,m2p:"ja",lan:[10,5],pcie:1,mini:false,ecc:true,idle:28,db:25,os:"eigenes System (z. B. TrueNAS, Unraid)",lock:false,docker:true,vm:true,tier:5,price:1150,bare:true,amdgpu:true},
- {id:"diy-n100",name:"Selbstbau 5-Bay N100 (Jonsbo N2)",brand:"Selbstbau",kind:"diy",bays:5,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:16,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5,2.5,2.5],pcie:0,mini:false,ecc:false,idle:12,db:24,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:2,price:560,
+ {id:"asu-as6804t",name:"Asustor Lockerstor 4 Gen3 (AS6804T)",brand:"Asustor",kind:"fertig",bays:4,exp:0,cpu:"AMD Ryzen Embedded V3C14",cores:4,thr:8,cs:40,t4:0,av1:false,arch:"x86",ram:16,solder:0,ramMax:64,ramT:["DDR5-ECC-SO"],slots:2,free:1,m2:4,m2p:"ja",lan:[10,10,5,5],pcie:0,mini:false,ecc:true,idle:25,db:24,os:"ADM 5",lock:false,docker:true,vm:true,tier:4,price:1100},
+ {id:"mf-n5pro",name:"Minisforum N5 Pro (Barebone)",brand:"Minisforum",kind:"fertig",bays:5,exp:0,cpu:"AMD Ryzen AI 9 HX PRO 370",cores:12,thr:24,cs:100,t4:6,av1:true,arch:"x86",ram:0,solder:0,ramMax:96,ramT:["DDR5-SO","DDR5-ECC-SO"],slots:2,free:2,m2:3,m2p:"ja",lan:[10,5],pcie:1,mini:false,ecc:true,idle:28,db:25,os:"eigenes System (z. B. TrueNAS, Unraid)",lock:false,docker:true,vm:true,tier:5,price:1000,bare:true,amdgpu:true},
+ {id:"diy-n100",name:"Selbstbau 5-Bay N100 (Jonsbo N2)",brand:"Selbstbau",kind:"diy",bays:5,exp:0,cpu:"Intel N100",cores:4,thr:4,cs:25,t4:3,av1:true,arch:"x86",ram:16,solder:0,ramMax:32,ramT:["DDR5-SO"],slots:1,free:0,m2:2,m2p:"ja",lan:[2.5,2.5,2.5,2.5],pcie:0,mini:false,ecc:false,idle:12,db:24,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:2,price:750,
   parts:"Gehäuse Jonsbo N2, N100-NAS-Mainboard (6× SATA, 4× 2,5 GbE), 16 GB DDR5, SFX-Netzteil 450 W, USB-Stick bzw. Boot-SSD"},
- {id:"diy-i3",name:"Selbstbau 8-Bay Core i3-14100 (Jonsbo N3)",brand:"Selbstbau",kind:"diy",bays:8,exp:0,cpu:"Intel Core i3-14100",cores:4,thr:8,cs:45,t4:6,av1:false,arch:"x86",ram:32,solder:0,ramMax:96,ramT:["DDR5-DIMM"],slots:2,free:0,m2:1,m2p:"ja",lan:[2.5],pcie:1,mini:false,ecc:false,idle:20,db:25,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:4,price:900,
+ {id:"diy-i3",name:"Selbstbau 8-Bay Core i3-14100 (Jonsbo N3)",brand:"Selbstbau",kind:"diy",bays:8,exp:0,cpu:"Intel Core i3-14100",cores:4,thr:8,cs:45,t4:6,av1:false,arch:"x86",ram:32,solder:0,ramMax:96,ramT:["DDR5-DIMM"],slots:2,free:0,m2:1,m2p:"ja",lan:[2.5],pcie:1,mini:false,ecc:false,idle:20,db:25,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:4,price:1300,
   parts:"Gehäuse Jonsbo N3, Mini-ITX-Board B760, Core i3-14100, 32 GB DDR5, SATA-Karte (M.2), SFX-Netzteil 550 W"},
- {id:"diy-ryzen",name:"Selbstbau 10-Bay Ryzen PRO mit ECC (Node 804)",brand:"Selbstbau",kind:"diy",bays:10,exp:0,cpu:"AMD Ryzen 5 PRO 8500G",cores:6,thr:12,cs:60,t4:4,av1:true,arch:"x86",ram:32,solder:0,ramMax:192,ramT:["DDR5-ECC-DIMM"],slots:4,free:2,m2:2,m2p:"ja",lan:[2.5],pcie:1,mini:false,ecc:true,idle:30,db:25,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:4,price:1050,amdgpu:true,
+ {id:"diy-ryzen",name:"Selbstbau 10-Bay Ryzen PRO mit ECC (Node 804)",brand:"Selbstbau",kind:"diy",bays:10,exp:0,cpu:"AMD Ryzen 5 PRO 8500G",cores:6,thr:12,cs:60,t4:4,av1:true,arch:"x86",ram:32,solder:0,ramMax:192,ramT:["DDR5-ECC-DIMM"],slots:4,free:2,m2:2,m2p:"ja",lan:[2.5],pcie:1,mini:false,ecc:true,idle:30,db:25,os:"TrueNAS / Unraid",lock:false,docker:true,vm:true,tier:4,price:1450,amdgpu:true,
   parts:"Gehäuse Fractal Node 804, mATX-Board B650 mit ECC-Freigabe, Ryzen 5 PRO 8500G, 32 GB DDR5 ECC, HBA-Karte 8× SATA, ATX-Netzteil 550 W Gold"}
 ],
 hdd:[
- {id:"wd-rp4",name:"WD Red Plus 4 TB",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.4,act:4.8,db:23,mbs:180,warr:3,tier:1,price:109},
- {id:"wd-rp8",name:"WD Red Plus 8 TB",brand:"WD",tb:8,rpm:5640,cls:"nas",smr:false,rated:8,idle:5.3,act:6.2,db:25,mbs:215,warr:3,tier:2,price:205},
- {id:"wd-rp12",name:"WD Red Plus 12 TB",brand:"WD",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:6.9,db:28,mbs:196,warr:3,tier:2,price:285},
- {id:"wd-rpro16",name:"WD Red Pro 16 TB",brand:"WD",tb:16,rpm:7200,cls:"naspro",smr:false,rated:24,idle:5.0,act:6.6,db:29,mbs:259,warr:5,tier:3,price:380},
- {id:"wd-rpro24",name:"WD Red Pro 24 TB",brand:"WD",tb:24,rpm:7200,cls:"naspro",smr:false,rated:24,idle:6.0,act:7.0,db:30,mbs:287,warr:5,tier:4,price:560},
- {id:"wd-hc580",name:"WD Ultrastar DC HC580 24 TB",brand:"WD",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.0,act:7.0,db:32,mbs:298,warr:5,tier:4,price:480},
- {id:"sg-iw4",name:"Seagate IronWolf 4 TB",brand:"Seagate",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.8,act:4.8,db:22,mbs:180,warr:3,tier:1,price:105},
- {id:"sg-iw8",name:"Seagate IronWolf 8 TB",brand:"Seagate",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.7,act:7.9,db:28,mbs:210,warr:3,tier:2,price:195},
- {id:"sg-iw12",name:"Seagate IronWolf 12 TB",brand:"Seagate",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.8,db:28,mbs:210,warr:3,tier:2,price:275},
- {id:"sg-iwp16",name:"Seagate IronWolf Pro 16 TB",brand:"Seagate",tb:16,rpm:7200,cls:"naspro",smr:false,rated:24,idle:5.3,act:7.8,db:28,mbs:255,warr:5,tier:3,price:365},
- {id:"sg-iwp24",name:"Seagate IronWolf Pro 24 TB",brand:"Seagate",tb:24,rpm:7200,cls:"naspro",smr:false,rated:24,idle:6.0,act:8.0,db:30,mbs:285,warr:5,tier:4,price:530},
- {id:"sg-x20",name:"Seagate Exos X20 20 TB",brand:"Seagate",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.4,act:9.4,db:32,mbs:272,warr:5,tier:3,price:390},
- {id:"sg-x24",name:"Seagate Exos X24 24 TB",brand:"Seagate",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.4,act:9.0,db:32,mbs:285,warr:5,tier:4,price:470},
- {id:"sg-m30",name:"Seagate Exos M 30 TB",brand:"Seagate",tb:30,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.5,act:8.9,db:32,mbs:275,warr:5,tier:5,price:690},
- {id:"tosh-n300-8",name:"Toshiba N300 8 TB",brand:"Toshiba",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:6.9,act:8.4,db:30,mbs:240,warr:3,tier:2,price:185},
- {id:"tosh-n300-18",name:"Toshiba N300 18 TB",brand:"Toshiba",tb:18,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.1,act:7.7,db:30,mbs:281,warr:3,tier:3,price:360},
- {id:"tosh-mg10-20",name:"Toshiba MG10 20 TB",brand:"Toshiba",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:4.4,act:8.2,db:32,mbs:268,warr:5,tier:3,price:395},
- {id:"syn-hat8",name:"Synology HAT3300 Plus 8 TB",brand:"Synology",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:27,mbs:230,warr:3,tier:2,price:235,cert:true},
- {id:"syn-hat12",name:"Synology HAT3300 Plus 12 TB",brand:"Synology",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:28,mbs:242,warr:3,tier:2,price:330,cert:true},
- {id:"syn-hat16",name:"Synology HAT3310 Plus 16 TB",brand:"Synology",tb:16,rpm:7200,cls:"nas",smr:false,rated:16,idle:5.0,act:7.3,db:29,mbs:262,warr:5,tier:3,price:440,cert:true},
- {id:"wd-red4",name:"WD Red 4 TB (SMR, WD40EFAX)",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:true,rated:8,idle:3.1,act:4.1,db:22,mbs:180,warr:3,tier:1,price:95,eol:true},
- {id:"sg-bc8",name:"Seagate BarraCuda 8 TB (SMR)",brand:"Seagate",tb:8,rpm:5400,cls:"desktop",smr:true,rated:2,idle:3.4,act:5.3,db:24,mbs:190,warr:2,tier:1,price:165}
+ {id:"wd-rp4",name:"WD Red Plus 4 TB",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.4,act:4.8,db:23,mbs:180,warr:3,tier:1,price:185},
+ {id:"wd-rp8",name:"WD Red Plus 8 TB",brand:"WD",tb:8,rpm:5640,cls:"nas",smr:false,rated:8,idle:5.3,act:6.2,db:25,mbs:215,warr:3,tier:2,price:373,chk:true},
+ {id:"wd-rp12",name:"WD Red Plus 12 TB",brand:"WD",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:6.9,db:28,mbs:196,warr:3,tier:2,price:517,chk:true},
+ {id:"wd-rpro16",name:"WD Red Pro 16 TB",brand:"WD",tb:16,rpm:7200,cls:"naspro",smr:false,rated:24,idle:5.0,act:6.6,db:29,mbs:259,warr:5,tier:3,price:650},
+ {id:"wd-rpro24",name:"WD Red Pro 24 TB",brand:"WD",tb:24,rpm:7200,cls:"naspro",smr:false,rated:24,idle:6.0,act:7.0,db:30,mbs:287,warr:5,tier:4,price:990},
+ {id:"wd-hc580",name:"WD Ultrastar DC HC580 24 TB",brand:"WD",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.0,act:7.0,db:32,mbs:298,warr:5,tier:4,price:1050},
+ {id:"sg-iw4",name:"Seagate IronWolf 4 TB",brand:"Seagate",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.8,act:4.8,db:22,mbs:180,warr:3,tier:1,price:178,chk:true},
+ {id:"sg-iw8",name:"Seagate IronWolf 8 TB",brand:"Seagate",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.7,act:7.9,db:28,mbs:210,warr:3,tier:2,price:360},
+ {id:"sg-iw12",name:"Seagate IronWolf 12 TB",brand:"Seagate",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.8,db:28,mbs:210,warr:3,tier:2,price:520},
+ {id:"sg-iwp16",name:"Seagate IronWolf Pro 16 TB",brand:"Seagate",tb:16,rpm:7200,cls:"naspro",smr:false,rated:24,idle:5.3,act:7.8,db:28,mbs:255,warr:5,tier:3,price:560},
+ {id:"sg-iwp24",name:"Seagate IronWolf Pro 24 TB",brand:"Seagate",tb:24,rpm:7200,cls:"naspro",smr:false,rated:24,idle:6.0,act:8.0,db:30,mbs:285,warr:5,tier:4,price:1030,chk:true},
+ {id:"sg-x20",name:"Seagate Exos X20 20 TB",brand:"Seagate",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.4,act:9.4,db:32,mbs:272,warr:5,tier:3,price:1083,chk:true},
+ {id:"sg-x24",name:"Seagate Exos X24 24 TB",brand:"Seagate",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.4,act:9.0,db:32,mbs:285,warr:5,tier:4,price:1150},
+ {id:"sg-m30",name:"Seagate Exos M 30 TB",brand:"Seagate",tb:30,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.5,act:8.9,db:32,mbs:275,warr:5,tier:5,price:1500},
+ {id:"tosh-n300-8",name:"Toshiba N300 8 TB",brand:"Toshiba",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:6.9,act:8.4,db:30,mbs:240,warr:3,tier:2,price:250,chk:true},
+ {id:"tosh-n300-18",name:"Toshiba N300 18 TB",brand:"Toshiba",tb:18,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.1,act:7.7,db:30,mbs:281,warr:3,tier:3,price:790},
+ {id:"tosh-mg10-20",name:"Toshiba MG10 20 TB",brand:"Toshiba",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:4.4,act:8.2,db:32,mbs:268,warr:5,tier:3,price:899,chk:true},
+ {id:"syn-hat8",name:"Synology HAT3300 Plus 8 TB",brand:"Synology",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:27,mbs:230,warr:3,tier:2,price:440,cert:true},
+ {id:"syn-hat12",name:"Synology HAT3300 Plus 12 TB",brand:"Synology",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:28,mbs:242,warr:3,tier:2,price:620,cert:true},
+ {id:"syn-hat16",name:"Synology HAT3310 Plus 16 TB",brand:"Synology",tb:16,rpm:7200,cls:"nas",smr:false,rated:16,idle:5.0,act:7.3,db:29,mbs:262,warr:5,tier:3,price:800,cert:true},
+ {id:"wd-red4",name:"WD Red 4 TB (SMR, WD40EFAX)",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:true,rated:8,idle:3.1,act:4.1,db:22,mbs:180,warr:3,tier:1,price:170,eol:true},
+ {id:"sg-bc8",name:"Seagate BarraCuda 8 TB (SMR)",brand:"Seagate",tb:8,rpm:5400,cls:"desktop",smr:true,rated:2,idle:3.4,act:5.3,db:24,mbs:190,warr:2,tier:1,price:300}
 ],
 ssd:[
  {id:"none",name:"Kein SSD-Cache",none:true,price:0,tier:0},
- {id:"kin-nv3-1",name:"Kingston NV3 1 TB",tb:1,tbw:320,cls:"consumer",mbs:6000,tier:1,price:85},
- {id:"sam-990ep-1",name:"Samsung 990 EVO Plus 1 TB",tb:1,tbw:600,cls:"consumer",mbs:7150,tier:2,price:115},
- {id:"sam-990ep-2",name:"Samsung 990 EVO Plus 2 TB",tb:2,tbw:1200,cls:"consumer",mbs:7250,tier:3,price:205},
- {id:"wd-sn700-500",name:"WD Red SN700 500 GB",tb:0.5,tbw:1000,cls:"nas",mbs:3430,tier:2,price:95},
- {id:"wd-sn700-1",name:"WD Red SN700 1 TB",tb:1,tbw:2000,cls:"nas",mbs:3430,tier:3,price:145},
- {id:"wd-sn700-2",name:"WD Red SN700 2 TB",tb:2,tbw:2500,cls:"nas",mbs:3430,tier:4,price:230},
- {id:"syn-snv3410-400",name:"Synology SNV3410 400 GB",tb:0.4,tbw:500,cls:"syno",mbs:3000,tier:2,price:150},
- {id:"syn-snv3410-800",name:"Synology SNV3410 800 GB",tb:0.8,tbw:1000,cls:"syno",mbs:3100,tier:3,price:240}
+ {id:"kin-nv3-1",name:"Kingston NV3 1 TB",tb:1,tbw:320,cls:"consumer",mbs:6000,tier:1,price:147,chk:true},
+ {id:"sam-990ep-1",name:"Samsung 990 EVO Plus 1 TB",tb:1,tbw:600,cls:"consumer",mbs:7150,tier:2,price:189,chk:true},
+ {id:"sam-990ep-2",name:"Samsung 990 EVO Plus 2 TB",tb:2,tbw:1200,cls:"consumer",mbs:7250,tier:3,price:330},
+ {id:"wd-sn700-500",name:"WD Red SN700 500 GB",tb:0.5,tbw:1000,cls:"nas",mbs:3430,tier:2,price:120},
+ {id:"wd-sn700-1",name:"WD Red SN700 1 TB",tb:1,tbw:2000,cls:"nas",mbs:3430,tier:3,price:180},
+ {id:"wd-sn700-2",name:"WD Red SN700 2 TB",tb:2,tbw:2500,cls:"nas",mbs:3430,tier:4,price:320},
+ {id:"syn-snv3410-400",name:"Synology SNV3410 400 GB",tb:0.4,tbw:500,cls:"syno",mbs:3000,tier:2,price:190},
+ {id:"syn-snv3410-800",name:"Synology SNV3410 800 GB",tb:0.8,tbw:1000,cls:"syno",mbs:3100,tier:3,price:300}
 ],
 ram:[
  {id:"none",name:"Keine Erweiterung",none:true,price:0,tier:0},
- {id:"syn-d4neso4",name:"Synology D4NESO-2666-4G",gb:4,mods:1,t:"DDR4-SO",syno:true,tier:2,price:95},
- {id:"cr-d4-8",name:"Crucial 8 GB DDR4-3200 SO-DIMM",gb:8,mods:1,t:"DDR4-SO",tier:1,price:45},
- {id:"cr-d4-16",name:"Crucial 16 GB DDR4-3200 SO-DIMM",gb:16,mods:1,t:"DDR4-SO",tier:2,price:75},
- {id:"cr-d4-32",name:"Crucial 32 GB DDR4-3200 SO-DIMM",gb:32,mods:1,t:"DDR4-SO",tier:3,price:150},
- {id:"syn-d4es02-4",name:"Synology D4ES02-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:110},
- {id:"syn-d4es01-8",name:"Synology D4ES01-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:160},
- {id:"syn-d4es01-16",name:"Synology D4ES01-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:260},
- {id:"kin-d4e-16",name:"Kingston Server Premier 16 GB DDR4-3200 ECC SO-DIMM",gb:16,mods:1,t:"DDR4-ECC-SO",tier:3,price:125},
- {id:"cr-d5-16",name:"Crucial 16 GB DDR5-5600 SO-DIMM",gb:16,mods:1,t:"DDR5-SO",tier:2,price:85},
- {id:"cr-d5-32",name:"Crucial 32 GB DDR5-5600 SO-DIMM",gb:32,mods:1,t:"DDR5-SO",tier:3,price:165},
- {id:"cr-d5-48",name:"Crucial 48 GB DDR5-5600 SO-DIMM",gb:48,mods:1,t:"DDR5-SO",tier:4,price:250},
- {id:"cr-d5-64k",name:"Crucial 64 GB (2× 32 GB) DDR5-5600 SO-DIMM",gb:64,mods:2,t:"DDR5-SO",tier:4,price:330},
- {id:"kin-d5e-32",name:"Kingston Server Premier 32 GB DDR5-5600 ECC SO-DIMM",gb:32,mods:1,t:"DDR5-ECC-SO",tier:4,price:230},
- {id:"kin-d5e-64k",name:"Kingston Server Premier 64 GB (2× 32 GB) DDR5 ECC SO-DIMM",gb:64,mods:2,t:"DDR5-ECC-SO",tier:5,price:450},
- {id:"kf-d5-64k",name:"Kingston FURY Beast 64 GB (2× 32 GB) DDR5-5600",gb:64,mods:2,t:"DDR5-DIMM",tier:4,price:360},
- {id:"kin-d5eu-64k",name:"Kingston Server Premier 64 GB (2× 32 GB) DDR5-4800 ECC UDIMM",gb:64,mods:2,t:"DDR5-ECC-DIMM",tier:5,price:480}
+ {id:"syn-d4neso4",name:"Synology D4NESO-2666-4G",gb:4,mods:1,t:"DDR4-SO",syno:true,tier:2,price:120},
+ {id:"cr-d4-8",name:"Crucial 8 GB DDR4-3200 SO-DIMM",gb:8,mods:1,t:"DDR4-SO",tier:1,price:80},
+ {id:"cr-d4-16",name:"Crucial 16 GB DDR4-3200 SO-DIMM",gb:16,mods:1,t:"DDR4-SO",tier:2,price:140},
+ {id:"cr-d4-32",name:"Crucial 32 GB DDR4-3200 SO-DIMM",gb:32,mods:1,t:"DDR4-SO",tier:3,price:280},
+ {id:"syn-d4es02-4",name:"Synology D4ES02-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:150},
+ {id:"syn-d4es01-8",name:"Synology D4ES01-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:230},
+ {id:"syn-d4es01-16",name:"Synology D4ES01-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:380},
+ {id:"kin-d4e-16",name:"Kingston Server Premier 16 GB DDR4-3200 ECC SO-DIMM",gb:16,mods:1,t:"DDR4-ECC-SO",tier:3,price:220},
+ {id:"cr-d5-16",name:"Crucial 16 GB DDR5-5600 SO-DIMM",gb:16,mods:1,t:"DDR5-SO",tier:2,price:280},
+ {id:"cr-d5-32",name:"Crucial 32 GB DDR5-5600 SO-DIMM",gb:32,mods:1,t:"DDR5-SO",tier:3,price:550,chk:true},
+ {id:"cr-d5-48",name:"Crucial 48 GB DDR5-5600 SO-DIMM",gb:48,mods:1,t:"DDR5-SO",tier:4,price:800},
+ {id:"cr-d5-64k",name:"Crucial 64 GB (2× 32 GB) DDR5-5600 SO-DIMM",gb:64,mods:2,t:"DDR5-SO",tier:4,price:1100},
+ {id:"kin-d5e-32",name:"Kingston Server Premier 32 GB DDR5-5600 ECC SO-DIMM",gb:32,mods:1,t:"DDR5-ECC-SO",tier:4,price:600},
+ {id:"kin-d5e-64k",name:"Kingston Server Premier 64 GB (2× 32 GB) DDR5 ECC SO-DIMM",gb:64,mods:2,t:"DDR5-ECC-SO",tier:5,price:1200},
+ {id:"kf-d5-64k",name:"Kingston FURY Beast 64 GB (2× 32 GB) DDR5-5600",gb:64,mods:2,t:"DDR5-DIMM",tier:4,price:1150},
+ {id:"kin-d5eu-64k",name:"Kingston Server Premier 64 GB (2× 32 GB) DDR5-4800 ECC UDIMM",gb:64,mods:2,t:"DDR5-ECC-DIMM",tier:5,price:1300}
 ],
 nic:[
  {id:"none",name:"Keine Netzwerkkarte",none:true,price:0,tier:0},
@@ -782,16 +783,16 @@ ups:[
 ],
 bak:[
  {id:"none",name:"Kein Backup",none:true,price:0,tier:0,tb:0},
- {id:"usb-8",name:"WD Elements Desktop 8 TB (USB)",kind:"usb",tb:8,mo:0,offsite:false,tier:1,price:185},
- {id:"usb-12",name:"WD Elements Desktop 12 TB (USB)",kind:"usb",tb:12,mo:0,offsite:false,tier:2,price:245},
- {id:"usb-20",name:"Seagate Expansion Desktop 20 TB (USB)",kind:"usb",tb:20,mo:0,offsite:false,tier:3,price:380},
- {id:"usb-2x16",name:"2× WD Elements Desktop 16 TB im Wechsel",kind:"rot",tb:16,mo:0,offsite:true,tier:3,price:600},
- {id:"hz-bx11",name:"Hetzner Storage Box BX11 (1 TB)",kind:"cloud",tb:1,mo:3.9,offsite:true,tier:1,price:0},
- {id:"hz-bx21",name:"Hetzner Storage Box BX21 (5 TB)",kind:"cloud",tb:5,mo:13.1,offsite:true,tier:2,price:0},
- {id:"hz-bx31",name:"Hetzner Storage Box BX31 (10 TB)",kind:"cloud",tb:10,mo:24.3,offsite:true,tier:3,price:0},
- {id:"hz-bx41",name:"Hetzner Storage Box BX41 (20 TB)",kind:"cloud",tb:20,mo:46.4,offsite:true,tier:4,price:0},
+ {id:"usb-8",name:"WD Elements Desktop 8 TB (USB)",kind:"usb",tb:8,mo:0,offsite:false,tier:1,price:300},
+ {id:"usb-12",name:"WD Elements Desktop 12 TB (USB)",kind:"usb",tb:12,mo:0,offsite:false,tier:2,price:430},
+ {id:"usb-20",name:"Seagate Expansion Desktop 20 TB (USB)",kind:"usb",tb:20,mo:0,offsite:false,tier:3,price:700},
+ {id:"usb-2x16",name:"2× WD Elements Desktop 16 TB im Wechsel",kind:"rot",tb:16,mo:0,offsite:true,tier:3,price:1100},
+ {id:"hz-bx11",name:"Hetzner Storage Box BX11 (1 TB)",kind:"cloud",tb:1,mo:3.81,offsite:true,tier:1,price:0,chk:true},
+ {id:"hz-bx21",name:"Hetzner Storage Box BX21 (5 TB)",kind:"cloud",tb:5,mo:12.97,offsite:true,tier:2,price:0,chk:true},
+ {id:"hz-bx31",name:"Hetzner Storage Box BX31 (10 TB)",kind:"cloud",tb:10,mo:24.75,offsite:true,tier:3,price:0,chk:true},
+ {id:"hz-bx41",name:"Hetzner Storage Box BX41 (20 TB)",kind:"cloud",tb:20,mo:48.31,offsite:true,tier:4,price:0,chk:true},
  {id:"b2",name:"Backblaze B2 (nach Verbrauch)",kind:"cloud",tb:999,mo:5.6,perTB:true,offsite:true,tier:3,price:0},
- {id:"nas2",name:"Zweit-NAS außer Haus (2 Bays, 2× 12 TB gespiegelt)",kind:"nas2",tb:12,mo:0,offsite:true,tier:4,price:860}
+ {id:"nas2",name:"Zweit-NAS außer Haus (2 Bays, 2× 12 TB gespiegelt)",kind:"nas2",tb:12,mo:0,offsite:true,tier:4,price:1360}
 ]};
 /* Cloud-Abos für den Vergleich (Listenpreise Jahresabo, Schätzung Stand 2026) */
 const CLOUD=[
@@ -819,12 +820,12 @@ const QTY_CATS=["hdd","ssd"];
 const PROFILE_NAME={backup:"Dateien & Backup",media:"Medien & Fotos",lab:"Homelab & VMs"};
 const PROFILE_DEF={backup:{streams:0,vms:0},media:{streams:2,vms:0},lab:{streams:1,vms:3}};
 const PRESETS=[
- {id:"family",name:"Familien-NAS",hint:"Fotos, Backups, 16 TB",profile:"media",budget:1400,params:{cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:70,bak:2}},
- {id:"starter",name:"Einstieg Backup",hint:"2 Platten gespiegelt",profile:"backup",budget:650,params:{cap:8,red:1,data:2,streams:0,vms:0,net:1,quiet:70,bak:1}},
- {id:"media",name:"Medienserver",hint:"Plex/Jellyfin, 48 TB",profile:"media",budget:2600,params:{cap:48,red:1,data:16,streams:3,vms:0,net:2.5,quiet:50,bak:1}},
- {id:"lab",name:"Homelab",hint:"Docker, VMs, 10 GbE",profile:"lab",budget:2800,params:{cap:24,red:1,data:8,streams:1,vms:4,net:10,quiet:40,bak:2}},
+ {id:"family",name:"Familien-NAS",hint:"Fotos, Backups, 16 TB",profile:"media",budget:2000,params:{cap:16,red:1,data:5,streams:1,vms:0,net:2.5,quiet:70,bak:2}},
+ {id:"starter",name:"Einstieg Backup",hint:"2 Platten gespiegelt",profile:"backup",budget:1000,params:{cap:8,red:1,data:2,streams:0,vms:0,net:1,quiet:70,bak:1}},
+ {id:"media",name:"Medienserver",hint:"Plex/Jellyfin, 48 TB",profile:"media",budget:4200,params:{cap:48,red:1,data:16,streams:3,vms:0,net:2.5,quiet:50,bak:1}},
+ {id:"lab",name:"Homelab",hint:"Docker, VMs, 10 GbE",profile:"lab",budget:4500,params:{cap:24,red:1,data:8,streams:1,vms:4,net:10,quiet:40,bak:2}},
  {id:"truenas",name:"Selbstbau TrueNAS",hint:"ECC, RAIDZ2",profile:"lab",budget:null,user:{nas:"diy-ryzen"},params:{cap:64,red:2,data:24,streams:1,vms:2,net:2.5,quiet:30,bak:2}},
- {id:"quiet",name:"Leise im Wohnzimmer",hint:"2 Bays, flüsterleise",profile:"backup",budget:900,params:{cap:8,red:1,data:3,streams:0,vms:0,net:2.5,quiet:100,bak:2}},
+ {id:"quiet",name:"Leise im Wohnzimmer",hint:"2 Bays, flüsterleise",profile:"backup",budget:1300,params:{cap:8,red:1,data:3,streams:0,vms:0,net:2.5,quiet:100,bak:2}},
  {id:"archive",name:"Datenarchiv",hint:"96 TB, 2 Platten Reserve",profile:"backup",budget:null,params:{cap:96,red:2,data:40,streams:0,vms:0,net:10,quiet:20,bak:2}}
 ];
 const BY={};for(const c in DB){BY[c]={};for(const p of DB[c])BY[c][p.id]=p;}
@@ -949,8 +950,8 @@ function checkAll(parts){
     if(n>nas.bays)add("error",["hdd","nas"],`${n} Platten, aber ${nas.name} hat nur ${nas.bays} Schächte.`);
     if(red>0&&n<minN(red))add("error",["hdd"],red===1?"Ausfallsicherheit für 1 Platte braucht mindestens 2 Platten (Spiegel).":"Ausfallsicherheit für 2 Platten (RAID 6 / SHR-2 / RAIDZ2) braucht mindestens 4 Platten.");
     if(h.rated&&nas.bays>h.rated)add("warn",["hdd","nas"],`${h.name} ist für Gehäuse bis ${h.rated} Schächte ausgelegt, ${nas.name} hat ${nas.bays}. Vibrationen verkürzen die Lebensdauer; besser NAS-Pro- oder Enterprise-Platten.`);
-    if(nas.lock&&!h.cert)add("info",["hdd","nas"],`${nas.name} gehört zur 2025er Plus-Serie. Synology hat die Sperre für Fremdplatten mit DSM 7.3 wieder gelockert; vor dem Kauf die aktuelle Kompatibilitätsliste prüfen.`);
-    if(h.cls==="ent"&&nas.kind==="fertig"&&nas.bays<=4)add("info",["hdd"],"Enterprise-Platten sind günstig pro TB, aber lauter und wärmer als NAS-Platten. Fürs Wohnzimmer eher ungeeignet.");
+    if(nas.lock&&!h.cert)add("info",["hdd","nas"],`${nas.name} gehört zur 2025er Plus-Serie. Seit DSM 7.3 (Oktober 2025) lassen sich Fremd-Festplatten wieder für Speicherpools nutzen; die Kompatibilitätsliste führt aber weiterhin vor allem Synology-Platten. DSM auf 7.3 oder neuer aktualisieren.`);
+    if(h.cls==="ent"&&nas.kind==="fertig"&&nas.bays<=4)add("info",["hdd"],"Enterprise-Platten sind lauter und wärmer als NAS-Platten und derzeit nicht günstiger pro TB. Fürs Wohnzimmer eher ungeeignet.");
   }
   if(h){
     if(h.smr)add(nas&&nas.kind==="diy"?"error":"warn",["hdd"],`${h.name} nutzt SMR: Wiederherstellungen dauern sehr lange${nas&&nas.kind==="diy"?" und ZFS (TrueNAS) kann die Platte aus dem Verbund werfen":""}. Für RAID CMR-Platten nehmen.`);
@@ -1003,7 +1004,8 @@ function checkAll(parts){
     if(!sl)add("error",["ssd"],`${nas?nas.name:"Das NAS"} hat keinen M.2-Steckplatz.`);
     else if(q>sl)add("error",["ssd"],`${q} SSDs, aber nur ${sl} M.2-Steckplätze.`);
     if(sl&&q===1)add("info",["ssd"],"Eine SSD taugt nur als Lese-Cache; für Schreib-Cache oder SSD-Speicherpool zwei SSDs im Spiegel nehmen.");
-    if(nas&&nas.m2p==="syno"&&ssd.cls!=="syno")add("info",["ssd"],"Fremd-SSDs nutzt DSM hier nur als Cache; einen SSD-Speicherpool (z. B. für VMs) gibt es nur mit Synology-SSDs.");
+    if(nas&&nas.lock&&ssd.cls!=="syno")add("warn",["ssd"],"Bei den 2025er Plus-Modellen sind M.2-SSDs anderer Hersteller auch nach DSM 7.3 eingeschränkt; Synology-SSDs nehmen.");
+    else if(nas&&nas.m2p==="syno"&&ssd.cls!=="syno")add("info",["ssd"],"Fremd-SSDs nutzt DSM hier nur als Cache; einen SSD-Speicherpool (z. B. für VMs) gibt es nur mit Synology-SSDs.");
     if(ssd.cls==="consumer"&&ssd.tbw<500)add("info",["ssd"],`${ssd.name} hat nur ${ssd.tbw} TBW Schreibfestigkeit; als Schreib-Cache nutzt sie sich schnell ab.`);
     if(nas&&nas.m2p==="nein"&&sl)add("info",["ssd"],"M.2-Plätze dienen hier nur als Cache.");
   }
@@ -1162,7 +1164,7 @@ function spec(cat,p){
   return "";
 }
 function tierDots(t){if(!t)return "";let s='<span class="tier" title="Klasse '+t+' von 5" aria-label="Klasse '+t+' von 5">';for(let i=1;i<=5;i++)s+='<i class="'+(i<=t?"on":"")+'"></i>';return s+"</span>";}
-function priceLink(cat,p){if(!p||p.none||!p.price||p.kind==="diy"||cat==="bak"&&p.kind==="nas2")return "";return `<span class="links"><a href="https://geizhals.de/?fs=${encodeURIComponent(p.name.replace(/\s*\(.*\)$/,""))}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
+function priceLink(cat,p){if(!p||p.none)return "";const tag=p.chk?'<span class="tag rec">Preis geprüft 25.11.</span> ':"";if(!p.price||p.kind==="diy"||cat==="bak"&&p.kind==="nas2")return tag?`<span class="links">${tag}</span>`:"";return `<span class="links">${tag}<a href="https://geizhals.de/?fs=${encodeURIComponent(p.name.replace(/\s*\(.*\)$/,""))}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
 const SEV_LABEL={error:"Konflikt",warn:"Achtung",info:"Hinweis",ok:"Passt"};
 function specRows(cat,p,parts){
   if(p.none)return [];
@@ -1190,7 +1192,7 @@ function prosCons(cat,p,parts){
       if(p.ecc)P1.push("ECC-Speicher schützt vor Bitfehlern im RAM");
       if(Math.max(...p.lan)>=10)P1.push("10 GbE eingebaut");else if(Math.max(...p.lan)<2.5)C.push("nur 1-GbE-Netzwerk (ca. 115 MB/s)");
       if(p.arch==="arm")C.push("schwacher ARM-Prozessor: wenig Docker, keine VMs");
-      if(p.lock)N.push("2025er Plus-Serie: vor Kauf Fremdplatten-Kompatibilität für deine DSM-Version prüfen");
+      if(p.lock)N.push("2025er Plus-Serie: Fremd-Festplatten erst ab DSM 7.3, M.2-SSDs weiterhin nur von Synology");
       if(p.slots===0)C.push("Arbeitsspeicher nicht erweiterbar");
       if(p.exp)P1.push(`erweiterbar auf ${p.exp} Schächte`);
       if(p.idle<=10)P1.push("sparsam im Leerlauf");
@@ -1200,7 +1202,7 @@ function prosCons(cat,p,parts){
     case "hdd":
       if(!p.smr)P1.push("CMR-Aufzeichnung, RAID-tauglich");else C.push("SMR: sehr langsame Rebuilds, für RAID ungeeignet");
       if(p.warr>=5)P1.push("5 Jahre Garantie");
-      if(p.cls==="ent"){P1.push("günstigster Preis pro TB in dieser Größe");C.push("laut bei Zugriffen, eher für Keller oder Abstellraum");}
+      if(p.cls==="ent"){P1.push("für Dauerlast und große Verbünde gebaut");C.push("laut bei Zugriffen, eher für Keller oder Abstellraum");}
       if(p.rpm<=5640)P1.push("5400er-Klasse: leise und kühl");
       if(p.cert)N.push("Synology-eigene Platte (Toshiba-Basis), offiziell kompatibel mit allen Synology-NAS");
       if(p.cls==="desktop")C.push("nicht für 24/7-Betrieb gebaut");

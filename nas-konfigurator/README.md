@@ -20,5 +20,7 @@ Interaktiver NAS-Konfigurator nach dem Vorbild der PC-Werkbank: Du wählst Gerä
 - **Speichern / Laden, Konfigurations-Code** (beginnt mit `NAS1:`), JSON-Datei, **Druckansicht** als A4-Datenblatt
 
 ## Preise und Daten
-Alle Preise sind Richtpreise (Stand November 2026) und **noch nicht** durch eine Red-Team-Prüfung belegt wie bei der PC-Werkbank. Festplatten, SSDs und RAM sind seit 2025 deutlich teurer und schwanken stark. Leistungs-, Strom- und Lautstärkewerte sind aus Datenblättern abgeleitete Schätzungen. Vor dem Kauf Tagespreise und Kompatibilitätslisten prüfen.
+Teile mit „Preis geprüft 25.11.“ wurden am 25. November 2026 per Preisvergleich recherchiert (überwiegend Geizhals-Daten); alle anderen Preise sind daraus abgeleitete Schätzungen. Festplatten (ca. 30–55 €/TB), Arbeitsspeicher und SSDs sind seit 2025 wegen der KI-Nachfrage stark gestiegen und schwanken. Leistungs-, Strom- und Lautstärkewerte sind aus Datenblättern abgeleitete Schätzungen. Vor dem Kauf Tagespreise und Kompatibilitätslisten prüfen.
 Die Teiledatenbank steht oben im `<script>` von `index.html` (Objekt `DB`) und lässt sich dort anpassen.
+
+Red-Team-Prüfung der Preise, Datenblätter und Regeln: `reports/Red Team NAS-Werkbank.md` (Korrekturen sind eingearbeitet).
