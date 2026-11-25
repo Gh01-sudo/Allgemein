@@ -709,15 +709,29 @@ label.btn{display:inline-flex;align-items:center}
    HDD: rated = freigegeben für Gehäuse bis n Schächte (0 = unbegrenzt), idle/act in W, db = Zugriffsgeräusch, mbs = MB/s. */
 const DB={
 nas:[
- {id:"syn-ds124",name:"Synology DS124",brand:"Synology",kind:"fertig",bays:1,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:5,db:19,os:"DSM 7",lock:false,docker:false,vm:false,tier:1,price:165},
- {id:"syn-ds223j",name:"Synology DS223j",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:false,docker:false,vm:false,tier:1,price:195},
- {id:"syn-ds225p",name:"Synology DS225+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:355,chk:true},
- {id:"syn-ds224p",name:"Synology DS224+",brand:"Synology",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[1,1],pcie:0,mini:false,ecc:false,idle:7,db:20,os:"DSM 7",lock:false,docker:true,vm:true,tier:2,price:330,eol:true},
- {id:"syn-ds425p",name:"Synology DS425+",brand:"Synology",kind:"fertig",bays:4,exp:0,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:10,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:519,chk:true},
- {id:"syn-ds923p",name:"Synology DS923+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1],pcie:0,mini:true,ecc:true,idle:13,db:22,os:"DSM 7",lock:false,docker:true,vm:true,tier:3,price:720,eol:true},
- {id:"syn-ds925p",name:"Synology DS925+",brand:"Synology",kind:"fertig",bays:4,exp:9,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:false,ecc:true,idle:14,db:22,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:774,chk:true},
- {id:"syn-ds1525p",name:"Synology DS1525+",brand:"Synology",kind:"fertig",bays:5,exp:15,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:true,ecc:true,idle:18,db:23,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:980},
- {id:"syn-ds1825p",name:"Synology DS1825+",brand:"Synology",kind:"fertig",bays:8,exp:18,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:25,db:24,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1355,chk:true},
+ {id:"syn-ds124",name:"Synology DS124",brand:"Synology",kind:"fertig",bays:1,exp:0,expUnit:null,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:3.4,db:17,os:"DSM 7",lock:false,docker:true,vm:false,tier:1,price:154,chk:true,synoRam:[]},
+ {id:"syn-ds223j",name:"Synology DS223j",brand:"Synology",kind:"fertig",bays:2,exp:0,expUnit:null,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:1,solder:1,ramMax:1,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:4,db:16,os:"DSM 7",lock:false,docker:true,vm:false,tier:1,price:190,chk:true,synoRam:[]},
+ {id:"syn-ds223",name:"Synology DS223",brand:"Synology",kind:"fertig",bays:2,exp:0,expUnit:null,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:4.1,db:13,os:"DSM 7",lock:false,docker:true,vm:false,tier:1,price:270,synoRam:[]},
+ {id:"syn-ds423",name:"Synology DS423",brand:"Synology",kind:"fertig",bays:4,exp:0,expUnit:null,cpu:"Realtek RTD1619B",cores:4,thr:4,cs:8,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1,1],pcie:0,mini:false,ecc:false,idle:5,db:18,os:"DSM 7",lock:false,docker:true,vm:false,tier:2,price:355,chk:true,synoRam:[]},
+ {id:"syn-ds225p",name:"Synology DS225+",brand:"Synology",kind:"fertig",bays:2,exp:0,expUnit:null,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:6.1,db:17,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:339,chk:true,synoRam:["syn-d4ns01-4"]},
+ {id:"syn-ds224p",name:"Synology DS224+",brand:"Synology",kind:"fertig",bays:2,exp:0,expUnit:null,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:0,m2p:"nein",lan:[1,1],pcie:0,mini:false,ecc:false,idle:4.4,db:20,os:"DSM 7",lock:false,docker:true,vm:true,tier:2,price:369,eol:true,synoRam:["syn-d4ns01-4"]},
+ {id:"syn-ds425p",name:"Synology DS425+",brand:"Synology",kind:"fertig",bays:4,exp:0,expUnit:null,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:6.1,db:19,os:"DSM 7",lock:true,docker:true,vm:true,tier:2,price:519,chk:true,synoRam:["syn-d4ns01-4"]},
+ {id:"syn-ds423p",name:"Synology DS423+",brand:"Synology",kind:"fertig",bays:4,exp:0,expUnit:null,cpu:"Intel Celeron J4125",cores:4,thr:4,cs:12,t4:2,av1:false,arch:"x86",ram:2,solder:2,ramMax:6,ramT:["DDR4-SO"],slots:1,free:1,m2:2,m2p:"syno",lan:[1,1],pcie:0,mini:false,ecc:false,idle:8.5,db:18,os:"DSM 7",lock:false,docker:true,vm:true,tier:2,price:520,eol:true,synoRam:["syn-d4neso4"]},
+ {id:"syn-ds725p",name:"Synology DS725+",brand:"Synology",kind:"fertig",bays:2,exp:7,expUnit:"DX525",cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:true,idle:7.9,db:16,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:650,synoRam:["syn-d4es04-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds725neo",name:"Synology DS725neo+",brand:"Synology",kind:"fertig",bays:2,exp:7,expUnit:"DX525",cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-SO","DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:7.9,db:16,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:564,neo:true,synoRam:["syn-d4ns01-4","syn-d4es04-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds923p",name:"Synology DS923+",brand:"Synology",kind:"fertig",bays:4,exp:9,expUnit:"DX517",cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1],pcie:0,mini:true,ecc:true,idle:11.5,db:21,os:"DSM 7",lock:false,docker:true,vm:true,tier:3,price:720,eol:true,synoRam:["syn-d4es02-4","syn-d4es02-8","syn-d4es01-16"]},
+ {id:"syn-ds925p",name:"Synology DS925+",brand:"Synology",kind:"fertig",bays:4,exp:9,expUnit:"DX525",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:false,ecc:true,idle:12.3,db:18.5,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:769,chk:true,synoRam:["syn-d4es04-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds925neo",name:"Synology DS925neo+",brand:"Synology",kind:"fertig",bays:4,exp:9,expUnit:"DX525",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-SO","DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:false,ecc:false,idle:12.3,db:18.5,os:"DSM 7",lock:true,docker:true,vm:true,tier:3,price:619,chk:true,neo:true,synoRam:["syn-d4ns01-4","syn-d4es04-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds1522p",name:"Synology DS1522+",brand:"Synology",kind:"fertig",bays:5,exp:15,expUnit:"DX517",cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1,1,1],pcie:0,mini:true,ecc:true,idle:16.7,db:21,os:"DSM 7",lock:false,docker:true,vm:true,tier:3,price:900,eol:true,synoRam:["syn-d4es02-8","syn-d4es01-16"]},
+ {id:"syn-ds1525p",name:"Synology DS1525+",brand:"Synology",kind:"fertig",bays:5,exp:15,expUnit:"DX525",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:true,ecc:true,idle:13.6,db:20.5,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1069,chk:true,synoRam:["syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds1525neo",name:"Synology DS1525neo+",brand:"Synology",kind:"fertig",bays:5,exp:15,expUnit:"DX525",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-SO","DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:0,mini:true,ecc:false,idle:13.6,db:20.5,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:894,neo:true,synoRam:["syn-d4ns01-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds1621p",name:"Synology DS1621+",brand:"Synology",kind:"fertig",bays:6,exp:16,expUnit:"DX517",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1,1,1],pcie:1,mini:false,ecc:true,idle:25.3,db:23,os:"DSM 7",lock:false,docker:true,vm:true,tier:4,price:1000,eol:true,synoRam:["syn-d4es01-4","syn-d4es01-8","syn-d4ecso-16"]},
+ {id:"syn-ds1821p",name:"Synology DS1821+",brand:"Synology",kind:"fertig",bays:8,exp:18,expUnit:"DX517",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[1,1,1,1],pcie:1,mini:false,ecc:true,idle:26.2,db:20,os:"DSM 7",lock:false,docker:true,vm:true,tier:4,price:1150,eol:true,synoRam:["syn-d4es01-4","syn-d4es01-8","syn-d4ecso-16"]},
+ {id:"syn-ds1825p",name:"Synology DS1825+",brand:"Synology",kind:"fertig",bays:8,exp:18,expUnit:"DX525",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:8,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:true,idle:18.3,db:21.8,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1356,chk:true,synoRam:["syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds1825neo",name:"Synology DS1825neo+",brand:"Synology",kind:"fertig",bays:8,exp:18,expUnit:"DX525",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-SO","DDR4-ECC-SO"],slots:2,free:1,m2:2,m2p:"syno",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:18.3,db:21.8,os:"DSM 7",lock:true,docker:true,vm:true,tier:4,price:1124,neo:true,synoRam:["syn-d4ns01-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-ds2422p",name:"Synology DS2422+",brand:"Synology",kind:"fertig",bays:12,exp:24,expUnit:"DX1222",cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:0,m2p:"nein",lan:[1,1,1,1],pcie:1,mini:false,ecc:true,idle:32.1,db:23,os:"DSM 7",lock:false,docker:true,vm:true,tier:5,price:1900,synoRam:["syn-d4es02-4","syn-d4es03-8","syn-d4es03-16"]},
+ {id:"syn-rs422p",name:"Synology RS422+ (Rack 1 HE)",brand:"Synology",kind:"rack",bays:4,exp:0,expUnit:null,cpu:"AMD Ryzen R1600",cores:2,thr:4,cs:18,t4:0,av1:false,arch:"x86",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1,1],pcie:0,mini:true,ecc:true,idle:13.4,db:26.5,os:"DSM 7",lock:false,docker:true,vm:false,tier:3,price:897,chk:true,synoRam:[]},
+ {id:"syn-rs1221p",name:"Synology RS1221+ (Rack 2 HE)",brand:"Synology",kind:"rack",bays:8,exp:0,expUnit:null,cpu:"AMD Ryzen V1500B",cores:4,thr:8,cs:28,t4:0,av1:false,arch:"x86",ram:4,solder:0,ramMax:32,ramT:["DDR4-ECC-SO"],slots:2,free:1,m2:0,m2p:"nein",lan:[1,1,1,1],pcie:1,mini:false,ecc:true,idle:22.6,db:35.8,os:"DSM 7",lock:false,docker:true,vm:true,tier:4,price:1700,synoRam:["syn-d4es04-4","syn-d4es01-8","syn-d4es03-16"]},
  {id:"qnap-ts233",name:"QNAP TS-233",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"ARM Cortex-A55",cores:4,thr:4,cs:7,t4:0,av1:false,arch:"arm",ram:2,solder:2,ramMax:2,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[1],pcie:0,mini:false,ecc:false,idle:6,db:20,os:"QTS 5",lock:false,docker:true,vm:false,tier:1,price:185},
  {id:"qnap-ts433",name:"QNAP TS-433",brand:"QNAP",kind:"fertig",bays:4,exp:0,cpu:"ARM Cortex-A55",cores:4,thr:4,cs:7,t4:0,av1:false,arch:"arm",ram:4,solder:4,ramMax:4,ramT:[],slots:0,free:0,m2:0,m2p:"nein",lan:[2.5,1],pcie:0,mini:false,ecc:false,idle:9,db:22,os:"QTS 5",lock:false,docker:true,vm:false,tier:1,price:340},
  {id:"qnap-ts264",name:"QNAP TS-264-8G",brand:"QNAP",kind:"fertig",bays:2,exp:0,cpu:"Intel Celeron N5095",cores:4,thr:4,cs:17,t4:3,av1:false,arch:"x86",ram:8,solder:0,ramMax:16,ramT:["DDR4-SO"],slots:2,free:1,m2:2,m2p:"ja",lan:[2.5,2.5],pcie:1,mini:false,ecc:false,idle:11,db:21,os:"QTS 5",lock:false,docker:true,vm:true,tier:2,price:420,hdmi:true},
@@ -763,9 +777,13 @@ hdd:[
  {id:"tosh-n300-8",name:"Toshiba N300 8 TB",brand:"Toshiba",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:6.9,act:8.4,db:30,mbs:240,warr:3,tier:2,price:250,chk:true},
  {id:"tosh-n300-18",name:"Toshiba N300 18 TB",brand:"Toshiba",tb:18,rpm:7200,cls:"nas",smr:false,rated:8,idle:4.1,act:7.7,db:30,mbs:281,warr:3,tier:3,price:790},
  {id:"tosh-mg10-20",name:"Toshiba MG10 20 TB",brand:"Toshiba",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:4.4,act:8.2,db:32,mbs:268,warr:5,tier:3,price:899,chk:true},
- {id:"syn-hat8",name:"Synology HAT3300 Plus 8 TB",brand:"Synology",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:27,mbs:230,warr:3,tier:2,price:440,cert:true},
- {id:"syn-hat12",name:"Synology HAT3300 Plus 12 TB",brand:"Synology",tb:12,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:28,mbs:242,warr:3,tier:2,price:620,cert:true},
- {id:"syn-hat16",name:"Synology HAT3310 Plus 16 TB",brand:"Synology",tb:16,rpm:7200,cls:"nas",smr:false,rated:16,idle:5.0,act:7.3,db:29,mbs:262,warr:5,tier:3,price:800,cert:true},
+ {id:"syn-hat4",name:"Synology HAT3300 Plus 4 TB",brand:"Synology",tb:4,rpm:5400,cls:"nas",smr:false,rated:8,idle:3.7,act:4.8,db:22,mbs:202,warr:3,tier:1,price:215,cert:true,chk:true},
+ {id:"syn-hat8",name:"Synology HAT3320 Plus 8 TB",brand:"Synology",tb:8,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.0,act:7.0,db:27,mbs:230,warr:3,tier:2,price:455,cert:true,chk:true},
+ {id:"syn-hat12",name:"Synology HAT3310 Plus 12 TB",brand:"Synology",tb:12,rpm:7200,cls:"nas",smr:false,rated:16,idle:5.0,act:7.0,db:28,mbs:242,warr:5,tier:3,price:575,cert:true,chk:true},
+ {id:"syn-hat16",name:"Synology HAT3310 Plus 16 TB",brand:"Synology",tb:16,rpm:7200,cls:"nas",smr:false,rated:16,idle:5.0,act:7.3,db:29,mbs:262,warr:5,tier:3,price:667,cert:true,chk:true},
+ {id:"syn-hat20",name:"Synology HAT3320 Plus 20 TB",brand:"Synology",tb:20,rpm:7200,cls:"nas",smr:false,rated:8,idle:5.5,act:7.5,db:29,mbs:270,warr:3,tier:4,price:850,cert:true},
+ {id:"syn-hat5310-20",name:"Synology HAT5310 20 TB (Enterprise)",brand:"Synology",tb:20,rpm:7200,cls:"ent",smr:false,rated:0,idle:5.5,act:8.0,db:32,mbs:270,warr:5,tier:4,price:1099,cert:true,chk:true},
+ {id:"syn-hat5320-24",name:"Synology HAT5320 24 TB (Enterprise)",brand:"Synology",tb:24,rpm:7200,cls:"ent",smr:false,rated:0,idle:6.0,act:8.2,db:32,mbs:285,warr:5,tier:5,price:1242,cert:true,chk:true},
  {id:"wd-red4",name:"WD Red 4 TB (SMR, WD40EFAX)",brand:"WD",tb:4,rpm:5400,cls:"nas",smr:true,rated:8,idle:3.1,act:4.1,db:22,mbs:180,warr:3,tier:1,price:170,eol:true},
  {id:"sg-bc8",name:"Seagate BarraCuda 8 TB (SMR)",brand:"Seagate",tb:8,rpm:5400,cls:"desktop",smr:true,rated:2,idle:3.4,act:5.3,db:24,mbs:190,warr:2,tier:1,price:300}
 ],
@@ -777,18 +795,28 @@ ssd:[
  {id:"wd-sn700-500",name:"WD Red SN700 500 GB",tb:0.5,tbw:1000,cls:"nas",mbs:3430,tier:2,price:120},
  {id:"wd-sn700-1",name:"WD Red SN700 1 TB",tb:1,tbw:2000,cls:"nas",mbs:3430,tier:3,price:180},
  {id:"wd-sn700-2",name:"WD Red SN700 2 TB",tb:2,tbw:2500,cls:"nas",mbs:3430,tier:4,price:320},
- {id:"syn-snv3410-400",name:"Synology SNV3410 400 GB",tb:0.4,tbw:500,cls:"syno",mbs:3000,tier:2,price:190},
- {id:"syn-snv3410-800",name:"Synology SNV3410 800 GB",tb:0.8,tbw:1000,cls:"syno",mbs:3100,tier:3,price:300}
+ {id:"syn-snv3410-400",name:"Synology SNV3410 400 GB",tb:0.4,tbw:500,cls:"syno",mbs:3000,tier:2,price:370,chk:true},
+ {id:"syn-snv3410-800",name:"Synology SNV3410 800 GB",tb:0.8,tbw:1000,cls:"syno",mbs:3100,tier:3,price:520,eol:true,no25:true},
+ {id:"syn-snv5420-400",name:"Synology SNV5420 400 GB",tb:0.4,tbw:700,cls:"syno",mbs:3500,tier:3,price:430},
+ {id:"syn-snv5420-800",name:"Synology SNV5420 800 GB",tb:0.8,tbw:1400,cls:"syno",mbs:3500,tier:4,price:700},
+ {id:"syn-snv5420-1600",name:"Synology SNV5420 1600 GB",tb:1.6,tbw:2800,cls:"syno",mbs:3500,tier:5,price:1200}
 ],
 ram:[
  {id:"none",name:"Keine Erweiterung",none:true,price:0,tier:0},
- {id:"syn-d4neso4",name:"Synology D4NESO-2666-4G",gb:4,mods:1,t:"DDR4-SO",syno:true,tier:2,price:120},
+ {id:"syn-d4ns01-4",name:"Synology D4NS01-4G",gb:4,mods:1,t:"DDR4-SO",syno:true,tier:2,price:265,chk:true},
+ {id:"syn-d4neso4",name:"Synology D4NESO-2666-4G",gb:4,mods:1,t:"DDR4-SO",syno:true,tier:2,price:265},
+ {id:"syn-d4es04-4",name:"Synology D4ES04-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:281,chk:true},
+ {id:"syn-d4es03-8",name:"Synology D4ES03-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:320,chk:true},
+ {id:"syn-d4es03-16",name:"Synology D4ES03-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:379,chk:true},
+ {id:"syn-d4es02-4",name:"Synology D4ES02-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:280},
+ {id:"syn-d4es02-8",name:"Synology D4ES02-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:320},
+ {id:"syn-d4es01-4",name:"Synology D4ES01-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:280},
+ {id:"syn-d4es01-8",name:"Synology D4ES01-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:320},
+ {id:"syn-d4es01-16",name:"Synology D4ES01-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:380},
+ {id:"syn-d4ecso-16",name:"Synology D4ECSO-2666-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:390},
  {id:"cr-d4-8",name:"Crucial 8 GB DDR4-3200 SO-DIMM",gb:8,mods:1,t:"DDR4-SO",tier:1,price:80},
  {id:"cr-d4-16",name:"Crucial 16 GB DDR4-3200 SO-DIMM",gb:16,mods:1,t:"DDR4-SO",tier:2,price:140},
  {id:"cr-d4-32",name:"Crucial 32 GB DDR4-3200 SO-DIMM",gb:32,mods:1,t:"DDR4-SO",tier:3,price:280},
- {id:"syn-d4es02-4",name:"Synology D4ES02-4G (ECC)",gb:4,mods:1,t:"DDR4-ECC-SO",syno:true,tier:2,price:150},
- {id:"syn-d4es01-8",name:"Synology D4ES01-8G (ECC)",gb:8,mods:1,t:"DDR4-ECC-SO",syno:true,tier:3,price:230},
- {id:"syn-d4es01-16",name:"Synology D4ES01-16G (ECC)",gb:16,mods:1,t:"DDR4-ECC-SO",syno:true,tier:4,price:380},
  {id:"kin-d4e-16",name:"Kingston Server Premier 16 GB DDR4-3200 ECC SO-DIMM",gb:16,mods:1,t:"DDR4-ECC-SO",tier:3,price:220},
  {id:"cr-d5-16",name:"Crucial 16 GB DDR5-5600 SO-DIMM",gb:16,mods:1,t:"DDR5-SO",tier:2,price:280},
  {id:"cr-d5-32",name:"Crucial 32 GB DDR5-5600 SO-DIMM",gb:32,mods:1,t:"DDR5-SO",tier:3,price:550,chk:true},
@@ -806,9 +834,13 @@ nic:[
  {id:"tp-tx401",name:"TP-Link TX401 (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"any",m2:0,w:6,tier:3,price:95},
  {id:"qnap-qxg10g",name:"QNAP QXG-10G1T (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"any",m2:0,w:6,tier:3,price:140},
  {id:"qnap-qm2",name:"QNAP QM2-2P10G1TB (10 GbE + 2× M.2)",sp:10,t:"pcie",vendor:"qnap",m2:2,w:9,tier:4,price:290},
- {id:"syn-e10g22",name:"Synology E10G22-T1-Mini (10 GbE)",sp:10,t:"mini",vendor:"syno",m2:0,w:6,tier:3,price:200},
- {id:"syn-e10g18",name:"Synology E10G18-T1 (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"syno",m2:0,w:7,tier:3,price:210},
- {id:"syn-e25g30",name:"Synology E25G30-F2 (2× 25 GbE SFP28)",sp:25,t:"pcie",vendor:"syno",m2:0,w:10,tier:5,price:400}
+ {id:"syn-e10g22",name:"Synology E10G22-T1-Mini (10 GbE)",sp:10,t:"mini",vendor:"syno",m2:0,w:6,tier:3,price:137,chk:true,fits:["syn-ds1525p","syn-ds1525neo","syn-ds923p","syn-ds1522p","syn-rs422p"]},
+ {id:"syn-e10g30t1",name:"Synology E10G30-T1 (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"syno",m2:0,w:7,tier:3,price:155,chk:true,fits:["syn-ds1825p","syn-ds1825neo","syn-rs1221p","syn-ds1621p","syn-ds1821p"]},
+ {id:"syn-e10g30t2",name:"Synology E10G30-T2 (2× 10 GbE, PCIe)",sp:10,t:"pcie",vendor:"syno",m2:0,w:9,tier:4,price:274,chk:true,fits:["syn-ds1825p","syn-ds1825neo","syn-ds2422p","syn-rs1221p","syn-ds1621p","syn-ds1821p"]},
+ {id:"syn-e25g30",name:"Synology E25G30-F2 (2× 25 GbE SFP28)",sp:25,t:"pcie",vendor:"syno",m2:0,w:10,tier:5,price:385,chk:true,fits:["syn-ds1825p","syn-ds1825neo","syn-ds2422p","syn-rs1221p","syn-ds1621p","syn-ds1821p"]},
+ {id:"syn-e10m20",name:"Synology E10M20-T1 (10 GbE + 2× M.2)",sp:10,t:"pcie",vendor:"syno",m2:2,w:10,tier:4,price:239,chk:true,fits:["syn-ds2422p","syn-rs1221p"]},
+ {id:"syn-m2d20",name:"Synology M2D20 (2× M.2, ohne Netzwerk)",sp:0,t:"pcie",vendor:"syno",m2:2,w:4,tier:3,price:184,chk:true,fits:["syn-ds2422p","syn-rs1221p"]},
+ {id:"syn-e10g18",name:"Synology E10G18-T1 (10 GbE, PCIe)",sp:10,t:"pcie",vendor:"syno",m2:0,w:7,tier:3,price:130,eol:true,fits:["syn-ds2422p","syn-rs1221p","syn-ds1621p","syn-ds1821p"]},
 ],
 ups:[
  {id:"none",name:"Keine USV",none:true,price:0,tier:0},
@@ -821,8 +853,9 @@ ups:[
 ],
 exp:[
  {id:"none",name:"Keine Erweiterungseinheit",none:true,price:0,tier:0},
- {id:"DX517",name:"Synology DX517 (5 Schächte)",bays:5,tier:3,price:520},
- {id:"DX525",name:"Synology DX525 (5 Schächte)",bays:5,tier:3,price:560}
+ {id:"DX517",name:"Synology DX517 (5 Schächte, eSATA)",bays:5,idle:2.4,tier:3,price:509,chk:true},
+ {id:"DX525",name:"Synology DX525 (5 Schächte, USB-C)",bays:5,idle:7,tier:3,price:500,chk:true},
+ {id:"DX1222",name:"Synology DX1222 (12 Schächte)",bays:12,idle:16,tier:4,price:1100}
 ],
 bak:[
  {id:"none",name:"Kein Backup",none:true,price:0,tier:0,tb:0},
@@ -854,7 +887,7 @@ const CATS=[
  {k:"exp",label:"Erweiterungseinheit",code:"DX"},
  {k:"ssd",label:"SSD-Cache",code:"M.2"},
  {k:"ram",label:"Arbeitsspeicher",code:"RAM"},
- {k:"nic",label:"Netzwerk",code:"LAN"},
+ {k:"nic",label:"Netzwerk / Karte",code:"PCIe"},
  {k:"ups",label:"USV",code:"STROM"},
  {k:"bak",label:"Backup",code:"3-2-1"}
 ];
@@ -909,10 +942,10 @@ function raidName(nas,n,red){
 function ramFits(nas,ram){return !!(nas&&ram&&!ram.none&&nas.ramT.includes(ram.t)&&nas.slots>=ram.mods);}
 /* Schächte: Gerät plus passende Erweiterungseinheiten */
 function expFits(nas,exp){return !!(nas&&exp&&!exp.none&&nas.expUnit===exp.id);}
-function expMax(nas){return nas&&nas.expUnit?Math.round((nas.exp-nas.bays)/5):0;}
+function expMax(nas){const u=nas&&nas.expUnit&&get("exp",nas.expUnit);return u?Math.round((nas.exp-nas.bays)/u.bays):0;}
 function bayTotal(parts){const nas=parts.nas;if(!nas)return 0;const e=parts.exp;return nas.bays+(expFits(nas,e)?Math.min(parts.q.exp,expMax(nas))*e.bays:0);}
 function nasPoolFiltered(){
-  const p=P();let pool=DB.nas.filter(x=>!x.eol);
+  const p=P();let pool=DB.nas.filter(x=>!x.eol&&x.kind!=="rack");
   if(p.brand==="syno"){const f=pool.filter(x=>x.brand==="Synology");if(f.length)pool=f;}
   if(p.bays){const f=pool.filter(x=>p.bays>=12?x.bays>=12:x.bays===p.bays);if(f.length)pool=f;}
   return pool;
@@ -927,8 +960,9 @@ function ramTotal(nas,ram){
 function ramNeed(nas){const p=P();let need={backup:2,media:4,lab:8}[state.profile]+p.vms*4+(p.streams>2?2:0);if(nas&&nas.kind==="diy")need=Math.max(need,16);if(nas&&nas.bare)need=Math.max(need,8);return need;}
 function nicProblem(nas,nic){
   if(!nas||!nic||nic.none)return "";
-  if(nic.t==="pcie"&&!nas.pcie)return `${nas.name} hat keinen PCIe-Steckplatz für die Karte.`;
-  if(nic.t==="mini"&&!nas.mini)return `${nic.name} passt nur in Synology-Modelle mit Netzwerk-Upgrade-Steckplatz (z. B. DS923+).`;
+  if(!nic.fits&&nic.t==="pcie"&&!nas.pcie)return `${nas.name} hat keinen PCIe-Steckplatz für die Karte.`;
+  if(!nic.fits&&nic.t==="mini"&&!nas.mini)return `${nic.name} passt nur in Synology-Modelle mit Netzwerk-Upgrade-Steckplatz (z. B. DS923+).`;
+  if(nic.fits&&!nic.fits.includes(nas.id))return `${nic.name} ist für ${nas.name} nicht freigegeben (passt in: ${nic.fits.map(i=>{const x=get("nas",i);return x?x.name.replace("Synology ",""):i;}).join(", ")}).`;
   if(nas.brand==="Synology"&&nic.vendor!=="syno")return `DSM bringt keinen Treiber für ${nic.name} mit; Synology-NAS nehmen nur Synology-Netzwerkkarten.`;
   if(nic.vendor==="qnap"&&nas.brand!=="QNAP")return `${nic.name} braucht QNAP-Treiber und läuft nur in QNAP-NAS.`;
   if(nic.vendor==="syno"&&nas.brand!=="Synology")return `${nic.name} ist für Synology-NAS gebaut; in ${nas.brand}-Geräten nicht freigegeben.`;
@@ -953,11 +987,12 @@ function powerInfo(parts){
   const nic=parts.nic&&!parts.nic.none?parts.nic.w:0;
   const ups=parts.ups&&!parts.ups.none?parts.ups.self:0;
   const bak=parts.bak&&parts.bak.kind==="nas2"?14:0;
-  const avg=base+drv+ssd+nic+ups+bak;
+  const ex=parts.exp&&!parts.exp.none&&expFits(nas,parts.exp)?(parts.exp.idle||5)*parts.q.exp:0;
+  const avg=base+drv+ssd+nic+ups+bak+ex;
   const load=(nas?nas.idle*1.5:0)+(h?n*h.act:0)+ssd+nic;
   const peak=(nas?nas.idle*1.8:0)+(h?n*24:0)+ssd+nic;
   const kwh=avg*8.76;
-  return {base,drv,ssd,nic,ups,bak,avg,load,peak,kwh,eur:kwh*p.kwh};
+  return {base,drv,ssd,nic,ups,bak,ex,avg,load,peak,kwh,eur:kwh*p.kwh};
 }
 function bakMonthly(b){if(!b||b.none)return 0;return b.perTB?Math.max(0.1,P().data)*b.mo:(b.mo||0);}
 function running(parts){return powerInfo(parts).eur+12*bakMonthly(parts.bak);}
@@ -1002,6 +1037,7 @@ function checkAll(parts){
     if(n>bt)add("error",["hdd","nas"],`${n} Platten, aber ${nas.name} hat nur ${bt} Schächte${bt>nas.bays?" (mit Erweiterung)":""}${nas.expUnit&&bt===nas.bays?`; mit ${nas.expUnit} sind bis zu ${nas.exp} möglich`:""}.`);
     if(red>0&&n<minN(red))add("error",["hdd"],red===1?"Ausfallsicherheit für 1 Platte braucht mindestens 2 Platten (Spiegel).":"Ausfallsicherheit für 2 Platten (RAID 6 / SHR-2 / RAIDZ2) braucht mindestens 4 Platten.");
     if(h.rated&&nas.bays>h.rated)add("warn",["hdd","nas"],`${h.name} ist für Gehäuse bis ${h.rated} Schächte ausgelegt, ${nas.name} hat ${nas.bays}. Vibrationen verkürzen die Lebensdauer; besser NAS-Pro- oder Enterprise-Platten.`);
+    if(nas.kind==="rack"&&nas.brand==="Synology"&&!h.cert)add("info",["hdd","nas"],"Rackstation: Synology garantiert volle Funktion nur mit gelisteten Laufwerken.");
     if(nas.lock&&!h.cert)add("info",["hdd","nas"],`${nas.name} gehört zur 2025er Plus-Serie. Seit DSM 7.3 (Oktober 2025) lassen sich Fremd-Festplatten wieder für Speicherpools nutzen; die Kompatibilitätsliste führt aber weiterhin vor allem Synology-Platten. DSM auf 7.3 oder neuer aktualisieren.`);
     if(h.cls==="ent"&&nas.kind==="fertig"&&nas.bays<=4)add("info",["hdd"],"Enterprise-Platten sind lauter und wärmer als NAS-Platten und derzeit nicht günstiger pro TB. Fürs Wohnzimmer eher ungeeignet.");
   }
@@ -1056,6 +1092,8 @@ function checkAll(parts){
       const rt=ramTotal(nas,ram);
       if(nas.free<ram.mods)add("info",["ram"],`Das Modul ersetzt das eingebaute; danach ${rt} GB.`);
       if(rt>nas.ramMax)add("warn",["ram"],`${rt} GB liegen über den offiziell unterstützten ${nas.ramMax} GB. Läuft oft, ist aber nicht freigegeben.`);
+      if(ram.syno&&nas.synoRam&&!nas.synoRam.includes(ram.id))add("error",["ram"],`${ram.name} ist für ${nas.name} nicht freigegeben. Passend: ${nas.synoRam.map(i=>get("ram",i).name.replace("Synology ","")).join(", ")||"keins (nicht erweiterbar)"}.`);
+      if(nas.free>=ram.mods&&nas.ramT.length>1&&ram.t!==nas.ramT[0])add("warn",["ram"],`${nas.name} hat ab Werk ${RAM_T[nas.ramT[0]]}; ECC und Nicht-ECC zu mischen unterstützt Synology nicht. Für ECC beide Plätze mit ECC-Modulen bestücken.`);
       if(nas.brand==="Synology"&&!ram.syno)add("warn",["ram"],"DSM meldet Fremdspeicher als nicht unterstützt, und der Synology-Support kann Hilfe ablehnen. Synology-Module sind teurer, aber offiziell.");
       if(rt<=nas.ram)add("info",["ram"],"Keine Wirkung: danach nicht mehr Arbeitsspeicher als ab Werk.");
     }
@@ -1065,7 +1103,8 @@ function checkAll(parts){
     if(!sl)add("error",["ssd"],`${nas?nas.name:"Das NAS"} hat keinen M.2-Steckplatz.`);
     else if(q>sl)add("error",["ssd"],`${q} SSDs, aber nur ${sl} M.2-Steckplätze.`);
     if(sl&&q===1)add("info",["ssd"],"Eine SSD taugt nur als Lese-Cache; für Schreib-Cache oder SSD-Speicherpool zwei SSDs im Spiegel nehmen.");
-    if(nas&&nas.lock&&ssd.cls!=="syno")add("warn",["ssd"],"Bei den 2025er Plus-Modellen sind M.2-SSDs anderer Hersteller auch nach DSM 7.3 eingeschränkt; Synology-SSDs nehmen.");
+    if(nas&&nas.lock&&ssd.cls!=="syno")add("error",["ssd"],"2025er Plus-Modelle nutzen M.2-SSDs anderer Hersteller auch unter DSM 7.3 nicht für Cache oder neue Speicherpools (nur bei Migration). Synology-SSD nehmen.");
+    if(nas&&nas.lock&&ssd.no25)add("error",["ssd"],`${ssd.name} steht nicht auf der Kompatibilitätsliste der 2025er Modelle; SNV3410-400G oder SNV5420 nehmen.`);
     else if(nas&&nas.m2p==="syno"&&ssd.cls!=="syno")add("info",["ssd"],"Fremd-SSDs nutzt DSM hier nur als Cache; einen SSD-Speicherpool (z. B. für VMs) gibt es nur mit Synology-SSDs.");
     if(ssd.cls==="consumer"&&ssd.tbw<500)add("info",["ssd"],`${ssd.name} hat nur ${ssd.tbw} TBW Schreibfestigkeit; als Schreib-Cache nutzt sie sich schnell ab.`);
     if(nas&&nas.m2p==="nein"&&sl)add("info",["ssd"],"M.2-Plätze dienen hier nur als Cache.");
@@ -1100,8 +1139,9 @@ function autoPick(c,parts,lowUp){
   if(c==="exp"){const n=parts.q.hdd||0;if(n<=nas.bays||!nas.expUnit)return [NONE("exp"),0];const u=get("exp",nas.expUnit);return [u,Math.min(expMax(nas),Math.ceil((n-nas.bays)/u.bays))];}
   if(c==="ram"){
     const need=ramNeed(nas),cur=nas.ram;if(cur>=need)return [NONE("ram"),0];
-    let cand=DB.ram.filter(r=>!r.none&&ramFits(nas,r));
-    if(nas.brand==="Synology"&&cand.some(r=>r.syno))cand=cand.filter(r=>r.syno);
+    let cand=DB.ram.filter(r=>!r.none&&!r.eol&&ramFits(nas,r));
+    if(nas.brand==="Synology"&&cand.some(r=>r.syno))cand=cand.filter(r=>r.syno&&(!nas.synoRam||nas.synoRam.includes(r.id)));
+    if(nas.ramT.length>1){const same=cand.filter(r=>r.t===nas.ramT[0]||nas.free<r.mods);if(same.length)cand=same;}
     const ok=cand.filter(r=>{const t=ramTotal(nas,r);return t>=need&&t<=nas.ramMax;}).sort((a,b)=>a.price-b.price);
     if(ok.length)return [ok[0],0];
     const best=cand.filter(r=>ramTotal(nas,r)<=nas.ramMax&&ramTotal(nas,r)>cur).sort((a,b)=>ramTotal(nas,b)-ramTotal(nas,a)||a.price-b.price)[0];
@@ -1109,7 +1149,7 @@ function autoPick(c,parts,lowUp){
   }
   if(c==="nic"){
     if(Math.max(...nas.lan)>=p.net)return [NONE("nic"),0];
-    const cand=DB.nic.filter(x=>!x.none&&!nicProblem(nas,x)&&x.sp>Math.max(...nas.lan));
+    const cand=DB.nic.filter(x=>!x.none&&!x.eol&&!nicProblem(nas,x)&&x.sp>Math.max(...nas.lan));
     const ok=cand.filter(x=>x.sp>=p.net&&x.vendor!=="qnap").sort((a,b)=>a.price-b.price);
     return [ok[0]||cand.sort((a,b)=>b.sp-a.sp||a.price-b.price)[0]||NONE("nic"),0];
   }
@@ -1117,7 +1157,7 @@ function autoPick(c,parts,lowUp){
     const want=state.profile==="lab"||p.vms>0,sl=m2Slots(parts);
     if(!want||!sl)return [NONE("ssd"),0];
     const q=Math.min(2,sl),minTb=p.vms>0?0.8:0.4;
-    let cand=DB.ssd.filter(s=>!s.none&&s.tb>=minTb&&s.cls!=="consumer");
+    let cand=DB.ssd.filter(s=>!s.none&&!s.eol&&s.tb>=minTb&&s.cls!=="consumer");
     if(nas.m2p==="syno")cand=cand.filter(s=>s.cls==="syno");else cand=cand.filter(s=>s.cls!=="syno");
     cand.sort((a,b)=>a.price-b.price);return [cand[0]||NONE("ssd"),cand[0]?q:0];
   }
@@ -1163,7 +1203,7 @@ function evalCombo(fixed,nas,hdd,n,quick){
   if(!quick){const iss=checkAll(parts);let e=0,w=0;for(const i of iss){if(i.level==="error")e++;else if(i.level==="warn")w++;}pen*=Math.pow(0.03,e)*Math.pow(0.82,w);}
   if(nas.bare&&(!parts.ram||parts.ram.none))pen*=0.2;
   if(rt<ramNeed(nas))pen*=0.8;
-  let Q=1+0.06*nas.tier;
+  let Q=1+0.03*nas.tier;
   if(state.profile==="lab")Q+=nas.cs/100*0.6+(nas.ecc?0.12:0)+(nas.m2?0.06:0)+(nas.pcie||nas.mini?0.04:0);
   if(state.profile==="media")Q+=Math.min(nas.t4,4)/4*0.25+(nas.av1?0.05:0);
   if(state.profile==="backup")Q+=(nas.brand==="Synology"?0.12:0)+(nas.idle<=10?0.04:0);
@@ -1223,7 +1263,7 @@ function spec(cat,p){
     case "exp":return `+${p.bays} Schächte · eSATA/Erweiterungsport · für ${DB.nas.filter(x=>x.expUnit===p.id).map(x=>x.name.replace("Synology ","")).join(", ")}`;
     case "ssd":return `${fmtTB(p.tb)} · NVMe · ${p.tbw} TBW · ${CLS_LABEL[p.cls]||"NAS-SSD"}`;
     case "ram":return `${p.gb} GB${p.mods>1?` (${p.mods}× ${p.gb/p.mods} GB)`:""} · ${RAM_T[p.t]}${p.syno?" · Synology-Original":""}`;
-    case "nic":return `${fmtG(p.sp)} · ${p.t==="pcie"?"PCIe-Karte":p.t==="mini"?"Synology-Steckmodul":"USB-Adapter"}${p.m2?` · +${p.m2} M.2`:""}`;
+    case "nic":return `${p.sp?fmtG(p.sp):"kein Netzwerk"} · ${p.t==="pcie"?"PCIe-Karte":p.t==="mini"?"Synology-Steckmodul":"USB-Adapter"}${p.m2?` · +${p.m2} M.2`:""}`;
     case "ups":return `${p.va} VA / ${p.w} W · ${p.sine?"reiner Sinus":"Stufen-Sinus"} · USB-Abschaltsignal · ca. ${p.wh} Wh Akku`;
     case "bak":return p.kind==="cloud"?`${p.perTB?"beliebig groß":fmtTB(p.tb)} · ${p.perTB?num(p.mo,2)+" € je TB und Monat":num(p.mo,2)+" €/Monat"} · außer Haus`:p.kind==="nas2"?`${fmtTB(p.tb)} · zweites NAS an anderem Ort · Hyper Backup / rsync`:p.kind==="rot"?`${fmtTB(p.tb)} je Platte · eine davon außer Haus`:`${fmtTB(p.tb)} · USB-Platte am NAS · einmalig`;
   }
@@ -1747,7 +1787,7 @@ function renderParts(parts,m){
     return `<div class="prow${ch?" changed":""}"><span class="eyebrow">${esc(c.label)}</span><span class="nm">${x?esc((QTY_CATS.includes(c.k)&&!x.none?parts.q[c.k]+"× ":"")+x.name):"–"}${ch?" · neu":""}</span><span class="num">${x?(c.k==="bak"&&bakMonthly(x)?eur2(bakMonthly(x))+"/M.":eur(partCost(parts,c.k))):""}</span></div>`;}).join("");
 }
 function renderPower(parts,m,issues){
-  const pw=m.pw,p=P(),r=[["NAS-Grundlast",pw.base],["Festplatten",pw.drv],["SSDs",pw.ssd],["Netzwerkkarte",pw.nic],["USV-Eigenverbrauch",pw.ups],["Zweit-NAS (Backup)",pw.bak]].filter(x=>x[1]>0);
+  const pw=m.pw,p=P(),r=[["NAS-Grundlast",pw.base],["Festplatten",pw.drv],["SSDs",pw.ssd],["Netzwerkkarte",pw.nic],["USV-Eigenverbrauch",pw.ups],["Erweiterungseinheit",pw.ex],["Zweit-NAS (Backup)",pw.bak]].filter(x=>x[1]>0);
   const imp=issues.filter(i=>i.level!=="info");
   $("#dPower").innerHTML=`<table class="ctable" style="min-width:0"><thead><tr><th>Verbraucher</th><th class="num">Ø Watt</th><th class="num">kWh/Jahr</th><th class="num">€/Jahr</th></tr></thead><tbody>
     ${r.map(x=>`<tr><td>${esc(x[0])}</td><td class="num">${num(x[1],1)}</td><td class="num">${num(x[1]*8.76,0)}</td><td class="num">${eur(x[1]*8.76*p.kwh)}</td></tr>`).join("")}
