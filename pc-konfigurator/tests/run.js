@@ -39,6 +39,23 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   ok(`${combos} Kombinationen ohne Konflikt oder Warnung`,bad.length===0,bad.slice(0,3));
   ok('keine JavaScript-Fehler bei den Reglern',errs.length===0,errs);
 
+  console.log('Budget bindend und Behalten');
+  await p.click('#tab-konfig');await p.waitForTimeout(200);
+  if(await p.isEnabled('#slots [data-act=releaseAll]')){await p.click('#slots [data-act=releaseAll]');await p.waitForTimeout(300);}
+  const overB=[];
+  for(const bud of [900,1300,1800,2600,4000]){await p.fill('#budget',String(bud));await p.waitForTimeout(800);
+    const sm=await p.textContent('#summary');if(/drüber/.test(sm))overB.push(bud);}
+  ok('Budget wird nie überschritten (900–4000 €)',overB.length===0,overB);
+  await p.click('#slots [data-act=keep][data-cat=gpu]');await p.waitForTimeout(200);
+  const g1=(await picks()).gpu;
+  await p.fill('#budget','2200');await p.waitForTimeout(800);
+  const pk=await p.evaluate(()=>JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks);
+  ok('behaltenes Teil bleibt bei Budgetänderung',pk.gpu.id===g1&&pk.gpu.src==='user',pk.gpu);
+  ok('Leiste zeigt behaltene Teile',/1 von 8/.test(await p.textContent('.slot-bar')));
+  await p.click('#slots [data-act=release][data-cat=gpu]');await p.waitForTimeout(300);
+  ok('Freigeben macht das Teil wieder automatisch',(await p.evaluate(()=>JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks.gpu.src))==='auto');
+  await p.fill('#budget','');await p.waitForTimeout(800);
+
   console.log('Vergleiche');
   await p.click('#tab-dash');await p.waitForTimeout(600);
   ok('Preis-FPS-Diagramm aller Systeme',await p.$$eval('#dSysPlot circle',x=>x.length)>10);
