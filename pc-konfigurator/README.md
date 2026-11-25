@@ -74,7 +74,7 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Zweiter Preis je Teil:** Neben dem Bestpreis (Geizhals-Daten) zeigt jedes Teil den Preis bei **alternate.de** mit Lieferstatus (grüner Punkt = sofort lieferbar) und direktem Produktlink, ebenso im Auswahlfenster, als Spalte im Vergleich und in der Einkaufsliste.
 - **„Alles bei Alternate“:** Zusammenfassung und Einkaufsliste rechnen die Summe bei einem Shop aus und zeigen den Aufpreis gegenüber den Bestpreisen. Teile, die es dort nicht gibt, gehen mit dem Bestpreis ein und werden genannt.
 - **Alternate-Fertig-PCs:** 10 Systeme von 1.199 € bis 4.999 € (Alternate-eigene Gaming-PCs, Gigabyte Aorus, MSI, Thermaltake, ASUS ROG) im Fertig-PC-Vergleich, im Diagramm und im Ranking.
-- Die Zuordnung zu den Teilen läuft automatisch über Modellnummer, Kapazität, Kit und Latenz; generalüberholte Ware und abweichende Varianten werden ausgeschlossen. Stand der Alternate-Preise: 25.11.2026 (221 Zuordnungen).
+- Die Zuordnung zu den Teilen läuft automatisch über Modellnummer, Kapazität, Kit und Latenz; generalüberholte Ware und abweichende Varianten werden ausgeschlossen. Stand der Alternate-Preise: 25.11.2026 (213 Zuordnungen).
 
 ## Tests
 `node pc-konfigurator/tests/run.js` prüft mit Playwright (Chromium):

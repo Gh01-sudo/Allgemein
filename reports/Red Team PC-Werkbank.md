@@ -1356,3 +1356,31 @@ Indizes der Fertig-PCs (g/cg/m) passen zu den DB-Werten der jeweiligen CPU und G
   - Ein weiteres System mit RTX 5060 Ti 8 GB.
   - Ein generalüberholtes Angebot entfernt.
 - **Tests danach:** 20 bestanden, 0 fehlgeschlagen.
+
+## Runde 10 (25.11.2026): Budget bindend, Behalten, Kombination
+Geprüft mit rund 1.000 Zufallsfällen (behaltene Teile, Zubehör, alle Profile und Baugrößen), einem exakten Solver für die Untergrenze und Playwright-Tests.
+- **Ergebnis:** Die Automatik ändert behaltene Teile nie und überschreitet ein machbares Budget nicht. In 432 Gaming-Fällen liefert die neue Version nirgends weniger FPS als die alte.
+- **Behoben:**
+  - Dashboard-Regler gaben behaltene Teile frei.
+  - ITX-Builds bekamen ATX-Gehäuse oder zu lange Grafikkarten.
+  - Die Suche nahm vermeidbare Warnungen in Kauf.
+  - Der RAM-Hinweis war falsch; die iGPU-Stufe fehlte bei behaltener CPU.
+  - Mit „Keine Grafikkarte“ wurde ein Prozessor mit schwacher iGPU gewählt.
+  - Ein 1500-W-Netzteil wurde bei 950 W Bedarf gewählt.
+  - Gehäuse-Vorschläge passten nicht zur Baugröße.
+  - Büro-PCs wurden überdimensioniert.
+  - Hinweistexte nannten behaltene Teile, obwohl keine behalten waren.
+- **Offen (leicht):**
+  - Behaltene Teile, die selbst nicht zusammenpassen, zeigen nur die allgemeine Budget-Meldung.
+  - Für eine behaltene LGA1700-CPU gibt es nur noch auslaufende Boards.
+
+## Runde 11 (25.11.2026): Teiledatenbank
+Geprüft wurden die 15 neuen Teile, rund 30 der 62 Preisänderungen (alle 23 Grafikkarten nach Artikelnummer) und rund 40 Alternate-Zuordnungen.
+- **Behoben:**
+  - Radiatoren beim Fractal Ridge.
+  - GPU-Länge und Radiatoren beim Pop Mini Air.
+  - Kühlerhöhe und SFX-Netzteil beim Jonsbo Z20.
+  - M.2-Plätze und PCIe-5.0-Steckplatz bei ASRock B860M Pro RS, Gigabyte B860M Gaming X, ASUS Prime B860M-A, MSI B850M-P und B850-P.
+  - Preise von Kingston 64 GB CL36, Corsair 64 GB CL30, XFX RX 9060 XT (Dual-Fan), Aorus RTX 5070 Ti Master und MSI MAG 275QF.
+  - 8 Alternate-Zuordnungen auf falsche Varianten entfernt (CL40 statt CL30/36, BTF, Dark, RGB, Pop 2, TL Flex, schwarz statt Standard).
+- **Hinweis:** Die Seasonic Focus GX-850 ist derzeit teurer als die GX-1000. Das ist die Marktlage, kein Datenfehler.
