@@ -30,6 +30,14 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   ok('alle vier Ansichten ohne Fehler',errs.length===0,errs);
 
   console.log('Regler-Kombinationen (Budget, Auflösung, Gaming/Kreativ, Größe)');
+  await p.click('#tab-konfig');await p.waitForTimeout(200);
+  const kept0=await p.evaluate(()=>JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks);
+  await p.click('#tab-dash');
+  await set('quiet',70);await p.waitForTimeout(200);
+  const kept1=await p.evaluate(()=>JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks);
+  ok('Regler ändern behaltene Teile nicht',Object.keys(kept0).every(c=>kept0[c].src!=='user'||(kept1[c]&&kept1[c].id===kept0[c].id&&kept1[c].src==='user')));
+  await p.click('#tab-konfig');await p.waitForTimeout(200);
+  if(await p.isEnabled('#slots [data-act=releaseAll]')){await p.click('#slots [data-act=releaseAll]');await p.waitForTimeout(300);}
   await p.click('#tab-dash');
   let combos=0;const bad=[];
   for(const mix of [0,50,100])for(const res of [0,1,3])for(const bud of [8050,1500,2500])for(const size of [0,2]){
