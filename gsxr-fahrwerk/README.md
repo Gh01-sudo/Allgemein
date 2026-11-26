@@ -4,7 +4,8 @@ Interaktives Fahrwerks-Dashboard für die Suzuki GSX-R 1000 K7 (2007–2008) mit
 
 `index.html` im Browser öffnen. Enthält:
 
-- Setup & Simulation: Viertelfahrzeug-Modell je Achse für sechs Fahrsituationen (Bodenwelle, Schlagloch, Bremsrippen, Bremsung 0,8 g, Beschleunigung 0,6 g, Kurve 45°), immer im Vergleich zur Serie
+- Simulation: Halbfahrzeug-Modell mit Nicken (Front und Heck gekoppelt) für 14 Fahrzustände: Bodenwelle, Schlagloch, Kante hoch, Absatz runter, Dehnfugen, Rippen, lange Wellen, Kuppe, Senke, Bremsung, Beschleunigung, Kurve, Anbremsen in die Kurve, Wechselkurve. Alle Hindernisse und Manöver in Größe einstellbar.
+- Fahrwerkseinsteller direkt neben der Animation, Vergleich mit Serie oder gemerktem Setup, Rückgängig
 - Live-Seitenansicht mit echter Kinematik: Lenkkopfwinkel, Nachlauf, Radstand, Nickwinkel
 - Durchhang-Messassistent mit konkreter Vorspann-Empfehlung
 - Fahrverhalten-Diagnose mit Testknöpfen
