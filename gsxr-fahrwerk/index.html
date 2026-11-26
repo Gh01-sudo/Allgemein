@@ -1,0 +1,1472 @@
+<title>K7 Fahrwerkslabor</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: Werkstatt-Telemetrie. Oben die Maschine als Röntgen-Schema mit Live-Geometrie, darunter Register: Setup+Simulation, Durchhang, Diagnose, Daten, Prüfprotokoll, Setups. */
+:root{
+  --bg:#0a0f15; --bg2:#0e151d; --panel:#111a24; --panel2:#16212d; --line:#22303f; --line2:#2d3e51;
+  --fg:#e2e9f0; --muted:#8a9db0; --dim:#5f7183;
+  --accent:#4a8dff; --accent-ink:#0a0f15; --accent-soft:rgba(74,141,255,.14);
+  --front:#52b4ff; --rear:#ffaa3b; --ghost:#6e8093;
+  --good:#38cf8e; --warn:#ffb020; --bad:#ff5d62;
+  --xray:rgba(120,170,230,.10); --xray-line:rgba(150,195,245,.55); --metal:#9fb3c8; --tyre:#1b242e;
+  --f-display:"Chakra Petch","Bahnschrift","Segoe UI",system-ui,sans-serif;
+  --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+@media (prefers-color-scheme: light){:root:not([data-theme="dark"]){
+  --bg:#eef2f6; --bg2:#e6ecf2; --panel:#ffffff; --panel2:#f4f7fa; --line:#d5dee8; --line2:#c3cfdc;
+  --fg:#0f1a26; --muted:#516476; --dim:#7d8d9d;
+  --accent:#1d5fd8; --accent-ink:#ffffff; --accent-soft:rgba(29,95,216,.10);
+  --front:#1b74cc; --rear:#c76a00; --ghost:#9aa9b8;
+  --good:#11935c; --warn:#b97800; --bad:#d42f35;
+  --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
+  color-scheme:light;
+}}
+:root[data-theme="light"]{
+  --bg:#eef2f6; --bg2:#e6ecf2; --panel:#ffffff; --panel2:#f4f7fa; --line:#d5dee8; --line2:#c3cfdc;
+  --fg:#0f1a26; --muted:#516476; --dim:#7d8d9d;
+  --accent:#1d5fd8; --accent-ink:#ffffff; --accent-soft:rgba(29,95,216,.10);
+  --front:#1b74cc; --rear:#c76a00; --ghost:#9aa9b8;
+  --good:#11935c; --warn:#b97800; --bad:#d42f35;
+  --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.wrap{max-width:1480px;margin:0 auto}
+h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:.01em}
+h2{font-size:1.25rem}
+h3{font-size:1rem}
+.mono,output,.num{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.lbl{font-size:.7rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600}
+a{color:var(--accent)}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* Kopf */
+.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;padding-block:22px 14px;border-bottom:1px solid var(--line)}
+.brand h1{font-size:clamp(1.5rem,3.2vw,2.3rem);font-weight:700;line-height:1.05}
+.brand h1 span{color:var(--accent)}
+.brand p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.pills{display:flex;flex-wrap:wrap;gap:8px}
+.pill{display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line2);border-radius:999px;padding:3px 10px;font-size:.78rem;color:var(--muted);background:var(--panel)}
+.pill b{color:var(--fg);font-weight:600}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--good);display:inline-block}
+
+/* Bühne */
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 340px;gap:16px;margin-top:16px}
+@media (max-width:1100px){.stage{grid-template-columns:minmax(0,1fr)}}
+.bikebox{position:relative;background:radial-gradient(1200px 500px at 60% 30%,var(--accent-soft),transparent 70%),var(--bg2);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
+.bikebox svg{display:block;width:100%;height:auto}
+.bikebox .blab{font-family:var(--f-mono,'JetBrains Mono',monospace);font-size:32px}
+.bikebox .blab.l1{font-size:34px}
+@media (max-width:700px){.bikebox .blab{font-size:54px}.bikebox .blab.l1{font-size:66px}.bikebox .blab.l2{display:none}}
+.gridbg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px;opacity:.35;pointer-events:none;mask-image:linear-gradient(to bottom,#000 40%,transparent)}
+.hud{position:absolute;left:14px;top:12px;display:flex;flex-direction:column;gap:2px;pointer-events:none}
+.hud .big{font-family:var(--f-display);font-size:1.05rem;font-weight:600}
+.hud .sub{font-size:.75rem;color:var(--muted)}
+.player{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);background:var(--panel)}
+.seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:3px}
+.seg button{border:0;background:transparent;padding:6px 10px;border-radius:7px;cursor:pointer;font-size:.8rem;color:var(--muted);white-space:nowrap}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink);font-weight:600}
+.seg button:hover:not([aria-pressed="true"]){color:var(--fg);background:var(--panel2)}
+.btn{border:1px solid var(--line2);background:var(--panel2);padding:7px 12px;border-radius:9px;cursor:pointer;font-size:.82rem;font-weight:500;display:inline-flex;align-items:center;gap:6px}
+.btn:hover{border-color:var(--accent)}
+.btn.pri{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.btn.sm{padding:4px 9px;font-size:.76rem}
+.inline{display:flex;align-items:center;gap:8px;font-size:.8rem;color:var(--muted)}
+.inline input[type=range]{width:120px}
+.scrub{flex:1 1 220px;min-width:160px;display:flex;align-items:center;gap:8px}
+.scrub input{flex:1;min-width:0}
+
+.geo{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px;min-width:0}
+.geo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.gcell{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}
+.gcell .v{font-family:var(--f-mono);font-size:1.15rem;font-weight:600;font-variant-numeric:tabular-nums}
+.gcell .d{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
+.gcell.live{border-color:var(--accent)}
+.d.up{color:var(--warn)} .d.dn{color:var(--front)}
+.bars{display:flex;flex-direction:column;gap:8px}
+.bar{display:grid;grid-template-columns:70px minmax(0,1fr) 64px;gap:8px;align-items:center;font-size:.78rem}
+.bar .tr{position:relative;height:12px;border-radius:6px;background:var(--bg2);border:1px solid var(--line);overflow:hidden}
+.bar .fill{position:absolute;inset:0 auto 0 0;border-radius:6px}
+.bar .tgt{position:absolute;top:-2px;bottom:-2px;border-left:2px dashed var(--fg);opacity:.6}
+.bar .zone{position:absolute;top:0;bottom:0;background:var(--good);opacity:.18}
+
+/* Register */
+.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:2px;overflow-x:auto;margin-top:18px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.tabs button{border:0;background:transparent;padding:12px 14px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.92rem;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
+.tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
+.panel{padding-top:16px}
+
+/* Setup */
+.setup{display:grid;grid-template-columns:380px minmax(0,1fr);gap:16px;align-items:start}
+@media (max-width:1000px){.setup{grid-template-columns:minmax(0,1fr)}}
+.controls{display:flex;flex-direction:column;gap:10px;min-width:0}
+details.grp{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
+details.grp>summary{cursor:pointer;list-style:none;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--f-display);font-weight:600}
+details.grp>summary::-webkit-details-marker{display:none}
+details.grp>summary::after{content:"";width:8px;height:8px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform .2s}
+details.grp[open]>summary::after{transform:rotate(-135deg)}
+details.grp>summary .tag{font-family:var(--f-mono);font-size:.7rem;color:var(--muted);font-weight:400;margin-left:auto;margin-right:8px}
+.grp-b{padding:4px 14px 14px;display:flex;flex-direction:column;gap:12px}
+.ctl{display:flex;flex-direction:column;gap:4px}
+.ctl-h{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+.ctl-h label{font-weight:500;font-size:.86rem}
+.ctl-h output{font-size:.86rem;font-weight:600;color:var(--fg)}
+.ctl-h output.chg{color:var(--accent)}
+.ctl-r{display:grid;grid-template-columns:28px minmax(0,1fr) 28px;gap:6px;align-items:center}
+.ctl-r button{height:28px;border-radius:7px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-weight:600;line-height:1}
+.ctl-r button:hover{border-color:var(--accent)}
+.rng{position:relative;height:28px;display:flex;align-items:center}
+.rng input{width:100%;margin:0;accent-color:var(--accent)}
+.rng .stk{position:absolute;top:2px;bottom:2px;width:2px;background:var(--warn);opacity:.85;pointer-events:none;border-radius:1px}
+.ctl-f{display:flex;justify-content:space-between;gap:8px;font-size:.72rem;color:var(--dim)}
+.ctl-f .stock{color:var(--warn);white-space:nowrap}
+.sel{display:flex;flex-direction:column;gap:6px}
+.btnrow{display:flex;flex-wrap:wrap;gap:8px}
+
+.results{display:flex;flex-direction:column;gap:14px;min-width:0}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:10px 12px;position:relative;overflow:hidden;min-width:0}
+.kpi .v{font-family:var(--f-mono);font-size:1.45rem;font-weight:600;line-height:1.15;font-variant-numeric:tabular-nums}
+.kpi .v small{font-size:.75rem;color:var(--muted);font-weight:400}
+.kpi .s{font-size:.74rem;color:var(--muted)}
+.kpi::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--st,var(--line2))}
+.chip{display:inline-flex;align-items:center;gap:4px;padding:1px 8px;border-radius:999px;font-size:.7rem;font-weight:600;border:1px solid currentColor;white-space:nowrap}
+.chip.good{color:var(--good)} .chip.warn{color:var(--warn)} .chip.bad{color:var(--bad)} .chip.info{color:var(--accent)} .chip.mut{color:var(--muted)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px;min-width:0}
+.card-h{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
+.cv{width:100%;display:block}
+.legend{display:flex;flex-wrap:wrap;gap:12px;font-size:.75rem;color:var(--muted)}
+.legend i{display:inline-block;width:18px;height:3px;border-radius:2px;vertical-align:middle;margin-right:5px}
+.legend i.dash{background:repeating-linear-gradient(90deg,var(--ghost) 0 5px,transparent 5px 8px)!important}
+.two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
+.recs{display:flex;flex-direction:column;gap:8px}
+.rec{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
+.rec .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:.8rem;color:var(--accent-ink)}
+.rec p{margin:0;font-size:.84rem}
+.rec p b{font-weight:600}
+.rec .why{color:var(--muted);font-size:.76rem;margin-top:2px}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:10px}
+table{border-collapse:collapse;width:100%;font-size:.82rem}
+th,td{padding:7px 10px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:.7rem;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);font-weight:600;background:var(--panel2);white-space:nowrap}
+td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums;white-space:nowrap}
+tr:last-child td{border-bottom:0}
+.delta-p{color:var(--good)} .delta-n{color:var(--bad)}
+.dials{display:grid;grid-template-columns:repeat(auto-fill,minmax(112px,1fr));gap:10px}
+.dial{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px;text-align:center;font-size:.72rem;color:var(--muted)}
+.dial svg{width:64px;height:64px;display:block;margin:0 auto 2px}
+.dial b{display:block;font-family:var(--f-mono);font-size:.9rem;color:var(--fg)}
+.note{font-size:.78rem;color:var(--muted);margin:0}
+.warnbox{border:1px solid var(--warn);background:color-mix(in srgb,var(--warn) 9%,transparent);border-radius:10px;padding:10px 12px;font-size:.82rem}
+
+/* Durchhang */
+.sag{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+@media (max-width:900px){.sag{grid-template-columns:minmax(0,1fr)}}
+.fields{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.fld{display:flex;flex-direction:column;gap:3px;font-size:.78rem;color:var(--muted)}
+.fld input,.fld select,textarea,.txt{background:var(--bg2);border:1px solid var(--line2);border-radius:8px;padding:7px 9px;color:var(--fg);font-family:var(--f-mono);font-size:.9rem;width:100%;min-width:0}
+textarea{font-size:.75rem;min-height:120px;resize:vertical}
+.steps{margin:0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:.84rem}
+.res3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:10px}
+
+/* Diagnose */
+.symps{display:flex;flex-wrap:wrap;gap:8px}
+.symp{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:.82rem}
+.symp[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
+.diag{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-top:14px}
+.diag .card h3{margin-bottom:6px}
+.diag ol{margin:6px 0 10px;padding-left:18px;font-size:.84rem;display:flex;flex-direction:column;gap:4px}
+
+/* Daten */
+.filters{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:12px}
+.filters .txt{max-width:280px}
+.stat{white-space:nowrap}
+.srcs{font-size:.74rem;color:var(--muted)}
+.srcs a{white-space:nowrap}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.list{margin:0;padding-left:18px;font-size:.84rem;display:flex;flex-direction:column;gap:5px}
+
+.toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:.84rem;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1}
+footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-size:.76rem;color:var(--dim)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (max-width:600px){.hud{position:static;padding:12px 14px 0}.hud .big{font-size:.95rem}}
+@media (max-width:520px){.fields,.res3{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.geo-grid{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <div class="lbl">Suzuki GSX-R 1000 · K7 (2007–2008) · Serienfahrwerk KYB</div>
+      <h1>K7 <span>Fahrwerkslabor</span></h1>
+      <p>Durchhang, Dämpfung, Geometrie und Reifendruck durchspielen. Jede Änderung läuft durch ein physikalisches Viertelfahrzeug-Modell mit sechs Fahrsituationen und wird gegen die Serieneinstellung verglichen.</p>
+    </div>
+    <div class="pills">
+      <span class="pill"><span class="dot" id="statusDot"></span>Setup-Index <b id="pillScore">–</b></span>
+      <span class="pill">Profil <b id="pillProfile">–</b></span>
+      <span class="pill">Fahrer <b id="pillRider">–</b></span>
+      <span class="pill">Datenstand <b>26.11.2026</b></span>
+    </div>
+  </header>
+
+  <section class="stage" aria-label="Fahrzeugschema und Geometrie">
+    <div class="bikebox">
+      <div class="gridbg"></div>
+      <div class="hud"><span class="big" id="hudTitle">Statisch mit Fahrer</span><span class="sub" id="hudSub">Seitenansicht maßstäblich, Federwege real</span></div>
+      <svg id="bike" viewBox="-380 -1230 2220 1450" role="img" aria-label="Seitenansicht der GSX-R 1000 K7 als Schema mit Gabel, Federbein und Geometrie"></svg>
+      <div class="player">
+        <div class="seg" id="scenSeg" role="group" aria-label="Fahrsituation"></div>
+        <button class="btn pri" id="playBtn" aria-label="Simulation abspielen">▶ Abspielen</button>
+        <label class="inline" for="speed">Tempo <input type="range" id="speed" min="30" max="250" step="5" value="80"><output id="speedO" class="mono">80 km/h</output></label>
+        <label class="inline" for="slowmo"><input type="checkbox" id="slowmo"> Zeitlupe ¼</label>
+        <label class="inline" for="exag"><input type="checkbox" id="exag"> Bewegung ×3</label>
+        <div class="scrub"><span class="lbl">t</span><input type="range" id="scrub" min="0" max="1299" value="0" aria-label="Zeitpunkt"><output id="tO" class="mono">0,00 s</output></div>
+      </div>
+    </div>
+    <aside class="geo" aria-label="Geometrie">
+      <div class="card-h" style="margin:0"><h2>Geometrie</h2><span class="chip info" id="geoMode">statisch</span></div>
+      <div class="geo-grid" id="geoGrid"></div>
+      <div>
+        <div class="lbl" style="margin-bottom:6px">Fahrer-Durchhang gegen Ziel</div>
+        <div class="bars" id="sagBars"></div>
+      </div>
+      <p class="note" id="geoNote">Referenz: Werksgeometrie (23,75° / 98 mm / 1415 mm) bezogen auf die Maschine ohne Fahrer mit Serieneinstellung.</p>
+    </aside>
+  </section>
+
+  <nav class="tabs" role="tablist" aria-label="Bereiche">
+    <button role="tab" aria-selected="true" data-tab="t-setup" id="tab-setup">Setup &amp; Simulation</button>
+    <button role="tab" aria-selected="false" data-tab="t-sag" id="tab-sag">Durchhang messen</button>
+    <button role="tab" aria-selected="false" data-tab="t-diag" id="tab-diag">Fahrverhalten-Diagnose</button>
+    <button role="tab" aria-selected="false" data-tab="t-data" id="tab-data">Technische Daten</button>
+    <button role="tab" aria-selected="false" data-tab="t-check" id="tab-check">Prüfprotokoll &amp; Modell</button>
+    <button role="tab" aria-selected="false" data-tab="t-lib" id="tab-lib">Setups &amp; Vergleich</button>
+  </nav>
+
+  <!-- SETUP -->
+  <section class="panel" id="t-setup" role="tabpanel" aria-labelledby="tab-setup">
+    <div class="setup">
+      <div class="controls" id="controls"></div>
+      <div class="results">
+        <div class="kpis" id="kpis"></div>
+        <div class="card">
+          <div class="card-h">
+            <h3 id="tcTitle">Zeitverlauf</h3>
+            <div class="legend"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i>Serie zum Vergleich</span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span></div>
+          </div>
+          <canvas class="cv" id="timeCv" height="380" aria-label="Federweg und Reifenlast über der Zeit"></canvas>
+          <p class="note" id="timeNote"></p>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Testparcours: alle Fahrsituationen</h3><span class="note">aktuelles Setup gegen Serie, gleicher Fahrer</span></div>
+          <div class="tablewrap"><table id="matrix"></table></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Analyse &amp; Empfehlungen</h3><button class="btn sm pri" id="applyRec">Empfehlung übernehmen</button></div>
+          <div class="recs" id="recs"></div>
+        </div>
+        <div class="two">
+          <div class="card">
+            <div class="card-h"><h3>Dämpferkennlinien</h3><div class="legend"><span><i style="background:var(--front)"></i>vorn</span><span><i style="background:var(--rear)"></i>hinten</span><span><i class="dash"></i>Serie</span></div></div>
+            <canvas class="cv" id="fvCv" height="260" aria-label="Dämpfungskraft über Radgeschwindigkeit"></canvas>
+            <p class="note">Kraft am Rad über Einfedergeschwindigkeit. Rechts Druckstufe, links Zugstufe. Der Knick markiert den Übergang Low-Speed zu High-Speed.</p>
+          </div>
+          <div class="card">
+            <div class="card-h"><h3>Federkennlinien</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel (axial)</span><span><i style="background:var(--rear)"></i>Rad hinten</span><span><i class="dash"></i>Serie</span></div></div>
+            <canvas class="cv" id="spCv" height="260" aria-label="Federkraft über Federweg"></canvas>
+            <p class="note">Gabel: zwei Stahlfedern plus Luftpolster (Ölstand). Hinten: Feder über Umlenkhebel, leicht progressiv. Punkte = Durchhang mit Fahrer.</p>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Einstellkarte</h3><span class="note">So stellst du es an der Maschine ein. Klicks immer von ganz zu (im Uhrzeigersinn) zurückzählen.</span></div>
+          <div class="dials" id="dials"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SAG -->
+  <section class="panel" id="t-sag" role="tabpanel" aria-labelledby="tab-sag" hidden>
+    <div class="cols" style="margin-bottom:14px">
+      <div class="card">
+        <h3 style="margin-bottom:8px">So misst du richtig</h3>
+        <ol class="steps">
+          <li>Zu zweit arbeiten. Reifen auf Solldruck, Tank wie beim Fahren, komplette Schutzkleidung anziehen.</li>
+          <li><b>L1 / R1:</b> Maschine aufbocken bzw. Rad entlasten, bis die Feder ganz ausgefedert ist. Messen.</li>
+          <li><b>L2 / R2:</b> Maschine auf beiden Rädern, ohne Fahrer, senkrecht gehalten. Messen.</li>
+          <li><b>L3 / R3:</b> Fahrer in Fahrposition, Füße auf den Rasten. Einmal einfedern lassen, messen.</li>
+          <li>Losbrechmoment ausgleichen: einmal leicht eindrücken und langsam kommen lassen, einmal anheben und sinken lassen. Mittelwert nehmen.</li>
+        </ol>
+        <p class="note" style="margin-top:8px">Vorn: Abstand Staubabstreifer (Unterkante Standrohr) bis Achsaufnahme, entlang des Gleitrohrs. Hinten: senkrecht von der Achsmitte zu einer Markierung am Heck.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">Zielwerte nach Einsatz</h3>
+        <div class="tablewrap"><table id="sagTargets"></table></div>
+        <p class="note" style="margin-top:8px">Übliche Werkstattrichtwerte für Supersportler. Freier Durchhang zeigt, ob die Federrate zum Fahrergewicht passt.</p>
+      </div>
+    </div>
+    <div class="sag">
+      <div class="card" id="sagFront"></div>
+      <div class="card" id="sagRear"></div>
+    </div>
+  </section>
+
+  <!-- DIAG -->
+  <section class="panel" id="t-diag" role="tabpanel" aria-labelledby="tab-diag" hidden>
+    <div class="card">
+      <h3 style="margin-bottom:4px">Was fällt dir beim Fahren auf?</h3>
+      <p class="note" style="margin-bottom:10px">Symptome antippen. Jede Karte nennt die wahrscheinlichste Ursache zuerst. „Testen“ ändert das Setup oben und rechnet sofort nach. Immer nur eine Sache auf einmal ändern und probefahren.</p>
+      <div class="symps" id="symps"></div>
+    </div>
+    <div class="diag" id="diag"></div>
+  </section>
+
+  <!-- DATA -->
+  <section class="panel" id="t-data" role="tabpanel" aria-labelledby="tab-data" hidden>
+    <div class="filters">
+      <input class="txt" id="dataQ" type="search" placeholder="Suchen, z. B. Nachlauf" aria-label="Technische Daten durchsuchen">
+      <div class="seg" id="dataCat" role="group" aria-label="Kategorie"></div>
+      <div class="seg" id="dataStat" role="group" aria-label="Prüfstatus"></div>
+    </div>
+    <div class="tablewrap"><table id="dataTbl"></table></div>
+    <p class="note" style="margin-top:10px">Status: <span class="chip good">2 Quellen</span> zwei unabhängige Quellen stimmen überein · <span class="chip info">1 Quelle</span> eine Quelle, keine Gegenprobe · <span class="chip warn">abweichend</span> Quellen widersprechen sich · <span class="chip mut">offen</span> nicht verifiziert, am Fahrzeug prüfen · <span class="chip mut" style="border-style:dashed">Modell</span> Annahme oder abgeleitet.</p>
+  </section>
+
+  <!-- CHECK -->
+  <section class="panel" id="t-check" role="tabpanel" aria-labelledby="tab-check" hidden>
+    <div class="cols">
+      <div class="card">
+        <h3 style="margin-bottom:8px">Doppelte Prüfung: Ergebnis</h3>
+        <div id="checkSummary"></div>
+        <p class="note" style="margin-top:10px">Verbindlich sind das Suzuki-Werkstatthandbuch und die Fahrerhandbücher für dein Baujahr sowie die Angaben in der Zulassungsbescheinigung und am Reifen. Ein K7-Fahrerhandbuch lag online nicht auswertbar vor; das gefundene Suzuki-Handbuch gehört zur Folgegeneration (2017+) und dient nur als Gegenprobe beim Reifendruck.</p>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">Rechenprüfungen</h3>
+        <ul class="list" id="mathChecks"></ul>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin-bottom:8px">Modellannahmen der Simulation</h3>
+      <div class="tablewrap"><table id="modelTbl"></table></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3 style="margin-bottom:8px">So rechnet das Modell</h3>
+      <ul class="list">
+        <li><b>Viertelfahrzeug je Achse:</b> gefederte Masse, ungefederte Masse, Reifen als Feder mit Dämpfung, Abheben möglich. Integration mit 0,2 ms Schrittweite über 2,6 s.</li>
+        <li><b>Gabel:</b> zwei lineare Stahlfedern mit Vorspannung, adiabates Luftpolster (Ölstand verändert das Luftvolumen), Endanschlag mit progressivem Puffer. Kräfte werden über den Lenkkopfwinkel in die Senkrechte umgerechnet.</li>
+        <li><b>Federbein:</b> Radfederrate = Federrate / Übersetzung², leicht progressiv durch die Umlenkung.</li>
+        <li><b>Dämpfer:</b> Low-Speed-Kennlinie bis zum Knick, darüber High-Speed-Steigung. Jeder Klick ändert die Low-Speed-Kraft um etwa 7,5 %, jede Umdrehung High-Speed um etwa 26 %. Klickwirkung ist relativ zur Serie kalibriert.</li>
+        <li><b>Bremsen/Beschleunigen:</b> dynamische Achslastverlagerung über Schwerpunkthöhe und Radstand, beim Bremsen zusätzlich die axiale Komponente der Bremskraft in der Gabel, beim Beschleunigen 90 % Anti-Squat durch den Kettenzug.</li>
+        <li><b>Geometrie:</b> echte ebene Kinematik mit Schwinge und Gabel. Lenkkopfwinkel, Nachlauf und Radstand ergeben sich aus der Nickstellung des Rahmens.</li>
+        <li><b>Grenzen:</b> keine Reifenseitenkräfte, kein Flex, keine Reibung der Gleitbuchsen, kein Temperatureinfluss auf das Öl. Das Modell zeigt Richtungen und Größenordnungen. Die Probefahrt entscheidet.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- LIB -->
+  <section class="panel" id="t-lib" role="tabpanel" aria-labelledby="tab-lib" hidden>
+    <div class="cols">
+      <div class="card">
+        <h3 style="margin-bottom:8px">Setup speichern</h3>
+        <div class="fld"><label for="saveName">Name</label><input id="saveName" class="txt" placeholder="z. B. Hockenheim trocken"></div>
+        <div class="btnrow" style="margin-top:8px"><button class="btn pri" id="saveBtn">Aktuelles Setup speichern</button></div>
+        <p class="note" style="margin-top:8px">Gespeichert wird nur in diesem Browser. Für eine Sicherung den Export kopieren.</p>
+        <div id="libList" style="margin-top:12px;display:flex;flex-direction:column;gap:8px"></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-bottom:8px">Export &amp; Import</h3>
+        <textarea id="ioText" aria-label="Setup als Text"></textarea>
+        <div class="btnrow" style="margin-top:8px">
+          <button class="btn" id="expBtn">Aktuelles Setup anzeigen</button>
+          <button class="btn" id="copyBtn">Text kopieren</button>
+          <button class="btn pri" id="impBtn">Aus Text übernehmen</button>
+        </div>
+      </div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <div class="card-h"><h3>Vergleich</h3>
+        <div class="inline"><label for="cmpA">A</label><select id="cmpA" class="txt" style="width:auto"></select><label for="cmpB">B</label><select id="cmpB" class="txt" style="width:auto"></select></div>
+      </div>
+      <div class="tablewrap"><table id="cmpTbl"></table></div>
+    </div>
+  </section>
+
+  <footer>
+    Simulationswerkzeug zur Orientierung. Fahrwerksänderungen in kleinen Schritten vornehmen, beide Gabelholme immer identisch einstellen, nach jeder Änderung auf abgesperrtem Gelände oder ruhiger Strecke probefahren. Verbindlich sind die Suzuki-Werksunterlagen für dein Fahrzeug.
+  </footer>
+</div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
+const G = 9.81, DEG = Math.PI / 180;
+const fmt = (v, d = 0) => { let x = Number.isFinite(v) ? +v.toFixed(d) : 0; if (x === 0) x = 0; return x.toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }); }; // ohne „-0“
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ============================ MODELLKONSTANTEN ============================ */
+const M = {
+  rake0: 23.75, trail0: 98, wb0: 1415,
+  Rf: 299.9, Rr: 310.9,            // 120/70-17: 215,9 + 84 mm ; 190/50-17: 215,9 + 95 mm
+  travelF: 125, travelR: 130,
+  bikeWet: 212, frontShare: 0.51, fuelFull: 17.5 * 0.745,
+  muF: 17, muR: 22,
+  kFstock: 9.57, kRstock: 99, MR: 2.05,
+  riderFront: 0.40, passFront: 0.05,
+  refRider: 80, refSagF: 36, refSagR: 32,
+  airA: 14.5e-4, airV0: 260e-6, oilArea: 16.6e-4,
+  ringMm: 1.0, ringsStock: 4,
+  zeta: { fReb: .55, fLS: .28, rReb: .60, rLS: .30 },
+  clickAlpha: 0.075, hsBeta: 0.30, hsRatioStock: 0.45, rebHs: 0.55,
+  vkF: 0.12, vkR: 0.18, vkReb: 0.25,
+  ktF: 175, ktR: 210, ctire: 250,
+  Ls: 575, alpha0: 10, antiSquat: 0.90, hBike: 0.55,
+  clicksMax: 20, hsMax: 4
+};
+M.offset = M.Rf * Math.sin(M.rake0 * DEG) - M.trail0 * Math.cos(M.rake0 * DEG);
+const COSR = Math.cos(M.rake0 * DEG), TANR = Math.tan(M.rake0 * DEG);
+
+const STOCK = { fPre: 4, fReb: 6, fLS: 14, fHS: 3, fProt: 0, fOil: 0, rPre: 0, rReb: 11, rLS: 14, rHS: 3, rShim: 0, pF: 2.5, pR: 2.9, kF: 9.57, kR: 99 };
+const PROFILES = {
+  komfort: { name: 'Straße komfortabel', sagF: 38, sagR: 33, off: { fReb: 1, fLS: 2, fHS: .5, rReb: 1, rLS: 2, rHS: .5 }, pF: 2.5, pR: 2.9, w: { comfort: .35, grip: .25, control: .2, reserve: .2 } },
+  sport: { name: 'Landstraße sportlich', sagF: 34, sagR: 30, off: { fReb: 0, fLS: 0, fHS: 0, rReb: 0, rLS: 0, rHS: 0 }, pF: 2.5, pR: 2.9, w: { comfort: .15, grip: .35, control: .3, reserve: .2 } },
+  track: { name: 'Rennstrecke', sagF: 30, sagR: 26, off: { fReb: -2, fLS: -3, fHS: -.5, rReb: -2, rLS: -3, rHS: -.5 }, pF: 2.2, pR: 2.0, w: { comfort: .05, grip: .4, control: .35, reserve: .2 } },
+  regen: { name: 'Nässe', sagF: 38, sagR: 33, off: { fReb: 2, fLS: 3, fHS: 1, rReb: 2, rLS: 3, rHS: 1 }, pF: 2.5, pR: 2.9, w: { comfort: .2, grip: .45, control: .2, reserve: .15 } }
+};
+const SAGZ = { komfort: [[35, 40], [30, 35]], sport: [[32, 36], [28, 32]], track: [[28, 32], [23, 28]], regen: [[35, 40], [30, 35]] };
+
+let S = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, profile: 'sport' }, STOCK);
+let scenario = 'bump', speed = 80;
+
+/* ============================ LASTEN & FEDERN ============================ */
+function loads(st) {
+  const fuelMiss = (1 - st.fuel / 100) * M.fuelFull;
+  const bikeF = M.bikeWet * M.frontShare - fuelMiss * 0.55;
+  const bikeR = M.bikeWet * (1 - M.frontShare) - fuelMiss * 0.45;
+  const totF = bikeF + st.rider * M.riderFront + st.passenger * M.passFront;
+  const totR = bikeR + st.rider * (1 - M.riderFront) + st.passenger * (1 - M.passFront) + st.luggage;
+  const tot = totF + totR;
+  const h = ((M.bikeWet - fuelMiss) * M.hBike + st.rider * 0.92 + st.passenger * 1.05 + st.luggage * 0.95) / tot;
+  return { totF, totR, tot, msF: totF - M.muF, msR: totR - M.muR, h };
+}
+function airF(s, oil) {
+  const V0 = M.airV0 - oil * 1e-3 * M.oilArea;
+  const V = Math.max(V0 - M.airA * Math.max(0, s) * 1e-3, V0 * 0.08);
+  return 2 * M.airA * 101325 * (Math.pow(V0 / V, 1.4) - 1);
+}
+const REF = loads({ rider: M.refRider, passenger: 0, luggage: 0, fuel: 100 });
+const P0F = (REF.msF * G * COSR - airF(M.refSagF, 0)) / (2 * M.kFstock) - M.refSagF;   // mm Grundvorspannung Gabel (Serie)
+const kw0 = M.kRstock / (M.MR * M.MR);
+const P0R = ((REF.msR * G) / kw0 - M.refSagR - 0.1 * M.refSagR * M.refSagR / M.travelR) / M.MR; // mm Grundvorspannung Federbein (Serie)
+
+function preF(st) { return P0F + (M.ringsStock - st.fPre) * M.ringMm; }
+function preR(st) { return P0R + st.rPre; }
+// Gabel: axiale Kraft (N) bei axialem Weg s (mm)
+function forkAx(s, st) {
+  const k = 2 * st.kF, p = preF(st);
+  if (s < 0) return k * p + 2000 * s;
+  let F = k * (p + s) + airF(s, st.fOil);
+  const b = M.travelF - 10;
+  if (s > b) F += 30 * (s - b) * (s - b);
+  if (s > M.travelF) F += 5000 * (s - M.travelF);
+  return F;
+}
+// Hinterrad: Kraft am Rad (N) bei Radweg x (mm)
+function rearW(x, st) {
+  const kw = st.kR / (M.MR * M.MR), p = preR(st);
+  if (x < 0) return kw * M.MR * p + 2000 * x;
+  let F = kw * (M.MR * p + x + 0.1 * x * x / M.travelR);
+  const b = M.travelR - 10;
+  if (x > b) F += 30 * (x - b) * (x - b);
+  if (x > M.travelR) F += 5000 * (x - M.travelR);
+  return F;
+}
+function solve(fn, target, lo, hi) {
+  if (fn(lo) >= target) return lo;
+  for (let i = 0; i < 60; i++) { const m = (lo + hi) / 2; if (fn(m) < target) lo = m; else hi = m; }
+  return (lo + hi) / 2;
+}
+function sags(st) {
+  const L = loads(st), B = loads(Object.assign({}, st, { rider: 0, passenger: 0, luggage: 0 }));
+  const sagF = solve(s => forkAx(s, st), L.msF * G * COSR, 0, M.travelF + 5);
+  const sagR = solve(x => rearW(x, st), L.msR * G, 0, M.travelR + 5);
+  const freeF = solve(s => forkAx(s, st), B.msF * G * COSR, 0, M.travelF + 5);
+  const freeR = solve(x => rearW(x, st), B.msR * G, 0, M.travelR + 5);
+  return { sagF, sagR, freeF, freeR, L };
+}
+
+/* ============================ DÄMPFER ============================ */
+const CC = {
+  F: 2 * Math.sqrt((2 * M.kFstock * 1000 / (COSR * COSR)) * REF.msF),
+  R: 2 * Math.sqrt((M.kRstock * 1000 / (M.MR * M.MR)) * REF.msR)
+};
+function damping(st) {
+  const a = M.clickAlpha, b = M.hsBeta;
+  return {
+    F: { ls: M.zeta.fLS * CC.F * Math.exp(-a * (st.fLS - STOCK.fLS)), hsr: M.hsRatioStock * Math.exp(-b * (st.fHS - STOCK.fHS)),
+         reb: M.zeta.fReb * CC.F * Math.exp(-a * (st.fReb - STOCK.fReb)), vk: M.vkF },
+    R: { ls: M.zeta.rLS * CC.R * Math.exp(-a * (st.rLS - STOCK.rLS)), hsr: M.hsRatioStock * Math.exp(-b * (st.rHS - STOCK.rHS)),
+         reb: M.zeta.rReb * CC.R * Math.exp(-a * (st.rReb - STOCK.rReb)), vk: M.vkR }
+  };
+}
+function dampF(v, c) {
+  if (v >= 0) return v < c.vk ? c.ls * v : c.ls * c.vk + c.ls * c.hsr * (v - c.vk);
+  const a = -v;
+  return -(a < M.vkReb ? c.reb * a : c.reb * M.vkReb + c.reb * M.rebHs * (a - M.vkReb));
+}
+
+/* ============================ SZENARIEN ============================ */
+const SCEN = {
+  bump: { name: 'Bodenwelle 25 mm', short: 'Bodenwelle' },
+  pothole: { name: 'Schlagloch 30 mm', short: 'Schlagloch' },
+  ripples: { name: 'Bremsrippen 6 mm', short: 'Rippen' },
+  brake: { name: 'Starke Bremsung 0,8 g', short: 'Bremsen' },
+  accel: { name: 'Beschleunigung 0,6 g', short: 'Beschleunigen' },
+  corner: { name: 'Kurve 45° mit Wellen', short: 'Kurve 45°' }
+};
+const T_SIM = 2.6, DT = 0.0002, REC = 10;
+function smooth(x) { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); }
+function scenDef(name, v, L) {
+  const D = v * 0.4, wbm = M.wb0 / 1000;
+  const def = { road: () => 0, nfac: () => 1, extF: () => 0, extR: () => 0, tireF: () => 0, tireR: () => 0, tEnd: 0.4 };
+  const accel = (t, a) => a * smooth((t - 0.3) / 0.35) * (1 - smooth((t - 1.5) / 0.3));
+  if (name === 'bump') { const L0 = 0.6; def.road = d => (d >= D && d <= D + L0) ? 0.025 * (1 - Math.cos(2 * Math.PI * (d - D) / L0)) / 2 : 0; def.tEnd = (D + L0 + wbm) / v; }
+  if (name === 'pothole') { const L0 = 0.45, e = 0.05; def.road = d => -0.03 * smooth((d - D) / e) * (1 - smooth((d - D - L0 + e) / e)); def.tEnd = (D + L0 + wbm) / v; }
+  if (name === 'ripples') { const L0 = 8, w = 1.1; def.road = d => (d >= D && d <= D + L0) ? 0.006 * (1 - Math.cos(2 * Math.PI * (d - D) / w)) / 2 : 0; def.tEnd = (D + L0 + wbm) / v; }
+  if (name === 'brake' || name === 'accel') {
+    def.road = d => 0.0008 * Math.sin(d * 7.3) * Math.sin(d * 2.1);
+    const a = name === 'brake' ? 0.8 * G : 0.6 * G;
+    const dF = t => L.tot * accel(t, a) * L.h / wbm;
+    if (name === 'brake') {
+      def.extF = t => dF(t) + L.tot * accel(t, a) * TANR;  // Lastverlagerung + axiale Bremskraftkomponente
+      def.tireF = t => -L.tot * accel(t, a) * TANR;       // Anzeige-Korrektur Reifenlast
+      def.extR = t => -dF(t);
+    } else {
+      def.extF = t => -dF(t);
+      def.extR = t => dF(t) * (1 - M.antiSquat);
+      def.tireR = t => dF(t) * M.antiSquat;
+    }
+    def.tEnd = 1.8; def.accel = t => accel(t, a) / G;
+  }
+  if (name === 'corner') {
+    const lean = 45 * DEG, nf = 1 / Math.cos(lean), Dc = v * 0.9, L0 = 1.0;
+    def.nfac = t => 1 + (nf - 1) * smooth((t - 0.1) / 0.5);
+    const bump = d => (d >= 0 && d <= L0) ? 0.015 * (1 - Math.cos(2 * Math.PI * d / L0)) / 2 : 0;
+    def.road = d => (bump(d - Dc) + bump(d - Dc - 6)) * Math.cos(lean);
+    def.tEnd = Math.max(0.6, (Dc + 6 + L0 + wbm) / v);
+    def.lean = t => 45 * smooth((t - 0.1) / 0.5);
+  }
+  return def;
+}
+
+/* ============================ SIMULATION ============================ */
+function simAxle(ax, st, sc, v, L) {
+  const isF = ax === 'F';
+  const c = damping(st)[ax];
+  const ms = isF ? L.msF : L.msR, mu = isF ? M.muF : M.muR;
+  const kt = (isF ? M.ktF * Math.pow(st.pF / 2.5, 0.9) : M.ktR * Math.pow(st.pR / 2.9, 0.9)) * 1000; // N/m
+  const Fv = isF ? (x => forkAx(x / COSR, st) / COSR) : (x => rearW(x, st));
+  const travelV = isF ? M.travelF * COSR : M.travelR;
+  const x0 = solve(Fv, ms * G, -5, travelV + 10);
+  const d0 = (ms + mu) * G / kt;
+  const ext = isF ? sc.extF : sc.extR, tadj = isF ? sc.tireF : sc.tireR;
+  const lag = isF ? 0 : M.wb0 / 1000;
+  let zs = 0, zu = 0, vs = 0, vu = 0;
+  const n = Math.floor(T_SIM / DT), out = { t: [], x: [], ft: [], zs: [], zu: [], zr: [], as: [] };
+  let prevZr = sc.road(v * 0 - lag);
+  for (let i = 0; i <= n; i++) {
+    const t = i * DT;
+    const zr = sc.road(v * t - lag);
+    const vr = (zr - prevZr) / DT; prevZr = zr;
+    const x = x0 + (zu - zs) * 1000;            // mm, vertikal
+    const Fs = Fv(x);
+    const Fd = dampF(vu - vs, c);
+    let Ft = kt * (d0 + (zr - zu));
+    if (Ft > 0) Ft += M.ctire * (vr - vu); else Ft = 0;
+    if (Ft < 0) Ft = 0;
+    const nf = sc.nfac(t), fe = ext(t);
+    const as = (Fs + Fd - ms * G * nf - fe) / ms;
+    const au = (-Fs - Fd + Ft - mu * G * nf) / mu;
+    vs += as * DT; vu += au * DT; zs += vs * DT; zu += vu * DT;
+    if (i % REC === 0) {
+      out.t.push(t); out.x.push(isF ? x / COSR : x); out.ft.push(Math.max(0, Ft + tadj(t)));
+      out.zs.push(zs * 1000); out.zu.push(zu * 1000); out.zr.push(zr * 1000); out.as.push(as);
+    }
+  }
+  out.x0 = isF ? x0 / COSR : x0; out.static = (ms + mu) * G; out.travel = isF ? M.travelF : M.travelR;
+  return out;
+}
+function kpiAxle(o, sc) {
+  const dtr = DT * REC, i0 = Math.round(0.25 / dtr), iE = Math.round(sc.tEnd / dtr), n = o.t.length, W = Math.round(0.15 / dtr);
+  const pre = [0]; for (let i = 0; i < n; i++) pre.push(pre[i] + o.ft[i]);
+  let mx = -1e9, mn = 1e9, f2 = 0, cnt = 0, lift = 0, acc2 = 0, minAfter = 1e9;
+  for (let i = i0; i < n; i++) {
+    mx = Math.max(mx, o.x[i]); mn = Math.min(mn, o.x[i]);
+    const a = Math.max(0, i - W), b = Math.min(n, i + W + 1), ma = (pre[b] - pre[a]) / (b - a);  // gleitender Mittelwert = quasistatische Last
+    f2 += (o.ft[i] - ma) ** 2; cnt++;
+    if (o.ft[i] < 0.05 * o.static) lift += dtr * 1000;
+    acc2 += o.as[i] * o.as[i];
+    if (i >= iE) minAfter = Math.min(minAfter, o.x[i]);
+  }
+  const fin = o.x[n - 1]; let settle = 0;
+  for (let i = n - 1; i >= iE; i--) { if (Math.abs(o.x[i] - fin) > 1.5) { settle = o.t[i] - sc.tEnd; break; } }
+  return {
+    usage: mx / o.travel, maxX: mx, minX: mn, bottom: mx > o.travel - 3, topout: minAfter < 1,
+    cv: Math.sqrt(f2 / cnt) / o.static, lift, rms: Math.sqrt(acc2 / cnt), settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter)
+  };
+}
+function subScores(k, sc) {
+  const comfort = clamp(100 - k.rms * 14, 0, 100);
+  const grip = clamp(100 - k.cv * 250 - k.lift * 0.5, 0, 100);
+  const control = clamp(100 - k.settle * 70 - k.over * 1.2 - (k.topout ? 15 : 0), 0, 100);
+  let reserve = 100;
+  if (k.usage > 0.85) reserve = 100 - (k.usage - 0.85) * 400;
+  if (k.bottom) reserve = Math.min(reserve, 35);
+  return { comfort, grip, control, reserve: clamp(reserve, 0, 100) };
+}
+function runAll(st, v) {
+  const L = loads(st), res = {};
+  for (const name of Object.keys(SCEN)) {
+    const sc = scenDef(name, v / 3.6, L);
+    const F = simAxle('F', st, sc, v / 3.6, L), R = simAxle('R', st, sc, v / 3.6, L);
+    const kF = kpiAxle(F, sc), kR = kpiAxle(R, sc);
+    const w = PROFILES[st.profile].w, sF = subScores(kF, sc), sR = subScores(kR, sc);
+    const avg = key => (sF[key] + sR[key]) / 2;
+    const score = w.comfort * avg('comfort') + w.grip * avg('grip') + w.control * avg('control') + w.reserve * avg('reserve');
+    res[name] = { F, R, kF, kR, sF, sR, score, sc };
+  }
+  return res;
+}
+function staticScore(st, sg) {
+  const [zf, zr] = SAGZ[st.profile];
+  const dev = (v, [a, b]) => v < a ? a - v : v > b ? v - b : 0;
+  return clamp(100 - dev(sg.sagF, zf) * 6 - dev(sg.sagR, zr) * 6, 0, 100);
+}
+
+/* ============================ GEOMETRIE / KINEMATIK ============================ */
+const U0 = { x: -Math.sin(M.rake0 * DEG), y: Math.cos(M.rake0 * DEG) };
+const N0 = { x: Math.cos(M.rake0 * DEG), y: Math.sin(M.rake0 * DEG) };
+const AXF = { x: M.wb0, y: M.Rf };
+const PIV = { x: M.Ls * Math.cos(M.alpha0 * DEG), y: M.Rr + M.Ls * Math.sin(M.alpha0 * DEG) };
+const onFork = t => ({ x: AXF.x + U0.x * t, y: AXF.y + U0.y * t });
+const onAxis = t => ({ x: AXF.x - N0.x * M.offset + U0.x * t, y: AXF.y - N0.y * M.offset + U0.y * t });
+let REFC = null; // Referenz-Einfederung (ohne Fahrer, Serie)
+function initRef() {
+  const st = Object.assign({}, STOCK, { rider: 0, passenger: 0, luggage: 0, fuel: 100, profile: 'sport' });
+  const sg = sags(st);
+  REFC = { sF: sg.freeF, xR: sg.freeR };
+}
+function pose(sF, xR, prot, shim, hF = 0, hR = 0) {
+  const ds = (sF - REFC.sF) + prot;
+  const axc = { x: AXF.x + U0.x * ds, y: AXF.y + U0.y * ds };
+  const ac = M.alpha0 * DEG - ((xR - REFC.xR) - shim * M.MR) / M.Ls;
+  const world = psi => {
+    const aw = ac + psi;
+    const pv = { x: M.Ls * Math.cos(aw), y: M.Rr + hR + M.Ls * Math.sin(aw) };
+    const c = Math.cos(psi), s = Math.sin(psi);
+    return P => { const dx = P.x - PIV.x, dy = P.y - PIV.y; return { x: pv.x + c * dx - s * dy, y: pv.y + s * dx + c * dy }; };
+  };
+  let lo = -0.25, hi = 0.25;
+  for (let i = 0; i < 40; i++) {
+    const m = (lo + hi) / 2;
+    const y = world(m)(axc).y - (M.Rf + hF);
+    // psi größer -> Nase hoch -> Vorderachse höher
+    if (y > 0) hi = m; else lo = m;
+  }
+  const psi = (lo + hi) / 2, W = world(psi);
+  const rake = M.rake0 + psi / DEG;
+  const r = rake * DEG;
+  const trail = (M.Rf * Math.sin(r) - M.offset) / Math.cos(r);
+  const af = W(axc);
+  return { psi, W, rake, trail, wb: af.x, axF: af, axR: { x: 0, y: M.Rr + hR }, ds, ac: ac + psi, pitch: -psi / DEG };
+}
+
+/* ============================ SVG-ZEICHNUNG ============================ */
+const NS = 'http://www.w3.org/2000/svg';
+const svg = $('#bike');
+const el = (tag, attrs = {}, parent = svg) => { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; };
+const P = p => `${p.x.toFixed(1)},${(-p.y).toFixed(1)}`;
+const poly = pts => 'M' + pts.map(P).join('L') + 'Z';
+const line = (a, b) => `M${P(a)}L${P(b)}`;
+// Umrisse in mm, Ursprung Hinterachse am Boden, Maschine ohne Fahrer (Referenzlage = Werksmaße).
+// Fixmaße: Sitzhöhe 810 mm (tiefster Punkt Fahrersitz), Bodenfreiheit 130 mm, Gesamthöhe ca. 1130 mm,
+// Felge 17" (Radius 215,9 mm), Bremsscheiben 310 / 220 mm. Die übrigen Umrisse sind schematisch.
+const SH = {
+  frame: [[1123, 925], [1060, 905], [880, 800], [720, 690], [620, 660], [560, 620], [535, 480], [520, 380], [560, 310], [640, 310], [670, 390], [720, 500], [820, 585], [1000, 690], [1150, 745], [1190, 770]],
+  engine: [[655, 560], [640, 420], [650, 300], [700, 205], [760, 165], [980, 160], [1060, 215], [1085, 320], [1095, 430], [1120, 560], [1080, 650], [1000, 690], [880, 640], [760, 600]],
+  tank: [[1110, 930], [1040, 975], [900, 985], [760, 950], [665, 872], [700, 820], [850, 800], [1000, 850]],
+  seat: [[665, 872], [600, 836], [540, 812], [490, 810], [430, 814], [395, 826], [395, 798], [560, 785], [690, 835]],
+  pillion: [[400, 830], [180, 905], [172, 930], [200, 938], [402, 866]],
+  tail: [[400, 830], [180, 905], [60, 945], [-45, 985], [-60, 965], [-35, 935], [120, 875], [330, 790], [520, 745], [650, 730], [700, 800], [600, 790], [400, 800]],
+  fairing: [[1110, 930], [1180, 1010], [1250, 1000], [1345, 985], [1390, 920], [1400, 860], [1370, 800], [1290, 740], [1215, 650], [1185, 540], [1110, 420], [1090, 300], [1060, 220], [1000, 155], [930, 135], [730, 140], [660, 190], [640, 300], [700, 420], [800, 520], [900, 600], [1000, 700], [1070, 800]],
+  screen: [[1250, 1000], [1345, 985], [1320, 1030], [1232, 1128], [1192, 1085]],
+  muffler: [[700, 180], [650, 200], [560, 420], [480, 610], [470, 640], [120, 760], [95, 840], [130, 862], [490, 730], [525, 640], [600, 440], [740, 210]],
+};
+const toPts = a => a.map(([x, y]) => ({ x, y }));
+for (const k in SH) SH[k] = toPts(SH[k]);
+const SHOCK_TOP = { x: 575, y: 640 }, COG = { x: M.wb0 * M.frontShare, y: M.hBike * 1000 };
+const SEAT_PT = { x: 490, y: 810 }, SEAT_H0 = 810, RIM_R = 215.9;
+let G_ = {};
+function buildSvg() {
+  svg.innerHTML = '';
+  const defs = el('defs');
+  defs.innerHTML = `<linearGradient id="gFork" x1="0" x2="1"><stop offset="0" stop-color="var(--metal)" stop-opacity=".55"/><stop offset=".5" stop-color="var(--metal)"/><stop offset="1" stop-color="var(--metal)" stop-opacity=".45"/></linearGradient>
+  <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--line2)" stop-opacity=".8"/><stop offset="1" stop-color="var(--line2)" stop-opacity="0"/></linearGradient>
+  <marker id="arw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker>`;
+  G_.ground = el('path', { fill: 'url(#gGround)', stroke: 'var(--muted)', 'stroke-width': 3 });
+  G_.axisLine = el('path', { stroke: 'var(--accent)', 'stroke-width': 3, 'stroke-dasharray': '18 12', fill: 'none', opacity: .8 });
+  G_.trailSeg = el('path', { stroke: 'var(--warn)', 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round' });
+  G_.wbDim = el('path', { stroke: 'var(--muted)', 'stroke-width': 2.5, fill: 'none', 'marker-start': 'url(#arw)', 'marker-end': 'url(#arw)' });
+  // Räder
+  for (const w of ['R', 'F']) {
+    const g = el('g'); G_['wheel' + w] = g;
+    const R = w === 'F' ? M.Rf : M.Rr;   // Reifen liegt zwischen Felgenhorn und Außendurchmesser, berührt den Boden genau
+    el('circle', { r: ((R + RIM_R) / 2).toFixed(1), fill: 'none', stroke: 'var(--tyre)', 'stroke-width': (R - RIM_R).toFixed(1) }, g);
+    el('circle', { r: R - 1.5, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 3, opacity: .55 }, g);
+    el('circle', { r: RIM_R, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 7 }, g);
+    el('circle', { r: w === 'F' ? 155 : 110, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 12, 'stroke-dasharray': '10 7', opacity: .7 }, g);
+    const sp = el('g', {}, g); G_['spokes' + w] = sp;
+    for (let i = 0; i < 3; i++) { const a = i * 120 * DEG; el('path', { d: `M0,0 L${(Math.cos(a) * 212).toFixed(1)},${(Math.sin(a) * 212).toFixed(1)} M0,0 L${(Math.cos(a + .28) * 212).toFixed(1)},${(Math.sin(a + .28) * 212).toFixed(1)}`, stroke: 'var(--metal)', 'stroke-width': 10, 'stroke-linecap': 'round' }, sp); }
+    el('circle', { r: 26, fill: 'var(--bg2)', stroke: 'var(--metal)', 'stroke-width': 6 }, g);
+  }
+  G_.swingarm = el('path', { stroke: 'var(--metal)', 'stroke-width': 34, 'stroke-linecap': 'round', fill: 'none' });
+  G_.fairing = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3, 'stroke-dasharray': '3 6' });
+  G_.engine = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 4, opacity: .95 });
+  G_.muffler = el('path', { fill: 'var(--metal)', 'fill-opacity': .28, stroke: 'var(--line2)', 'stroke-width': 4 });
+  G_.frame = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--accent)', 'stroke-width': 5 });
+  G_.shockBody = el('path', { stroke: 'var(--metal)', 'stroke-width': 26, 'stroke-linecap': 'round', fill: 'none' });
+  G_.shockSpring = el('path', { stroke: 'var(--rear)', 'stroke-width': 9, fill: 'none', 'stroke-linejoin': 'round' });
+  G_.tank = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
+  G_.tail = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
+  G_.seat = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 3 });
+  G_.pillion = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 3, opacity: .8 });
+  G_.seatDim = el('path', { stroke: 'var(--muted)', 'stroke-width': 2.5, 'stroke-dasharray': '10 8', fill: 'none' });
+  G_.seatMark = el('path', { stroke: 'var(--fg)', 'stroke-width': 4, fill: 'none' });
+  G_.screen = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--xray-line)', 'stroke-width': 2 });
+  G_.forkInner = el('path', { stroke: 'var(--front)', 'stroke-width': 30, 'stroke-linecap': 'butt', fill: 'none' });
+  G_.oring = el('path', { stroke: 'var(--bad)', 'stroke-width': 12, fill: 'none' });
+  G_.forkOuter = el('path', { stroke: 'url(#gFork)', 'stroke-width': 46, 'stroke-linecap': 'butt', fill: 'none' });
+  G_.clamps = el('path', { stroke: 'var(--metal)', 'stroke-width': 26, 'stroke-linecap': 'round', fill: 'none' });
+  G_.bar = el('path', { stroke: 'var(--metal)', 'stroke-width': 18, 'stroke-linecap': 'round', fill: 'none' });
+  G_.caliper = el('path', { fill: 'var(--bad)', opacity: .85 });
+  G_.cog = el('g');
+  el('circle', { r: 22, fill: 'var(--bg)', stroke: 'var(--fg)', 'stroke-width': 4 }, G_.cog);
+  el('path', { d: 'M-22,0A22,22 0 0,1 0,-22L0,0Z M22,0A22,22 0 0,1 0,22L0,0Z', fill: 'var(--fg)' }, G_.cog);
+  G_.loadF = el('path', { stroke: 'var(--front)', 'stroke-width': 7, fill: 'none', 'marker-end': 'url(#arw)' });
+  G_.loadR = el('path', { stroke: 'var(--rear)', 'stroke-width': 7, fill: 'none', 'marker-end': 'url(#arw)' });
+  // Beschriftung: Klasse steuert die Größe (auf schmalen Bildschirmen per CSS größer)
+  const T = (cls, fill = 'var(--fg)', anchor = 'middle') => el('text', { class: 'blab ' + cls, fill, 'text-anchor': anchor });
+  G_.tRake = T('l1', 'var(--accent)', 'end');
+  G_.tTrail = T('l1', 'var(--warn)', 'end');
+  G_.tWb = T('l1', 'var(--muted)');
+  G_.tSeat = T('ls', 'var(--fg)');
+  G_.tF = T('l2', 'var(--front)', 'end');
+  G_.tR = T('l2', 'var(--rear)', 'end');
+  G_.tLoadF = T('l2', 'var(--front)', 'end');
+  G_.tLoadR = T('l2', 'var(--rear)', 'start');
+}
+let wheelRot = 0;
+function drawBike(st) {
+  // st: {sF, xR, hF, hR, dist, ftF, ftR, prot, shim}
+  const p = pose(st.sF, st.xR, st.prot, st.shim, st.hF, st.hR), W = p.W;
+  // Boden
+  const pts = [];
+  for (let x = -380; x <= 1840; x += 20) pts.push({ x, y: st.road ? st.road(x) : 0 });
+  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L1840,220L-380,220Z`);
+  // Räder
+  wheelRot = -(st.dist || 0) / M.Rf / DEG;
+  G_.wheelF.setAttribute('transform', `translate(${P(p.axF)})`);
+  G_.wheelR.setAttribute('transform', `translate(${P(p.axR)})`);
+  G_.spokesF.setAttribute('transform', `rotate(${(-(st.dist || 0) / M.Rf / DEG).toFixed(1)})`);
+  G_.spokesR.setAttribute('transform', `rotate(${(-(st.dist || 0) / M.Rr / DEG).toFixed(1)})`);
+  // Chassis
+  const tr = arr => poly(arr.map(W));
+  for (const k of ['frame', 'engine', 'tank', 'seat', 'pillion', 'tail', 'fairing', 'screen', 'muffler']) G_[k].setAttribute('d', tr(SH[k]));
+  const piv = W(PIV);
+  G_.swingarm.setAttribute('d', line(piv, p.axR));
+  // Federbein: oben am Rahmen, unten Umlenkung (Punkt auf der Schwinge, 25 % ab Drehpunkt, 45 mm darunter)
+  const sa = { x: p.axR.x - piv.x, y: p.axR.y - piv.y }, sl = Math.hypot(sa.x, sa.y);
+  const lk = { x: piv.x + sa.x * 0.25 + (sa.y / sl) * 45, y: piv.y + sa.y * 0.25 - (sa.x / sl) * 45 };
+  const top = W(SHOCK_TOP);
+  G_.shockBody.setAttribute('d', line(top, lk));
+  const dx = lk.x - top.x, dy = lk.y - top.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
+  const comp = clamp((st.xR) / M.travelR, 0, 1.1);
+  const s0 = 40, s1 = L - 60, coils = 7; let d = `M${P({ x: top.x + ux * s0, y: top.y + uy * s0 })}`;
+  for (let i = 0; i <= coils * 2; i++) { const tt = s0 + (s1 - s0) * i / (coils * 2) * (1 - comp * 0.25); const off = (i % 2 ? 1 : -1) * 34; d += `L${P({ x: top.x + ux * tt + nx * off, y: top.y + uy * tt + ny * off })}`; }
+  G_.shockSpring.setAttribute('d', d);
+  // Gabel
+  const fk = t => W(onFork(t)); // Chassis-fest
+  const ax = p.axF;
+  const outerBot = fk(170), topC = fk(700), botC = fk(545);
+  G_.forkOuter.setAttribute('d', line(outerBot, topC));
+  G_.forkInner.setAttribute('d', line(ax, fk(240)));
+  const sMaxDelta = (st.sMax != null ? st.sMax : st.sF) - REFC.sF + st.prot;
+  const ang = Math.atan2(topC.y - outerBot.y, topC.x - outerBot.x), px = -Math.sin(ang) * 22, py = Math.cos(ang) * 22;
+  const orP = fk(p.ds + (170 - Math.max(0, sMaxDelta)) - 0); // Position O-Ring auf Gleitrohr
+  G_.oring.setAttribute('d', `M${P({ x: orP.x - px, y: orP.y - py })}L${P({ x: orP.x + px, y: orP.y + py })}`);
+  const axT = W(onAxis(690)), axB = W(onAxis(535));
+  G_.clamps.setAttribute('d', line(axT, topC) + line(axB, botC));
+  const bar = W({ x: onFork(665).x - 95, y: onFork(665).y + 10 });
+  G_.bar.setAttribute('d', line(fk(665), bar));
+  // Radialsattel hinter dem Gleitrohr, über dem Bremsscheibenrand (Scheibe 310 mm)
+  const fu = { x: Math.cos(ang), y: Math.sin(ang) }, fb = { x: -fu.y, y: fu.x };   // fb zeigt nach hinten
+  const cal = (a, b) => ({ x: ax.x + fu.x * a + fb.x * b, y: ax.y + fu.y * a + fb.y * b });
+  G_.caliper.setAttribute('d', poly([cal(25, 105), cal(140, 105), cal(140, 160), cal(25, 160)]));
+  // Schwerpunkt
+  const cg = W(COG); G_.cog.setAttribute('transform', `translate(${P(cg)})`);
+  // Lenkachse bis Boden + Nachlauf
+  const A = W(onAxis(900)), A2 = W(onAxis(0));
+  const ux2 = A.x - A2.x, uy2 = A.y - A2.y, gy = st.road ? st.road(A2.x) : 0;
+  const tg = (gy - A2.y) / uy2, Gp = { x: A2.x + ux2 * tg, y: gy };
+  G_.axisLine.setAttribute('d', line(A, Gp));
+  const cp = { x: ax.x, y: st.road ? st.road(ax.x) : 0 };
+  G_.trailSeg.setAttribute('d', line({ x: Gp.x, y: Gp.y - 6 }, { x: cp.x, y: cp.y - 6 }));
+  G_.wbDim.setAttribute('d', line({ x: 0, y: -50 }, { x: ax.x, y: -50 }));
+  // Sitzhöhe: tiefster Punkt des Fahrersitzes, senkrecht zum Boden
+  const sp = W(SEAT_PT), seatH = sp.y - (st.road ? st.road(sp.x) : 0);
+  G_.seatDim.setAttribute('d', line(sp, { x: sp.x, y: sp.y - seatH }));
+  G_.seatMark.setAttribute('d', line({ x: sp.x - 40, y: sp.y }, { x: sp.x + 40, y: sp.y }));
+  // Lastpfeile außerhalb der Reifen
+  const lf = clamp((st.ftF || 0) / 40, 0, 220), lr = clamp((st.ftR || 0) / 40, 0, 220);
+  G_.loadF.setAttribute('d', line({ x: Math.max(ax.x + M.Rf + 45, 1770), y: 30 + lf }, { x: Math.max(ax.x + M.Rf + 45, 1770), y: 30 }));
+  G_.loadR.setAttribute('d', line({ x: -350, y: 30 + lr }, { x: -350, y: 30 }));
+  // Texte
+  const tx = (e, p, s) => { e.setAttribute('x', p.x.toFixed(0)); e.setAttribute('y', (-p.y).toFixed(0)); e.textContent = s; };
+  tx(G_.tRake, { x: A.x - 25, y: A.y + 5 }, `Lenkkopf ${fmt(p.rake, 2)}°`);
+  tx(G_.tWb, { x: ax.x / 2, y: -122 }, `Radstand ${fmt(p.wb, 0)} mm`);
+  tx(G_.tTrail, { x: 1830, y: -122 }, `Nachlauf ${fmt(p.trail, 1)} mm`);
+  tx(G_.tSeat, { x: sp.x, y: sp.y + 150 }, `Sitzhöhe ${fmt(seatH, 0)} mm (leer ${SEAT_H0})`);
+  tx(G_.tF, { x: 1830, y: 1175 }, `Federweg vorn ${fmt(st.sF, 0)} / ${M.travelF} mm`);
+  tx(G_.tR, { x: 1830, y: 1120 }, `Federweg hinten ${fmt(st.xR, 0)} / ${M.travelR} mm`);
+  tx(G_.tLoadR, { x: -370, y: -186 }, `Radlast hinten ${fmt((st.ftR || 0) / 1000, 2)} kN`);
+  tx(G_.tLoadF, { x: 1830, y: -186 }, `Radlast vorn ${fmt((st.ftF || 0) / 1000, 2)} kN`);
+  return p;
+}
+
+/* ============================ STEUERELEMENTE ============================ */
+const CTL = [
+  { grp: 'Fahrer & Beladung', id: 'g-load', items: [
+    { k: 'rider', label: 'Fahrer inkl. Ausrüstung', min: 50, max: 140, step: 1, unit: 'kg', d: 0, hint: 'Mit Helm, Kombi, Stiefeln' },
+    { k: 'passenger', label: 'Sozius inkl. Ausrüstung', min: 0, max: 110, step: 1, unit: 'kg', d: 0, hint: '0 = solo' },
+    { k: 'luggage', label: 'Gepäck am Heck', min: 0, max: 15, step: 1, unit: 'kg', d: 0, hint: 'Hecktasche' },
+    { k: 'fuel', label: 'Tankfüllung', min: 10, max: 100, step: 5, unit: '%', d: 0, hint: 'Voll ≈ 13 kg Kraftstoff' }
+  ] },
+  { grp: 'Gabel vorne (KYB 43 mm USD)', id: 'g-fork', front: true, items: [
+    { k: 'fPre', label: 'Federvorspannung', min: 0, max: 8, step: .5, unit: 'Ringe', d: 1, hint: 'sichtbare Ringe, weniger = mehr Vorspannung', inv: true },
+    { k: 'fReb', label: 'Zugstufe', min: 0, max: M.clicksMax, step: 1, unit: 'Kl. offen', d: 0, hint: 'oben, Klicks ab ganz zu', inv: true },
+    { k: 'fLS', label: 'Druckstufe Low-Speed', min: 0, max: M.clicksMax, step: 1, unit: 'Kl. offen', d: 0, hint: 'unten, Schlitzschraube', inv: true },
+    { k: 'fHS', label: 'Druckstufe High-Speed', min: 0, max: M.hsMax, step: .25, unit: 'Umdr. offen', d: 2, hint: 'unten, Sechskant', inv: true },
+    { k: 'fProt', label: 'Gabel durchgesteckt', min: -5, max: 10, step: .5, unit: 'mm', d: 1, hint: '+ = Front tiefer, schärferes Einlenken' },
+    { k: 'fOil', label: 'Ölstand gegenüber Serie', min: -10, max: 15, step: 1, unit: 'mm', d: 0, hint: '+ = weniger Luft, mehr Endprogression' }
+  ] },
+  { grp: 'Federbein hinten', id: 'g-shock', items: [
+    { k: 'rPre', label: 'Federvorspannung', min: -5, max: 12, step: .5, unit: 'mm', d: 1, hint: 'Federweg-Verkürzung gegenüber Serie' },
+    { k: 'rReb', label: 'Zugstufe', min: 0, max: M.clicksMax, step: 1, unit: 'Kl. offen', d: 0, hint: 'unten am Federbein', inv: true },
+    { k: 'rLS', label: 'Druckstufe Low-Speed', min: 0, max: M.clicksMax, step: 1, unit: 'Kl. offen', d: 0, hint: 'Ausgleichsbehälter, Schraube', inv: true },
+    { k: 'rHS', label: 'Druckstufe High-Speed', min: 0, max: M.hsMax, step: .25, unit: 'Umdr. offen', d: 2, hint: 'Ausgleichsbehälter, Sechskant', inv: true },
+    { k: 'rShim', label: 'Heckhöhe (Distanz am Federbein)', min: 0, max: 8, step: .5, unit: 'mm', d: 1, hint: '1 mm am Federbein ≈ 2 mm an der Achse' }
+  ] },
+  { grp: 'Reifen', id: 'g-tyre', items: [
+    { k: 'pF', label: 'Luftdruck vorn (kalt)', min: 1.8, max: 3.0, step: .05, unit: 'bar', d: 2, hint: 'Suzuki: 2,50 bar' },
+    { k: 'pR', label: 'Luftdruck hinten (kalt)', min: 1.8, max: 3.2, step: .05, unit: 'bar', d: 2, hint: 'Suzuki: 2,90 bar' }
+  ] },
+  { grp: 'Federn tauschen (Was-wäre-wenn)', id: 'g-spring', closed: true, items: [
+    { k: 'kF', label: 'Gabelfeder je Holm', min: 8.0, max: 11.5, step: .05, unit: 'N/mm', d: 2, hint: 'Serie ≈ 9,57 N/mm (0,976 kg/mm)' },
+    { k: 'kR', label: 'Federbeinfeder', min: 85, max: 120, step: 1, unit: 'N/mm', d: 0, hint: 'Serie ≈ 99 N/mm (10,1 kg/mm)' }
+  ] }
+];
+const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100 }, STOCK);
+function buildControls() {
+  const host = $('#controls');
+  let h = `<div class="card" style="padding:12px 14px"><div class="sel"><span class="lbl">Einsatzprofil</span><div class="seg" id="profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false">${p.name}</button>`).join('')}</div></div>
+  <div class="btnrow" style="margin-top:10px"><button class="btn" id="btnStock">Serie laden</button><button class="btn pri" id="btnRec">Empfehlung berechnen</button></div></div>`;
+  for (const g of CTL) {
+    h += `<details class="grp" id="${g.id}" ${g.closed ? '' : 'open'}><summary>${g.grp}<span class="tag" id="${g.id}-tag"></span></summary><div class="grp-b">`;
+    for (const c of g.items) {
+      const pct = ((STOCK_ALL[c.k] - c.min) / (c.max - c.min)) * 100;
+      h += `<div class="ctl"><div class="ctl-h"><label for="c-${c.k}">${c.label}</label><output id="o-${c.k}"></output></div>
+      <div class="ctl-r"><button data-k="${c.k}" data-dir="-1" aria-label="${c.label} verringern">−</button>
+      <div class="rng"><input type="range" id="c-${c.k}" data-k="${c.k}" min="${c.min}" max="${c.max}" step="${c.step}"><span class="stk" style="left:calc(${pct}% + ${(8 - pct * 0.16).toFixed(1)}px)" title="Serie"></span></div>
+      <button data-k="${c.k}" data-dir="1" aria-label="${c.label} erhöhen">+</button></div>
+      <div class="ctl-f"><span>${c.hint}</span><span class="stock">Serie ${fmt(STOCK_ALL[c.k], c.d)}</span></div></div>`;
+    }
+    h += `</div></details>`;
+  }
+  host.innerHTML = h;
+  host.addEventListener('input', e => { const k = e.target.dataset.k; if (k) { S[k] = parseFloat(e.target.value); schedule(); } });
+  host.addEventListener('click', e => {
+    const b = e.target.closest('button'); if (!b) return;
+    if (b.dataset.dir) { const c = findCtl(b.dataset.k); S[c.k] = clamp(+(S[c.k] + c.step * +b.dataset.dir).toFixed(3), c.min, c.max); schedule(); }
+    if (b.dataset.p) { S.profile = b.dataset.p; schedule(); }
+    if (b.id === 'btnStock') { const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, profile: S.profile }; S = Object.assign({}, STOCK, keep); schedule(); toast('Serieneinstellung geladen'); }
+    if (b.id === 'btnRec') { applyRecommendation(); }
+  });
+}
+const findCtl = k => CTL.flatMap(g => g.items).find(c => c.k === k);
+function syncControls() {
+  for (const c of CTL.flatMap(g => g.items)) {
+    const inp = $('#c-' + c.k); if (inp && +inp.value !== S[c.k]) inp.value = S[c.k];
+    const o = $('#o-' + c.k); o.textContent = `${fmt(S[c.k], c.d)} ${c.unit}`;
+    o.classList.toggle('chg', Math.abs(S[c.k] - STOCK_ALL[c.k]) > 1e-6 && !['rider', 'passenger', 'luggage', 'fuel'].includes(c.k));
+  }
+  $$('#profSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === S.profile));
+  const nChg = g => g.items.filter(c => !['rider', 'passenger', 'luggage', 'fuel'].includes(c.k) && Math.abs(S[c.k] - STOCK_ALL[c.k]) > 1e-6).length;
+  for (const g of CTL) { const t = $('#' + g.id + '-tag'); if (g.id === 'g-load') t.textContent = `${fmt(S.rider + S.passenger + S.luggage)} kg Zuladung`; else { const n = nChg(g); t.textContent = n ? `${n} geändert` : 'Serie'; } }
+}
+
+/* ============================ EMPFEHLUNG ============================ */
+function recommend(st) {
+  const pr = PROFILES[st.profile], L = loads(st), out = Object.assign({}, st), notes = [];
+  // Vorspannung vorne
+  const FaxL = L.msF * G * COSR;
+  const pF = (FaxL - airF(pr.sagF, st.fOil)) / (2 * st.kF) - pr.sagF;
+  let rings = M.ringsStock - (pF - P0F) / M.ringMm;
+  const ringsRaw = rings; rings = clamp(Math.round(rings * 2) / 2, 0, 8); out.fPre = rings;
+  // Vorspannung hinten
+  const kw = st.kR / (M.MR * M.MR);
+  const pRr = ((L.msR * G) / kw - pr.sagR - 0.1 * pr.sagR * pr.sagR / M.travelR) / M.MR;
+  let rp = pRr - P0R; const rpRaw = rp; rp = clamp(Math.round(rp * 2) / 2, -5, 12); out.rPre = rp;
+  // Dämpfung
+  const wcorr = Math.round((st.rider + st.passenger * 0.6 - 80) / 12);
+  const o = pr.off;
+  out.fReb = clamp(STOCK.fReb + o.fReb - wcorr, 0, M.clicksMax);
+  out.fLS = clamp(STOCK.fLS + o.fLS - wcorr, 0, M.clicksMax);
+  out.fHS = clamp(STOCK.fHS + o.fHS, 0, M.hsMax);
+  out.rReb = clamp(STOCK.rReb + o.rReb - wcorr - (st.passenger > 0 ? 2 : 0), 0, M.clicksMax);
+  out.rLS = clamp(STOCK.rLS + o.rLS - wcorr - (st.passenger > 0 ? 1 : 0), 0, M.clicksMax);
+  out.rHS = clamp(STOCK.rHS + o.rHS, 0, M.hsMax);
+  out.pF = st.passenger > 0 && st.profile !== 'track' ? 2.5 : pr.pF; out.pR = st.passenger > 0 && st.profile !== 'track' ? 2.9 : pr.pR;
+  // Bremsreserve der Gabel prüfen: erst Ölstand, dann Low-Speed-Druckstufe
+  const vB = speed / 3.6;
+  for (let i = 0; i < 4; i++) {
+    const r = kpiAxle(simAxle('F', out, scenDef('brake', vB, L), vB, L), scenDef('brake', vB, L));
+    if (r.usage <= 0.9) break;
+    if (out.fOil < 10) out.fOil = Math.min(10, out.fOil + 5); else out.fLS = Math.max(0, out.fLS - 1);
+  }
+  if (out.fOil !== st.fOil) notes.push({ lvl: 'info', t: `Ölstand Gabel +${fmt(out.fOil - st.fOil)} mm empfohlen`, w: 'Mehr Endprogression gegen Durchschlagen beim harten Bremsen, ohne den Komfort im ersten Federwegsdrittel zu verändern. Ölstand bei ausgebauten Federn und ganz eingefahrener Gabel messen.' });
+  // Federraten-Check
+  const kFrec = M.kFstock * (L.msF / REF.msF), kRrec = M.kRstock * (L.msR / REF.msR);
+  if (ringsRaw < 0) notes.push({ lvl: 'bad', t: `Gabelfedern zu weich für ${fmt(st.rider)} kg`, w: `Für ${pr.sagF} mm Durchhang bräuchte es ${fmt(-ringsRaw, 1)} Ringe mehr Vorspannung als möglich. Richtwert Federrate je Holm: ${fmt(kFrec, 2)} N/mm (${fmt(kFrec / 9.81, 3)} kg/mm).` });
+  if (ringsRaw > 8) notes.push({ lvl: 'warn', t: 'Gabelfedern eher zu hart', w: `Selbst mit minimaler Vorspannung wird der Ziel-Durchhang nicht erreicht. Richtwert: ${fmt(kFrec, 2)} N/mm je Holm.` });
+  if (rpRaw > 12) notes.push({ lvl: 'bad', t: 'Federbeinfeder zu weich für die Zuladung', w: `Es wären ${fmt(rpRaw, 1)} mm Vorspannung nötig. Richtwert Feder: ${fmt(kRrec, 0)} N/mm (${fmt(kRrec / 9.81, 1)} kg/mm).` });
+  if (rpRaw < -5) notes.push({ lvl: 'warn', t: 'Federbeinfeder eher zu hart', w: `Richtwert Feder: ${fmt(kRrec, 0)} N/mm.` });
+  return { out, notes, kFrec, kRrec };
+}
+function applyRecommendation() { const r = recommend(S); S = r.out; schedule(); toast('Empfehlung übernommen. Jetzt mit Serie vergleichen und probefahren.'); }
+
+/* ============================ RECHENLAUF & RENDER ============================ */
+let RUN = null, STOCKRUN = null, SG = null, SGstock = null, playT = 0, playing = false, lastTs = 0, pending = false;
+function schedule() { if (pending) return; pending = true; requestAnimationFrame(() => { pending = false; recompute(); }); }
+function recompute() {
+  syncControls();
+  SG = sags(S);
+  const stockSt = Object.assign({}, STOCK, { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, profile: S.profile });
+  SGstock = sags(stockSt);
+  RUN = runAll(S, speed); STOCKRUN = runAll(stockSt, speed);
+  renderAll();
+}
+function overall(run, st, sg) { const dyn = Object.values(run).reduce((a, r) => a + r.score, 0) / Object.keys(run).length; return 0.75 * dyn + 0.25 * staticScore(st, sg); }
+function scoreChip(v) { return v >= 80 ? 'good' : v >= 62 ? 'warn' : 'bad'; }
+function renderAll() {
+  const sc = overall(RUN, S, SG), scS = overall(STOCKRUN, Object.assign({}, S, STOCK), SGstock);
+  $('#pillScore').textContent = `${fmt(sc)} / 100`;
+  $('#statusDot').style.background = `var(--${scoreChip(sc)})`;
+  $('#pillProfile').textContent = PROFILES[S.profile].name;
+  $('#pillRider').textContent = `${fmt(S.rider)} kg${S.passenger ? ' + ' + fmt(S.passenger) + ' kg' : ''}`;
+  renderKpis(sc, scS); renderMatrix(); renderRecs(); renderGeo(); renderSagBars();
+  drawTime(); drawFV(); drawSpring(); renderDials(); renderSagTab();
+  if (!playing) showFrame(+$('#scrub').value);
+}
+function renderKpis(sc, scS) {
+  const r = RUN[scenario], [zf, zr] = SAGZ[S.profile];
+  const inZ = (v, [a, b]) => v >= a && v <= b;
+  const tiles = [
+    { l: 'Setup-Index', v: fmt(sc), u: '/100', s: `Serie ${fmt(scS)} · ${sc >= scS ? '+' : ''}${fmt(sc - scS)}`, st: scoreChip(sc) },
+    { l: 'Durchhang vorn', v: fmt(SG.sagF, 1), u: 'mm', s: `Ziel ${zf[0]}–${zf[1]} · frei ${fmt(SG.freeF, 1)}`, st: inZ(SG.sagF, zf) ? 'good' : 'warn' },
+    { l: 'Durchhang hinten', v: fmt(SG.sagR, 1), u: 'mm', s: `Ziel ${zr[0]}–${zr[1]} · frei ${fmt(SG.freeR, 1)}`, st: inZ(SG.sagR, zr) ? 'good' : 'warn' },
+    { l: 'Federweg-Nutzung', v: `${fmt(r.kF.usage * 100)}<small> / </small>${fmt(r.kR.usage * 100)}`, u: '%', s: `${SCEN[scenario].short}: vorn / hinten${r.kF.bottom || r.kR.bottom ? ' · Durchschlag' : ''}`, st: (r.kF.bottom || r.kR.bottom) ? 'bad' : (r.kF.usage > .85 || r.kR.usage > .85) ? 'warn' : 'good' },
+    { l: 'Haftung vorn/hinten', v: `${fmt(r.sF.grip)}<small> / </small>${fmt(r.sR.grip)}`, u: '', s: `Lastschwankung ${fmt(r.kF.cv * 100)} % / ${fmt(r.kR.cv * 100)} %`, st: scoreChip(Math.min(r.sF.grip, r.sR.grip)) },
+    { l: 'Beruhigung', v: `${fmt(r.kF.settle * 1000)}<small> / </small>${fmt(r.kR.settle * 1000)}`, u: 'ms', s: 'bis ±1,5 mm um Endlage', st: scoreChip(Math.min(r.sF.control, r.sR.control)) }
+  ];
+  $('#kpis').innerHTML = tiles.map(t => `<div class="kpi" style="--st:var(--${t.st})"><div class="lbl">${t.l}</div><div class="v">${t.v}<small> ${t.u}</small></div><div class="s">${t.s}</div></div>`).join('');
+}
+function renderMatrix() {
+  const cell = (a, b, d = 0, invert = false, suf = '') => { const diff = a - b, good = invert ? diff < -0.5 : diff > 0.5, bad = invert ? diff > 0.5 : diff < -0.5; return `<td class="n">${fmt(a, d)}${suf} <span class="${good ? 'delta-p' : bad ? 'delta-n' : ''}">${Math.abs(diff) >= 0.5 ? (diff > 0 ? '▲' : '▼') : '·'}</span></td>`; };
+  let h = `<thead><tr><th>Situation</th><th>Gabel max</th><th>Hinten max</th><th>Haftung v</th><th>Haftung h</th><th>Komfort</th><th>Kontrolle</th><th>Note</th><th>Serie</th></tr></thead><tbody>`;
+  for (const k of Object.keys(SCEN)) {
+    const r = RUN[k], s = STOCKRUN[k];
+    const flag = (kk) => kk.bottom ? ' <span class="chip bad">Anschlag</span>' : '';
+    h += `<tr data-s="${k}" style="cursor:pointer"><td>${SCEN[k].name}${k === scenario ? ' <span class="chip info">aktiv</span>' : ''}</td>
+    <td class="n">${fmt(r.kF.maxX, 0)} mm${flag(r.kF)}</td><td class="n">${fmt(r.kR.maxX, 0)} mm${flag(r.kR)}</td>
+    ${cell(r.sF.grip, s.sF.grip)}${cell(r.sR.grip, s.sR.grip)}${cell((r.sF.comfort + r.sR.comfort) / 2, (s.sF.comfort + s.sR.comfort) / 2)}${cell((r.sF.control + r.sR.control) / 2, (s.sF.control + s.sR.control) / 2)}
+    <td class="n"><span class="chip ${scoreChip(r.score)}">${fmt(r.score)}</span></td><td class="n">${fmt(s.score)}</td></tr>`;
+  }
+  $('#matrix').innerHTML = h + '</tbody>';
+}
+$('#matrix').addEventListener('click', e => { const tr = e.target.closest('tr[data-s]'); if (tr) setScenario(tr.dataset.s); });
+
+function analysis() {
+  const items = [], r = RUN, [zf, zr] = SAGZ[S.profile];
+  const rec = recommend(S);
+  rec.notes.forEach(n => items.push({ lvl: n.lvl, t: n.t, w: n.w }));
+  if (SG.sagF > zf[1]) items.push({ lvl: 'warn', t: `Mehr Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm liegt über dem Ziel ${zf[0]}–${zf[1]} mm. Die Front steht zu tief, die Gabel hat weniger Reserve beim Bremsen.` });
+  if (SG.sagF < zf[0]) items.push({ lvl: 'warn', t: `Weniger Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm unter Ziel. Die Gabel federt kaum aus, das Vorderrad verliert in Senken den Kontakt.` });
+  if (SG.sagR > zr[1]) items.push({ lvl: 'warn', t: `Mehr Vorspannung hinten: ${fmt(rec.out.rPre, 1)} mm gegenüber Serie`, w: `Durchhang ${fmt(SG.sagR, 1)} mm über Ziel ${zr[0]}–${zr[1]} mm. Heck zu tief: träges Einlenken, Front entlastet.` });
+  if (SG.sagR < zr[0]) items.push({ lvl: 'warn', t: `Weniger Vorspannung hinten: ${fmt(rec.out.rPre, 1)} mm gegenüber Serie`, w: `Durchhang ${fmt(SG.sagR, 1)} mm unter Ziel. Weniger Traktion am Kurvenausgang.` });
+  if (SG.freeR < 4) items.push({ lvl: 'warn', t: 'Freier Durchhang hinten fast null', w: `Nur ${fmt(SG.freeR, 1)} mm ohne Fahrer: die Feder ist für die Zuladung zu weich und wird über Vorspannung kompensiert. Härtere Feder prüfen.` });
+  if (SG.freeF < 12) items.push({ lvl: 'warn', t: 'Freier Durchhang vorn sehr klein', w: `${fmt(SG.freeF, 1)} mm: Gabelfedern zu weich oder zu viel Vorspannung.` });
+  if (r.brake.kF.bottom) items.push({ lvl: 'bad', t: 'Gabel schlägt beim harten Bremsen durch', w: 'Reihenfolge: Ölstand +5 mm (wirkt nur am Ende des Federwegs), dann Druckstufe Low-Speed 2 Klicks zu, erst danach Vorspannung. Bleibt es, sind die Federn zu weich.' });
+  else if (r.brake.kF.usage > .9) items.push({ lvl: 'warn', t: `Gabel nutzt beim Bremsen ${fmt(r.brake.kF.usage * 100)} % Federweg`, w: 'Wenig Reserve für Bodenwellen in der Bremszone. Ölstand +3 bis +5 mm oder 1–2 Klicks mehr Druckstufe.' });
+  if (r.brake.kR.minX < 2) items.push({ lvl: 'warn', t: 'Heck federt beim Bremsen komplett aus', w: 'Hinterrad wird fast entlastet. Zugstufe hinten 1–2 Klicks zu bremst das Ausfedern, Gewicht nach hinten verlagern hilft auch.' });
+  if (r.accel.kF.minX < 2) items.push({ lvl: 'info', t: 'Front federt beim Beschleunigen voll aus', w: 'Typisch bei 0,6 g. Neigt die Front zum Pendeln, Zugstufe vorn 1 Klick zu und Lenkungsdämpfer prüfen.' });
+  const ripF = r.ripples.sF.grip, ripR = r.ripples.sR.grip;
+  if (ripF < 70) items.push({ lvl: 'warn', t: 'Vorderrad springt auf Rippen', w: `Haftung ${fmt(ripF)}. High-Speed-Druckstufe vorn ¼ bis ½ Umdrehung öffnen, Luftdruck auf Sollwert prüfen.` });
+  if (ripR < 70) items.push({ lvl: 'warn', t: 'Hinterrad springt auf Rippen', w: `Haftung ${fmt(ripR)}. High-Speed-Druckstufe hinten ¼ bis ½ Umdrehung öffnen; bei Pumpen Zugstufe 1 Klick öffnen.` });
+  if (r.bump.kF.settle > 0.25 || r.bump.kR.settle > 0.25) items.push({ lvl: 'warn', t: 'Nachschwingen nach der Bodenwelle', w: 'Zugstufe auf der betroffenen Achse 1–2 Klicks zu.' });
+  if (r.bump.kF.topout || r.bump.kR.topout) items.push({ lvl: 'info', t: 'Ausfedern bis Anschlag nach der Bodenwelle', w: 'Zugstufe ist sehr offen oder die Vorspannung sehr hoch.' });
+  const geoS = pose(SG.sagF, SG.sagR, S.fProt, S.rShim);
+  if (geoS.trail < 88) items.push({ lvl: 'warn', t: `Nachlauf nur ${fmt(geoS.trail, 1)} mm`, w: 'Sehr kurzer Nachlauf: schnelles Einlenken, aber Kippeligkeit und Kickback-Neigung. Gabel weniger durchstecken oder Heck tiefer.' });
+  if (geoS.trail > 104) items.push({ lvl: 'info', t: `Nachlauf ${fmt(geoS.trail, 1)} mm`, w: 'Stabil, aber träges Einlenken. Gabel 2–3 mm durchstecken oder Heck mit Distanz anheben.' });
+  if (S.profile === 'track' && (S.pF > 2.4 || S.pR > 2.3)) items.push({ lvl: 'info', t: 'Luftdruck für die Rennstrecke prüfen', w: 'Straßendruck ist auf der Strecke meist zu hoch. Maßgeblich ist die Vorgabe des Reifenherstellers für deinen Reifen, gemessen warm.' });
+  if (S.profile !== 'track' && (Math.abs(S.pF - 2.5) > 0.05 || Math.abs(S.pR - 2.9) > 0.05)) items.push({ lvl: 'warn', t: 'Luftdruck weicht von Suzuki-Vorgabe ab', w: 'Für die Straße gelten 2,50 bar vorn und 2,90 bar hinten, kalt gemessen.' });
+  if (!items.length) items.push({ lvl: 'good', t: 'Setup im Zielfenster', w: 'Durchhang und Dämpfung passen zum Profil. Feinarbeit jetzt über Probefahrt und Kabelbinder an Gabel und Federbein.' });
+  return items;
+}
+function renderRecs() {
+  const ic = { good: '✓', warn: '!', bad: '×', info: 'i' };
+  $('#recs').innerHTML = analysis().map(i => `<div class="rec"><span class="ic" style="background:var(--${i.lvl === 'info' ? 'accent' : i.lvl})">${ic[i.lvl]}</span><div><p><b>${i.t}</b></p><p class="why">${i.w}</p></div><span></span></div>`).join('');
+}
+$('#applyRec').addEventListener('click', applyRecommendation);
+
+function geoCells(p, ref, live) {
+  const d = (v, r, dd = 1, u = '') => { const x = v - r; return `<span class="d ${x > 0.05 ? 'up' : x < -0.05 ? 'dn' : ''}">${x >= 0 ? '+' : ''}${fmt(x, dd)}${u} zur Werksangabe</span>`; };
+  return [
+    { l: 'Lenkkopfwinkel', v: `${fmt(p.rake, 2)}°`, d: d(p.rake, M.rake0, 2, '°') },
+    { l: 'Nachlauf', v: `${fmt(p.trail, 1)} mm`, d: d(p.trail, M.trail0, 1, ' mm') },
+    { l: 'Radstand', v: `${fmt(p.wb, 0)} mm`, d: d(p.wb, M.wb0, 0, ' mm') },
+    { l: 'Nickwinkel', v: `${fmt(p.pitch, 2)}°`, d: `<span class="d">${p.pitch > 0 ? 'Front tiefer' : p.pitch < 0 ? 'Heck tiefer' : 'neutral'}</span>` }
+  ];
+}
+function renderGeo(live) {
+  const p = live || pose(SG.sagF, SG.sagR, S.fProt, S.rShim);
+  const cells = geoCells(p);
+  const pS = pose(SGstock.sagF, SGstock.sagR, 0, 0);
+  cells.push({ l: 'Gabel eingefedert', v: `${fmt(live ? live.sF : SG.sagF, 1)} mm`, d: `<span class="d">von ${M.travelF} mm · ${fmt((live ? live.sF : SG.sagF) / M.travelF * 100)} %</span>` });
+  cells.push({ l: 'Hinten eingefedert', v: `${fmt(live ? live.xR : SG.sagR, 1)} mm`, d: `<span class="d">von ${M.travelR} mm · ${fmt((live ? live.xR : SG.sagR) / M.travelR * 100)} %</span>` });
+  cells.push({ l: 'Serie, gleicher Fahrer', v: `${fmt(pS.rake, 2)}°`, d: `<span class="d">Nachlauf ${fmt(pS.trail, 1)} mm</span>` });
+  cells.push({ l: 'Achslast vorn', v: `${fmt(SG.L.totF / SG.L.tot * 100, 1)} %`, d: `<span class="d">${fmt(SG.L.totF, 0)} von ${fmt(SG.L.tot, 0)} kg</span>` });
+  $('#geoGrid').innerHTML = cells.map(c => `<div class="gcell ${live ? 'live' : ''}"><div class="lbl">${c.l}</div><div class="v">${c.v}</div>${c.d}</div>`).join('');
+  $('#geoMode').textContent = live ? 'live' : 'statisch';
+}
+function renderSagBars() {
+  const [zf, zr] = SAGZ[S.profile], [tf, tr] = [PROFILES[S.profile].sagF, PROFILES[S.profile].sagR];
+  const bar = (lbl, v, z, t, max, col) => `<div class="bar"><span>${lbl}</span><div class="tr"><div class="zone" style="left:${z[0] / max * 100}%;width:${(z[1] - z[0]) / max * 100}%"></div><div class="fill" style="width:${clamp(v / max * 100, 0, 100)}%;background:${col};opacity:.85"></div><div class="tgt" style="left:${t / max * 100}%"></div></div><span class="mono">${fmt(v, 1)} mm</span></div>`;
+  $('#sagBars').innerHTML = bar('Gabel', SG.sagF, zf, tf, 60, 'var(--front)') + bar('Hinten', SG.sagR, zr, tr, 60, 'var(--rear)') + bar('frei v', SG.freeF, [20, 30], 25, 60, 'var(--ghost)') + bar('frei h', SG.freeR, [5, 15], 10, 60, 'var(--ghost)');
+}
+
+/* ============================ CANVAS-DIAGRAMME ============================ */
+function prep(cv) {
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = +cv.getAttribute('height');
+  cv.style.height = h + 'px';
+  if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
+  c.font = `11px ${css('--f-mono') || 'monospace'}`; return { c, w, h };
+}
+function axes(c, x0, y0, w, h, xmin, xmax, ymin, ymax, xt, yt, xl, yl, xf = v => v, yf = v => v) {
+  const X = v => x0 + (v - xmin) / (xmax - xmin) * w, Y = v => y0 + h - (v - ymin) / (ymax - ymin) * h;
+  c.strokeStyle = css('--line'); c.lineWidth = 1; c.fillStyle = css('--muted'); c.textAlign = 'right'; c.textBaseline = 'middle';
+  for (const v of yt) { c.beginPath(); c.moveTo(x0, Y(v)); c.lineTo(x0 + w, Y(v)); c.stroke(); c.fillText(yf(v), x0 - 6, Y(v)); }
+  c.textAlign = 'center'; c.textBaseline = 'top';
+  for (const v of xt) { c.beginPath(); c.moveTo(X(v), y0); c.lineTo(X(v), y0 + h); c.stroke(); c.fillText(xf(v), X(v), y0 + h + 5); }
+  c.fillStyle = css('--muted'); c.textAlign = 'left'; c.textBaseline = 'bottom'; if (yl) c.fillText(yl, x0, y0 - 4);
+  c.textAlign = 'right'; c.textBaseline = 'top'; if (xl) c.fillText(xl, x0 + w, y0 + h + 18);
+  return { X, Y };
+}
+function path(c, xs, ys, X, Y, col, lw = 2, dash = null) { c.beginPath(); c.strokeStyle = col; c.lineWidth = lw; c.setLineDash(dash || []); for (let i = 0; i < xs.length; i++) { const px = X(xs[i]), py = Y(ys[i]); i ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke(); c.setLineDash([]); }
+let hoverI = null;
+function drawTime() {
+  const cv = $('#timeCv'), { c, w, h } = prep(cv), r = RUN[scenario], s = STOCKRUN[scenario];
+  const x0 = 52, pw = w - x0 - 12, h1 = (h - 70) * 0.58, h2 = (h - 70) * 0.42 - 20, y1 = 18, y2 = y1 + h1 + 34;
+  const ticks = [0, .5, 1, 1.5, 2, 2.5];
+  const A = axes(c, x0, y1, pw, h1, 0, T_SIM, 0, 135, [], [0, 25, 50, 75, 100, 125], '', 'Federweg mm');
+  c.strokeStyle = css('--bad'); c.setLineDash([4, 4]); c.beginPath(); c.moveTo(x0, A.Y(125)); c.lineTo(x0 + pw, A.Y(125)); c.stroke(); c.beginPath(); c.moveTo(x0, A.Y(130)); c.lineTo(x0 + pw, A.Y(130)); c.stroke(); c.setLineDash([]);
+  path(c, s.F.t, s.F.x, A.X, A.Y, css('--ghost'), 1.4, [5, 4]); path(c, s.R.t, s.R.x, A.X, A.Y, css('--ghost'), 1.4, [2, 3]);
+  path(c, r.F.t, r.F.x, A.X, A.Y, css('--front'), 2.2); path(c, r.R.t, r.R.x, A.X, A.Y, css('--rear'), 2.2);
+  const mx = Math.max(...r.F.ft, ...r.R.ft, ...s.F.ft, ...s.R.ft) / 1000;
+  const top = Math.ceil(mx / 0.5) * 0.5 || 1, yt2 = []; for (let v = 0; v <= top + 1e-9; v += top > 3 ? 1 : 0.5) yt2.push(v);
+  const B = axes(c, x0, y2, pw, h2, 0, T_SIM, 0, top, ticks, yt2, 'Zeit s', 'Reifenlast kN', v => fmt(v, 1), v => fmt(v, 1));
+  const kN = a => a.map(v => v / 1000);
+  path(c, s.F.t, kN(s.F.ft), B.X, B.Y, css('--ghost'), 1.2, [5, 4]); path(c, s.R.t, kN(s.R.ft), B.X, B.Y, css('--ghost'), 1.2, [2, 3]);
+  path(c, r.F.t, kN(r.F.ft), B.X, B.Y, css('--front'), 1.8); path(c, r.R.t, kN(r.R.ft), B.X, B.Y, css('--rear'), 1.8);
+  // Abspielmarke
+  const i = hoverI != null ? hoverI : +$('#scrub').value, t = r.F.t[i];
+  c.strokeStyle = css('--fg'); c.globalAlpha = .55; c.beginPath(); c.moveTo(A.X(t), y1); c.lineTo(A.X(t), y2 + h2); c.stroke(); c.globalAlpha = 1;
+  const dotc = (X, Y, v, col) => { c.fillStyle = col; c.beginPath(); c.arc(X, Y, 4, 0, 7); c.fill(); };
+  dotc(A.X(t), A.Y(r.F.x[i]), 0, css('--front')); dotc(A.X(t), A.Y(r.R.x[i]), 0, css('--rear'));
+  dotc(B.X(t), B.Y(r.F.ft[i] / 1000), 0, css('--front')); dotc(B.X(t), B.Y(r.R.ft[i] / 1000), 0, css('--rear'));
+  const lab = `t ${fmt(t, 2)} s   Gabel ${fmt(r.F.x[i], 1)} mm   hinten ${fmt(r.R.x[i], 1)} mm   Last ${fmt(r.F.ft[i] / 1000, 2)} / ${fmt(r.R.ft[i] / 1000, 2)} kN`;
+  c.font = `11px ${css('--f-mono')}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = css('--fg'); c.fillText(lab, x0 + pw, 2);
+  $('#tcTitle').textContent = `Zeitverlauf: ${SCEN[scenario].name} bei ${speed} km/h`;
+  const k = r.kF, kr = r.kR;
+  $('#timeNote').textContent = `Gabel max. ${fmt(k.maxX, 0)} mm (${fmt(k.usage * 100)} %), hinten max. ${fmt(kr.maxX, 0)} mm (${fmt(kr.usage * 100)} %). Reifen ohne Bodenkontakt: vorn ${fmt(k.lift)} ms, hinten ${fmt(kr.lift)} ms. Fahren über die Kurve zeigt die Werte zu jedem Zeitpunkt.`;
+}
+$('#timeCv').addEventListener('pointermove', e => {
+  const cv = e.currentTarget, rc = cv.getBoundingClientRect(), x0 = 52, pw = rc.width - x0 - 12;
+  const t = clamp((e.clientX - rc.left - x0) / pw, 0, 1) * T_SIM; hoverI = clamp(Math.round(t / (DT * REC)), 0, RUN[scenario].F.t.length - 1);
+  if (!playing) { $('#scrub').value = hoverI; showFrame(hoverI); } else drawTime();
+});
+$('#timeCv').addEventListener('pointerleave', () => { hoverI = null; drawTime(); });
+function drawFV() {
+  const cv = $('#fvCv'), { c, w, h } = prep(cv);
+  const dS = damping(Object.assign({}, S, STOCK)), dC = damping(S);
+  const vs = []; for (let v = -1.2; v <= 1.2001; v += 0.02) vs.push(+v.toFixed(3));
+  const f = (cc) => vs.map(v => dampF(v, cc));
+  const all = [...f(dC.F), ...f(dC.R), ...f(dS.F), ...f(dS.R)];
+  const mx = Math.max(...all.map(Math.abs)), lim = Math.ceil(mx / 500) * 500;
+  const yt = []; for (let v = -lim; v <= lim; v += lim / 2) yt.push(v);
+  const A = axes(c, 52, 16, w - 64, h - 52, -1.2, 1.2, -lim, lim, [-1.2, -.6, 0, .6, 1.2], yt, 'Radgeschw. m/s', 'Kraft N', v => fmt(v, 1), v => fmt(v));
+  path(c, vs, f(dS.F), A.X, A.Y, css('--ghost'), 1.3, [5, 4]); path(c, vs, f(dS.R), A.X, A.Y, css('--ghost'), 1.3, [2, 3]);
+  path(c, vs, f(dC.F), A.X, A.Y, css('--front'), 2.2); path(c, vs, f(dC.R), A.X, A.Y, css('--rear'), 2.2);
+  c.fillStyle = css('--muted'); c.textAlign = 'left'; c.textBaseline = 'top'; c.fillText('Zugstufe', A.X(-1.15), A.Y(lim * 0.1)); c.textAlign = 'right'; c.fillText('Druckstufe', A.X(1.15), A.Y(-lim * 0.05));
+}
+function drawSpring() {
+  const cv = $('#spCv'), { c, w, h } = prep(cv), stS = Object.assign({}, S, STOCK);
+  const xs = []; for (let x = 0; x <= 130; x += 1) xs.push(x);
+  const fF = st => xs.map(x => x <= M.travelF ? forkAx(x, st) : NaN), fR = st => xs.map(x => rearW(x, st));
+  const all = [...fF(S), ...fR(S), ...fF(stS), ...fR(stS)].filter(Number.isFinite);
+  const lim = Math.ceil(Math.max(...all) / 1000) * 1000, yt = []; for (let v = 0; v <= lim; v += lim / 4) yt.push(v);
+  const A = axes(c, 52, 16, w - 64, h - 52, 0, 130, 0, lim, [0, 25, 50, 75, 100, 125], yt, 'Federweg mm', 'Kraft N', v => v, v => fmt(v));
+  const clip = arr => arr.map(v => Number.isFinite(v) ? v : lim);
+  path(c, xs.slice(0, 126), clip(fF(stS)).slice(0, 126), A.X, A.Y, css('--ghost'), 1.3, [5, 4]); path(c, xs, fR(stS), A.X, A.Y, css('--ghost'), 1.3, [2, 3]);
+  path(c, xs.slice(0, 126), clip(fF(S)).slice(0, 126), A.X, A.Y, css('--front'), 2.2); path(c, xs, fR(S), A.X, A.Y, css('--rear'), 2.2);
+  const dot = (x, y, col) => { c.fillStyle = col; c.strokeStyle = css('--bg'); c.lineWidth = 2; c.beginPath(); c.arc(A.X(x), A.Y(y), 5, 0, 7); c.fill(); c.stroke(); };
+  dot(SG.sagF, forkAx(SG.sagF, S), css('--front')); dot(SG.sagR, rearW(SG.sagR, S), css('--rear'));
+}
+function dialSvg(frac, col) {
+  const a0 = -225, a1 = 45, a = a0 + (a1 - a0) * clamp(frac, 0, 1), r = 26, cx = 32, cy = 32;
+  const pt = (ang, rr) => `${(cx + Math.cos(ang * DEG) * rr).toFixed(1)},${(cy + Math.sin(ang * DEG) * rr).toFixed(1)}`;
+  let ticks = ''; for (let i = 0; i <= 10; i++) { const an = a0 + (a1 - a0) * i / 10; ticks += `<path d="M${pt(an, r)}L${pt(an, r - 4)}" stroke="var(--line2)" stroke-width="1.5"/>`; }
+  return `<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="${r}" fill="var(--bg2)" stroke="var(--line2)"/>${ticks}<path d="M${pt(a0, r - 8)} A${r - 8},${r - 8} 0 ${a - a0 > 180 ? 1 : 0},1 ${pt(a, r - 8)}" stroke="${col}" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M32,32L${pt(a, r - 3)}" stroke="var(--fg)" stroke-width="2.5" stroke-linecap="round"/><circle cx="32" cy="32" r="3.5" fill="var(--fg)"/></svg>`;
+}
+function renderDials() {
+  const items = [
+    ['Gabel Vorspannung', S.fPre, 8, 'Ringe sichtbar', 'var(--front)', 1], ['Gabel Zugstufe', S.fReb, M.clicksMax, 'Klicks offen', 'var(--front)', 0], ['Gabel Druck LS', S.fLS, M.clicksMax, 'Klicks offen', 'var(--front)', 0], ['Gabel Druck HS', S.fHS, M.hsMax, 'Umdr. offen', 'var(--front)', 2],
+    ['Federbein Vorsp.', S.rPre + 5, 17, `${S.rPre >= 0 ? '+' : ''}${fmt(S.rPre, 1)} mm`, 'var(--rear)', -1], ['Federbein Zug', S.rReb, M.clicksMax, 'Klicks offen', 'var(--rear)', 0], ['Federbein Druck LS', S.rLS, M.clicksMax, 'Klicks offen', 'var(--rear)', 0], ['Federbein Druck HS', S.rHS, M.hsMax, 'Umdr. offen', 'var(--rear)', 2],
+    ['Luftdruck vorn', S.pF - 1.8, 1.2, 'bar kalt', 'var(--front)', -2], ['Luftdruck hinten', S.pR - 1.8, 1.4, 'bar kalt', 'var(--rear)', -3]
+  ];
+  $('#dials').innerHTML = items.map(([l, v, mx, u, col, d]) => {
+    const shown = d === -1 ? '' : d === -2 ? fmt(S.pF, 2) : d === -3 ? fmt(S.pR, 2) : fmt(v, d);
+    return `<div class="dial">${dialSvg(v / mx, col)}<b>${shown} ${d === -1 ? u : ''}</b>${l}<br>${d === -1 ? 'gegenüber Serie' : u}</div>`;
+  }).join('');
+}
+
+/* ============================ ABSPIELEN ============================ */
+function frameState(i) {
+  const r = RUN[scenario], ex = $('#exag').checked ? 3 : 1, v = speed / 3.6, t = r.F.t[i];
+  const sc = r.sc;
+  const sF = r.F.x0 + (r.F.x[i] - r.F.x0) * ex, xR = r.R.x0 + (r.R.x[i] - r.R.x0) * ex;
+  let sMax = 0; for (let j = 0; j <= i; j++) sMax = Math.max(sMax, r.F.x[j]);
+  const dist = v * t * 1000;
+  return {
+    sF, xR, hF: r.F.zu[i] * ex, hR: r.R.zu[i] * ex, dist, ftF: r.F.ft[i], ftR: r.R.ft[i], prot: S.fProt, shim: S.rShim, sMax: r.F.x0 + (sMax - r.F.x0) * ex,
+    road: x => sc.road(v * t - M.wb0 / 1000 + x / 1000) * 1000 * ex, t
+  };
+}
+function showFrame(i) {
+  const fs = frameState(i), p = drawBike(fs);
+  $('#tO').textContent = `${fmt(fs.t, 2)} s`;
+  const r = RUN[scenario];
+  const pTrue = pose(r.F.x[i], r.R.x[i], S.fProt, S.rShim, r.F.zu[i], r.R.zu[i]);
+  pTrue.sF = r.F.x[i]; pTrue.xR = r.R.x[i];
+  if (i > 0) { renderGeo(pTrue); $('#hudTitle').textContent = SCEN[scenario].name; }
+  else { renderGeo(); $('#hudTitle').textContent = 'Statisch mit Fahrer'; }
+  let sub = `${speed} km/h · t = ${fmt(fs.t, 2)} s`;
+  if (r.sc.accel) sub += ` · ${fmt(r.sc.accel(fs.t), 2)} g`;
+  if (r.sc.lean) sub += ` · Schräglage ${fmt(r.sc.lean(fs.t))}°`;
+  if ($('#exag').checked) sub += ' · Bewegung ×3';
+  $('#hudSub').textContent = sub;
+  drawTime();
+}
+function loop(ts) {
+  if (!playing) return;
+  const dt = lastTs ? (ts - lastTs) / 1000 : 0; lastTs = ts;
+  playT += dt * ($('#slowmo').checked ? 0.25 : 1);
+  if (playT > T_SIM) playT = 0;
+  const i = clamp(Math.round(playT / (DT * REC)), 0, RUN[scenario].F.t.length - 1);
+  $('#scrub').value = i; showFrame(i);
+  requestAnimationFrame(loop);
+}
+function setPlaying(on) {
+  playing = on; $('#playBtn').textContent = on ? '❚❚ Pause' : '▶ Abspielen'; $('#playBtn').setAttribute('aria-label', on ? 'Simulation pausieren' : 'Simulation abspielen');
+  if (on) { lastTs = 0; playT = (+$('#scrub').value) * DT * REC; if (playT >= T_SIM - 0.01) playT = 0; requestAnimationFrame(loop); }
+}
+$('#playBtn').addEventListener('click', () => setPlaying(!playing));
+$('#scrub').addEventListener('input', e => { if (playing) setPlaying(false); showFrame(+e.target.value); });
+$('#exag').addEventListener('change', () => showFrame(+$('#scrub').value));
+$('#speed').addEventListener('input', e => { speed = +e.target.value; $('#speedO').textContent = `${speed} km/h`; schedule(); });
+function setScenario(k) {
+  scenario = k; $$('#scenSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === k));
+  renderKpis(overall(RUN, S, SG), overall(STOCKRUN, Object.assign({}, S, STOCK), SGstock)); renderMatrix();
+  if (!playing) { $('#scrub').value = 0; setPlaying(true); } else drawTime();
+}
+$('#scenSeg').innerHTML = Object.entries(SCEN).map(([k, s]) => `<button data-s="${k}" aria-pressed="${k === scenario}">${s.short}</button>`).join('');
+$('#scenSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setScenario(b.dataset.s); });
+
+/* ============================ REGISTER ============================ */
+$$('.tabs button').forEach(b => b.addEventListener('click', () => {
+  $$('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
+  $$('.panel').forEach(p => p.hidden = p.id !== b.dataset.tab);
+  if (b.dataset.tab === 't-setup') { drawTime(); drawFV(); drawSpring(); }
+  try { localStorage.setItem('k7lab.tab', b.dataset.tab); } catch (e) {}
+}));
+
+/* ============================ DURCHHANG-TAB ============================ */
+const SAGIN = { L1: 180, L2: 158, L3: 143, R1: 600, R2: 588, R3: 568 };
+function renderSagTab() {
+  const [zf, zr] = SAGZ[S.profile], tf = PROFILES[S.profile].sagF, trr = PROFILES[S.profile].sagR;
+  $('#sagTargets').innerHTML = `<thead><tr><th>Profil</th><th>Vorn mit Fahrer</th><th>Hinten mit Fahrer</th><th>Frei vorn</th><th>Frei hinten</th></tr></thead><tbody>` +
+    Object.entries(PROFILES).map(([k, p]) => `<tr${k === S.profile ? ' style="background:var(--accent-soft)"' : ''}><td>${p.name}</td><td class="n">${SAGZ[k][0][0]}–${SAGZ[k][0][1]} mm</td><td class="n">${SAGZ[k][1][0]}–${SAGZ[k][1][1]} mm</td><td class="n">20–30 mm</td><td class="n">5–15 mm</td></tr>`).join('') + '</tbody>';
+  const card = (side) => {
+    const F = side === 'F', a = F ? ['L1', 'L2', 'L3'] : ['R1', 'R2', 'R3'];
+    const v = a.map(k => SAGIN[k]), free = v[0] - v[1], rider = v[0] - v[2];
+    const z = F ? zf : zr, t = F ? tf : trr, fz = F ? [20, 30] : [5, 15];
+    const delta = rider - t;
+    let action;
+    if (F) { const rings = clamp(S.fPre - delta / M.ringMm, 0, 8); action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(delta / M.ringMm), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(S.fPre, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.`; }
+    else { const mm = delta / M.MR; action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: Feder um ${fmt(Math.abs(mm), 1)} mm ${delta > 0 ? 'zusätzlich spannen' : 'entspannen'} (1 mm an der Feder ≈ ${fmt(M.MR, 2)} mm am Rad).`; }
+    let springNote = '';
+    if (free < fz[0] - 3 && rider > z[0]) springNote = '<p class="warnbox" style="margin-top:8px">Wenig freier Durchhang bei viel Fahrer-Durchhang: die Feder ist für dein Gewicht zu weich. Vorspannung allein löst das nicht sauber.</p>';
+    if (free > fz[1] + 5 && rider <= z[1]) springNote = '<p class="warnbox" style="margin-top:8px">Viel freier Durchhang bei passendem Fahrer-Durchhang: die Feder ist für dein Gewicht eher zu hart.</p>';
+    const st = (val, zz) => val >= zz[0] && val <= zz[1] ? 'good' : 'warn';
+    return `<div class="card-h"><h3>${F ? 'Gabel vorn' : 'Federbein hinten'}</h3><span class="chip mut">Beispielwerte, eigene eintragen</span></div>
+      <div class="fields">${a.map((k, i) => `<div class="fld"><label for="sg-${k}">${k} · ${['ausgefedert', 'ohne Fahrer', 'mit Fahrer'][i]}</label><input id="sg-${k}" data-k="${k}" type="number" step="0.5" inputmode="decimal" value="${SAGIN[k]}"></div>`).join('')}</div>
+      <div class="res3">
+        <div class="gcell"><div class="lbl">Frei</div><div class="v">${fmt(free, 1)} mm</div><span class="chip ${st(free, fz)}">Ziel ${fz[0]}–${fz[1]}</span></div>
+        <div class="gcell"><div class="lbl">Mit Fahrer</div><div class="v">${fmt(rider, 1)} mm</div><span class="chip ${st(rider, z)}">Ziel ${z[0]}–${z[1]}</span></div>
+        <div class="gcell"><div class="lbl">Abweichung</div><div class="v">${delta >= 0 ? '+' : ''}${fmt(delta, 1)} mm</div><span class="d">zu ${t} mm Ziel</span></div>
+      </div>
+      <p style="margin:10px 0 0;font-size:.88rem"><b>${action}</b></p>${springNote}
+      <div class="btnrow" style="margin-top:10px"><button class="btn sm pri" data-apply="${side}">Ins Modell übernehmen</button></div>`;
+  };
+  const keepFocus = document.activeElement && document.activeElement.id;
+  $('#sagFront').innerHTML = card('F'); $('#sagRear').innerHTML = card('R');
+  if (keepFocus && keepFocus.startsWith('sg-')) { const e = $('#' + keepFocus); if (e) { e.focus(); const l = e.value.length; try { e.setSelectionRange(l, l); } catch (x) {} } }
+}
+$('#t-sag').addEventListener('change', e => { const k = e.target.dataset.k; if (k) { SAGIN[k] = parseFloat(e.target.value) || 0; renderSagTab(); } });
+$('#t-sag').addEventListener('click', e => {
+  const b = e.target.closest('[data-apply]'); if (!b) return;
+  const t = b.dataset.apply === 'F' ? PROFILES[S.profile].sagF : PROFILES[S.profile].sagR;
+  if (b.dataset.apply === 'F') { const d = (SAGIN.L1 - SAGIN.L3) - t; S.fPre = clamp(Math.round((S.fPre - d / M.ringMm) * 2) / 2, 0, 8); }
+  else { const d = (SAGIN.R1 - SAGIN.R3) - t; S.rPre = clamp(Math.round((S.rPre + d / M.MR) * 2) / 2, -5, 12); }
+  schedule(); toast('Vorspannung im Modell angepasst');
+});
+
+/* ============================ DIAGNOSE ============================ */
+const DIAG = [
+  { id: 'dive', t: 'Gabel taucht beim Bremsen tief ein / schlägt durch', c: ['Zu wenig Endprogression in der Gabel', 'Druckstufe Low-Speed zu offen', 'Federn zu weich für dein Gewicht'], a: [['fOil', 5, 'Ölstand +5 mm'], ['fLS', -2, 'Druckstufe LS vorn 2 Klicks zu']], scen: 'brake' },
+  { id: 'chatter', t: 'Vorderrad stempelt auf Rippen und Flickstellen', c: ['High-Speed-Druckstufe zu hart', 'Luftdruck zu hoch', 'Zugstufe zu stark: Gabel verhärtet sich (Packing)'], a: [['fHS', .5, 'Druckstufe HS vorn ½ Umdr. öffnen'], ['fReb', 1, 'Zugstufe vorn 1 Klick öffnen']], scen: 'ripples' },
+  { id: 'rearpump', t: 'Heck pumpt nach Wellen, schaukelt nach', c: ['Zugstufe hinten zu offen', 'Zu wenig Vorspannung hinten'], a: [['rReb', -2, 'Zugstufe hinten 2 Klicks zu']], scen: 'bump' },
+  { id: 'traction', t: 'Hinterrad findet am Kurvenausgang keine Traktion', c: ['Druckstufe hinten zu hart', 'Zugstufe hinten zu stark: Rad kommt nicht schnell genug zurück', 'Zu viel Vorspannung hinten'], a: [['rLS', 2, 'Druckstufe LS hinten 2 Klicks öffnen'], ['rReb', 1, 'Zugstufe hinten 1 Klick öffnen']], scen: 'accel' },
+  { id: 'understeer', t: 'Lenkt träge ein, schiebt über das Vorderrad', c: ['Front steht zu hoch / Heck zu tief: zu viel Nachlauf', 'Zu viel Vorspannung vorn: Gabel taucht beim Anbremsen kaum ein', 'Druckstufe vorn zu hart'], a: [['fProt', 2, 'Gabel 2 mm durchstecken'], ['rShim', 2, 'Heck 2 mm anheben (Distanz)']], scen: 'corner' },
+  { id: 'nervous', t: 'Unruhig bei hohem Tempo, Lenker schlägt beim Beschleunigen', c: ['Front zu tief / Heck zu hoch: zu wenig Nachlauf', 'Zugstufe vorn zu offen', 'Lenkungsdämpfer defekt oder Lenkkopflager prüfen', 'Reifendruck und -zustand prüfen'], a: [['fProt', -2, 'Gabel 2 mm weniger durchstecken'], ['fReb', -1, 'Zugstufe vorn 1 Klick zu']], scen: 'accel' },
+  { id: 'harsh', t: 'Hart und unkomfortabel auf schlechtem Asphalt', c: ['High-Speed-Druckstufe zu hart', 'Luftdruck über Sollwert'], a: [['fHS', .5, 'Druckstufe HS vorn ½ Umdr. öffnen'], ['rHS', .5, 'Druckstufe HS hinten ½ Umdr. öffnen']], scen: 'ripples' },
+  { id: 'wallow', t: 'Schwammig im Wechsel, Heck sackt durch', c: ['Druckstufe LS hinten zu offen', 'Zu wenig Vorspannung hinten', 'Zugstufe hinten zu offen'], a: [['rLS', -2, 'Druckstufe LS hinten 2 Klicks zu'], ['rPre', 2, 'Vorspannung hinten +2 mm']], scen: 'corner' },
+  { id: 'unused', t: 'Kabelbinder zeigt: Federweg wird nicht genutzt', c: ['Druckstufe zu hart', 'Zu viel Vorspannung', 'Ölstand zu hoch'], a: [['fLS', 2, 'Druckstufe LS vorn 2 Klicks öffnen'], ['fOil', -5, 'Ölstand −5 mm']], scen: 'brake' },
+  { id: 'frontfloat', t: 'Front schwimmt in schnellen Wechselkurven', c: ['Zugstufe vorn zu offen', 'Zu wenig Vorspannung vorn'], a: [['fReb', -2, 'Zugstufe vorn 2 Klicks zu'], ['fPre', -1, 'Vorspannung vorn +1 Ring']], scen: 'bump' },
+  { id: 'twoup', t: 'Mit Sozius: Heck sackt ab, Front leicht', c: ['Vorspannung hinten nicht an Zuladung angepasst', 'Zugstufe hinten zu offen für die höhere Last'], a: [['rPre', 5, 'Vorspannung hinten +5 mm'], ['rReb', -2, 'Zugstufe hinten 2 Klicks zu']], scen: 'bump' },
+  { id: 'kick', t: 'Lenker schlägt bei Bodenwellen im Kurvenausgang', c: ['Zugstufe vorn zu stark oder zu schwach', 'Heck zu hoch', 'Lenkungsdämpfer prüfen (S-DMS/Elektronik hat Warnanzeige)'], a: [['rShim', -1, 'Heck 1 mm absenken'], ['fReb', -1, 'Zugstufe vorn 1 Klick zu']], scen: 'corner' }
+];
+const DSEL = new Set();
+function renderDiag() {
+  $('#symps').innerHTML = DIAG.map(d => `<button class="symp" data-d="${d.id}" aria-pressed="${DSEL.has(d.id)}">${d.t}</button>`).join('');
+  const sel = DIAG.filter(d => DSEL.has(d.id));
+  $('#diag').innerHTML = sel.length ? sel.map(d => `<div class="card"><h3>${d.t}</h3><div class="lbl">Wahrscheinliche Ursachen</div><ol>${d.c.map(x => `<li>${x}</li>`).join('')}</ol>
+    <div class="lbl" style="margin-bottom:6px">Test im Modell</div><div class="btnrow">${d.a.map((a, i) => `<button class="btn sm" data-da="${d.id}" data-i="${i}">${a[2]}</button>`).join('')}<button class="btn sm" data-ds="${d.scen}">Situation „${SCEN[d.scen].short}“ ansehen</button></div></div>`).join('')
+    : `<div class="card"><p class="note">Noch kein Symptom gewählt. Tipp: Vor der Fahrt einen Kabelbinder um ein Gabelgleitrohr und die Kolbenstange des Federbeins legen. Danach zeigt er, wie viel Federweg du wirklich nutzt.</p></div>`;
+}
+$('#t-diag').addEventListener('click', e => {
+  const s = e.target.closest('[data-d]'); if (s) { DSEL.has(s.dataset.d) ? DSEL.delete(s.dataset.d) : DSEL.add(s.dataset.d); renderDiag(); return; }
+  const a = e.target.closest('[data-da]');
+  if (a) { const d = DIAG.find(x => x.id === a.dataset.da), [k, dv, lbl] = d.a[+a.dataset.i], c = findCtl(k); S[k] = clamp(+(S[k] + dv).toFixed(3), c.min, c.max); schedule(); toast(`${lbl}: jetzt ${fmt(S[k], c.d)} ${c.unit}`); return; }
+  const sc = e.target.closest('[data-ds]'); if (sc) { $('#tab-setup').click(); setScenario(sc.dataset.ds); window.scrollTo({ top: 0, behavior: 'smooth' }); }
+});
+
+/* ============================ TECHNISCHE DATEN ============================ */
+const SRC = {
+  CW: ['Cycle World, First Ride 2007', 'https://issues.cycleworld.com/article/2007/5/1/2007-suzuki-4gsx-r1000'],
+  MD: ['moto-data.net GSX-R 1000 (2007)', 'https://moto-data.net/suzuki/gsx-r-1000-2007'],
+  BW: ['bikeswiki GSX-R1000', 'https://bikeswiki.com/Suzuki_GSX-R1000'],
+  CC: ['CycleChaos GSX-R1000', 'https://www.cyclechaos.com/wiki/Sandbox/Suzuki_GSX-R1000'],
+  MH: ['Model History (Scribd)', 'https://www.scribd.com/document/43446949/Model-History'],
+  BZ: ['bikez.com GSX-R 1000 2007', 'https://bikez.com/motorcycles/suzuki_gsx-r_1000_2007.php'],
+  TK: ['Teknik Motorsport, Serien-Federraten 2007', 'https://www.teknikmotorsport.com/bike-suspension-parts/suzuki/gsx-r1000/2007/?pgnum=3'],
+  GX: ['gixxer.com: Suspension Setting K7-1000', 'https://www.gixxer.com/threads/suspension-setting-k7-1000.200643/'],
+  GX2: ['gixxer.com: 2007 GSXR1000 Suspension Settings', 'https://www.gixxer.com/threads/2007-gsxr1000-suspension-settings.170551/'],
+  DE: ['gsx-r1000.de: Fahrwerksabstimmung K7 org. Dämpfer', 'https://www.gsx-r1000.de/themen/fahrwerksabstimmung-k7-org-d%C3%A4mpfer.7783/'],
+  SZ: ['Suzuki GSX-R1000 Fahrerhandbuch (Folgegeneration)', 'https://suzukimotorcycles.com.au/wp-content/uploads/2024/07/GSX-R1000-Owners-Manual-99011-17K57-01A.pdf'],
+  AM: ['AMCN (998,6 cm³)', 'https://amcn.com.au/?p=23468'],
+  MCN: ['MCN Test GSX-R1000 2007–2008', 'https://motorcyclenews.com/bike-reviews/suzuki/gsx-r1000/2007'],
+  PS: ['1000PS Modellseite 2007', 'https://1000ps.com/en-us/model/16/suzuki-gsx-r-1000/2007'],
+  KT: ['K-Tech Federn K7/K8 (M-Sliders)', 'https://msliders.com/products/rear-shock-spring-gsx-r-1000-k7-k8'],
+  SF: ['suzuki-forums.net: HS/LS Compression K7/K8', 'https://www.suzuki-forums.net/threads/high-and-low-compression-on-gsxr1000-k7-k8.1283/'],
+  MO: ['MOTORRAD Top-Test GSX-R 1000 (2007)', 'https://www.motorradonline.de/supersportler/top-test-suzuki-gsx-r-1000-der-siebte-streich/'],
+  MS: ['motorcyclespecs.co.za GSX-R1000 2007', 'https://www.motorcyclespecs.co.za/model/suzu/suzuki_gsxr1000%2007.htm'],
+  SC: ['suzukicycles.org Modelljahr 2007', 'https://www.suzukicycles.org/2000-2009/2007a.shtml']
+};
+const STATL = { ok2: ['good', '2 Quellen'], ok1: ['info', '1 Quelle'], conf: ['warn', 'abweichend'], open: ['mut', 'offen'], model: ['mut', 'Modell'] };
+const DATA = [
+  ['Motor', 'Bauart', 'Reihenvierzylinder, flüssigkeitsgekühlt, DOHC, 4 Ventile je Zylinder', 'ok1', ['MD'], ''],
+  ['Motor', 'Hubraum', '999 cm³ (998,6 cm³)', 'ok2', ['AM', 'MD'], 'Gegenprobe: 73,4² × π/4 × 59,0 × 4 = 998,6 cm³'],
+  ['Motor', 'Bohrung × Hub', '73,4 × 59,0 mm', 'ok2', ['MD', 'AM'], 'Rechnerisch konsistent mit 998,6 cm³'],
+  ['Motor', 'Verdichtung', '12,5 : 1', 'ok2', ['MD', 'MO'], ''],
+  ['Motor', 'Nennleistung', '185 PS (136 kW) bei 12.000 /min', 'ok2', ['MO', 'SC'], 'MOTORRAD maß auf dem Prüfstand rund 180 PS. Länderversionen können abweichen, Fahrzeugschein Feld P.2 zeigt den Wert deiner Maschine.'],
+  ['Motor', 'Drehmoment', '117 Nm bei 10.000 /min', 'ok2', ['MO', 'MD'], 'suzukicycles.org nennt 116,7 Nm'],
+  ['Motor', 'Gemischaufbereitung', 'Saugrohreinspritzung mit Doppel-Drosselklappen', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
+  ['Elektronik', 'Fahrmodi S-DMS', 'Drei Motorkennfelder A / B / C, am rechten Lenkerschalter', 'open', [], 'Beeinflusst nur die Leistungsentfaltung, nicht das Fahrwerk'],
+  ['Elektronik', 'Lenkungsdämpfer', 'Hydraulisch, elektronisch geregelt (geschwindigkeitsabhängig), nicht von Hand einstellbar', 'ok1', ['CW'], 'Cycle World nennt den elektronischen Lenkungsdämpfer als Stabilitätsfaktor'],
+  ['Antrieb', 'Getriebe / Kupplung', '6 Gänge, Anti-Hopping-Kupplung', 'ok1', ['CW'], 'Cycle World: überarbeitete Anti-Hopping-Kupplung'],
+  ['Fahrwerk', 'Rahmen', 'Aluminium-Brückenrahmen (Twin-Spar)', 'open', [], ''],
+  ['Fahrwerk', 'Gabel', 'KYB Upside-Down, 43 mm, voll einstellbar: Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'SF'], 'Getrennte HS/LS-Druckstufe in mehreren K7-Threads bestätigt'],
+  ['Fahrwerk', 'Federweg vorn', '125 mm', 'ok1', ['MD'], 'bikez führt 125 mm teils unter Bodenfreiheit, daher nur eine belastbare Quelle'],
+  ['Fahrwerk', 'Federbein', 'Zentralfederbein mit Umlenkung, voll einstellbar: Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'DE'], 'Höhenverstellung am Federbein: im Werkstatthandbuch prüfen'],
+  ['Fahrwerk', 'Federweg hinten', '130 mm', 'conf', ['MD', 'MS', 'MO'], 'moto-data und motorcyclespecs: 130 mm; MOTORRAD-Datenblatt: 135 mm. Modell rechnet mit 130 mm Radweg'],
+  ['Fahrwerk', 'Federrate Gabel (Serie)', '0,976 kg/mm je Holm ≈ 9,57 N/mm', 'ok1', ['TK'], 'Angabe ohne Einheit veröffentlicht, kg/mm abgeleitet; Traxxion-Ersatz 0,975 kg/mm passt dazu'],
+  ['Fahrwerk', 'Federrate Federbein (Serie)', '10,1 kg/mm ≈ 99 N/mm', 'ok1', ['TK', 'KT'], 'K-Tech bietet 95 / 105 / 110 N/mm an, Serie liegt plausibel dazwischen'],
+  ['Geometrie', 'Lenkkopfwinkel', '23,75° (23° 45′)', 'ok2', ['CW', 'MO'], 'MOTORRAD gibt 66,2° zur Waagerechten an, also 23,8° zur Senkrechten. moto-data rundet auf 24°'],
+  ['Geometrie', 'Nachlauf', '98 mm', 'ok2', ['MO', 'MD'], 'Cycle World nennt 3,92 in ≈ 99,6 mm'],
+  ['Geometrie', 'Radstand', '1415 mm', 'ok2', ['MO', 'MD'], 'Cycle World: Radstand gegenüber K6 verlängert'],
+  ['Geometrie', 'Gabel-Offset (abgeleitet)', `${fmt(M.offset, 1)} mm`, 'model', [], 'Aus Lenkkopfwinkel, Nachlauf und Reifenradius 299,9 mm berechnet'],
+  ['Abmessungen', 'Sitzhöhe', '810 mm', 'ok2', ['MO', 'SC', 'MD'], 'Ohne Fahrer gemessen; die Seitenansicht zeigt den Wert mit Fahrer-Durchhang zusätzlich an'],
+  ['Abmessungen', 'Bodenfreiheit', '130 mm', 'ok2', ['SC', 'MD'], ''],
+  ['Abmessungen', 'Länge × Breite × Höhe', '2045 × 720 × 1130 mm', 'ok2', ['SC', 'MD'], 'MOTORRAD hat 2060 × 780 × 1140 mm nachgemessen (mit Spiegeln)'],
+  ['Abmessungen', 'Trockengewicht', '172 kg', 'ok2', ['SC', 'MD'], ''],
+  ['Abmessungen', 'Gewicht vollgetankt', '212 kg (gewogen)', 'ok1', ['MO'], 'MOTORRAD-Messung; moto-data nennt 192 kg „wet“ ohne Angabe zum Tank. Modell rechnet mit 212 kg'],
+  ['Abmessungen', 'Tankinhalt', '17,5 l', 'ok2', ['MO', 'MD'], 'bikez nennt 18 l'],
+  ['Räder & Reifen', 'Reifen vorn', '120/70 ZR17 auf 3.50 × 17', 'ok2', ['MO', 'MD'], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.1) prüfen'],
+  ['Räder & Reifen', 'Reifen hinten', '190/50 ZR17 auf 6.00 × 17', 'ok2', ['MO', 'MD'], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.2) prüfen'],
+  ['Räder & Reifen', 'Luftdruck vorn (kalt)', '2,50 bar (250 kPa, 36 psi), solo und mit Sozius', 'ok1', ['SZ'], 'Suzuki-Vorgabe der Baureihe; Aufkleber an der Schwinge deiner K7 vergleichen'],
+  ['Räder & Reifen', 'Luftdruck hinten (kalt)', '2,90 bar (290 kPa, 42 psi), solo und mit Sozius', 'ok1', ['SZ'], 'wie oben'],
+  ['Bremsen', 'Vorn', '2 Scheiben 310 mm, radial verschraubte Vierkolben-Festsättel', 'ok2', ['MO', 'MS'], ''],
+  ['Bremsen', 'Hinten', '1 Scheibe 220 mm, Einkolben-Schwimmsattel', 'ok2', ['MO', 'MS'], ''],
+  ['Werkseinstellung', 'Gabel Vorspannung', '4 Ringe sichtbar', 'conf', ['GX', 'DE'], 'gixxer.com: 4 Ringe; gsx-r1000.de: 3,5 Ringe'],
+  ['Werkseinstellung', 'Gabel Zugstufe', '6 Klicks offen ab ganz zu', 'ok2', ['GX', 'DE'], ''],
+  ['Werkseinstellung', 'Gabel Druckstufe Low-Speed', '14 Klicks offen', 'conf', ['GX', 'DE'], 'Zwei Quellen 14, ein Beitrag nennt 10'],
+  ['Werkseinstellung', 'Gabel Druckstufe High-Speed', '3 Umdrehungen offen', 'conf', ['DE', 'GX'], 'Ein Beitrag nennt 2,5 Umdrehungen'],
+  ['Werkseinstellung', 'Federbein Zugstufe', '11 Klicks offen', 'conf', ['DE', 'GX2'], 'Angaben 9 bis 12 Klicks'],
+  ['Werkseinstellung', 'Federbein Druckstufe Low-Speed', '14 Klicks offen', 'conf', ['DE', 'GX'], 'Ein Beitrag nennt 13'],
+  ['Werkseinstellung', 'Federbein Druckstufe High-Speed', '3 Umdrehungen offen', 'ok2', ['DE', 'GX2'], ''],
+  ['Werkseinstellung', 'Einstellregel Suzuki', 'Dämpfung in kleinen Schritten ändern, beide Gabelholme immer identisch einstellen', 'ok1', ['SZ'], 'Aus dem Suzuki-Handbuch der Baureihe']
+];
+let dataCat = 'Alle', dataStat = 'alle';
+function renderData() {
+  const cats = ['Alle', ...new Set(DATA.map(d => d[0]))];
+  $('#dataCat').innerHTML = cats.map(c => `<button data-c="${c}" aria-pressed="${c === dataCat}">${c}</button>`).join('');
+  $('#dataStat').innerHTML = [['alle', 'Alle'], ['ok2', '2 Quellen'], ['ok1', '1 Quelle'], ['conf', 'abweichend'], ['open', 'offen'], ['model', 'Modell']].map(([k, l]) => `<button data-st="${k}" aria-pressed="${k === dataStat}">${l}</button>`).join('');
+  const q = ($('#dataQ').value || '').toLowerCase();
+  const rows = DATA.filter(d => (dataCat === 'Alle' || d[0] === dataCat) && (dataStat === 'alle' || d[3] === dataStat) && (!q || d.join(' ').toLowerCase().includes(q)));
+  $('#dataTbl').innerHTML = `<thead><tr><th>Bereich</th><th>Merkmal</th><th>Wert</th><th>Prüfung</th><th>Quellen &amp; Hinweis</th></tr></thead><tbody>` +
+    (rows.map(d => { const [c, l] = STATL[d[3]]; return `<tr><td>${d[0]}</td><td>${d[1]}</td><td class="n" style="white-space:normal">${d[2]}</td><td class="stat"><span class="chip ${c}"${d[3] === 'model' ? ' style="border-style:dashed"' : ''}>${l}</span></td><td class="srcs">${d[4].map(s => `<a href="${SRC[s][1]}" target="_blank" rel="noopener">${SRC[s][0]}</a>`).join(' · ')}${d[5] ? `<div>${d[5]}</div>` : ''}</td></tr>`; }).join('') || `<tr><td colspan="5">Keine Treffer. Suchbegriff oder Filter ändern.</td></tr>`) + '</tbody>';
+}
+$('#dataQ').addEventListener('input', renderData);
+$('#dataCat').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { dataCat = b.dataset.c; renderData(); } });
+$('#dataStat').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { dataStat = b.dataset.st; renderData(); } });
+
+function renderCheck() {
+  const cnt = k => DATA.filter(d => d[3] === k).length;
+  $('#checkSummary').innerHTML = `<div class="geo-grid">${Object.entries(STATL).map(([k, [c, l]]) => `<div class="gcell"><div class="lbl">${l}</div><div class="v">${cnt(k)}</div><span class="chip ${c}">${k === 'ok2' ? 'belastbar' : k === 'ok1' ? 'plausibel' : k === 'conf' ? 'Widerspruch markiert' : k === 'open' ? 'am Fahrzeug prüfen' : 'Annahme'}</span></div>`).join('')}</div>
+  <p class="note" style="margin-top:10px">Bei den Werkseinstellungen widersprechen sich die Forenangaben in mehreren Punkten. Das Tool nutzt die Mehrheitsangabe als Ausgangspunkt. Vor dem ersten Verstellen deshalb den Ist-Zustand deiner Maschine zählen und notieren: Klicks ganz zudrehen, mitzählen, wieder auf den alten Wert zurück.</p>`;
+  const s0 = sags(Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100 }, STOCK)), p0 = pose(REFC.sF, REFC.xR, 0, 0);
+  const chk = [
+    ['Hubraum aus Bohrung × Hub', `${fmt(Math.PI / 4 * 73.4 * 73.4 * 59 * 4 / 1000, 1)} cm³`, Math.abs(Math.PI / 4 * 73.4 * 73.4 * 59 * 4 / 1000 - 998.6) < 0.2],
+    ['Reifenradius vorn 120/70 R17', `${fmt(M.Rf, 1)} mm = 215,9 + 0,70 × 120`, true],
+    ['Reifenradius hinten 190/50 R17', `${fmt(M.Rr, 1)} mm = 215,9 + 0,50 × 190`, true],
+    ['Kinematik trifft Werksgeometrie in der Referenzlage', `${fmt(p0.rake, 2)}° · ${fmt(p0.trail, 1)} mm · ${fmt(p0.wb, 0)} mm`, Math.abs(p0.rake - M.rake0) < 0.01 && Math.abs(p0.trail - M.trail0) < 0.2 && Math.abs(p0.wb - M.wb0) < 0.5],
+    ['Serien-Durchhang 80 kg (Kalibrierziel 36 / 32 mm)', `${fmt(s0.sagF, 1)} / ${fmt(s0.sagR, 1)} mm`, Math.abs(s0.sagF - 36) < 0.3 && Math.abs(s0.sagR - 32) < 0.3],
+    ['Freier Durchhang Serie (Plausibilität)', `${fmt(s0.freeF, 1)} / ${fmt(s0.freeR, 1)} mm`, s0.freeF > 12 && s0.freeF < 32 && s0.freeR > 3 && s0.freeR < 20],
+    ['Federraten-Umrechnung', `0,976 kg/mm × 9,81 = ${fmt(0.976 * 9.81, 2)} N/mm · 10,1 kg/mm = ${fmt(10.1 * 9.81, 1)} N/mm`, true],
+    ['Grundvorspannung aus Kalibrierung', `Gabel ${fmt(P0F, 1)} mm je Feder · Federbein ${fmt(P0R, 1)} mm`, P0F > 5 && P0F < 40 && P0R > 2 && P0R < 20],
+    ['Sitzhöhe in der Referenzlage (Werk 810 mm)', `${fmt(p0.W(SEAT_PT).y, 1)} mm`, Math.abs(p0.W(SEAT_PT).y - SEAT_H0) < 0.5],
+    ['Reifen berührt den Boden (Referenzlage)', `vorn ${fmt(p0.axF.y - M.Rf, 1)} mm · hinten ${fmt(p0.axR.y - M.Rr, 1)} mm Abstand`, Math.abs(p0.axF.y - M.Rf) < 0.5 && Math.abs(p0.axR.y - M.Rr) < 0.5],
+    ['Bremsszenario Serie 80 kg: Gabel nutzt', `${fmt(STOCKRUN ? STOCKRUN.brake.kF.maxX : 0, 0)} von 125 mm`, true]
+  ];
+  $('#mathChecks').innerHTML = chk.map(([a, b, ok]) => `<li><span class="chip ${ok ? 'good' : 'bad'}">${ok ? 'OK' : 'prüfen'}</span> <b>${a}:</b> <span class="mono">${b}</span></li>`).join('');
+  const mt = [
+    ['Masse vollgetankt', '212 kg, 51 % vorn', 'MOTORRAD-Messung; Verteilung geschätzt'],
+    ['Ungefederte Massen', '17 kg vorn · 22 kg hinten', 'Rad, Reifen, Bremse, Gleitrohre bzw. Schwingenanteil'],
+    ['Fahrer-Gewichtsverteilung', '40 % vorn · 60 % hinten', 'Sportliche Sitzposition; Sozius 5 / 95 %'],
+    ['Schwerpunkthöhe', 'Maschine 0,55 m · Fahrer 0,92 m', 'Für Lastverlagerung beim Bremsen und Beschleunigen'],
+    ['Übersetzung Federbein', `${fmt(M.MR, 2)} : 1 (Rad : Feder)`, 'Typisch für Umlenkungen dieser Klasse; leicht progressiv modelliert'],
+    ['Kalibrierung Vorspannung', '80 kg Fahrer → 36 mm vorn / 32 mm hinten in Serie', 'Aus Forenangaben zum Serien-Durchhang der K7 (vorn 35–40 mm)'],
+    ['Vorspannring Gabel', '1 Ring ≈ 1 mm Vorspannung', 'Ringabstand am Einsteller; mit Messschieber prüfen'],
+    ['Klickbereich', `0–${M.clicksMax} Klicks, HS 0–${M.hsMax} Umdrehungen`, 'Gesamtzahl je Einsteller an deiner Maschine zählen'],
+    ['Klickwirkung', '≈ 7,5 % Low-Speed-Kraft je Klick · ≈ 26 % je HS-Umdrehung', 'Relativ zur Serie; nahe „ganz zu“ wirken Klicks in der Realität stärker'],
+    ['Dämpfungsmaß Serie', 'Zug vorn ζ 0,55 · Druck vorn ζ 0,28 · Zug hinten ζ 0,60 · Druck hinten ζ 0,30', 'Übliche Werte für Straßen-Supersportler'],
+    ['Luftpolster Gabel', '260 cm³ je Holm, Kolbenfläche 14,5 cm², Adiabatenexponent 1,4', 'Ölstand +1 mm ≈ −1,7 cm³ Luft'],
+    ['Reifensteifigkeit', '175 N/mm vorn bei 2,5 bar · 210 N/mm hinten bei 2,9 bar', 'Skaliert mit Luftdruck^0,9'],
+    ['Anti-Squat', '90 %', 'Kettenzug stützt das Heck beim Beschleunigen'],
+    ['Schwinge', '575 mm, 10° Neigung', 'Für die Geometrie-Kinematik']
+  ];
+  $('#modelTbl').innerHTML = `<thead><tr><th>Größe</th><th>Wert im Modell</th><th>Begründung</th></tr></thead><tbody>${mt.map(r => `<tr><td>${r[0]}</td><td class="n" style="white-space:normal">${r[1]}</td><td class="srcs">${r[2]}</td></tr>`).join('')}</tbody>`;
+}
+
+/* ============================ SETUP-BIBLIOTHEK ============================ */
+const KEYS = ['rider', 'passenger', 'luggage', 'fuel', 'profile', ...Object.keys(STOCK)];
+let LIB = [];
+function libLoad() { try { LIB = JSON.parse(localStorage.getItem('k7lab.setups') || '[]'); } catch (e) { LIB = []; } if (!Array.isArray(LIB)) LIB = []; }
+function libSave() { try { localStorage.setItem('k7lab.setups', JSON.stringify(LIB)); } catch (e) {} }
+const pick = st => { const o = {}; KEYS.forEach(k => o[k] = st[k]); return o; };
+function renderLib() {
+  $('#libList').innerHTML = LIB.length ? LIB.map((s, i) => `<div class="rec" style="grid-template-columns:minmax(0,1fr) auto"><div><p><b>${esc(s.name)}</b></p><p class="why">${PROFILES[s.v.profile] ? PROFILES[s.v.profile].name : ''} · ${fmt(s.v.rider)} kg · Index ${fmt(s.score)}</p></div><div class="btnrow"><button class="btn sm" data-ld="${i}">Laden</button><button class="btn sm" data-del="${i}">Löschen</button></div></div>`).join('') : '<p class="note">Noch keine Setups gespeichert.</p>';
+  const opts = [['cur', 'Aktuelles Setup'], ['stock', 'Serie'], ...LIB.map((s, i) => ['l' + i, s.name])];
+  for (const id of ['cmpA', 'cmpB']) { const sel = $('#' + id), v = sel.value || (id === 'cmpA' ? 'cur' : 'stock'); sel.innerHTML = opts.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join(''); sel.value = opts.some(o => o[0] === v) ? v : (id === 'cmpA' ? 'cur' : 'stock'); }
+  renderCmp();
+}
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+function getCmp(k) { if (k === 'cur') return pick(S); if (k === 'stock') return Object.assign(pick(S), STOCK); const s = LIB[+k.slice(1)]; return s ? Object.assign(pick(S), s.v) : pick(S); }
+function renderCmp() {
+  const a = getCmp($('#cmpA').value || 'cur'), b = getCmp($('#cmpB').value || 'stock');
+  const ra = runAll(a, speed), rb = runAll(b, speed), sa = sags(a), sb = sags(b);
+  const rows = [];
+  for (const c of CTL.flatMap(g => g.items)) rows.push([c.label, fmt(a[c.k], c.d) + ' ' + c.unit, fmt(b[c.k], c.d) + ' ' + c.unit, a[c.k] !== b[c.k]]);
+  rows.push(['Profil', PROFILES[a.profile].name, PROFILES[b.profile].name, a.profile !== b.profile]);
+  rows.push(['Durchhang vorn / hinten', `${fmt(sa.sagF, 1)} / ${fmt(sa.sagR, 1)} mm`, `${fmt(sb.sagF, 1)} / ${fmt(sb.sagR, 1)} mm`, true]);
+  const pa = pose(sa.sagF, sa.sagR, a.fProt, a.rShim), pb = pose(sb.sagF, sb.sagR, b.fProt, b.rShim);
+  rows.push(['Lenkkopf / Nachlauf', `${fmt(pa.rake, 2)}° / ${fmt(pa.trail, 1)} mm`, `${fmt(pb.rake, 2)}° / ${fmt(pb.trail, 1)} mm`, true]);
+  for (const k of Object.keys(SCEN)) rows.push([`Note ${SCEN[k].short}`, fmt(ra[k].score), fmt(rb[k].score), true]);
+  rows.push(['Setup-Index', fmt(overall(ra, a, sa)), fmt(overall(rb, b, sb)), true]);
+  $('#cmpTbl').innerHTML = `<thead><tr><th>Merkmal</th><th>A</th><th>B</th></tr></thead><tbody>${rows.map(r => `<tr${r[3] && r[1] !== r[2] ? ' style="background:var(--accent-soft)"' : ''}><td>${r[0]}</td><td class="n">${r[1]}</td><td class="n">${r[2]}</td></tr>`).join('')}</tbody>`;
+}
+$('#cmpA').addEventListener('change', renderCmp); $('#cmpB').addEventListener('change', renderCmp);
+$('#saveBtn').addEventListener('click', () => { const n = ($('#saveName').value || '').trim() || `Setup ${LIB.length + 1}`; LIB.push({ name: n, v: pick(S), score: overall(RUN, S, SG), at: Date.now() }); libSave(); renderLib(); $('#saveName').value = ''; toast(`„${n}“ gespeichert`); });
+$('#libList').addEventListener('click', e => {
+  const l = e.target.closest('[data-ld]'), d = e.target.closest('[data-del]');
+  if (l) { S = Object.assign({}, S, LIB[+l.dataset.ld].v); schedule(); toast(`„${LIB[+l.dataset.ld].name}“ geladen`); }
+  if (d) { const i = +d.dataset.del; if (d.dataset.sure) { const n = LIB[i].name; LIB.splice(i, 1); libSave(); renderLib(); toast(`„${n}“ gelöscht`); } else { d.dataset.sure = '1'; d.textContent = 'Wirklich löschen?'; d.classList.add('pri'); } }
+});
+$('#expBtn').addEventListener('click', () => { $('#ioText').value = JSON.stringify({ app: 'K7 Fahrwerkslabor', v: 1, setup: pick(S) }, null, 2); });
+$('#copyBtn').addEventListener('click', () => { const t = $('#ioText'); if (!t.value) $('#expBtn').click(); navigator.clipboard.writeText(t.value).then(() => toast('In die Zwischenablage kopiert'), () => { t.select(); toast('Text markiert, jetzt mit Strg+C kopieren'); }); });
+$('#impBtn').addEventListener('click', () => {
+  try { const j = JSON.parse($('#ioText').value), v = j.setup || j, n = {}; for (const k of KEYS) if (k in v) n[k] = k === 'profile' ? (PROFILES[v[k]] ? v[k] : S.profile) : clamp(+v[k], (findCtl(k) || { min: -1e9 }).min, (findCtl(k) || { max: 1e9 }).max); S = Object.assign({}, S, n); schedule(); toast('Setup übernommen'); }
+  catch (e) { toast('Text ist kein gültiges Setup. Bitte den kompletten Export einfügen.'); }
+});
+
+/* ============================ START ============================ */
+let toastT; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
+initRef(); buildSvg(); buildControls(); libLoad();
+recompute(); renderDiag(); renderData(); renderCheck(); renderLib();
+try { const t = localStorage.getItem('k7lab.tab'); if (t && $(`[data-tab="${t}"]`)) $(`[data-tab="${t}"]`).click(); } catch (e) {}
+let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); }, 120); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawTime(); drawFV(); drawSpring(); });
+</script>
