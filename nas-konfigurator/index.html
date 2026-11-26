@@ -795,7 +795,7 @@ kbd{font-family:var(--f-mono);font-size:10.5px;border:1px solid var(--line);bord
       <label class="switch" style="font-weight:500"><input type="checkbox" id="cOnlyOk"> Nur Teile zeigen, die zu meinem System passen</label>
     </section>
     <section class="card dc-card" aria-label="Direktvergleich" id="dcCard">
-      <h2>Direktvergleich <span class="eyebrow" id="dcSub">bis zu 4 Modelle, alle Daten</span></h2>
+      <h2>Direktvergleich <span class="eyebrow" id="dcSub">bis zu 6 Modelle, alle Daten</span></h2>
       <div class="dc-tools">
         <label class="ctl-label" for="dcAdd">Modell hinzufügen</label>
         <select id="dcAdd" class="sel"></select>
@@ -2380,21 +2380,21 @@ function renderCompare(parts){
 const DCKEY="naswerkbank.direct";
 let dcSel=(()=>{try{return JSON.parse(localStorage.getItem(DCKEY)||"{}")||{};}catch(e){return {};}})();
 function dcSave(){try{localStorage.setItem(DCKEY,JSON.stringify(dcSel));}catch(e){}}
-const DC_COL=["#0E6A71","#4D45B5","#C9731F","#2F6FE0"];
+const DC_MAX=6,DC_COL=["#0E6A71","#4D45B5","#C9731F","#2F6FE0","#B23A6E","#5E7D1E"];
 /* ohne eigene Auswahl: aktuelles Teil plus die nächsten sinnvollen Alternativen */
 function dcIds(cat){
   if(Array.isArray(dcSel[cat]))return dcSel[cat].filter(id=>get(cat,id));
   const parts=resolve(state.picks),cur=parts[cat],out=[];if(cur&&!cur.none)out.push(cur.id);
   if(cur&&!cur.none){const ctx=withPart(parts,cat,null);if(QTY_CATS.includes(cat))ctx.q[cat]=parts.q[cat];betterOptions(cat,cur,ctx,2).forEach(o=>out.push(o.id));
-    const sv=savingsList(parts).find(x=>x.c===cat);if(sv&&out.length<4)out.push(sv.p.id);}
+    const sv=savingsList(parts).find(x=>x.c===cat);if(sv&&out.length<DC_MAX)out.push(sv.p.id);}
   if(out.length<3){/* auffüllen mit passenden Modellen in ähnlicher Preislage */
     const ctx=withPart(parts,cat,null),q=QTY_CATS.includes(cat)?parts.q[cat]:undefined,ref=cur&&!cur.none?cur.price:0;
     DB[cat].filter(p=>!p.none&&!p.eol&&!out.includes(p.id)&&(cat!=="nas"||P().brand!=="syno"||p.brand==="Synology"))
       .filter(p=>!issuesFor(cat,p,ctx,q).some(i=>i.level==="error")).sort((a,b)=>Math.abs(a.price-ref)-Math.abs(b.price-ref))
       .slice(0,3-out.length).forEach(p=>out.push(p.id));}
-  return [...new Set(out)].slice(0,4);
+  return [...new Set(out)].slice(0,DC_MAX);
 }
-function dcToggle(cat,id,on){let l=dcIds(cat).slice();if(on){if(!l.includes(id)){if(l.length>=4)l.shift();l.push(id);}}else l=l.filter(x=>x!==id);dcSel[cat]=l;dcSave();}
+function dcToggle(cat,id,on){let l=dcIds(cat).slice();if(on){if(!l.includes(id)){if(l.length>=DC_MAX)l.shift();l.push(id);}}else l=l.filter(x=>x!==id);dcSel[cat]=l;dcSave();}
 /* Alle Vergleichsdaten für Bildschirm und PDF */
 function dcData(cat){
   const parts=resolve(state.picks),ids=dcIds(cat),items=ids.map(id=>get(cat,id)).filter(Boolean);
@@ -2413,10 +2413,10 @@ function dcData(cat){
 }
 function renderDirect(parts){
   const cat=cmpCat,D=dcData(cat),n=D.per.length;
-  $("#dcSub").textContent=`${CAT_LABEL[cat]} · ${n} von 4 Modellen`;
-  $("#dcAdd").innerHTML=`<option value="">${n>=4?"Höchstens 4 – erst eines entfernen":"Modell wählen …"}</option>`+DB[cat].filter(p=>!p.none&&!dcIds(cat).includes(p.id)).map(p=>`<option value="${esc(p.id)}">${esc(p.name)}${p.eol?" (Auslauf)":""}</option>`).join("");
-  $("#dcAdd").disabled=n>=4;$("#dcPdfBtn").disabled=!n;
-  if(!n){$("#dcTable").innerHTML=`<p class="subline">Noch nichts ausgewählt. Über „Modell hinzufügen“ oder die Häkchen in der Tabelle unten bis zu 4 Modelle wählen.</p>`;$("#dcBars").innerHTML="";return;}
+  $("#dcSub").textContent=`${CAT_LABEL[cat]} · ${n} von ${DC_MAX} Modellen`;
+  $("#dcAdd").innerHTML=`<option value="">${n>=DC_MAX?`Höchstens ${DC_MAX} – erst eines entfernen`:"Modell wählen …"}</option>`+DB[cat].filter(p=>!p.none&&!dcIds(cat).includes(p.id)).map(p=>`<option value="${esc(p.id)}">${esc(p.name)}${p.eol?" (Auslauf)":""}</option>`).join("");
+  $("#dcAdd").disabled=n>=DC_MAX;$("#dcPdfBtn").disabled=!n;
+  if(!n){$("#dcTable").innerHTML=`<p class="subline">Noch nichts ausgewählt. Über „Modell hinzufügen“ oder die Häkchen in der Tabelle unten bis zu 6 Modelle wählen.</p>`;$("#dcBars").innerHTML="";return;}
   const head=D.per.map((x,i)=>`<th class="dc-h" style="--mc:${DC_COL[i]}"><span class="dc-sw"></span><b>${esc(x.p.name)}</b><span class="dc-pr">${cat==="bak"&&bakMonthly(x.p)?eur2(bakMonthly(x.p))+"/Monat":eur(x.p.price)}</span>
     <span class="dc-st ${x.lv}">${x.lv==="ok"?"passt":x.lv==="warn"?"Hinweis":"passt nicht"}</span>${x.p.chk?'<span class="tag rec">Preis belegt</span>':""}
     <span class="dc-act">${x.cur?'<span class="tag user">aktuell</span>':`<button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(x.p.id)}">Übernehmen</button>`}<button type="button" class="btn ghost" data-act="dcDel" data-id="${esc(x.p.id)}" aria-label="${esc(x.p.name)} aus dem Vergleich nehmen">Entfernen</button></span></th>`).join("");
@@ -2463,17 +2463,18 @@ function buildPdf(jspdf,D){
     set([255,255,255]);font(17,"bold");txt(title,M+21,12);font(9);txt(sub,M+21,18);font(8);txt("Stand Preise: Oktober/November 2026 · erstellt "+today,W-M,18,{align:"right"});};
   const foot=()=>{set(LINE,"d");doc.setLineWidth(0.2);doc.line(M,H-10,W-M,H-10);set(MUT);font(7);
     txt("NAS-Werkbank · Richtwerte und Preise ohne Gewähr; „Preis belegt“ = Preisvergleichs-Beleg Okt./Nov. 2026, sonst Schätzung. Vor dem Kauf prüfen.",M,H-6);txt("Seite "+page,W-M,H-6,{align:"right"});};
-  const newPage=()=>{foot();doc.addPage();page++;band("Direktvergleich "+CAT_LABEL[D.cat],D.per.map(x=>x.p.name).join("  ·  "));return 30;};
+  const newPage=()=>{foot();doc.addPage();page++;font(9);let sub=D.per.map(x=>x.p.name.replace(/^(Synology|Seagate|Toshiba|WD|UGREEN NASync|QNAP|TerraMaster|Asustor|Minisforum) /,"")).join("  ·  ");
+    while(sub.length>8&&doc.getTextWidth(pdfT(sub))>W-2*M-21-92)sub=sub.slice(0,-2);if(sub.length<D.per.map(x=>x.p.name).join("").length/2)sub+=" …";band("Direktvergleich "+CAT_LABEL[D.cat],sub);return 30;};
   /* Seite 1: Titel, Karten, Diagramme */
   band("Direktvergleich "+CAT_LABEL[D.cat],`${n} Modelle · ${PROFILE_NAME[state.profile]} · Ziel ${fmtTB(P().cap)}, ${P().red} Platte(n) Ausfallsicherheit${state.budget?" · Budget "+eur(state.budget):""}`);
-  const cw=(W-2*M-(n-1)*5)/n,ch=50,cy=30;
-  D.per.forEach((x,i)=>{const cx=M+i*(cw+5);set(SUNK,"f");set(LINE,"d");doc.setLineWidth(0.25);doc.roundedRect(cx,cy,cw,ch,2.5,2.5,"FD");
+  const cw=(W-2*M-(n-1)*(n>4?3:5))/n,ch=50,cy=30;
+  D.per.forEach((x,i)=>{const cx=M+i*(cw+(n>4?3:5));set(SUNK,"f");set(LINE,"d");doc.setLineWidth(0.25);doc.roundedRect(cx,cy,cw,ch,2.5,2.5,"FD");
     set(cols[i],"f");doc.roundedRect(cx,cy,cw,4,2.5,2.5,"F");doc.rect(cx,cy+2,cw,2,"F");
     set(MUT);font(7,"bold");txt((x.cur?"AKTUELL · ":"")+(x.p.brand||CAT_LABEL[D.cat]).toUpperCase(),cx+4,cy+9.5);
-    set(INK);font(11.5,"bold");const nm=wrap(x.p.name,cw-8).slice(0,2);doc.text(nm,cx+4,cy+15);
+    set(INK);font(n>4?9.5:11.5,"bold");const nm=wrap(x.p.name,cw-8).slice(0,2);doc.text(nm,cx+4,cy+15);
     set(MUT);font(7.5);doc.text(wrap(spec(D.cat,x.p),cw-8).slice(0,3),cx+4,cy+15+nm.length*5);
-    set(cols[i]);font(17,"bold");txt(D.cat==="bak"&&bakMonthly(x.p)?eur2(bakMonthly(x.p))+"/M.":eur(x.p.price),cx+4,cy+44);
-    font(6.5,"bold");const pill=x.lv==="ok"?["PASST",OK,OKS]:x.lv==="warn"?["HINWEIS",WARN,WARNS]:["PASST NICHT",BAD,BADS];
+    set(cols[i]);font(n>4?14:17,"bold");txt(D.cat==="bak"&&bakMonthly(x.p)?eur2(bakMonthly(x.p))+"/M.":eur(x.p.price),cx+4,cy+44);
+    font(n>4?5.8:6.5,"bold");const pill=x.lv==="ok"?["PASST",OK,OKS]:x.lv==="warn"?["HINWEIS",WARN,WARNS]:["PASST NICHT",BAD,BADS];
     const pw=doc.getTextWidth(pill[0])+5;set(pill[2],"f");doc.roundedRect(cx+cw-4-pw,cy+39.6,pw,5,1.5,1.5,"F");set(pill[1]);txt(pill[0],cx+cw-4-pw/2,cy+43.1,{align:"center"});
     set(MUT);font(7);txt(`${x.bests} von ${D.cols.length} Bestwerten${x.p.chk?" · Preis belegt":" · Preis geschätzt"}`,cx+4,cy+48.3);});
   /* Diagramme */
@@ -2493,11 +2494,12 @@ function buildPdf(jspdf,D){
     D.per.forEach((x,i)=>{const cx=M+c0+i*cwT;set(cols[i],"f");doc.rect(cx,ty,cwT,1.4,"F");set([255,255,255]);font(8,"bold");txt(wrap(x.p.name,cwT-4)[0],cx+2,ty+5.8);});ty+=9;};
   head();let z=0;
   const group=t=>{if(ty+8>H-14){ty=newPage();head();}set([220,238,239],"f");doc.rect(M,ty,W-2*M,6,"F");set(ACC);font(7.5,"bold");txt(t.toUpperCase(),M+2,ty+4.1);ty+=6;z=0;};
-  const row=(label,cells,bestIdx)=>{font(7.5);const lines=cells.map(c=>wrap(c,cwT-4)),lh=Math.max(1,...lines.map(l=>l.length),wrap(label,c0-4).length)*3.4+2.6;
+  const fs=n>4?6.6:7.5;
+  const row=(label,cells,bestIdx)=>{font(fs);const lines=cells.map(c=>wrap(c,cwT-4)),lh=Math.max(1,...lines.map(l=>l.length),wrap(label,c0-4).length)*3.4+2.6;
     if(ty+lh>H-14){ty=newPage();head();}
     if(z++%2){set(SUNK,"f");doc.rect(M,ty,W-2*M,lh,"F");}
     set(MUT);font(7.5,"bold");doc.text(wrap(label,c0-4),M+2,ty+4);
-    lines.forEach((l,i)=>{const cx=M+c0+i*cwT,b=bestIdx&&bestIdx.includes(i);if(b){set(OKS,"f");doc.rect(cx,ty,cwT,lh,"F");}set(b?OK:INK);font(7.5,b?"bold":"normal");doc.text(l,cx+2,ty+4);});
+    lines.forEach((l,i)=>{const cx=M+c0+i*cwT,b=bestIdx&&bestIdx.includes(i);if(b){set(OKS,"f");doc.rect(cx,ty,cwT,lh,"F");}set(b?OK:INK);font(fs,b?"bold":"normal");doc.text(l,cx+2,ty+4);});
     set(LINE,"d");doc.setLineWidth(0.1);doc.line(M,ty+lh,W-M,ty+lh);ty+=lh;};
   group("Kennzahlen");
   D.cols.forEach(c=>{const v=D.per.map(x=>c.v(x.p));row(c.l,v.map(c.f),n>1?v.map((a,i)=>a===D.best[c.k]?i:-1).filter(i=>i>=0):null);});

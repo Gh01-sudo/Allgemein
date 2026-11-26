@@ -17,7 +17,7 @@ Interaktiver NAS-Konfigurator nach dem Vorbild der PC-Werkbank: Du wählst Gerä
 - **Frontplatte:** Das NAS als Gerät mit Laufwerksschlitten. Ein leerer Schacht („+“) fügt eine Platte hinzu, ein belegter öffnet die Plattenauswahl. LEDs zeigen Daten (blau) und Redundanz (orange), der Balken darunter Nutzkapazität, Ziel und heutige Daten.
 - **Rückgängig / Wiederholen:** jede Änderung, auch per Strg+Z und Strg+Y; ein Hinweis unten rechts zeigt, was sich geändert hat und was es kostet.
 - **Schnellsuche:** Strg+K (Mac: ⌘K) durchsucht alle Teile, zeigt Preis und ob das Teil passt, Enter übernimmt.
-- **Direktvergleich (Reiter „Vergleich“):** bis zu 4 Modelle einer Kategorie nebeneinander – Kennzahlen mit markierten Bestwerten, Wirkung auf deine Konfiguration (Gesamtpreis, Kapazität, Strom, Lautstärke, Konflikte), komplettes Datenblatt, Stärken, Schwächen, Hinweise und Balkendiagramme. Auswahl über „Modell hinzufügen“ oder die Häkchen in der Tabelle.
+- **Direktvergleich (Reiter „Vergleich“):** bis zu 6 Modelle einer Kategorie nebeneinander – Kennzahlen mit markierten Bestwerten, Wirkung auf deine Konfiguration (Gesamtpreis, Kapazität, Strom, Lautstärke, Konflikte), komplettes Datenblatt, Stärken, Schwächen, Hinweise und Balkendiagramme. Auswahl über „Modell hinzufügen“ oder die Häkchen in der Tabelle.
 - **Als PDF speichern:** A4-Querformat mit Titelband, farbigen Modellkarten, Diagrammen, vollständiger Datentabelle mit Bestwerten sowie Stärken/Schwächen; im Artifact-Viewer über den Speichern-Dialog, lokal als normaler Download (die PDF-Bibliothek jsPDF wird dafür einmalig von cdnjs geladen).
 - **Schnellfilter** in der Teileauswahl (z. B. Plattengröße, Synology HAT, 10 GbE, ECC), Nutzkapazität als Regler.
 
