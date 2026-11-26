@@ -1384,3 +1384,11 @@ Geprüft wurden die 15 neuen Teile, rund 30 der 62 Preisänderungen (alle 23 Gra
   - Preise von Kingston 64 GB CL36, Corsair 64 GB CL30, XFX RX 9060 XT (Dual-Fan), Aorus RTX 5070 Ti Master und MSI MAG 275QF.
   - 8 Alternate-Zuordnungen auf falsche Varianten entfernt (CL40 statt CL30/36, BTF, Dark, RGB, Pop 2, TL Flex, schwarz statt Standard).
 - **Hinweis:** Die Seasonic Focus GX-850 ist derzeit teurer als die GX-1000. Das ist die Marktlage, kein Datenfehler.
+
+## Runde 12 (26.11.2026): „Budget ist bindend“
+- **Fund:** Das Budget galt nur für die Summe der Bestpreise, also meist eine Bestellung bei mehreren Shops. Beim Einkauf bei Alternate lagen 29 von 36 geprüften Zusammenstellungen über dem Budget, um bis zu 767 €. Versand und Preisschwankungen waren nicht eingeplant.
+- **Behoben:** Neue Auswahl „Budget gilt für“: Bestpreise oder Einkauf bei Alternate.
+  - Bei Alternate plant die Automatik mit den Alternate-Preisen; Teile ohne Alternate-Angebot erhalten 15 % Planungsaufschlag.
+  - Eine Reserve von 3 oder 5 % ist wählbar.
+  - Bei Bestpreis-Planung erscheint ein Hinweis, wenn der Alternate-Einkauf über dem Budget läge.
+  - Geprüft in 120 Browser-Fällen (beide Grundlagen, mit und ohne Reserve, alle Baugrößen) ohne Konflikt oder Überschreitung.

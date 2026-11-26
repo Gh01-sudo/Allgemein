@@ -118,6 +118,7 @@ button,input,select{font:inherit;color:inherit}
 .tag{font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;font-weight:600;white-space:nowrap}
 .tag.user{background:var(--accent-soft);color:var(--accent)}
 .tag.auto{background:var(--auto-soft);color:var(--auto)}
+.budget-opts{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font-size:12px;color:var(--muted)}.budget-opts label{display:flex;gap:6px;align-items:center}.budget-opts select{font:inherit;color:var(--ink,inherit);background:var(--sunk);border:1px solid var(--line);border-radius:6px;padding:2px 4px;max-width:100%}
 .budget-hint{display:block;color:var(--warn);font-size:12px;margin-top:4px;max-width:260px}
 .slot-bar{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;padding:10px 14px;margin-bottom:10px;border:1px solid var(--line);border-radius:12px;background:var(--sunk);font-size:13.5px}
 .slot-bar small{display:block;color:var(--muted);font-size:12px;margin-top:2px}.slot-bar .actions{display:flex;gap:6px;flex-wrap:wrap}
@@ -878,6 +879,7 @@ label.btn{display:inline-flex;align-items:center}
     <div class="ctl">
       <label class="ctl-label" for="budget">Budget</label>
       <span class="budget-in"><input id="budget" type="number" inputmode="numeric" min="300" step="50" placeholder="ohne Limit"><span class="mono">€</span></span>
+      <span class="budget-opts"><label>gilt für <select id="bBasis"><option value="best">Bestpreise (mehrere Shops)</option><option value="alt">Einkauf bei Alternate</option></select></label><label>Reserve <select id="bReserve"><option value="0">keine</option><option value="3">3 %</option><option value="5">5 %</option></select></label></span>
       <small id="budgetHint" class="budget-hint" hidden>Mindestens 300 € – darunter gibt es keinen sinnvollen PC. Das Budget bleibt leer.</small>
     </div>
     <div class="ctl">
@@ -1475,7 +1477,8 @@ const $=s=>document.querySelector(s);
 /* ---------- Zustand ---------- */
 const KEY="pcwerkbank.v1";
 const DEF_PARAMS={mix:60,res:3,fps:60,ram:32,storage:1000,quiet:80,size:"ATX",hours:4,kwh:0.35};
-let state={profile:"gaming",budget:null,auto:true,picks:{},params:Object.assign({},DEF_PARAMS),view:"konfig"};
+let state={profile:"gaming",budget:null,bBasis:"best",bReserve:0,auto:true,picks:{},params:Object.assign({},DEF_PARAMS),view:"konfig"};
+const cleanBasis=v=>v==="alt"?"alt":"best",cleanReserve=v=>[0,3,5].includes(v)?v:0;
 function save(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(e){}}
 /* Parameter aus Speicher, Link, Code oder Datei: nur gültige Werte übernehmen (sonst stürzen Auswahl und Darstellung ab) */
 function cleanParams(src){
@@ -1495,7 +1498,7 @@ function load(){
     const picks={};
     for(const c in s.picks){const v=s.picks[c];if(v&&get(c,v.id)&&(v.src==="user"||v.src==="auto"))picks[c]={id:v.id,src:v.src};}
     const params=cleanParams(s.params);
-    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,auto:s.auto!==false,picks,params,view:["dash","ov","cmp","up"].includes(s.view)?s.view:"konfig"};
+    state={profile:WEIGHTS[s.profile]?s.profile:"gaming",budget:(typeof s.budget==="number"&&s.budget>0)?s.budget:null,bBasis:cleanBasis(s.bBasis),bReserve:cleanReserve(s.bReserve),auto:s.auto!==false,picks,params,view:["dash","ov","cmp","up"].includes(s.view)?s.view:"konfig"};
     return true;
   }catch(e){return false;}
 }
@@ -1558,7 +1561,7 @@ function checkAll(parts,profile){
   if(cpu&&board&&cpu.socket==="AM5"&&/^(A620|B650)$/.test(board.chipset)&&/^AMD Ryzen \d 9\d{3}/.test(cpu.name))add("info",["cpu","board"],`Ryzen 9000 auf ${board.chipset}: Das Board braucht ein BIOS mit AGESA 1.2 oder neuer. Bei älterer Lagerware vorher per Flash-BIOS-Taste (ohne CPU) aktualisieren.`);
   /* Plattform ohne lieferbare Mainboards (z. B. LGA1700) */
   if(cpu&&!DB.board.some(b=>b.socket===cpu.socket&&!b.eol))add("info",["cpu","board"],`Für Sockel ${cpu.socket} sind kaum noch neue Mainboards lieferbar (nur Restbestände, oft teuer). Ohne vorhandenes Board ist ein aktueller Prozessor meist die bessere Wahl.`);
-  if(state.budget){const tt=Object.values(parts).reduce((s2,x)=>s2+(x?x.price:0),0);if(tt>state.budget){const nK=CORE.filter(c=>state.picks[c.k]&&state.picks[c.k].src==="user").length;add("warn",[],`Budget um ${eur(tt-state.budget)} überschritten.`+(I.some(i=>i.level==="error")?` Zuerst den Konflikt oben lösen – mit nicht zusammenpassenden Teilen lässt sich das Budget nicht planen.`:!state.auto?` Schalte die Automatik ein oder wähle günstigere Teile.`:nK?` Die Automatik ändert nur freigegebene Teile – gib behaltene Teile frei oder erhöhe das Budget.`:` Für diese Vorgaben gibt es keine günstigere passende Zusammenstellung.`));}}
+  if(state.budget){const tt=budgetSum(parts),cap=budgetCap();if(tt>cap){const nK=CORE.filter(c=>state.picks[c.k]&&state.picks[c.k].src==="user").length;add("warn",[],`Budget um ${eur(tt-cap)} überschritten${state.bBasis==="alt"?" (Einkauf bei Alternate)":""}${state.bReserve&&!budgetPlanning?` (mit ${state.bReserve} % Reserve)`:""}.`+(I.some(i=>i.level==="error")?` Zuerst den Konflikt oben lösen – mit nicht zusammenpassenden Teilen lässt sich das Budget nicht planen.`:!state.auto?` Schalte die Automatik ein oder wähle günstigere Teile.`:nK?` Die Automatik ändert nur freigegebene Teile – gib behaltene Teile frei oder erhöhe das Budget.`:` Für diese Vorgaben gibt es keine günstigere passende Zusammenstellung.`));}}
   if(profile!=="office"&&cpu&&hasGpu&&buildFps(parts,P().res)<P().fps*0.9)add("info",["gpu"],`Ziel-Bildrate nicht erreicht: ca. ${buildFps(parts,P().res)} statt ${P().fps} FPS in ${RES[P().res].label} (AAA, ohne Upscaling).`);
   /* RAM-Höhe unter großen Doppelturm-Kühlern */
   if(ram&&cooler&&cooler.kind==="air"&&cooler.cap>=270&&ram.h&&ram.h>40)add("info",["ram","cooler"],`Der ${ram.h} mm hohe RAM (mit Heatspreader/RGB) stößt beim ${cooler.name} an den vorderen Lüfter: Lüfter einige Millimeter höher setzen oder flacheren RAM wählen.`);
@@ -1763,6 +1766,29 @@ function choose(cat,picks,T,alloc){
   const tc=catTier(cat,T);
   return pool.slice().sort((a,b)=>Math.abs(a.tier-tc)-Math.abs(b.tier-tc)||value(cat,b)-value(cat,a))[0];
 }
+/* ---------- Budget-Basis ----------
+   „Bestpreise“: je Teil der günstigste Händler (Geizhals-Daten, meist mehrere Shops).
+   „Alternate“: alles in einem Shop; Teile ohne Alternate-Angebot zählen mit dem Bestpreis.
+   Die Reserve (0/3/5 %) hält Luft für Versand und Preisschwankungen frei. */
+let budgetPlanning=false;
+function budgetCap(){if(!state.budget)return null;return budgetPlanning?state.budget:Math.floor(state.budget*(1-(state.bReserve||0)/100));}
+function budgetPrice(x){if(!x)return 0;if(!budgetPlanning&&state.bBasis==="alt"&&!x.none&&typeof ALT!=="undefined"&&ALT[x.id])return ALT[x.id][0];return x.price||0;}
+function budgetBasisTxt(){return (state.bBasis==="alt"?" · bei Alternate":"")+(state.bReserve?` · ${state.bReserve} % Reserve`:"");}
+function budgetSum(parts){let t=0;for(const c in parts)t+=budgetPrice(parts[c]);return t;}
+/* Plant mit Budget-Basis und Reserve: Preise werden für die Dauer der Planung auf die Basis umgestellt */
+function withBudgetBasis(fn){
+  if(budgetPlanning||!state.budget)return fn();
+  const saved=state.budget,swap=[],seen=new Set();
+  state.budget=budgetCap();
+  if(state.bBasis==="alt"&&typeof ALT!=="undefined")for(const c in DB)for(const x of DB[c]){if(seen.has(x))continue;seen.add(x);const a=ALT[x.id];
+    if(a&&!x.none){swap.push([x,x.price]);x.price=a[0];}
+    /* Bei Alternate nicht erhältliche Teile: 15 % Planungsaufschlag, damit Alternate-Teile Vorrang haben,
+       sie aber wählbar bleiben, wenn es in der Baugröße nichts anderes gibt */
+    else if(!a&&!x.none&&x.price>0&&x.kind!=="boxed"&&!XCAT.has(c)){swap.push([x,x.price]);x.price=Math.round(x.price*1.15);}}
+  budgetPlanning=true;
+  try{return fn();}finally{budgetPlanning=false;state.budget=saved;for(const [x,v] of swap)x.price=v;}
+}
+
 /* ---------- Budget-Modus: das Budget ist bindend ----------
    Behaltene Teile (eigene Wahl) bleiben unverändert. Für alle anderen Teile wird die beste
    Kombination gesucht: alle sinnvollen Prozessor-Grafikkarten-Paare werden mit passenden
@@ -2113,7 +2139,7 @@ function fillCore(base){
 let prevIds={};
 function recompute(){
   prevIds={};for(const c in state.picks)prevIds[c]=state.picks[c].id;
-  if(state.auto)state.picks=fillMissing(userOnly());
+  if(state.auto)state.picks=withBudgetBasis(()=>fillMissing(userOnly()));
   save();render();
 }
 
@@ -2213,7 +2239,7 @@ function upgradeTip(cat,p,parts){
   const ctx=Object.assign({},parts);delete ctx[cat];
   /* Bei bindendem Budget nur Vorschläge, die noch hineinpassen */
   let opts=betterOptions(cat,p,ctx,state.budget?6:1);
-  if(state.budget){const total=sumPrice(state.picks);opts=opts.filter(o=>total-p.price+o.price<=state.budget);}
+  if(state.budget){const total=budgetSum(resolve(state.picks)),cap=budgetCap();opts=opts.filter(o=>total-budgetPrice(p)+budgetPrice(o)<=cap);}
   const o=opts[0];if(!o)return "";
   return `<div class="up-tip"><span class="tag up">Besser</span><span><b>${esc(o.name)}</b> · ${esc(deltaPrice(o.price-p.price))} · ${esc(benefitText(cat,p,o,parts))}</span><button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(o.id)}">Übernehmen</button></div>`;
 }
@@ -2257,12 +2283,12 @@ function renderSummary(parts,issues){
   for(const c in state.picks){const p=get(c,state.picks[c].id);total+=p.price;count++;if(state.picks[c].src==="auto")autoSum+=p.price;}
   const missing=CORE.filter(c=>!state.picks[c.k]).map(c=>c.label);
   let xSum=0,coreCount=0;for(const c in state.picks){if(XCAT.has(c))xSum+=get(c,state.picks[c].id).price;else coreCount++;}
-  const b=state.budget;
+  const b=budgetCap(),bt=budgetSum(parts);
   let budgetHtml="";
   if(b){
-    const pct=Math.min(100,total/b*100);const over=total>b;
-    budgetHtml=`<div class="kv"><span>Budget ${eur(b)}</span><span class="num">${over?"+"+eur(total-b)+" drüber":eur(b-total)+" übrig"}</span></div>
-      <div class="meter ${over?"bad":"ok"}" role="img" aria-label="${Math.round(total/b*100)} Prozent des Budgets"><span style="width:${pct}%"></span></div>`;
+    const pct=Math.min(100,bt/b*100);const over=bt>b;
+    budgetHtml=`<div class="kv"><span>Budget ${eur(b)}${budgetBasisTxt()}</span><span class="num">${over?"+"+eur(bt-b)+" drüber":eur(b-bt)+" übrig"}</span></div>
+      <div class="meter ${over?"bad":"ok"}" role="img" aria-label="${Math.round(bt/b*100)} Prozent des Budgets"><span style="width:${pct}%"></span></div>`;
   }
   const {cpu,gpu,psu}=parts;
   const gl=gamingLabel(gpu,cpu);
@@ -2343,14 +2369,14 @@ function renderHero(parts,issues){
   const p=P();let total=0,core=0,chk=0;for(const c in parts){total+=parts[c].price;if(!XCAT.has(c)){core++;if(parts[c].chk||parts[c].price===0)chk++;}}
   const {cpu,gpu}=parts,hasG=gpu&&!gpu.none;
   const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
-  const fps=gpu||cpu?buildFps(parts,p.res):0,loadW=core?estLoad(parts):0,noise=noiseInfo(parts),b=state.budget;
+  const fps=gpu||cpu?buildFps(parts,p.res):0,loadW=core?estLoad(parts):0,noise=noiseInfo(parts),b=budgetCap(),bt=budgetSum(parts);
   $("#heroPc").innerHTML=realPcSvg(parts,new Set(issues.filter(i=>i.level==="error").flatMap(i=>i.cats)));
   $("#heroEyebrow").textContent=`Dein PC · ${PROFILE_NAME[state.profile]}`;
   const sn=x=>x.replace(/^(AMD|Intel|NVIDIA) (GeForce |Radeon |Core )?/,"").replace(/ \d+ GB$/,"");
   $("#heroTitle").innerHTML=core?`${esc(cpu?sn(cpu.name):"Prozessor offen")} <span style="color:var(--muted)">+</span> ${esc(hasG?sn(gpu.name):gpu?"Prozessor-Grafik":"Grafik offen")}<small>${esc(gamingLabel(gpu,cpu)||"")}</small>`:`Stell deinen PC zusammen<small>Wähle Teile oder lass die Werkbank ergänzen.</small>`;
   $("#heroPrice").innerHTML=`<span data-count="hero-price" data-to="${Math.round(total)}" data-fmt="eur">${eur(total)}</span>`;
-  $("#heroPriceSub").textContent=b?(total>b?`${eur(total-b)} über Budget ${eur(b)}`:`${eur(b-total)} unter Budget ${eur(b)}`):`${core} von 8 Teilen${parts.os?"":" · ohne Betriebssystem"}`;
-  const bar=$("#heroBar");bar.hidden=!b;if(b){bar.classList.toggle("over",total>b);bar.firstElementChild.style.width=Math.min(100,total/b*100)+"%";}
+  $("#heroPriceSub").textContent=b?((state.bBasis==="alt"?`bei Alternate ${eur(bt)} · `:"")+(bt>b?`${eur(bt-b)} über Budget ${eur(b)}`:`${eur(b-bt)} unter Budget ${eur(b)}`)+(state.bReserve?` (${state.bReserve} % Reserve)`:"")):`${core} von 8 Teilen${parts.os?"":" · ohne Betriebssystem"}`;
+  const bar=$("#heroBar");bar.hidden=!b;if(b){bar.classList.toggle("over",bt>b);bar.firstElementChild.style.width=Math.min(100,bt/b*100)+"%";}
   const fCls=!fps?"":fps>=p.fps?"ok":fps>=p.fps*0.8?"warn":"bad";
   const hs=(lbl,val,sub,cls)=>`<div class="hs ${cls||""}"><span>${esc(lbl)}</span><b>${val}</b><small>${sub}</small></div>`;
   $("#heroStats").innerHTML=[
@@ -2365,7 +2391,7 @@ function renderHero(parts,issues){
   $("#heroChips").innerHTML=[
     errs?ch("bad",errs+" Konflikt"+(errs>1?"e":"")):warns?ch("warn",warns+" Hinweis"+(warns>1?"e":"")):core?ch("ok","Alles kompatibel"):"",
     core?ch(chk===core?"ok":"warn",`${chk} von ${core} Preisen geprüft`):"",
-    b?ch(total>b?"bad":"ok",total>b?"Budget überschritten":"im Budget"):"",
+    b?ch(bt>b?"bad":"ok",bt>b?"Budget überschritten":"im Budget"):"",
     hasG&&gpu.noise?ch(gpu.noise===1?"ok":gpu.noise===3?"warn":"",NOISE_TXT[gpu.noise]):"",
     ch(priceAge()>21?"bad":priceAge()>7?"warn":"ok",ageText()+" (Stand 25.11.2026)")
   ].join("");
@@ -2375,13 +2401,13 @@ function renderHud(parts,issues){
   const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
   const hasG=parts.gpu||parts.cpu,fps=hasG?buildFps(parts,p.res):0;
   const loadW=hasG?estLoad(parts):0,psu=parts.psu,lp=psu&&loadW?Math.round(loadW/psu.watt*100):0;
-  const noise=noiseInfo(parts),b=state.budget;
-  const bud=b?`<div class="hud-bar${total>b?" over":""}"><span style="width:${Math.min(100,total/b*100)}%"></span></div>`:"";
+  const noise=noiseInfo(parts),b=budgetCap(),bt=budgetSum(parts);
+  const bud=b?`<div class="hud-bar${bt>b?" over":""}"><span style="width:${Math.min(100,bt/b*100)}%"></span></div>`:"";
   const fCls=!fps?"":fps>=p.fps?"ok":fps>=p.fps*0.8?"warn":"bad";
   const sCls=errs?"bad":warns?"warn":core?"ok":"";
   const gp=parts.gpu&&!parts.gpu.none?parts.gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,""):parts.gpu?"iGPU":"–";
   $("#hud").innerHTML=`
-   <button type="button" class="hud-i ${b?(total>b?"bad":"ok"):""}" data-act="hudGo" data-view="konfig" data-tip="${esc(b?`Budget ${eur(b)}: ${total>b?eur(total-b)+" drüber":eur(b-total)+" übrig"}`:"Kein Budget gesetzt")} · Klick: Konfigurator"><small>Gesamtpreis${b?" / "+eur(b):""}</small><b data-count="hud-price" data-to="${Math.round(total)}" data-fmt="eur">${eur(total)}</b>${bud||`<em>${core} von 8 Teilen</em>`}</button>
+   <button type="button" class="hud-i ${b?(bt>b?"bad":"ok"):""}" data-act="hudGo" data-view="konfig" data-tip="${esc(b?`Budget ${eur(b)}: ${bt>b?eur(bt-b)+" drüber":eur(b-bt)+" übrig"}`:"Kein Budget gesetzt")} · Klick: Konfigurator"><small>Gesamtpreis${b?" / "+eur(b):""}</small><b data-count="hud-price" data-to="${Math.round(total)}" data-fmt="eur">${eur(total)}</b>${bud||`<em>${core} von 8 Teilen</em>`}</button>
    <button type="button" class="hud-i ${fCls}" data-act="hudGo" data-view="dash" data-tip="AAA-Spiele, hohe Details, ohne Upscaling · Ziel ${p.fps} FPS · Klick: Dashboard"><small>${esc(RES[p.res].label)}</small><b>${fps?fps+" FPS":"–"}</b><em>Ziel ${p.fps} FPS</em></button>
    <button type="button" class="hud-i hx" data-act="hudGo" data-view="ov" data-tip="${esc(parts.gpu?parts.gpu.name:"Keine Grafikkarte gewählt")} · Klick: Übersicht"><small>Grafik</small><b>${esc(gp)}</b><em>${parts.cpu?esc(parts.cpu.name.replace(/^(AMD|Intel) /,"")):"–"}</em></button>
    <button type="button" class="hud-i ${!lp?"":lp>90?"bad":lp>75?"warn":"ok"}" data-act="hudGo" data-view="dash" data-tip="Geschätzte Volllast${psu?`, Netzteil ${psu.watt} W zu ${lp} % ausgelastet`:""}"><small>Strom</small><b>${loadW?loadW+" W":"–"}</b><em>${psu?`Netzteil ${lp} %`:"kein Netzteil"}</em></button>
@@ -2391,6 +2417,7 @@ function renderHud(parts,issues){
 function render(){
   const parts=resolve(state.picks);
   const issues=checkAll(parts,state.profile);
+  if(state.budget&&state.bBasis!=="alt"){const A=altSum(parts),cap=budgetCap();if(A.best&&A.best<=cap&&A.sum>cap)issues.push({level:"info",cats:[],msg:`Bei Alternate kostet diese Zusammenstellung ${eur(A.sum)} und läge ${eur(A.sum-cap)} über dem Budget. Kaufst du alles dort, stelle „Budget gilt für“ auf „Einkauf bei Alternate“.`});}
   if(state.budget&&state.auto)budgetNotes.forEach(m=>{if(!issues.some(i=>i.msg===m))issues.unshift({level:"info",cats:[],msg:m});});
   renderHud(parts,issues);
   renderSlots(parts,issues);renderSummary(parts,issues);
@@ -2398,6 +2425,7 @@ function render(){
   if(state.view==="konfig")renderKInfo(parts,issues);
   document.querySelectorAll("#profileSeg button").forEach(b=>b.setAttribute("aria-checked",String(b.dataset.profile===state.profile)));
   const bi=$("#budget");if(document.activeElement!==bi)bi.value=state.budget||"";
+  {const a=$("#bBasis"),r=$("#bReserve");if(a)a.value=state.bBasis;if(r)r.value=String(state.bReserve);}
   $("#autofill").checked=state.auto;
   renderView();
   if(state.view==="dash"){
@@ -2502,7 +2530,8 @@ function renderDash(parts,issues){
   const errs=issues.filter(i=>i.level==="error").length,warns=issues.filter(i=>i.level==="warn").length;
   const noise=noiseInfo(parts);
   const fpsCls=fps>=p.fps?"ok":fps>=p.fps*0.8?"warn":"bad";
-  const budgetLine=state.budget?(total>state.budget?`<span class="pill bad">${eur(total-state.budget)} über Budget</span><small>RAM, SSD, Auflösung oder Bildrate senken</small>`:`<span class="pill ok">${eur(state.budget-total)} unter Budget</span>`):`<small>kein Budget gesetzt</small>`;
+  const bCap=budgetCap(),bTot=budgetSum(parts);
+  const budgetLine=state.budget?(bTot>bCap?`<span class="pill bad">${eur(bTot-bCap)} über Budget</span><small>Teile freigeben oder Vorgaben senken</small>`:`<span class="pill ok">${eur(bCap-bTot)} unter Budget${budgetBasisTxt()}</span>`):`<small>kein Budget gesetzt</small>`;
   $("#dKpis").innerHTML=`
    <div class="kpi"><span class="eyebrow">Gesamtpreis</span><b>${eur(total)}</b>${budgetLine}</div>
    <div class="kpi"><span class="eyebrow">Leistungsklasse</span><b style="font-size:16px;line-height:1.25">${esc(gamingLabel(parts.gpu,parts.cpu)||"–")}</b><small>${parts.gpu&&!parts.gpu.none?esc(parts.gpu.name.replace(/^(NVIDIA|AMD|Intel) (GeForce |Radeon )?/,"")):""}</small></div>
@@ -3131,7 +3160,7 @@ function renderCompare(parts){
      if(vn>0.85)why.push("sehr gutes Preis-Leistungs-Verhältnis");else if(vn<0.4)why.push("teuer für die Leistung");
      if(qn>=0.8)why.push("leise");else if(qn<0.4&&P().quiet>=60)why.push("eher laut");
      const warn=issuesFor(cat,x,ctx,state.profile).some(i=>i.level==="warn");if(warn){sc*=0.8;why.push("mit Warnung");}
-     if(state.budget&&tot-curPr+x.price>state.budget){sc*=0.85;why.push("sprengt das Budget");}
+     if(state.budget&&tot-curPr+x.price>budgetCap()){sc*=0.85;why.push("sprengt das Budget");}
      return [x.id,{s:Math.round(sc),why:why.join(", ")||"ausgewogen"}];}));}
   const cols=cmpCols(cat);
   const col=cols.find(c=>c[0]===cmpSort.k)||cols.find(c=>c[0]==="price");
@@ -3519,7 +3548,7 @@ function renderGauges(parts,total){
   items.push({lbl:"Bildrate "+RES[p.res].label,frac:fps/fMax,val:fps||"–",unit:"FPS",lv:fps>=p.fps?"ok":fps>=p.fps*0.8?"warn":"bad",sub:`Ziel ${p.fps} FPS`,ticks:[p.fps/fMax]});
   const pl=psu?loadW/psu.watt:0;items.push({lbl:"Netzteil-Last",frac:pl,val:psu?Math.round(pl*100):"–",unit:"%",lv:!psu?"":pl>0.85?"bad":pl>0.7?"warn":"ok",sub:psu?`${loadW} von ${psu.watt} W`:"kein Netzteil",ticks:[0.7]});
   const cr=cpu&&cool&&cool.kind!=="boxed"?cool.cap/cpu.cool:cpu&&cool?cool.cap/cpu.cool:0;items.push({lbl:"Kühlreserve",frac:cr/2,val:cr?"+"+Math.round((cr-1)*100):"–",unit:"%",lv:!cr?"":cr<1?"bad":cr<1.2?"warn":"ok",sub:cool?`${cool.cap} W für ${cpu?cpu.cool:"?"} W`:"kein Kühler",ticks:[0.5]});
-  const bu=state.budget?total/state.budget:0;items.push({lbl:"Budget",frac:state.budget?bu:0,val:state.budget?Math.round(bu*100):"–",unit:state.budget?"%":"kein Limit",lv:!state.budget?"":bu>1?"bad":bu>0.95?"warn":"ok",sub:state.budget?`${eur(total)} von ${eur(state.budget)}`:eur(total),ticks:state.budget?[1]:[]});
+  const bu=state.budget?budgetSum(parts)/budgetCap():0;items.push({lbl:"Budget",frac:state.budget?bu:0,val:state.budget?Math.round(bu*100):"–",unit:state.budget?"%":"kein Limit",lv:!state.budget?"":bu>1?"bad":bu>0.95?"warn":"ok",sub:state.budget?`${eur(budgetSum(parts))} von ${eur(budgetCap())}${budgetBasisTxt()}`:eur(total),ticks:state.budget?[1]:[]});
   items.push({lbl:"Lautstärke",frac:Math.min(1,noise.n/7),val:noise.label,unit:"",lv:noise.cls,sub:noise.why.join(", ")||"ausgewogen"});
   const ppf=fps?total/fps:0;const ref=[20,30,45,70];items.push({lbl:"Preis pro FPS",frac:ppf?Math.min(1,ppf/80):0,val:ppf?Math.round(ppf):"–",unit:"€ je FPS",lv:!ppf?"":ppf<=ref[1]?"ok":ppf<=ref[2]?"warn":"bad",sub:"weniger ist besser"});
   $("#dGauges").innerHTML=items.map(i=>`<div class="gauge" role="img" aria-label="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)}" data-tip="${esc(i.lbl)}: ${esc(String(i.val))} ${esc(i.unit)} · ${esc(i.sub)}">${gaugeSvg(i.frac,esc(String(i.val)),esc(i.unit),stateColor(i.lv),i.ticks)}<span class="g-lbl">${esc(i.lbl)}</span><span class="g-sub">${esc(i.sub)}</span></div>`).join("");
@@ -3911,7 +3940,7 @@ const SKEY="pcwerkbank.saves";
 const embedded=(()=>{try{return window.self!==window.top;}catch(e){return true;}})();
 function loadSaves(){try{const a=JSON.parse(localStorage.getItem(SKEY)||"[]");return Array.isArray(a)?a:[];}catch(e){return [];}}
 function writeSaves(a){try{localStorage.setItem(SKEY,JSON.stringify(a));return true;}catch(e){return false;}}
-function snapshot(){return {v:1,picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,auto:state.auto};}
+function snapshot(){return {v:1,picks:JSON.parse(JSON.stringify(state.picks)),params:Object.assign({},state.params),profile:state.profile,budget:state.budget,bBasis:state.bBasis,bReserve:state.bReserve,auto:state.auto};}
 function cfgTotal(picks){let t=0;for(const c in picks){const x=get(c,picks[c].id);if(x)t+=x.price;}return t;}
 function applySnapshot(o){
   if(!o||typeof o!=="object"||!o.picks)return false;
@@ -3920,6 +3949,7 @@ function applySnapshot(o){
   const params=cleanParams(o.params);
   state.picks=picks;state.params=params;state.profile=WEIGHTS[o.profile]?o.profile:state.profile;
   state.budget=(typeof o.budget==="number"&&o.budget>0)?o.budget:null;state.auto=o.auto!==false;
+  state.bBasis=cleanBasis(o.bBasis);state.bReserve=cleanReserve(o.bReserve);
   recompute();renderSliders&&renderSliders();render();return true;
 }
 function encodeCfg(o){const j=JSON.stringify({v:1,p:Object.fromEntries(Object.entries(o.picks).map(([c,v])=>[c,(v.src==="user"?"u:":"a:")+v.id])),r:o.params,f:o.profile,b:o.budget,a:o.auto});return "PCW1:"+btoa(unescape(encodeURIComponent(j)));}
@@ -4061,7 +4091,7 @@ document.addEventListener("click",e=>{
   else if(act==="keepAll"){CORE.forEach(c=>{if(state.picks[c.k])state.picks[c.k].src="user";});save();render();}
   else if(act==="releaseAll"){CORE.forEach(c=>{if(state.picks[c.k])state.picks[c.k].src="auto";});recompute();}
   else if(act==="remove"){delete state.picks[cat];recompute();}
-  else if(act==="fill"){state.picks=fillMissing(state.picks);save();render();}
+  else if(act==="fill"){state.picks=withBudgetBasis(()=>fillMissing(state.picks));save();render();}
   else if(act==="reset"){state.picks={};state.budget=null;save();render();}
   else if(act==="copy")copyList();
   else if(act==="openAll"){saveCollapsed(new Set());initCollapse();}
@@ -4104,6 +4134,8 @@ document.addEventListener("change",e=>{if(e.target&&e.target.id==="preSel"){preS
 $("#dCmpSel").addEventListener("change",e=>{cmpSel=e.target.value;render();});
 $("#autofill").addEventListener("change",e=>{state.auto=e.target.checked;recompute();});
 let bt=null;
+$("#bBasis").addEventListener("change",e=>{state.bBasis=cleanBasis(e.target.value);recompute();});
+$("#bReserve").addEventListener("change",e=>{state.bReserve=cleanReserve(parseInt(e.target.value,10));recompute();});
 $("#budget").addEventListener("input",e=>{
   clearTimeout(bt);
   bt=setTimeout(()=>{const v=parseInt(e.target.value,10);state.budget=(v>=300)?v:null;

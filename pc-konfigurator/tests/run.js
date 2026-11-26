@@ -62,6 +62,10 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   ok('Leiste zeigt behaltene Teile',/1 von 8/.test(await p.textContent('.slot-bar')));
   await p.click('#slots [data-act=release][data-cat=gpu]');await p.waitForTimeout(300);
   ok('Freigeben macht das Teil wieder automatisch',(await p.evaluate(()=>JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks.gpu.src))==='auto');
+  await p.selectOption('#bBasis','alt');await p.selectOption('#bReserve','5');await p.fill('#budget','2500');await p.waitForTimeout(900);
+  const hs=await p.textContent('#heroPriceSub');
+  ok('Budget für Alternate-Einkauf mit Reserve eingehalten',/bei Alternate/.test(hs)&&/unter Budget 2\.375/.test(hs),hs);
+  await p.selectOption('#bBasis','best');await p.selectOption('#bReserve','0');
   await p.fill('#budget','');await p.waitForTimeout(800);
 
   console.log('Vergleiche');

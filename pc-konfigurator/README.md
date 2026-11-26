@@ -16,6 +16,9 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
   Grafikkarte zurückgenommen, jeweils mit Hinweis. Nur wenn behaltene Teile oder die Baugröße es unmöglich machen,
   wird die günstigste passende Zusammenstellung mit der nötigen Mindestsumme gezeigt. Beim Büro-Profil ist das Budget
   eine Obergrenze, kein Ausgabeziel.
+- **Budget gilt für:** „Bestpreise“ (je Teil der günstigste Händler, meist mehrere Shops) oder „Einkauf bei Alternate“
+  (alles in einem Shop; Teile mit Alternate-Angebot haben Vorrang). Dazu eine wählbare **Reserve** von 3 oder 5 % für
+  Versand und Preisschwankungen. Liegt der Alternate-Einkauf bei Bestpreis-Planung über dem Budget, erscheint ein Hinweis.
 - **Behalten und Freigeben:** Jedes Teil ist entweder „🔒 Behalten“ (eigene Wahl, wird nie automatisch geändert,
   auch nicht durch Budget oder Regler) oder „Automatisch“. Selbst ausgewählte Teile werden behalten; „Freigeben“ gibt
   ein Teil wieder an die Automatik. Eine Leiste über den Teilen zeigt, wie viele Kernteile behalten sind, mit
