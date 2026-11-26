@@ -256,7 +256,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <div class="lbl">Suzuki GSX-R 1000 · K7 (2007–2008) · Serienfahrwerk KYB</div>
+      <div class="lbl">Suzuki GSX-R 1000 · K7 (2007–2008) · Serienfahrwerk</div>
       <h1>K7 <span>Fahrwerkslabor</span></h1>
       <p>Durchhang, Dämpfung, Geometrie und Reifendruck durchspielen. Jede Änderung läuft durch ein physikalisches Fahrzeugmodell mit Nickbewegung, Ventil-Dämpfern, Reibung und echter Straßenrauheit. 14 Fahrsituationen mit frei einstellbaren Hindernissen, Vergleich mit der Serie oder einem gemerkten Setup.</p>
     </div>
@@ -415,7 +415,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
       <div class="seg" id="dataStat" role="group" aria-label="Prüfstatus"></div>
     </div>
     <div class="tablewrap"><table id="dataTbl"></table></div>
-    <p class="note" style="margin-top:10px">Status: <span class="chip good">2 Quellen</span> zwei unabhängige Quellen stimmen überein · <span class="chip info">1 Quelle</span> eine Quelle, keine Gegenprobe · <span class="chip warn">abweichend</span> Quellen widersprechen sich · <span class="chip mut">offen</span> nicht verifiziert, am Fahrzeug prüfen · <span class="chip mut" style="border-style:dashed">Modell</span> Annahme oder abgeleitet.</p>
+    <p class="note" style="margin-top:10px">Status: <span class="chip good">2+ Quellen</span> mindestens zwei unabhängige Quellen stimmen überein · <span class="chip info">1 Quelle</span> eine Quelle, keine Gegenprobe · <span class="chip warn">abweichend</span> Quellen widersprechen sich · <span class="chip mut">offen</span> nicht verifiziert, am Fahrzeug prüfen · <span class="chip mut" style="border-style:dashed">Modell</span> Annahme oder abgeleitet.</p>
   </section>
 
   <!-- CHECK -->
@@ -441,7 +441,11 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Halbfahrzeug mit Nicken:</b> Aufbau mit Hub- und Nickbewegung, Vorder- und Hinterrad als ungefederte Massen, Reifen als Feder mit Dämpfung, Abheben möglich. Front und Heck beeinflussen sich gegenseitig. Integration mit 0,2 ms Schrittweite über 2,6 bis 7 s.</li>
         <li><b>Reifen rollt über Kanten:</b> Die Radmitte folgt der Hüllkurve eines Rades mit echtem Radius (300 / 311 mm). Scharfe Kanten werden dadurch so verschliffen, wie es ein rollendes Rad tut.</li>
         <li><b>Straßenrauheit:</b> Zufallsprofil nach ISO 8608 aus 48 Wellenlängen von 0,08 bis 20 m. Klassen A, B, C mit 16, 64 und 256 · 10⁻⁶ m³. Die Bewertung trennt das Grundrauschen der Straße von der Reaktion auf das Hindernis und zählt das Rauschen nur zur Hälfte.</li>
-        <li><b>Reibung:</b> Losbrechkraft von Dichtungen und Gleitbuchsen, 60 N in der Gabel und 30 N am Hinterrad. Sie macht kleine Stöße härter, als es die Dämpfung allein täte.</li>
+        <li><b>Reibung:</b> Losbrechkraft von Dichtungen und Gleitbuchsen, 60 N in der Gabel und 30 N am Hinterrad. Beim Bremsen biegt sich die Gabel und die Buchsen klemmen stärker (+6 % der Bremskraft). Das macht kleine Stöße in der Bremszone härter.</li>
+        <li><b>Fahrer als eigene Masse:</b> 60 % des Fahrergewichts federn über Sitzbank und Beine (Eigenfrequenz ≈ 5 Hz). Komfort wird am Fahrer gemessen, nicht am Rahmen.</li>
+        <li><b>Luftwiderstand:</b> cW·A 0,33 m² am Druckpunkt 0,75 m. Mit dem Tempo wird die Front leichter (≈ 320 N bei 200 km/h), der Kettenzug stützt das Heck. Die Bremse muss den Luftwiderstand nicht mit abbauen.</li>
+        <li><b>Öltemperatur:</b> Kaltes Öl ist zäher und erhöht vor allem die Low-Speed-Dämpfung.</li>
+        <li><b>Abgleich mit Messung:</b> MOTORRAD hat 10,1 m/s² mittlere Verzögerung gemessen und beschreibt ein abhebendes Hinterrad. Das Modell zeigt bei 1,03 g dasselbe.</li>
         <li><b>Gabel:</b> zwei lineare Stahlfedern mit Vorspannung, adiabates Luftpolster (Ölstand verändert das Luftvolumen), Endanschlag mit progressivem Puffer. Kräfte werden über den Lenkkopfwinkel in die Senkrechte umgerechnet.</li>
         <li><b>Federbein:</b> Radfederrate = Federrate / Übersetzung², leicht progressiv durch die Umlenkung.</li>
         <li><b>Dämpfer als Ventilmodell:</b> Je Richtung zwei parallele Ölwege. Die Bypass-Nadel (Low-Speed) hat einen laminaren und einen quadratischen Anteil; ihr Querschnitt wächst mit den Klicks (Nadelkegel, Exponent 1,4). Daher wirken Klicks nahe „ganz zu“ stark und weit offen kaum noch. Das Shim-Paket (High-Speed) öffnet ab einer Öffnungskraft, die der High-Speed-Einsteller vorspannt. Die Kennlinie wird je Einstellung als Tabelle berechnet und im Schnittbild sichtbar gemacht.</li>
@@ -501,9 +505,9 @@ const M = {
   rake0: 23.75, trail0: 98, wb0: 1415,
   Rf: 299.9, Rr: 310.9,            // 120/70-17: 215,9 + 84 mm ; 190/50-17: 215,9 + 95 mm
   travelF: 125, travelR: 130,
-  bikeWet: 200, frontShare: 0.51, fuelFull: 17.5 * 0.745,
+  bikeWet: 212, frontShare: 0.51, fuelFull: 17.5 * 0.745,
   muF: 17, muR: 22,
-  kFstock: 9.57, kRstock: 99, MR: 2.05,
+  kFstock: 9.57, kRstock: 99, MR: 130 / 61,
   riderFront: 0.40, passFront: 0.05,
   refRider: 80, refSagF: 36, refSagR: 32,
   airA: 14.5e-4, airV0: 260e-6, oilArea: 16.6e-4,
@@ -515,10 +519,11 @@ const M = {
   Ls: 575, alpha0: 10, antiSquat: 0.90, hBike: 0.55,
   clicksMax: 20, hsMax: 4
 };
-M.offset = M.Rf * Math.sin(M.rake0 * DEG) - M.trail0 * Math.cos(M.rake0 * DEG);
+M.offset = 28; // Gabel-Offset laut Werksangabe (2007: von 30 auf 28 mm geändert)
+M.RfEff = (M.trail0 * Math.cos(M.rake0 * DEG) + M.offset) / Math.sin(M.rake0 * DEG); // wirksamer Rollradius, aus Nachlauf 98 mm abgeleitet
 const COSR = Math.cos(M.rake0 * DEG), TANR = Math.tan(M.rake0 * DEG);
 
-const STOCK = { fPre: 4, fReb: 6, fLS: 14, fHS: 3, fProt: 0, fOil: 0, rPre: 0, rReb: 11, rLS: 14, rHS: 3, rShim: 0, pF: 2.5, pR: 2.9, kF: 9.57, kR: 99 };
+const STOCK = { fPre: 4, fReb: 6, fLS: 14, fHS: 3, fProt: 0, fOil: 0, rPre: 0, rReb: 12, rLS: 14, rHS: 3, rShim: 0, pF: 2.5, pR: 2.9, kF: 9.57, kR: 99 };
 const PROFILES = {
   komfort: { name: 'Straße komfortabel', sagF: 38, sagR: 33, off: { fReb: 1, fLS: 2, fHS: .5, rReb: 1, rLS: 2, rHS: .5 }, pF: 2.5, pR: 2.9, w: { comfort: .35, grip: .25, control: .2, reserve: .2 } },
   sport: { name: 'Landstraße sportlich', sagF: 34, sagR: 30, off: { fReb: 0, fLS: 0, fHS: 0, rReb: 0, rLS: 0, rHS: 0 }, pF: 2.5, pR: 2.9, w: { comfort: .15, grip: .35, control: .3, reserve: .2 } },
@@ -527,7 +532,7 @@ const PROFILES = {
 };
 const SAGZ = { komfort: [[35, 40], [30, 35]], sport: [[32, 36], [28, 32]], track: [[28, 32], [23, 28]], regen: [[35, 40], [30, 35]] };
 
-let S = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, profile: 'sport' }, STOCK);
+let S = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40, profile: 'sport' }, STOCK);
 let scenario = 'bump', speed = 80;
 
 /* ============================ LASTEN & FEDERN ============================ */
@@ -596,9 +601,12 @@ const CC = {
 };
 const DAMP = { area0: 3, areaExp: 1.4, linShare: 0.6, hsFc: 0.35, hsSlope: 0.25, dv: 0.01, n: 400 };
 const clickArea = n => DAMP.area0 + Math.pow(Math.max(0, n), DAMP.areaExp);
-function circuit(cls, vk, hsr, nClick, nStock, tHS, tStock) {
+// Viskosität von Gabel-/Dämpferöl relativ zu 40 °C (typisch ISO VG 10–15)
+const VISC = [[0, 5.0], [20, 2.2], [40, 1.0], [60, 0.55], [80, 0.36]];
+function viscFactor(T) { T = clamp(T == null ? 40 : T, 0, 80); for (let i = 1; i < VISC.length; i++) if (T <= VISC[i][0]) { const [t0, v0] = VISC[i - 1], [t1, v1] = VISC[i]; return v0 + (v1 - v0) * (T - t0) / (t1 - t0); } return VISC[VISC.length - 1][1]; }
+function circuit(cls, vk, hsr, nClick, nStock, tHS, tStock, visc = 1) {
   const r = clickArea(nClick) / clickArea(nStock);
-  const cl = DAMP.linShare * cls / r, kq = (1 - DAMP.linShare) * cls / vk / (r * r);
+  const cl = DAMP.linShare * cls / r * visc, kq = (1 - DAMP.linShare) * cls / vk / (r * r);
   const hsAdj = tHS == null ? 0 : tStock - tHS;
   const Fc = cls * vk * Math.max(0.3, 1 + DAMP.hsFc * hsAdj);
   const cs = cls * hsr * (tHS == null ? 1 : Math.exp(DAMP.hsSlope * hsAdj));
@@ -616,13 +624,13 @@ function circuit(cls, vk, hsr, nClick, nStock, tHS, tStock) {
 }
 const DCACHE = new Map();
 function damping(st) {
-  const key = [st.fReb, st.fLS, st.fHS, st.rReb, st.rLS, st.rHS].join('|');
+  const vf = viscFactor(st.oilT), key = [st.fReb, st.fLS, st.fHS, st.rReb, st.rLS, st.rHS, vf.toFixed(3)].join('|');
   if (DCACHE.has(key)) return DCACHE.get(key);
   const zF = M.zeta, d = {
-    F: { comp: circuit(zF.fLS * CC.F, M.vkF, M.hsRatioStock, st.fLS, STOCK.fLS, st.fHS, STOCK.fHS),
-         reb: circuit(zF.fReb * CC.F, M.vkReb, M.rebHs, st.fReb, STOCK.fReb, null, null) },
-    R: { comp: circuit(zF.rLS * CC.R, M.vkR, M.hsRatioStock, st.rLS, STOCK.rLS, st.rHS, STOCK.rHS),
-         reb: circuit(zF.rReb * CC.R, M.vkReb, M.rebHs, st.rReb, STOCK.rReb, null, null) }
+    F: { comp: circuit(zF.fLS * CC.F, M.vkF, M.hsRatioStock, st.fLS, STOCK.fLS, st.fHS, STOCK.fHS, vf),
+         reb: circuit(zF.fReb * CC.F, M.vkReb, M.rebHs, st.fReb, STOCK.fReb, null, null, vf) },
+    R: { comp: circuit(zF.rLS * CC.R, M.vkR, M.hsRatioStock, st.rLS, STOCK.rLS, st.rHS, STOCK.rHS, vf),
+         reb: circuit(zF.rReb * CC.R, M.vkReb, M.rebHs, st.rReb, STOCK.rReb, null, null, vf) }
   };
   if (DCACHE.size > 60) DCACHE.clear();
   DCACHE.set(key, d); return d;
@@ -638,7 +646,7 @@ function shimShare(v, c) { const cir = v >= 0 ? c.comp : c.reb, a = Math.abs(v);
 
 /* ============================ FAHRBAHN: Rauheit & Reifen-Abrollen ============================ */
 // Rauheit nach ISO 8608: Gd(n) = Gd(n0)·(n/n0)^-2, n0 = 0,1 Zyklen/m. Klassen A/B/C = 16 / 64 / 256 ·10⁻⁶ m³.
-const ROUGH = { glatt: { n: 'glatt', g: 0 }, gut: { n: 'gut (ISO A)', g: 16e-6 }, mittel: { n: 'mittel (ISO B)', g: 64e-6 }, schlecht: { n: 'schlecht (ISO C)', g: 256e-6 } };
+const ROUGH = { glatt: { n: 'glatt', g: 0 }, gut: { n: 'neuer Asphalt', g: 4e-6 }, mittel: { n: 'normal (ISO A)', g: 16e-6 }, schlecht: { n: 'schlecht (ISO B)', g: 64e-6 }, kaputt: { n: 'sehr schlecht (ISO C)', g: 256e-6 } };
 let roughness = 'gut';
 const RCOMP = (() => {
   let seed = 917; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
@@ -716,7 +724,7 @@ const cosBump = (d, x0, L, h) => (d >= x0 && d <= x0 + L) ? h * (1 - Math.cos(2 
 function scenDef(name, v, P) {
   const D = Math.max(3, v * 0.4), wbm = M.wb0 / 1000, mm = 0.001;
   const def = { road: () => 0, nfac: () => 1, ax: () => 0, tEnd: 0.4, start: D };
-  const tex = d => 0.0006 * Math.sin(d * 7.3) * Math.sin(d * 2.1);
+  const tex = () => 0; // Feintextur kommt aus der Straßenrauheit (ISO 8608)
   switch (name) {
     case 'bump': def.road = d => cosBump(d, D, P.L, P.h * mm); def.tEnd = (D + P.L + wbm) / v; break;
     case 'pothole': { const e = Math.min(0.05, P.L / 4); def.road = d => -P.h * mm * smooth((d - D) / e) * (1 - smooth((d - D - P.L + e) / e)); def.tEnd = (D + P.L + wbm) / v; break; }
@@ -764,53 +772,66 @@ function scenDef(name, v, P) {
   return def;
 }
 
-/* ============================ SIMULATION (Halbfahrzeug mit Nicken) ============================ */
-// Freiheitsgrade: Hub und Nicken des Aufbaus, Hub von Vorder- und Hinterrad. Reifen rollen als Hüllkurve über Kanten und können abheben.
-const K_PITCH = 0.48;       // Trägheitsradius Nicken in m (Modellannahme)
-const FRIC = { F: 60, R: 30, v0: 0.004 }; // Losbrechreibung Gabel (beide Holme, axial) und Federbein (am Rad) in N
+/* ============================ SIMULATION (Halbfahrzeug mit Nicken, Fahrer und Aerodynamik) ============================ */
+// Freiheitsgrade: Hub und Nicken des Rahmens, Hub von Vorder- und Hinterrad, Hub des Fahrers auf der Sitzbank.
+// Reifen rollen als Hüllkurve über Kanten und können abheben.
+const K_PITCH = 0.48;                       // Trägheitsradius Nicken in m (Modellannahme)
+const FRIC = { F: 60, R: 30, v0: 0.004, muBrake: 0.06 }; // Losbrechreibung; Gabelbuchsen klemmen unter Bremslast stärker
+const RIDER = { share: 0.6, k: 55000, c: 1300 };          // 60 % des Fahrers federn über Sitz/Beine (≈ 5 Hz, ζ ≈ 0,4)
+const AERO = { CdA: 0.33, rho: 1.2, hcp: 0.75 };          // Luftwiderstandsfläche geduckt, Druckpunkthöhe
+const dragN = v => 0.5 * AERO.rho * AERO.CdA * v * v;
 function simRun(st, sc, v, L) {
   const dmp = damping(st), wb = M.wb0 / 1000;
-  const msF = L.msF, msR = L.msR, m = msF + msR, a = wb * msR / m, b = wb * msF / m, I = m * K_PITCH * K_PITCH;
+  const msF = L.msF, msR = L.msR, m = msF + msR, a = wb * msR / m;
+  const mrd = st.rider > 0 ? st.rider * RIDER.share : 0, mc = m - mrd, cr = (1 - M.riderFront) * wb;
+  const ac = (m * a - mrd * cr) / mc, bc = wb - ac, lr = ac - cr;
+  const Itot = m * K_PITCH * K_PITCH, Ic = Math.max(0.3 * Itot, Itot - mc * (ac - a) ** 2 - mrd * (cr - a) ** 2);
   const ktF = M.ktF * Math.pow(st.pF / 2.5, 0.9) * 1000, ktR = M.ktR * Math.pow(st.pR / 2.9, 0.9) * 1000;
   const FvF = x => forkAx(x / COSR, st) / COSR, FvR = x => rearW(x, st);
-  const x0F = solve(FvF, msF * G, -5, M.travelF * COSR + 10), x0R = solve(FvR, msR * G, -5, M.travelR + 10);
-  const d0F = (msF + M.muF) * G / ktF, d0R = (msR + M.muR) * G / ktR;
+  // Gleichgewicht bei Fahrt: Luftwiderstand hebt die Front an, Kettenzug stützt das Heck
+  const Fd = dragN(v), My0 = Fd * AERO.hcp, pairR0 = M.antiSquat * Fd * L.h / wb;
+  const FF0 = msF * G - My0 / wb, FR0 = msR * G + My0 / wb - pairR0;
+  const x0F = solve(FvF, FF0, -5, M.travelF * COSR + 10), x0R = solve(FvR, FR0, -5, M.travelR + 10);
+  const d0F = (FF0 + M.muF * G) / ktF, d0R = (FR0 + pairR0 + M.muR * G) / ktR;
   const frF = FRIC.F / COSR, frR = FRIC.R;
-  let z = 0, vz = 0, th = 0, w = 0, zf = 0, vf = 0, zr = 0, vr = 0;
+  let z = 0, vz = 0, th = 0, w = 0, zf = 0, vf = 0, zr = 0, vr = 0, zd = 0, vd = 0;
   const eF = sc.envF, eR = sc.envR;
   let pF = eF(0), pR = eR(-wb);
   const n = Math.floor(sc.T / DT);
   const mk = () => ({ t: [], x: [], ft: [], zu: [], as: [], v: [], fd: [] });
-  const F = mk(), R = mk(), pitch = [], axg = [], lean = [];
+  const F = mk(), R = mk(), pitch = [], axg = [], lean = [], ard = [], fdrag = [];
   for (let i = 0; i <= n; i++) {
     const t = i * DT, nf = sc.nfac(t), ax = sc.ax(t) * G;
     const rF = eF(v * t), rR = eR(v * t - wb), vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
-    const yF = z + a * th, yR = z - b * th, vyF = vz + a * w, vyR = vz - b * w;
+    const yF = z + ac * th, yR = z - bc * th, vyF = vz + ac * w, vyR = vz - bc * w;
     const xF = x0F + (zf - yF) * 1000, xR = x0R + (zr - yR) * 1000;
+    const X = L.tot * ax + Fd, Fb = X < 0 ? -X : 0;               // Längskraft am Boden, Bremskraft vorn
     const uF = vf - vyF, uR = vr - vyR;
-    const dF = dampF(uF, dmp.F) + frF * Math.tanh(uF / FRIC.v0), dR = dampF(uR, dmp.R) + frR * Math.tanh(uR / FRIC.v0);
+    const dF = dampF(uF, dmp.F) + (frF + FRIC.muBrake * Fb) * Math.tanh(uF / FRIC.v0), dR = dampF(uR, dmp.R) + frR * Math.tanh(uR / FRIC.v0);
     const FF = FvF(xF) + dF, FR = FvR(xR) + dR;
     let tF = ktF * (d0F + rF - zf); tF = tF > 0 ? Math.max(0, tF + M.ctire * (vrF - vf)) : 0;
     let tR = ktR * (d0R + rR - zr); tR = tR > 0 ? Math.max(0, tR + M.ctire * (vrR - vr)) : 0;
-    const Fx = L.tot * ax;                                     // Längskraft gesamt
-    const pairF = ax < 0 ? -Fx * TANR : 0;                      // Bremskraft-Anteil entlang der Gabel
-    const pairR = ax > 0 ? M.antiSquat * Fx * L.h / wb : 0;     // Anti-Squat aus dem Kettenzug
-    const My = Fx * L.h;                                        // Nickmoment aus der Massenträgheit
-    const az = (FF + FR - m * G * nf - pairF + pairR) / m;
-    const aw = (a * (FF - pairF) - b * (FR + pairR) + My) / I;
+    const pairF = Fb * TANR;                                       // Bremskraft-Anteil entlang der Gabel
+    const pairR = X > 0 ? M.antiSquat * X * L.h / wb : 0;          // Anti-Squat aus dem Kettenzug
+    const My = L.tot * ax * L.h + Fd * AERO.hcp;                   // Nickmoment aus Trägheit und Luftwiderstand
+    let Fs = 0, ad = 0;
+    if (mrd > 0) { const ys = z + lr * th, vys = vz + lr * w; Fs = mrd * G + RIDER.k * (ys - zd) + RIDER.c * (vys - vd); ad = (Fs - mrd * G * nf) / mrd; }
+    const az = (FF + FR - Fs - mc * G * nf - pairF + pairR) / mc;
+    const aw = (ac * (FF - pairF) - bc * (FR + pairR) - lr * Fs + My) / Ic;
     const af = (-FF + tF - M.muF * G * nf + pairF) / M.muF;
     const ar = (-FR + tR - M.muR * G * nf - pairR) / M.muR;
-    vz += az * DT; w += aw * DT; vf += af * DT; vr += ar * DT;
-    z += vz * DT; th += w * DT; zf += vf * DT; zr += vr * DT;
+    vz += az * DT; w += aw * DT; vf += af * DT; vr += ar * DT; vd += ad * DT;
+    z += vz * DT; th += w * DT; zf += vf * DT; zr += vr * DT; zd += vd * DT;
     if (i % REC === 0) {
-      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + a * aw); F.v.push(uF); F.fd.push(dF);
-      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - b * aw); R.v.push(uR); R.fd.push(dR);
-      pitch.push(-th / DEG); axg.push(ax / G); lean.push(sc.lean ? sc.lean(t) : 0);
+      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + ac * aw); F.v.push(uF); F.fd.push(dF);
+      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - bc * aw); R.v.push(uR); R.fd.push(dR);
+      pitch.push(-th / DEG); axg.push(ax / G); lean.push(sc.lean ? sc.lean(t) : 0); ard.push(mrd > 0 ? ad : az); fdrag.push(Fd);
     }
   }
-  F.x0 = x0F / COSR; F.static = (msF + M.muF) * G; F.travel = M.travelF;
-  R.x0 = x0R; R.static = (msR + M.muR) * G; R.travel = M.travelR;
-  return { F, R, pitch, axg, lean, T: sc.T };
+  F.ar = R.ar = ard;
+  F.x0 = x0F / COSR; F.static = (FF0 + M.muF * G); F.travel = M.travelF;
+  R.x0 = x0R; R.static = (FR0 + pairR0 + M.muR * G); R.travel = M.travelR;
+  return { F, R, pitch, axg, lean, T: sc.T, drag: Fd, aeroF: My0 / wb };
 }
 function kpiAxle(o, sc) {
   // Grundrauheit der Straße wird vor dem Hindernis gemessen und nur zur Hälfte bewertet,
@@ -821,14 +842,14 @@ function kpiAxle(o, sc) {
   const ma = i => { const a = Math.max(0, i - W), b = Math.min(n, i + W + 1); return (pre[b] - pre[a]) / (b - a); };
   // Grundrauschen
   let bx = 0, bx2 = 0, bf2 = 0, ba2 = 0, bn = 0;
-  for (let i = Math.round(0.05 / dtr); i < iS; i++) { bx += o.x[i]; bx2 += o.x[i] * o.x[i]; bf2 += (o.ft[i] - ma(i)) ** 2; ba2 += o.as[i] * o.as[i]; bn++; }
+  for (let i = Math.round(0.05 / dtr); i < iS; i++) { bx += o.x[i]; bx2 += o.x[i] * o.x[i]; bf2 += (o.ft[i] - ma(i)) ** 2; ba2 += (o.ar || o.as)[i] ** 2; bn++; }
   const sdX = bn ? Math.sqrt(Math.max(0, bx2 / bn - (bx / bn) ** 2)) : 0, cvB = bn ? Math.sqrt(bf2 / bn) / o.static : 0, rmsB = bn ? Math.sqrt(ba2 / bn) : 0;
   let mx = -1e9, mn = 1e9, f2 = 0, cnt = 0, lift = 0, acc2 = 0, minAfter = 1e9;
   for (let i = i0; i < n; i++) {
     mx = Math.max(mx, o.x[i]); mn = Math.min(mn, o.x[i]);
     f2 += (o.ft[i] - ma(i)) ** 2; cnt++;
     if (o.ft[i] < 0.05 * o.static) lift += dtr * 1000;
-    acc2 += o.as[i] * o.as[i];
+    acc2 += (o.ar || o.as)[i] ** 2;
     if (i >= iE) minAfter = Math.min(minAfter, o.x[i]);
   }
   // Beruhigung auf geglättetem Signal, Toleranz wächst mit dem Grundrauschen
@@ -891,7 +912,7 @@ function pose(sF, xR, prot, shim, hF = 0, hR = 0) {
   const psi = (lo + hi) / 2, W = world(psi);
   const rake = M.rake0 + psi / DEG;
   const r = rake * DEG;
-  const trail = (M.Rf * Math.sin(r) - M.offset) / Math.cos(r);
+  const trail = (M.RfEff * Math.sin(r) - M.offset) / Math.cos(r);
   const af = W(axc);
   return { psi, W, rake, trail, wb: af.x, axF: af, axR: { x: 0, y: M.Rr + hR }, ds, ac: ac + psi, pitch: -psi / DEG };
 }
@@ -1242,9 +1263,10 @@ const CTL = [
     { k: 'rider', label: 'Fahrer inkl. Ausrüstung', min: 50, max: 140, step: 1, unit: 'kg', d: 0, hint: 'Mit Helm, Kombi, Stiefeln' },
     { k: 'passenger', label: 'Sozius inkl. Ausrüstung', min: 0, max: 110, step: 1, unit: 'kg', d: 0, hint: '0 = solo' },
     { k: 'luggage', label: 'Gepäck am Heck', min: 0, max: 15, step: 1, unit: 'kg', d: 0, hint: 'Hecktasche' },
-    { k: 'fuel', label: 'Tankfüllung', min: 10, max: 100, step: 5, unit: '%', d: 0, hint: 'Voll ≈ 13 kg Kraftstoff' }
+    { k: 'fuel', label: 'Tankfüllung', min: 10, max: 100, step: 5, unit: '%', d: 0, hint: 'Voll ≈ 13 kg Kraftstoff' },
+    { k: 'oilT', label: 'Öltemperatur Dämpfer', short: 'Öltemperatur', min: 0, max: 80, step: 5, unit: '°C', d: 0, hint: 'Kalt = zähes Öl = mehr Low-Speed-Dämpfung' }
   ] },
-  { grp: 'Gabel vorne (KYB 43 mm USD)', id: 'g-fork', items: [
+  { grp: 'Gabel vorne (Upside-down, Ø 43 mm)', id: 'g-fork', items: [
     { k: 'fPre', label: 'Federvorspannung', short: 'Vorspannung', min: 0, max: 8, step: .5, unit: 'Ringe', d: 1, hint: 'sichtbare Ringe, weniger = mehr Vorspannung', hard: -1 },
     { k: 'fReb', label: 'Zugstufe', short: 'Zugstufe', min: 0, max: M.clicksMax, step: 1, unit: 'Kl. offen', d: 0, hint: 'oben, Klicks ab ganz zu', hard: -1 },
     { k: 'fLS', label: 'Druckstufe Low-Speed', short: 'Druck LS', min: 0, max: M.clicksMax, step: 1, unit: 'Kl. offen', d: 0, hint: 'unten, Schlitzschraube', hard: -1 },
@@ -1268,8 +1290,8 @@ const CTL = [
     { k: 'kR', label: 'Federbeinfeder', short: 'Feder hinten', min: 85, max: 120, step: 1, unit: 'N/mm', d: 0, hint: 'Serie ≈ 99 N/mm (10,1 kg/mm)', hard: 1 }
   ] }
 ];
-const LOADKEYS = ['rider', 'passenger', 'luggage', 'fuel'];
-const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100 }, STOCK);
+const LOADKEYS = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
+const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40 }, STOCK);
 const findCtl = k => CTL.flatMap(g => g.items).find(c => c.k === k);
 const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false">${p.name}</button>`).join('')}</div>`;
 function buildControls() {
@@ -1289,13 +1311,13 @@ function buildControls() {
   }
   $('#controls').innerHTML = h;
   // Schnellzugriff neben der Simulation
-  const QG = [['Gabel vorn', 'var(--front)', ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt']], ['Federbein hinten', 'var(--rear)', ['rPre', 'rReb', 'rLS', 'rHS', 'rShim']], ['Reifen', 'var(--accent)', ['pF', 'pR']]];
+  const QG = [['Gabel vorn', 'var(--front)', ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt']], ['Federbein hinten', 'var(--rear)', ['rPre', 'rReb', 'rLS', 'rHS', 'rShim']], ['Reifen', 'var(--accent)', ['pF', 'pR']], ['Umgebung', 'var(--muted)', ['oilT']]];
   let q = `<div class="card-h" style="margin-bottom:8px"><h2>Fahrwerk direkt</h2><span class="chip mut" id="qChg">Serie</span></div>
     ${profSeg()}
     <div class="btnrow" style="margin:8px 0 4px"><button class="btn sm" data-act="stock">Serie</button><button class="btn sm pri" data-act="rec">Empfehlung</button><button class="btn sm" data-act="undo" id="undoBtn" disabled>Rückgängig</button></div>
     <div class="qload"><label for="q-rider" class="lbl">Fahrer</label><input type="range" id="q-rider" data-k="rider" min="50" max="140" step="1"><output id="qo-rider" class="mono"></output></div>`;
   for (const [title, col, keys] of QG) {
-    q += `<div class="qgrp"><div class="qgrp-h" style="--c:${col}"><span>${title}</span><span class="note">← weicher · härter →</span></div>`;
+    q += `<div class="qgrp"><div class="qgrp-h" style="--c:${col}"><span>${title}</span><span class="note">${title === 'Umgebung' ? '← kälter · wärmer →' : '← weicher · härter →'}</span></div>`;
     for (const k of keys) {
       const c = findCtl(k);
       q += `<div class="qrow" data-qk="${k}"><span class="qdial" id="qd-${k}"></span><span class="qlbl">${c.short}<small id="qs-${k}"></small></span><output id="qo-${k}" class="mono"></output>
@@ -1318,7 +1340,7 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.dir && b.dataset.k) { const c = findCtl(b.dataset.k); setVal(c.k, S[c.k] + c.step * +b.dataset.dir); }
   else if (b.dataset.p) { pushUndo(); S.profile = b.dataset.p; schedule(); }
-  else if (b.dataset.act === 'stock') { pushUndo(); const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, profile: S.profile }; S = Object.assign({}, STOCK, keep); schedule(); toast('Serieneinstellung geladen'); }
+  else if (b.dataset.act === 'stock') { pushUndo(); const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }; S = Object.assign({}, STOCK, keep); schedule(); toast('Serieneinstellung geladen'); }
   else if (b.dataset.act === 'rec') { applyRecommendation(); }
   else if (b.dataset.act === 'undo') { if (UNDO.length) { S = JSON.parse(UNDO.pop()); schedule(); toast('Letzte Änderung zurückgenommen'); } }
 });
@@ -1328,7 +1350,7 @@ function syncControls() {
     const o = $('#o-' + c.k); o.textContent = `${fmt(S[c.k], c.d)} ${c.unit}`;
     const chg = Math.abs(S[c.k] - STOCK_ALL[c.k]) > 1e-6 && !LOADKEYS.includes(c.k);
     o.classList.toggle('chg', chg);
-    const qo = LOADKEYS.includes(c.k) ? null : $('#qo-' + c.k);
+    const qo = ['rider', 'passenger', 'luggage', 'fuel'].includes(c.k) ? null : $('#qo-' + c.k);
     if (qo) {
       qo.textContent = `${fmt(S[c.k], c.d)} ${c.unit.split(' ')[0]}`; qo.classList.toggle('chg', chg);
       const d = S[c.k] - STOCK_ALL[c.k];
@@ -1390,7 +1412,7 @@ function applyRecommendation() { const r = recommend(S); S = r.out; schedule(); 
 let RUN = null, COMP = null, SG = null, SGc = null, playT = 0, playing = false, lastTs = 0, pending = false;
 let CMPMODE = 'stock', PINNED = null;
 function compSetup() {
-  const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, profile: S.profile };
+  const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile };
   if (CMPMODE === 'pin' && PINNED) return Object.assign({}, PINNED, keep);
   return Object.assign({}, STOCK, keep);
 }
@@ -1499,6 +1521,9 @@ function drawProfile() {
 function analysis() {
   const items = [], r = RUN, [zf, zr] = SAGZ[S.profile];
   const rec = recommend(S);
+  const pay = S.rider + S.passenger + S.luggage;
+  if (pay > 178) items.push({ lvl: 'bad', t: `Zuladung ${fmt(pay)} kg über 178 kg`, w: 'MOTORRAD hat 178 kg zulässige Zuladung ermittelt (zulässiges Gesamtgewicht 390 kg). Reifen, Federn und Bremsen sind dafür nicht ausgelegt.' });
+  if (S.oilT <= 15) items.push({ lvl: 'info', t: `Kaltes Dämpferöl (${fmt(S.oilT)} °C)`, w: 'Zähes Öl dämpft im Low-Speed-Bereich deutlich stärker. Erst nach einigen Kilometern einstellen und bewerten, nicht direkt nach dem Kaltstart.' });
   rec.notes.forEach(n => items.push({ lvl: n.lvl, t: n.t, w: n.w }));
   if (SG.sagF > zf[1]) items.push({ lvl: 'warn', t: `Mehr Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm liegt über dem Ziel ${zf[0]}–${zf[1]} mm. Die Front steht zu tief, die Gabel hat weniger Reserve beim Bremsen.` });
   if (SG.sagF < zf[0]) items.push({ lvl: 'warn', t: `Weniger Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm unter Ziel. Die Gabel federt kaum aus, das Vorderrad verliert in Senken den Kontakt.` });
@@ -1696,7 +1721,7 @@ function renderTele(i) {
   const lamp = (lbl, ft, st) => { const lift = ft < 0.05 * st; return `<div class="tl"><span class="lamp" style="background:var(--${lift ? 'bad' : 'good'})"></span><span>${lbl}<br><b class="mono">${lift ? 'abgehoben' : fmt(ft / 1000, 2) + ' kN'}</b></span></div>`; };
   $('#tele').innerHTML = bar('Gabel', r.F.x[i], mF, c.F.x[i], M.travelF, 'var(--front)') + bar('Federbein', r.R.x[i], mR, c.R.x[i], M.travelR, 'var(--rear)') +
     lamp('Vorderrad', r.F.ft[i], r.F.static) + lamp('Hinterrad', r.R.ft[i], r.R.static) +
-    `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs<br><b class="mono">${fmt(r.axg[i], 2)} g</b></span></div>`;
+    `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs · Luft<br><b class="mono">${fmt(r.axg[i], 2)} g · ${fmt(r.drag, 0)} N</b></span></div>`;
 }
 function loop(ts) {
   if (!playing) return;
@@ -1819,75 +1844,98 @@ $('#t-diag').addEventListener('click', e => {
 
 /* ============================ TECHNISCHE DATEN ============================ */
 const SRC = {
+  MOT: ['MOTORRAD Top-Test K7 (27.02.2007, Messwerte)', 'https://www.motorradonline.de/supersportler/top-test-suzuki-gsx-r-1000-der-siebte-streich/'],
+  MOG: ['MOTORRAD Gebrauchtberatung GSX-R 1000', 'https://www.motorradonline.de/ratgeber/gebrauchtberatung-suzuki-gsx-r-1000-der-supersportler-von-suzuki-als-gebrauchte/'],
+  MCS: ['motorcyclespecs.co.za 2007 (Werksdaten)', 'https://www.motorcyclespecs.co.za/model/suzu/suzuki_gsxr1000%2007.htm'],
   CW: ['Cycle World, First Ride 2007', 'https://issues.cycleworld.com/article/2007/5/1/2007-suzuki-4gsx-r1000'],
   MD: ['moto-data.net GSX-R 1000 (2007)', 'https://moto-data.net/suzuki/gsx-r-1000-2007'],
   BW: ['bikeswiki GSX-R1000', 'https://bikeswiki.com/Suzuki_GSX-R1000'],
   CC: ['CycleChaos GSX-R1000', 'https://www.cyclechaos.com/wiki/Sandbox/Suzuki_GSX-R1000'],
   MH: ['Model History (Scribd)', 'https://www.scribd.com/document/43446949/Model-History'],
   BZ: ['bikez.com GSX-R 1000 2007', 'https://bikez.com/motorcycles/suzuki_gsx-r_1000_2007.php'],
+  PS: ['1000PS Modellseite 2007', 'https://1000ps.com/en-us/model/16/suzuki-gsx-r-1000/2007'],
+  SZT: ['Suzuki Originalbereifung Modelle 2007 (Bescheinigung)', 'https://www.suzuki.at/service/dokumente/reifenbescheinigungen/Originalbereifungen%20Modelle%202007.pdf'],
+  SZ: ['Suzuki Fahrerhandbuch GSX-R1000 (Folgegeneration)', 'https://suzukimotorcycles.com.au/wp-content/uploads/2024/07/GSX-R1000-Owners-Manual-99011-17K57-01A.pdf'],
+  SM5: ['Suzuki Werkstatthandbuch GSX-R1000 K5/K6', 'https://www.manualslib.com/manual/1016410/Suzuki-Gsx-R1000k5.html'],
+  MLS: ['Suzuki GSX-R1000 Werkstatthandbuch (manualslib)', 'https://www.manualslib.com/manual/1286279/Suzuki-Gsx-R1000.html'],
+  LOU: ['Louis Fahrzeugdatenbank GSX-R 1000 K7/K8', 'https://www.louis.eu/en/bike-database/suzuki-gsx-r-1000-k7-k8/wvcl/1889'],
   TK: ['Teknik Motorsport, Serien-Federraten 2007', 'https://www.teknikmotorsport.com/bike-suspension-parts/suzuki/gsx-r1000/2007/?pgnum=3'],
+  RTB: ['Race Tech Gabelfedern 07–08 (Bayside Performance)', 'https://www.baysideperformance.ca/07-08-gsxr-1000-race-tech-fork-springs'],
+  KT: ['K-Tech Federn K7/K8 (M-Sliders)', 'https://msliders.com/products/rear-shock-spring-gsx-r-1000-k7-k8'],
+  BIT: ['Bitubo Federbein GSX-R 1000 K7 (Maße)', 'https://www.brixiamoto.com/en/bitubo-rear-shock-absorber-s0080xxz31-1527411.html'],
+  OHL: ['Öhlins TTX RT SU932 für GSX-R 1000 2007–2008', 'https://www.teknikmotorsport.com/ohlins-su932-ttx-rt-shock-rear-for-suzuki-gsx-r-1000-2007-2008'],
+  ULT: ['Ultimate Motorcycling, Test 2007', 'https://ultimatemotorcycling.com/?p=5742'],
+  JB: ['JustBikes: 2007 GSX-R1000 arrives', 'https://www.justbikes.com.au/news-and-reviews/2007-suzuki-gsx-r1000-arrives/13448'],
+  BSA: ['bikesales: Push-button tuning (S-DMS)', 'https://www.bikesales.com.au/editorial/details/push-button-tuning-for-gsx-r1000-11737/'],
   GX: ['gixxer.com: Suspension Setting K7-1000', 'https://www.gixxer.com/threads/suspension-setting-k7-1000.200643/'],
   GX2: ['gixxer.com: 2007 GSXR1000 Suspension Settings', 'https://www.gixxer.com/threads/2007-gsxr1000-suspension-settings.170551/'],
   DE: ['gsx-r1000.de: Fahrwerksabstimmung K7 org. Dämpfer', 'https://www.gsx-r1000.de/themen/fahrwerksabstimmung-k7-org-d%C3%A4mpfer.7783/'],
-  SZ: ['Suzuki GSX-R1000 Fahrerhandbuch (Folgegeneration)', 'https://suzukimotorcycles.com.au/wp-content/uploads/2024/07/GSX-R1000-Owners-Manual-99011-17K57-01A.pdf'],
-  AM: ['AMCN (998,6 cm³)', 'https://amcn.com.au/?p=23468'],
-  MCN: ['MCN Test GSX-R1000 2007–2008', 'https://motorcyclenews.com/bike-reviews/suzuki/gsx-r1000/2007'],
-  PS: ['1000PS Modellseite 2007', 'https://1000ps.com/en-us/model/16/suzuki-gsx-r-1000/2007'],
-  KT: ['K-Tech Federn K7/K8 (M-Sliders)', 'https://msliders.com/products/rear-shock-spring-gsx-r-1000-k7-k8'],
   SF: ['suzuki-forums.net: HS/LS Compression K7/K8', 'https://www.suzuki-forums.net/threads/high-and-low-compression-on-gsxr1000-k7-k8.1283/']
 };
-const STATL = { ok2: ['good', '2 Quellen'], ok1: ['info', '1 Quelle'], conf: ['warn', 'abweichend'], open: ['mut', 'offen'], model: ['mut', 'Modell'] };
+const STATL = { ok2: ['good', '2+ Quellen'], ok1: ['info', '1 Quelle'], conf: ['warn', 'abweichend'], open: ['mut', 'offen'], model: ['mut', 'Modell'] };
+// [Bereich, Merkmal, Wert, Status, Quellen, Hinweis, Ergebnis Prüfrunde 2]
 const DATA = [
-  ['Motor', 'Bauart', 'Reihenvierzylinder, flüssigkeitsgekühlt, DOHC, 4 Ventile je Zylinder', 'ok1', ['MD'], ''],
-  ['Motor', 'Hubraum', '999 cm³ (998,6 cm³)', 'ok2', ['AM', 'MD'], 'Gegenprobe: 73,4² × π/4 × 59,0 × 4 = 998,6 cm³'],
-  ['Motor', 'Bohrung × Hub', '73,4 × 59,0 mm', 'ok2', ['MD', 'AM'], 'Rechnerisch konsistent mit 998,6 cm³'],
-  ['Motor', 'Verdichtung', '12,5 : 1', 'ok1', ['MD'], ''],
-  ['Motor', 'Nennleistung', '178–185 PS bei 12.000 /min', 'conf', ['PS', 'MCN'], 'Drehzahl 12.000 /min bestätigt (MCN). Leistungsangaben schwanken je nach Markt und Quelle. Fahrzeugschein, Feld P.2, zeigt den Wert deiner Maschine.'],
-  ['Motor', 'Drehmoment', 'ca. 117 Nm bei ca. 10.000 /min', 'open', [], 'Nicht doppelt bestätigt'],
-  ['Motor', 'Gemischaufbereitung', 'Saugrohreinspritzung mit Doppel-Drosselklappen', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
-  ['Elektronik', 'Fahrmodi S-DMS', 'Drei Motorkennfelder A / B / C, am rechten Lenkerschalter', 'open', [], 'Beeinflusst nur die Leistungsentfaltung, nicht das Fahrwerk'],
-  ['Elektronik', 'Lenkungsdämpfer', 'Hydraulisch, elektronisch geregelt (geschwindigkeitsabhängig), nicht von Hand einstellbar', 'ok1', ['CW'], 'Cycle World nennt den elektronischen Lenkungsdämpfer als Stabilitätsfaktor'],
-  ['Antrieb', 'Getriebe / Kupplung', '6 Gänge, Anti-Hopping-Kupplung', 'ok1', ['CW'], 'Cycle World: überarbeitete Anti-Hopping-Kupplung'],
-  ['Fahrwerk', 'Rahmen', 'Aluminium-Brückenrahmen (Twin-Spar)', 'open', [], ''],
-  ['Fahrwerk', 'Gabel', 'KYB Upside-Down, 43 mm, voll einstellbar: Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'SF'], 'Getrennte HS/LS-Druckstufe in mehreren K7-Threads bestätigt'],
-  ['Fahrwerk', 'Federweg vorn', '125 mm', 'ok1', ['MD'], 'bikez führt 125 mm teils unter Bodenfreiheit, daher nur eine belastbare Quelle'],
-  ['Fahrwerk', 'Federbein', 'Zentralfederbein mit Umlenkung, voll einstellbar: Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'DE'], 'Höhenverstellung am Federbein: im Werkstatthandbuch prüfen'],
-  ['Fahrwerk', 'Federweg hinten', '130 mm', 'open', [], 'Nicht doppelt bestätigt; Modell rechnet mit 130 mm Radweg'],
-  ['Fahrwerk', 'Federrate Gabel (Serie)', '0,976 kg/mm je Holm ≈ 9,57 N/mm', 'ok1', ['TK'], 'Angabe ohne Einheit veröffentlicht, kg/mm abgeleitet; Traxxion-Ersatz 0,975 kg/mm passt dazu'],
-  ['Fahrwerk', 'Federrate Federbein (Serie)', '10,1 kg/mm ≈ 99 N/mm', 'ok1', ['TK', 'KT'], 'K-Tech bietet 95 / 105 / 110 N/mm an, Serie liegt plausibel dazwischen'],
-  ['Geometrie', 'Lenkkopfwinkel', '23,75° (23° 45′)', 'ok2', ['CW', 'MD'], 'Einzelne Datenbanken runden auf 24°'],
-  ['Geometrie', 'Nachlauf', '98 mm', 'ok2', ['BW', 'MD'], 'Cycle World nennt 3,92 in ≈ 99,6 mm'],
-  ['Geometrie', 'Radstand', '1415 mm', 'ok2', ['MD', 'CW'], 'Cycle World: Radstand gegenüber K6 verlängert'],
-  ['Geometrie', 'Gabel-Offset (abgeleitet)', `${fmt(M.offset, 1)} mm`, 'model', [], 'Aus Lenkkopfwinkel, Nachlauf und Reifenradius 299,9 mm berechnet'],
-  ['Abmessungen', 'Sitzhöhe', '810 mm', 'ok1', ['CC'], 'CycleChaos: 810 mm für K5 bis L6'],
-  ['Abmessungen', 'Bodenfreiheit', '130 mm', 'ok1', ['CC'], 'Allgemeine Angabe für die Baureihe'],
-  ['Abmessungen', 'Trockengewicht', '172 kg', 'ok2', ['MH', 'MD'], ''],
-  ['Abmessungen', 'Fahrfertig (Modellwert)', 'ca. 200 kg', 'model', [], 'Trocken 172 kg + Kraftstoff, Öl, Kühlmittel, Batterie; Modellannahme'],
-  ['Abmessungen', 'Tankinhalt', '17,5 l', 'conf', ['CC', 'BZ'], 'bikez nennt 18 l'],
-  ['Räder & Reifen', 'Reifen vorn', '120/70 ZR17', 'open', [], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.1) prüfen'],
-  ['Räder & Reifen', 'Reifen hinten', '190/50 ZR17', 'open', [], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.2) prüfen'],
-  ['Räder & Reifen', 'Luftdruck vorn (kalt)', '2,50 bar (250 kPa, 36 psi), solo und mit Sozius', 'ok1', ['SZ'], 'Suzuki-Vorgabe der Baureihe; Aufkleber an der Schwinge deiner K7 vergleichen'],
-  ['Räder & Reifen', 'Luftdruck hinten (kalt)', '2,90 bar (290 kPa, 42 psi), solo und mit Sozius', 'ok1', ['SZ'], 'wie oben'],
-  ['Bremsen', 'Vorn', '2 Scheiben 310 mm, radial verschraubte Vierkolben-Sättel', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
-  ['Bremsen', 'Hinten', '1 Scheibe 220 mm, Einkolben-Sattel', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
-  ['Werkseinstellung', 'Gabel Vorspannung', '4 Ringe sichtbar', 'conf', ['GX', 'DE'], 'gixxer.com: 4 Ringe; gsx-r1000.de: 3,5 Ringe'],
-  ['Werkseinstellung', 'Gabel Zugstufe', '6 Klicks offen ab ganz zu', 'ok2', ['GX', 'DE'], ''],
-  ['Werkseinstellung', 'Gabel Druckstufe Low-Speed', '14 Klicks offen', 'conf', ['GX', 'DE'], 'Zwei Quellen 14, ein Beitrag nennt 10'],
-  ['Werkseinstellung', 'Gabel Druckstufe High-Speed', '3 Umdrehungen offen', 'conf', ['DE', 'GX'], 'Ein Beitrag nennt 2,5 Umdrehungen'],
-  ['Werkseinstellung', 'Federbein Zugstufe', '11 Klicks offen', 'conf', ['DE', 'GX2'], 'Angaben 9 bis 12 Klicks'],
-  ['Werkseinstellung', 'Federbein Druckstufe Low-Speed', '14 Klicks offen', 'conf', ['DE', 'GX'], 'Ein Beitrag nennt 13'],
-  ['Werkseinstellung', 'Federbein Druckstufe High-Speed', '3 Umdrehungen offen', 'ok2', ['DE', 'GX2'], ''],
-  ['Werkseinstellung', 'Einstellregel Suzuki', 'Dämpfung in kleinen Schritten ändern, beide Gabelholme immer identisch einstellen', 'ok1', ['SZ'], 'Aus dem Suzuki-Handbuch der Baureihe']
+  ['Motor', 'Hubraum', '999 cm³ (998,6 cm³)', 'ok2', ['MOT', 'MCS'], 'Gegenrechnung: 73,4² × π/4 × 59,0 × 4 = 998,6 cm³', 'bestätigt'],
+  ['Motor', 'Bohrung × Hub', '73,4 × 59,0 mm', 'ok2', ['MOT', 'MCS', 'MD'], 'Rechnerisch konsistent mit 998,6 cm³', 'bestätigt'],
+  ['Motor', 'Verdichtung', '12,5 : 1', 'ok2', ['MOT', 'MCS'], '', 'neu bestätigt (Runde 1: nur 1 Quelle)'],
+  ['Motor', 'Nennleistung', '136 kW (185 PS) bei 12.000 /min', 'ok2', ['MOT', 'MOG'], '185 PS × 0,7355 = 136,1 kW. Prüfstand MOTORRAD: 180 PS. Die 178 PS auf 1000PS sind der Wert der K5/K6. motorcyclespecs nennt 185,1 hp, aber 138 kW (Einheitenfehler).', 'Widerspruch aufgelöst'],
+  ['Motor', 'Drehmoment', '117 Nm bei 10.000 /min', 'ok2', ['MOT', 'MCS'], 'K5/K6: 118 Nm bei 9.000 /min', 'neu bestätigt (Runde 1: offen)'],
+  ['Motor', 'Getriebe-Übersetzungen', '2,562 · 2,052 · 1,714 · 1,500 · 1,360 · 1,269', 'ok1', ['MCS'], '6 Gänge', 'neu'],
+  ['Elektronik', 'Fahrmodi S-DMS', 'Drei Leistungskennfelder A / B / C, Schalter am Lenker', 'ok2', ['CW', 'BSA'], 'Beeinflusst nur die Leistungsentfaltung, nicht das Fahrwerk', 'neu bestätigt'],
+  ['Elektronik', 'Lenkungsdämpfer', 'Hydraulisch, elektronisch geregelt: Magnetventil mit Kegelnadel, dämpft abhängig vom Tempo. Nicht von Hand einstellbar', 'ok2', ['CW', 'ULT', 'JB'], 'MOTORRAD: bei niedrigem Tempo kaum spürbar', 'neu bestätigt'],
+  ['Antrieb', 'Getriebe / Kupplung', '6 Gänge, Anti-Hopping-Kupplung', 'ok1', ['CW', 'MCS'], '6 Gänge 2 Quellen; Anti-Hopping nur Cycle World', 'teilweise bestätigt'],
+  ['Fahrwerk', 'Rahmen', 'Aluminium-Brückenrahmen', 'open', [], 'In keiner Quelle der beiden Runden ausdrücklich belegt', 'offen'],
+  ['Fahrwerk', 'Gabel', 'Upside-down, Ø 43 mm, DLC-beschichtete Gleitrohre', 'ok2', ['MOT', 'MCS'], 'Hersteller KYB in keiner Quelle belegt', 'bestätigt'],
+  ['Fahrwerk', 'Gabel-Einsteller', 'Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'SF'], '', 'bestätigt'],
+  ['Fahrwerk', 'Federweg vorn', '125 mm', 'ok2', ['MOT', 'MCS', 'MD'], 'K5/K6: 120 mm', 'neu bestätigt'],
+  ['Fahrwerk', 'Federweg hinten', '130 mm', 'conf', ['MCS', 'MD', 'MOT'], 'Werksdaten 130 mm, MOTORRAD 135 mm. Modell rechnet mit 130 mm', 'Widerspruch gefunden'],
+  ['Fahrwerk', 'Federbein', 'Zentralfederbein mit Umlenkhebel; Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['MOT', 'MCS', 'GX'], '', 'bestätigt'],
+  ['Fahrwerk', 'Federbein-Hub / Länge', 'ca. 61 mm Hub, 314 mm lang', 'ok1', ['BIT'], 'Maße eines Ersatzfederbeins für die K7. Ergibt Übersetzung 130 / 61 = 2,13 : 1', 'neu'],
+  ['Fahrwerk', 'Federrate Gabel (Serie)', '0,976 kg/mm je Holm ≈ 9,57 N/mm', 'ok2', ['TK', 'RTB'], 'Race Tech nennt für 07–08 ausdrücklich 0,976 kg/mm Serie', 'neu bestätigt (Runde 1: 1 Quelle)'],
+  ['Fahrwerk', 'Federrate Federbein (Serie)', '10,1 kg/mm ≈ 99 N/mm', 'ok1', ['TK'], 'Zubehör für K7: K-Tech 95–110 N/mm, Öhlins 105 N/mm, Bitubo 11 kg/mm. Serie liegt plausibel darin', 'keine 2. Quelle gefunden'],
+  ['Fahrwerk', 'Gabelöl', '512 ml Suzuki L01 je Holm', 'ok2', ['LOU', 'MLS'], 'Werkstatthandbuch der Baureihe: 510 ml', 'neu'],
+  ['Fahrwerk', 'Ölstand Gabel', 'ca. 101 mm (ohne Feder, Gabel eingeschoben)', 'ok1', ['MLS'], 'Wert der Baureihe, für K7 im Werkstatthandbuch prüfen', 'neu'],
+  ['Fahrwerk', 'Federbein-Federlänge eingebaut', '177,6 mm (K5/K6)', 'open', ['SM5'], 'Nur für K5/K6 belegt. Gute Referenz zum Nachmessen der Vorspannung', 'neu'],
+  ['Geometrie', 'Lenkkopfwinkel', '23,75° (= 66,2° zur Waagerechten)', 'ok2', ['MOT', 'CW', 'MD'], 'MOTORRAD 66,2° → 90 − 66,2 = 23,8°. Einzelne Datenbanken runden auf 24°', 'bestätigt'],
+  ['Geometrie', 'Nachlauf', '98 mm', 'ok2', ['MOT', 'MCS', 'BW'], '', 'bestätigt'],
+  ['Geometrie', 'Radstand', '1415 mm', 'ok2', ['MOT', 'MCS', 'MD'], 'K5/K6: 1405 mm', 'bestätigt'],
+  ['Geometrie', 'Gabel-Offset', '28 mm', 'ok1', ['MCS'], '2007 von 30 auf 28 mm geändert. Runde 1 hatte 31,1 mm errechnet; jetzt Werksangabe', 'korrigiert'],
+  ['Geometrie', 'Wirksamer Rollradius vorn', `${fmt(M.RfEff, 1)} mm`, 'model', [], 'Aus Nachlauf 98 mm, 23,75° und Offset 28 mm. Kleiner als der Nennradius 299,9 mm, weil der Reifen unter Last einfedert', 'neu'],
+  ['Abmessungen', 'Sitzhöhe', '810 mm', 'ok2', ['MOT', 'MCS'], 'Lenkerhöhe 870 mm (MOTORRAD)', 'neu bestätigt'],
+  ['Abmessungen', 'Bodenfreiheit', '130 mm', 'ok2', ['MCS', 'CC'], '', 'neu bestätigt'],
+  ['Abmessungen', 'Länge × Breite × Höhe', '2045 × 720 × 1130 mm', 'conf', ['MCS', 'MOT'], 'MOTORRAD misst 2060 × 780 × 1140 mm', 'Widerspruch gefunden'],
+  ['Abmessungen', 'Trockengewicht', '172 kg', 'ok2', ['MCS', 'MH'], '', 'bestätigt'],
+  ['Abmessungen', 'Gewicht vollgetankt (gewogen)', '212 kg', 'ok2', ['MOT', 'MOG'], 'Datenbanken nennen 192 kg „nass“ ohne Messung. Runde 1 nutzte 200 kg; jetzt Messwert', 'korrigiert'],
+  ['Abmessungen', 'Radlastverteilung', '51 / 49 % vorn / hinten', 'ok1', ['MOT'], 'Gemessen, vollgetankt ohne Fahrer. Eine Datenbank nennt 52/48 ohne Beleg', 'neu'],
+  ['Abmessungen', 'Zuladung / zul. Gesamtgewicht', '178 kg / 390 kg', 'ok1', ['MOT'], 'Das Modell warnt bei Überschreitung', 'neu'],
+  ['Abmessungen', 'Tankinhalt', '17,5 l', 'ok2', ['MOT', 'MCS', 'CC'], 'bikez nennt 18 l (Wert der K5/K6)', 'Widerspruch aufgelöst'],
+  ['Räder & Reifen', 'Felgen', '3.50 × 17 / 6.00 × 17', 'ok2', ['SZT', 'MOT'], '', 'neu'],
+  ['Räder & Reifen', 'Reifengrößen', '120/70 ZR17 (58W) / 190/50 ZR17 (73W)', 'ok2', ['SZT', 'MOT', 'MCS'], 'Zulassungsbescheinigung Feld 15.1 / 15.2', 'neu bestätigt (Runde 1: offen)'],
+  ['Räder & Reifen', 'Erstbereifung', 'Bridgestone Battlax BT015 (vorn „N“, hinten „G“)', 'ok2', ['SZT', 'MOT'], 'Laut Suzuki keine Reifenbindung in den Fahrzeugpapieren', 'neu'],
+  ['Räder & Reifen', 'Luftdruck (kalt)', '2,50 bar vorn / 2,90 bar hinten, solo und zu zweit', 'ok2', ['SZ', 'MOT'], 'Gleicher Wert bei K5 (MOTORRAD) und Folgegeneration (Suzuki). Aufkleber an der Schwinge vergleichen', 'neu bestätigt'],
+  ['Bremsen', 'Vorn', '2 Scheiben Ø 310 mm (5 mm dick), radial verschraubte Vierkolben-Festsättel', 'ok2', ['MOT', 'MCS'], 'Hersteller der Sättel widersprüchlich angegeben, daher weggelassen', 'neu bestätigt'],
+  ['Bremsen', 'Hinten', '1 Scheibe Ø 220 mm, Einkolben-Schwimmsattel', 'ok2', ['MOT', 'MCS'], '', 'neu bestätigt'],
+  ['Messwerte', 'Bremsweg 100–0 km/h', '38,3 m, mittlere Verzögerung 10,1 m/s² (1,03 g)', 'ok1', ['MOT'], 'Gegenrechnung: 27,78² / (2 × 38,3) = 10,07 m/s². MOTORRAD: Hinterrad hebt ab und versetzt', 'neu, als Modell-Prüfwert genutzt'],
+  ['Messwerte', 'Höchstgeschwindigkeit', '295 km/h', 'conf', ['MOT', 'MCS'], 'Werksdaten-Seite: 290 km/h', 'neu'],
+  ['Messwerte', 'Beschleunigung 0–100 km/h', '3,2 s', 'conf', ['MOT', 'MCS'], 'motorcyclespecs: 2,8 s', 'neu'],
+  ['Werkseinstellung', 'Gabel Vorspannung', '4 Ringe sichtbar', 'conf', ['GX', 'SM5', 'DE', 'GX2'], '4: gixxer.com, Handbuch K5/K6 · 3,5: gsx-r1000.de, zweiter K7-Thread', 'Widerspruch bleibt'],
+  ['Werkseinstellung', 'Gabel Zugstufe', '6 Klicks offen ab ganz zu', 'ok2', ['GX', 'DE', 'GX2'], '', 'bestätigt (3 Quellen)'],
+  ['Werkseinstellung', 'Gabel Druckstufe Low-Speed', '14 Klicks offen', 'conf', ['GX', 'DE', 'GX2'], '14: zwei Quellen · 10: eine Quelle', 'Widerspruch bleibt'],
+  ['Werkseinstellung', 'Gabel Druckstufe High-Speed', '3 Umdrehungen offen', 'conf', ['DE', 'GX'], 'Ein Beitrag nennt 2,5', 'Widerspruch bleibt'],
+  ['Werkseinstellung', 'Federbein Zugstufe', '12 Klicks offen', 'conf', ['GX2', 'SM5', 'DE'], '12: zweiter K7-Thread und Handbuch K5/K6 · 11: gsx-r1000.de. Runde 1 nutzte 11', 'korrigiert auf Mehrheit'],
+  ['Werkseinstellung', 'Federbein Druckstufe Low-Speed', '14 Klicks offen', 'ok2', ['DE', 'GX', 'SM5'], 'Ein Beitrag nennt 13', 'bestätigt'],
+  ['Werkseinstellung', 'Federbein Druckstufe High-Speed', '3 Umdrehungen offen', 'ok2', ['DE', 'GX2'], '', 'bestätigt'],
+  ['Werkseinstellung', 'Einstellregel Suzuki', 'In kleinen Schritten verstellen, beide Gabelholme immer identisch', 'ok1', ['SZ'], '', 'bestätigt']
 ];
 let dataCat = 'Alle', dataStat = 'alle';
 function renderData() {
   const cats = ['Alle', ...new Set(DATA.map(d => d[0]))];
   $('#dataCat').innerHTML = cats.map(c => `<button data-c="${c}" aria-pressed="${c === dataCat}">${c}</button>`).join('');
-  $('#dataStat').innerHTML = [['alle', 'Alle'], ['ok2', '2 Quellen'], ['ok1', '1 Quelle'], ['conf', 'abweichend'], ['open', 'offen'], ['model', 'Modell']].map(([k, l]) => `<button data-st="${k}" aria-pressed="${k === dataStat}">${l}</button>`).join('');
+  $('#dataStat').innerHTML = [['alle', 'Alle'], ['ok2', '2+ Quellen'], ['ok1', '1 Quelle'], ['conf', 'abweichend'], ['open', 'offen'], ['model', 'Modell']].map(([k, l]) => `<button data-st="${k}" aria-pressed="${k === dataStat}">${l}</button>`).join('');
   const q = ($('#dataQ').value || '').toLowerCase();
   const rows = DATA.filter(d => (dataCat === 'Alle' || d[0] === dataCat) && (dataStat === 'alle' || d[3] === dataStat) && (!q || d.join(' ').toLowerCase().includes(q)));
-  $('#dataTbl').innerHTML = `<thead><tr><th>Bereich</th><th>Merkmal</th><th>Wert</th><th>Prüfung</th><th>Quellen &amp; Hinweis</th></tr></thead><tbody>` +
-    (rows.map(d => { const [c, l] = STATL[d[3]]; return `<tr><td>${d[0]}</td><td>${d[1]}</td><td class="n" style="white-space:normal">${d[2]}</td><td class="stat"><span class="chip ${c}"${d[3] === 'model' ? ' style="border-style:dashed"' : ''}>${l}</span></td><td class="srcs">${d[4].map(s => `<a href="${SRC[s][1]}" target="_blank" rel="noopener">${SRC[s][0]}</a>`).join(' · ')}${d[5] ? `<div>${d[5]}</div>` : ''}</td></tr>`; }).join('') || `<tr><td colspan="5">Keine Treffer. Suchbegriff oder Filter ändern.</td></tr>`) + '</tbody>';
+  $('#dataTbl').innerHTML = `<thead><tr><th>Bereich</th><th>Merkmal</th><th>Wert</th><th>Status</th><th>Prüfrunde 2</th><th>Quellen &amp; Hinweis</th></tr></thead><tbody>` +
+    (rows.map(d => { const [c, l] = STATL[d[3]]; return `<tr><td>${d[0]}</td><td>${d[1]}</td><td class="n" style="white-space:normal">${d[2]}</td><td class="stat"><span class="chip ${c}"${d[3] === 'model' ? ' style="border-style:dashed"' : ''}>${l}</span></td><td class="srcs" style="white-space:nowrap">${d[6] || ''}</td><td class="srcs">${d[4].map(s => `<a href="${SRC[s][1]}" target="_blank" rel="noopener">${SRC[s][0]}</a>`).join(' · ')}${d[5] ? `<div>${d[5]}</div>` : ''}</td></tr>`; }).join('') || `<tr><td colspan="6">Keine Treffer. Suchbegriff oder Filter ändern.</td></tr>`) + '</tbody>';
 }
 $('#dataQ').addEventListener('input', renderData);
 $('#dataCat').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { dataCat = b.dataset.c; renderData(); } });
@@ -1896,8 +1944,10 @@ $('#dataStat').addEventListener('click', e => { const b = e.target.closest('butt
 function renderCheck() {
   const cnt = k => DATA.filter(d => d[3] === k).length;
   $('#checkSummary').innerHTML = `<div class="geo-grid">${Object.entries(STATL).map(([k, [c, l]]) => `<div class="gcell"><div class="lbl">${l}</div><div class="v">${cnt(k)}</div><span class="chip ${c}">${k === 'ok2' ? 'belastbar' : k === 'ok1' ? 'plausibel' : k === 'conf' ? 'Widerspruch markiert' : k === 'open' ? 'am Fahrzeug prüfen' : 'Annahme'}</span></div>`).join('')}</div>
+  <div class="warnbox" style="margin-top:10px"><b>Zweite Prüfrunde:</b> Jeder Wert wurde ein zweites Mal gegen unabhängige Quellen geprüft, vorrangig gegen den MOTORRAD-Top-Test der K7 mit Messwerten und gegen die Suzuki-Reifenbescheinigung 2007. Korrigiert: Gewicht 200 → 212 kg (gewogen), Gabel-Offset 31,1 (errechnet) → 28 mm (Werksangabe), Federbein-Übersetzung 2,05 → 2,13 (aus 61 mm Hub), Werkseinstellung Zugstufe hinten 11 → 12 Klicks. Neu bestätigt: Drehmoment, Reifen, Bremsen, Sitzhöhe, Federrate Gabel. Neu gefunden: Federweg hinten 130 oder 135 mm.</div>
   <p class="note" style="margin-top:10px">Bei den Werkseinstellungen widersprechen sich die Forenangaben in mehreren Punkten. Das Tool nutzt die Mehrheitsangabe als Ausgangspunkt. Vor dem ersten Verstellen deshalb den Ist-Zustand deiner Maschine zählen und notieren: Klicks ganz zudrehen, mitzählen, wieder auf den alten Wert zurück.</p>`;
   const s0 = sags(Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100 }, STOCK)), p0 = pose(REFC.sF, REFC.xR, 0, 0);
+  const BRK103 = (() => { const st = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40, profile: 'sport' }, STOCK), v = 100 / 3.6, sc = prepScen('brake', v, { g: 1.03, ramp: 0.35, h: 0 }); return Math.min(...simRun(st, sc, v, loads(st)).R.ft); })();
   const chk = [
     ['Hubraum aus Bohrung × Hub', `${fmt(Math.PI / 4 * 73.4 * 73.4 * 59 * 4 / 1000, 1)} cm³`, Math.abs(Math.PI / 4 * 73.4 * 73.4 * 59 * 4 / 1000 - 998.6) < 0.2],
     ['Reifenradius vorn 120/70 R17', `${fmt(M.Rf, 1)} mm = 215,9 + 0,70 × 120`, true],
@@ -1907,25 +1957,36 @@ function renderCheck() {
     ['Freier Durchhang Serie (Plausibilität)', `${fmt(s0.freeF, 1)} / ${fmt(s0.freeR, 1)} mm`, s0.freeF > 12 && s0.freeF < 32 && s0.freeR > 3 && s0.freeR < 20],
     ['Federraten-Umrechnung', `0,976 kg/mm × 9,81 = ${fmt(0.976 * 9.81, 2)} N/mm · 10,1 kg/mm = ${fmt(10.1 * 9.81, 1)} N/mm`, true],
     ['Grundvorspannung aus Kalibrierung', `Gabel ${fmt(P0F, 1)} mm je Feder · Federbein ${fmt(P0R, 1)} mm`, P0F > 5 && P0F < 40 && P0R > 2 && P0R < 20],
+    ['Lenkkopfwinkel MOTORRAD (66,2° zur Waagerechten)', `90° − 66,2° = ${fmt(90 - 66.2, 1)}° ≈ 23,75°`, Math.abs(90 - 66.2 - 23.75) < 0.1],
+    ['Leistung in kW', `185 PS × 0,7355 = ${fmt(185 * 0.7355, 1)} kW`, Math.abs(185 * 0.7355 - 136) < 0.5],
+    ['Leistung bei Drehmomentspitze', `117 Nm × 10.000 /min = ${fmt(117 * 10000 * 2 * Math.PI / 60 / 1000, 1)} kW < 136 kW`, 117 * 10000 * 2 * Math.PI / 60 / 1000 < 136],
+    ['Bremsverzögerung aus Bremsweg', `27,78² / (2 × 38,3 m) = ${fmt(27.78 ** 2 / 76.6, 2)} m/s²`, Math.abs(27.78 ** 2 / 76.6 - 10.1) < 0.1],
+    ['Federbein-Übersetzung', `130 mm Radweg / 61 mm Hub = ${fmt(M.MR, 2)} : 1`, true],
+    ['Offset, Nachlauf und Rollradius konsistent', `(${fmt(M.RfEff, 1)} × sin 23,75° − 28) / cos 23,75° = ${fmt((M.RfEff * Math.sin(M.rake0 * DEG) - M.offset) / Math.cos(M.rake0 * DEG), 1)} mm`, Math.abs((M.RfEff * Math.sin(M.rake0 * DEG) - M.offset) / Math.cos(M.rake0 * DEG) - 98) < 0.1],
+    ['Modell gegen Messung: Bremsung 1,03 g (MOTORRAD)', `Hinterradlast min. ${fmt(BRK103, 0)} N: ${BRK103 < 100 ? 'Hinterrad hebt ab, wie im Test beschrieben' : 'Hinterrad bleibt belastet, weicht von der Messung ab'}`, BRK103 < 100],
     ['Bremsung 0,8 g, Serie, 80 kg: Gabel nutzt', `${fmt((() => { const st = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, profile: 'sport' }, STOCK), sc = prepScen('brake', 80 / 3.6, { g: 0.8, ramp: 0.35, h: 0 }); return kpiAxle(simRun(st, sc, 80 / 3.6, loads(st)).F, sc).maxX; })(), 0)} von 125 mm`, true]
   ];
   $('#mathChecks').innerHTML = chk.map(([a, b, ok]) => `<li><span class="chip ${ok ? 'good' : 'bad'}">${ok ? 'OK' : 'prüfen'}</span> <b>${a}:</b> <span class="mono">${b}</span></li>`).join('');
   const mt = [
-    ['Masse fahrfertig', '200 kg, 51 % vorn', 'Schätzung aus 172 kg trocken'],
+    ['Masse vollgetankt', '212 kg, 51 % vorn', 'MOTORRAD-Messung (Redaktionswaage)'],
     ['Ungefederte Massen', '17 kg vorn · 22 kg hinten', 'Rad, Reifen, Bremse, Gleitrohre bzw. Schwingenanteil'],
     ['Fahrer-Gewichtsverteilung', '40 % vorn · 60 % hinten', 'Sportliche Sitzposition; Sozius 5 / 95 %'],
     ['Schwerpunkthöhe', 'Maschine 0,55 m · Fahrer 0,92 m', 'Für Lastverlagerung beim Bremsen und Beschleunigen'],
-    ['Übersetzung Federbein', `${fmt(M.MR, 2)} : 1 (Rad : Feder)`, 'Typisch für Umlenkungen dieser Klasse; leicht progressiv modelliert'],
+    ['Übersetzung Federbein', `${fmt(M.MR, 2)} : 1 (Rad : Feder)`, '130 mm Radweg / 61 mm Federbein-Hub; leicht progressiv modelliert'],
+    ['Gabel-Offset / Rollradius', `28 mm / ${fmt(M.RfEff, 1)} mm`, 'Offset Werksangabe; Rollradius so gewählt, dass der Nachlauf 98 mm ergibt'],
+    ['Fahrer als Masse', '60 % des Fahrers federn über Sitz und Beine: 55 kN/m, 1300 Ns/m (≈ 5 Hz, ζ ≈ 0,4)', 'Typische Werte der Schwingungsmedizin für sitzende Menschen. Komfort wird am Fahrer gemessen'],
+    ['Luftwiderstand', 'cW·A = 0,33 m², Druckpunkt 0,75 m hoch', 'Geduckter Fahrer. Entlastet die Front: ≈ 80 N bei 100 km/h, ≈ 320 N bei 200 km/h'],
+    ['Öltemperatur', 'Viskosität relativ zu 40 °C: 0 °C × 5,0 · 20 °C × 2,2 · 60 °C × 0,55 · 80 °C × 0,36', 'Wirkt auf den laminaren Anteil der Nadel, also vor allem Low-Speed'],
     ['Kalibrierung Vorspannung', '80 kg Fahrer → 36 mm vorn / 32 mm hinten in Serie', 'Aus Forenangaben zum Serien-Durchhang der K7 (vorn 35–40 mm)'],
     ['Vorspannring Gabel', '1 Ring ≈ 1 mm Vorspannung', 'Ringabstand am Einsteller; mit Messschieber prüfen'],
     ['Klickbereich', `0–${M.clicksMax} Klicks, HS 0–${M.hsMax} Umdrehungen`, 'Gesamtzahl je Einsteller an deiner Maschine zählen'],
     ['Nadelquerschnitt', 'A(n) = 3 + n^1,4 (n = Klicks offen)', 'Kegelnadel: Klicks nahe „ganz zu“ wirken stark, weit offen schwach'],
     ['Shim-Paket', 'Öffnet bei Knickgeschwindigkeit; je HS-Umdrehung zu +35 % Öffnungskraft, +28 % Steigung', 'Relativ zur Serie kalibriert'],
-    ['Reibung', 'Gabel 60 N axial (beide Holme) · Federbein 30 N am Rad', 'Dichtungen und Gleitbuchsen, typische Größenordnung'],
+    ['Reibung', 'Gabel 60 N axial (beide Holme) + 6 % der Bremskraft · Federbein 30 N am Rad', 'Dichtungen und Gleitbuchsen; unter Bremslast klemmen die Buchsen durch Biegung stärker'],
     ['Dämpfungsmaß Serie', 'Zug vorn ζ 0,55 · Druck vorn ζ 0,28 · Zug hinten ζ 0,60 · Druck hinten ζ 0,30', 'Übliche Werte für Straßen-Supersportler'],
     ['Luftpolster Gabel', '260 cm³ je Holm, Kolbenfläche 14,5 cm², Adiabatenexponent 1,4', 'Ölstand +1 mm ≈ −1,7 cm³ Luft'],
     ['Reifensteifigkeit', '175 N/mm vorn bei 2,5 bar · 210 N/mm hinten bei 2,9 bar', 'Skaliert mit Luftdruck^0,9'],
-    ['Straßenrauheit', 'ISO 8608 Klasse A / B / C', 'Standard „gut“ (Klasse A); umschaltbar unter Hindernis & Fahrzustand'],
+    ['Straßenrauheit', 'Gd(n0) = 4 / 16 / 64 / 256 · 10⁻⁶ m³', 'Neuer Asphalt (unteres Viertel ISO-Klasse A), normal (Mitte A), schlecht (B), sehr schlecht (C). Standard: neuer Asphalt. Ergibt 5–10 % Radlastschwankung bei 50–100 km/h, wie für gute Straßen typisch'],
     ['Anti-Squat', '90 %', 'Kettenzug stützt das Heck beim Beschleunigen'],
     ['Schwinge', '575 mm, 10° Neigung', 'Für die Geometrie-Kinematik'],
     ['Nickträgheit', 'Trägheitsradius 0,48 m', 'Gefederte Masse inkl. Fahrer; bestimmt, wie schnell die Maschine nickt']
@@ -1934,7 +1995,7 @@ function renderCheck() {
 }
 
 /* ============================ SETUP-BIBLIOTHEK ============================ */
-const KEYS = ['rider', 'passenger', 'luggage', 'fuel', 'profile', ...Object.keys(STOCK)];
+const KEYS = ['rider', 'passenger', 'luggage', 'fuel', 'oilT', 'profile', ...Object.keys(STOCK)];
 let LIB = [];
 function libLoad() { try { LIB = JSON.parse(localStorage.getItem('k7lab.setups') || '[]'); } catch (e) { LIB = []; } if (!Array.isArray(LIB)) LIB = []; }
 function libSave() { try { localStorage.setItem('k7lab.setups', JSON.stringify(LIB)); } catch (e) {} }
