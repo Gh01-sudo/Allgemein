@@ -462,7 +462,7 @@ label.btn{display:inline-flex;align-items:center}
     <div>
       <div class="eyebrow">NAS-Konfigurator · Preise Deutschland, Stand November 2026</div>
       <h1>NAS-Werkbank</h1>
-      <p>Wähle Gerät, Festplatten oder Zubehör, das dir wichtig ist. Die Werkbank ergänzt den Rest passend zu Kapazität, Ausfallsicherheit, Streaming und Budget und prüft Schächte, RAID, Speicher, Netzwerk, USV und Backup.</p>
+      <p>Wähle Gerät, Festplatten oder Zubehör, das dir wichtig ist. Die Werkbank ergänzt den Rest zur besten Kombination nach Preis, Strom und deinen Vorgaben (Kapazität, Ausfallsicherheit, Streaming, Budget) und prüft Schächte, RAID, Speicher, Netzwerk, USV und Backup.</p>
     </div>
   </header>
 
@@ -1040,6 +1040,7 @@ function checkAll(parts){
   const p=P(),out=[],add=(level,cats,msg)=>out.push({level,cats,msg});
   const nas=parts.nas,h=parts.hdd,n=parts.q.hdd||0,ssd=parts.ssd,ram=parts.ram,nic=parts.nic,ups=parts.ups,bak=parts.bak;
   const red=p.red;
+  if(p.data>p.cap)add("warn",["hdd"],`Deine Daten heute (${fmtTB(p.data)}) sind mehr als dein Kapazitätsziel (${fmtTB(p.cap)}). Die Werkbank plant deshalb mehr Platz ein als das Ziel; Ziel anheben oder „Daten heute“ im Dashboard senken.`);
   if(h&&nas){
     const bt=bayTotal(parts);
     if(n>bt)add("error",["hdd","nas"],`${n} Platten, aber ${nas.name} hat nur ${bt} Schächte${bt>nas.bays?" (mit Erweiterung)":""}${nas.expUnit&&bt===nas.bays?`; mit ${nas.expUnit} sind bis zu ${nas.exp} möglich`:""}.`);
@@ -1284,7 +1285,7 @@ function spec(cat,p){
   return "";
 }
 function tierDots(t){if(!t)return "";let s='<span class="tier" title="Klasse '+t+' von 5" aria-label="Klasse '+t+' von 5">';for(let i=1;i<=5;i++)s+='<i class="'+(i<=t?"on":"")+'"></i>';return s+"</span>";}
-function priceLink(cat,p){if(!p||p.none)return "";const tag=p.chk?'<span class="tag rec">Preis geprüft 25.11.</span> ':"";if(!p.price||p.kind==="diy"||cat==="bak"&&p.kind==="nas2")return tag?`<span class="links">${tag}</span>`:"";return `<span class="links">${tag}<a href="https://geizhals.de/?fs=${encodeURIComponent(p.name.replace(/\s*\(.*\)$/,""))}" target="_blank" rel="noopener">Preis prüfen ↗</a></span>`;}
+function priceLink(cat,p){if(!p||p.none)return "";const tag=p.chk?'<span class="tag rec">Preis geprüft 25.11.</span> ':"";if(!p.price||p.kind==="diy"||cat==="bak"&&p.kind==="nas2")return tag?`<span class="links">${tag}</span>`:"";const q=encodeURIComponent(p.name.replace(/\s*\(.*\)$/,""));return `<span class="links">${tag}Preis prüfen: <a href="https://geizhals.de/?fs=${q}" target="_blank" rel="noopener">Geizhals ↗</a> · <a href="https://www.alternate.de/listing.xhtml?q=${q}" target="_blank" rel="noopener">Alternate ↗</a></span>`;}
 const SEV_LABEL={error:"Konflikt",warn:"Achtung",info:"Hinweis",ok:"Passt"};
 function specRows(cat,p,parts){
   if(p.none)return [];

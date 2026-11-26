@@ -2,15 +2,15 @@
 
 Interaktiver NAS-Konfigurator nach dem Vorbild der PC-Werkbank: Du wählst Gerät, Festplatten oder Zubehör, das dir wichtig ist, und die Werkbank ergänzt den Rest passend dazu.
 
-**Öffnen:** `index.html` im Browser öffnen. Keine Installation, keine externen Verbindungen (außer den „Preis prüfen“-Links zu Geizhals).
+**Öffnen:** `index.html` im Browser öffnen. Keine Installation, keine externen Verbindungen (außer den „Preis prüfen“-Links zu Geizhals und Alternate).
 
 ## Funktionen
 - **Schwerpunkt Synology:** Hersteller-Filter (Standard: Synology, umschaltbar auf alle). 23 Synology-Modelle von DS124 bis DS2422+ inklusive neo+-Reihe, Rackstations und Auslaufmodellen, dazu Synology-RAM, -SSDs, -Festplatten, -Netzwerkkarten und Erweiterungseinheiten mit den offiziellen Freigaben je Modell.
 - **Schächte wählen:** beliebig, 1, 2, 4, 5, 6, 8 oder 12+; Erweiterungseinheiten (DX517, DX525, DX1222, RX418) erhöhen die Schachtzahl.
 - **9 Positionen:** NAS-System, Festplatten, Erweiterungseinheit, SSD-Cache, Arbeitsspeicher (mit Stückzahl), Netzwerk/PCIe-Karte, USV, Backup – Stückzahlen per − / +.
 - **Einsatz:** Dateien & Backup, Medien & Fotos (Plex/Jellyfin), Homelab & VMs.
-- **Bestmögliche Kombination:** Die Automatik spielt alle Geräte, Plattenmodelle und Stückzahlen durch, bewertet die besten Kandidaten mit der vollständigen Kompatibilitätsprüfung und schließt Kombinationen mit Konflikten aus (Budget, Kapazität, Ausfallsicherheit, Transcoding, VMs, Netzwerk, Lautstärke, Strom über 5 Jahre).
-- **Prüfung:** Schächte inkl. Erweiterung, RAID-Mindestanzahl, SMR/Desktop-Platten, Synology-Laufwerksrichtlinie 2025 (Festplatten frei, M.2 nur Synology), freigegebene RAM-Module je Modell, identische Module, ECC/Nicht-ECC bei neo+, Karten-Freigaben je Modell, M.2-Plätze, Transcoding, Docker/VMs, USV, Backup (3-2-1), Füllstand, Lautstärke.
+- **Beste Kombination nach Preis, Strom und deinen Vorgaben:** Die Automatik spielt alle Geräte, Plattenmodelle und Stückzahlen durch, bewertet die besten Kandidaten mit der vollständigen Kompatibilitätsprüfung und schließt Kombinationen mit Konflikten aus (Budget, Kapazität, Ausfallsicherheit, Transcoding, VMs, Netzwerk, Lautstärke, Strom über 5 Jahre). Die Gewichtung ist ein Modell, keine objektive Wahrheit; geschätzte Preise können die Wahl verschieben.
+- **Prüfung:** Schächte inkl. Erweiterung, RAID-Mindestanzahl, SMR/Desktop-Platten, Synology-Laufwerksrichtlinie 2025 (Festplatten frei, M.2 nur Synology), freigegebene RAM-Module je Modell, identische Module, ECC/Nicht-ECC bei neo+, Karten-Freigaben je Modell, M.2-Plätze, Transcoding, Docker/VMs, USV, Backup (3-2-1), Füllstand, Lautstärke, Daten heute größer als Kapazitätsziel.
 - **RAID-Rechner (eigener Reiter):** Platten auch unterschiedlich groß; SHR, SHR-2, Basic, JBOD, RAID 0/1/5/6/10, RAIDZ1/2/3 mit Nutzkapazität, TiB, Ausfalltoleranz, Redundanz, ungenutztem Platz, Effizienz und Tempo; Aufteilung je Platte und Übernahme der Ausfallsicherheit in die Konfiguration.
 
 ## Wie bei der PC-Werkbank
