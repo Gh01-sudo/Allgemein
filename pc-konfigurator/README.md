@@ -30,7 +30,20 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 - **Start:** beim ersten Öffnen deine Konfiguration (4K-Gaming + Kreativ); eigene Stände über „Speichern / Laden“
 - Teileliste zum Kopieren; die Konfiguration bleibt im Browser gespeichert
 
+## Sparen & Upgrade (eigener Reiter)
+- **Engpass-Analyse:** Messzeilen mit Statuslampe für Bildrate gegen Ziel, Balance Prozessor/Grafikkarte, Grafikspeicher, Arbeitsspeicher, Netzteil-Last, Kühlreserve, Speicherplatz und Platz im Gehäuse. Zu jedem Engpass gibt es die günstigste Lösung ohne neue Konflikte, zum Testen oder direkt zum Übernehmen.
+- **Spar-Planer:** Ziel-Ersparnis per Regler. Die Werkbank stellt die Tausche mit dem geringsten Leistungsverlust pro Euro zusammen (je Teil höchstens einer, ohne neue Warnungen) und zeigt neuen Preis, Bildrate und Multi-Core vorher/nachher. Gleichwertige Tausche ohne Verlust stehen extra und sind mit einem Klick übernommen.
+- **Upgrade-Roadmap:** bis zu fünf Schritte nach Leistungsgewinn pro Euro. Netzteil und Kühler werden mitgekauft, wenn sie sonst nicht reichen. Dazu ein Diagramm aus Mehrkosten und Leistungsindex (jetzt = 100) sowie „Bis hier übernehmen“.
+- **Was wäre, wenn:** ein Teil live tauschen und vorher/nachher vergleichen (Preis, Bildrate, Multi-Core, Volllast, Netzteil-Last, Kühlreserve, Lautstärke, Konflikte), mit Blättern ◀ ▶. „Testen“-Knöpfe in Engpass-Analyse, Spar-Planer, Prüfstand und bei den Besser-Vorschlägen springen hierher.
+
+## Prüfstand (eigener Reiter)
+- **Alle offenen und kritischen Punkte** deines PCs an einer Stelle: Konflikte, Warnungen, Hinweise, fehlende Teile, Budget, auslaufende Teile, geschätzte Preise, Chip-Platzhalter, Teile ohne Alternate-Angebot und Preisalter.
+- Filter nach kritisch, Warnungen und Hinweisen. Zu jedem Punkt gibt es „Zum Teil“ und, wo möglich, „Lösen“ mit dem passenden Tausch.
+- Der Reiter zeigt die Zahl der kritischen bzw. offenen Punkte als Abzeichen.
+- **Bekannte Grenzen der Werkbank:** Leistungsmodell, Preise, Alternate, Kompatibilitätsprüfung, Kühlung/Lautstärke, Strom, Aufrüst-Berater und Automatik, dazu Kennzahlen zum Datenstand.
+
 ## Design
+- **Technisches Cockpit:** feines Messraster im Hintergrund, Karten mit Eckmarken, nummerierte Reiter und Abschnitte, Monospace-Kennzahlen, Statuslampen (grün/gelb/rot, kritisch pulsierend), segmentierte Messbalken. Die Chips im Hero führen zu Prüfstand und Engpass-Analyse.
 - **Dunkles Premium-Design** als Standard (Glas-Karten, weiche Farbverläufe, Akzent-Verlauf), oben rechts auf Hell umschaltbar; die Wahl wird gemerkt.
 - **Hero-Bereich:** große, maßstabsgetreue Seitenansicht deines PCs, daneben CPU + Grafikkarte, Gesamtpreis mit Budgetbalken, sechs Kennzahlen und Status-Chips (Kompatibilität, geprüfte Preise, Budget, Kühler-Lautstärke).
 - **Bauteil-Kacheln** im Raster statt einer Liste, jede mit Symbol, Farbstreifen, großem Kernwert (z. B. „12 Kerne“, „93 Index · 16 GB“, „850 W“) und Preis.
@@ -83,7 +96,8 @@ Interaktiver PC-Konfigurator: Du wählst die Teile, die dir wichtig sind, und di
 `node pc-konfigurator/tests/run.js` prüft mit Playwright (Chromium):
 - Start ohne JavaScript-Fehler, alle Ansichten
 - 54 Regler-Kombinationen ohne Konflikt oder Warnung
-- Budget bindend (900–4.000 €), behaltene Teile bleiben bei Budget- und Regleränderungen, Freigeben
+- Budget bindend (900–4.000 €), behaltene Teile bleiben bei Budget- und Regleränderungen, Freigeben, Budget für Alternate mit Reserve
+- Sparen & Upgrade (Engpass, Spar-Planer übernehmen, Roadmap, Was-wäre-wenn) und Prüfstand (Filter, Sprung zum Teil)
 - alle Vergleiche, Aufrüst-Berater, Bauanleitung, Einkauf, zweite SSD, Speichern
 - Handy-Breite 390 px ohne horizontales Scrollen
 

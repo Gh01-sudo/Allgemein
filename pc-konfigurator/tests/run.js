@@ -26,7 +26,7 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   ok('Kopfleiste zeigt FPS',/FPS/.test(await p.textContent('#hud')));
 
   console.log('Ansichten');
-  for(const v of ['dash','ov','cmp','up','konfig']){await p.click('#tab-'+v);await p.waitForTimeout(250);}
+  for(const v of ['dash','ov','cmp','su','chk','up','konfig']){await p.click('#tab-'+v);await p.waitForTimeout(250);}
   ok('alle fünf Ansichten ohne Fehler',errs.length===0,errs);
 
   console.log('Regler-Kombinationen (Budget, Auflösung, Gaming/Kreativ, Größe)');
@@ -110,6 +110,31 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   catch(e){ok('PDF wird erzeugt',false,String(e).slice(0,120));}
   await p.click('[data-act="closePdf"]');
 
+  console.log('Sparen & Upgrade, Prüfstand');
+  await p.click('#tab-konfig');await p.waitForTimeout(200);
+  if(await p.isEnabled('#slots [data-act=releaseAll]')){await p.click('#slots [data-act=releaseAll]');await p.waitForTimeout(300);}
+  await p.click('#tab-su');await p.waitForTimeout(400);
+  ok('Engpass-Analyse mit Messzeilen',await p.$$eval('.eng-r',x=>x.length)>=5);
+  ok('Upgrade-Roadmap mit Diagramm',await p.$$eval('.road-ch circle',x=>x.length)>=2);
+  const pr0=await p.textContent('#heroPrice');
+  await p.$eval('#suSave',el=>{el.value=el.max;el.dispatchEvent(new Event('input',{bubbles:true}));});await p.waitForTimeout(500);
+  const nPlan=await p.$$eval('.su-save tbody tr',x=>x.length);
+  ok('Spar-Planer schlägt Tausche vor',nPlan>=1,nPlan);
+  const before=await p.evaluate(()=>Object.values(JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks).map(v=>v.id).join());
+  await p.click('[data-act=suSaveAll]');await p.waitForTimeout(400);
+  const after=await p.evaluate(()=>Object.values(JSON.parse(localStorage.getItem('pcwerkbank.v1')).picks).map(v=>v.id).join());
+  ok('Spar-Plan wird übernommen',before!==after);
+  const wi0=await p.$eval('#wiPart',x=>x.value);await p.click('[data-act=wiStep][data-d="1"]');await p.waitForTimeout(300);
+  ok('Was-wäre-wenn blättert und vergleicht',(await p.$eval('#wiPart',x=>x.value))!==wi0&&await p.$$eval('.su-tbl.wi tbody tr',x=>x.length)>=6);
+  await p.selectOption('#wiCat','psu');await p.waitForTimeout(300);
+  ok('Was-wäre-wenn: Kategorie wechseln',(await p.textContent('.su-what')).includes('Netzteil'));
+  await p.click('#tab-chk');await p.waitForTimeout(400);
+  ok('Prüfstand mit Zählern und Grenzen',await p.$$eval('.ck',x=>x.length)===4&&await p.$$eval('.lim dt',x=>x.length)>=6);
+  await p.click('.ck.info');await p.waitForTimeout(200);
+  ok('Prüfstand-Filter wirkt',(await p.textContent('.chk-list h2')).includes('Hinweise'));
+  const j=await p.$('.pt [data-act=jump]');if(j){await j.click();await p.waitForTimeout(600);}
+  ok('Sprung zum Teil öffnet den Konfigurator',!j||await p.isVisible('#viewKonfig'));
+
   console.log('Speichern und Code');
   await p.click('#tab-konfig');await p.waitForTimeout(200);
   await p.click('#hero [data-act="openSave"]');await p.waitForTimeout(200);
@@ -119,7 +144,7 @@ const ok=(name,cond,info)=>{if(cond){pass++;console.log('  ✓',name);}else{fail
   console.log('Handy (390 px)');
   const m=await b.newPage({viewport:{width:390,height:844}});m.on('pageerror',e=>errs.push(e.message));
   await m.goto(URL);await m.waitForTimeout(400);
-  const widths=[];for(const v of ['konfig','dash','ov','cmp','up']){await m.click('#tab-'+v);await m.waitForTimeout(300);widths.push(await m.evaluate(()=>document.documentElement.scrollWidth));}
+  const widths=[];for(const v of ['konfig','dash','ov','cmp','su','chk','up']){await m.click('#tab-'+v);await m.waitForTimeout(300);widths.push(await m.evaluate(()=>document.documentElement.scrollWidth));}
   ok('kein horizontales Scrollen in allen Ansichten',widths.every(w=>w<=390),widths);
 
   ok('insgesamt keine JavaScript-Fehler',errs.length===0,errs);
