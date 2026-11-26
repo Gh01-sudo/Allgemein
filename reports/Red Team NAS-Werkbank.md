@@ -118,3 +118,18 @@ Zwei unabhängige Prüfer haben die gesamte Datenbank und alle Regeln geprüft: 
 - Preise ohne belastbaren Beleg (als Schätzung markiert): DS725+, DS725neo+, DS1525neo+, DS1825neo+, DS2422+, RS422+, RS1221+, Auslaufmodelle, HAT3320-20T, SNV5420-400/800, DX517, DX1222, RX418, ältere RAM-Module.
 - Ob Synology Fremd-Netzwerkkarten offiziell zulässt, ließ sich nicht belegen; das Tool meldet sie als Konflikt (kein Treiber in DSM).
 - DX525: Synology nennt kompatible Laufwerke als Pflicht; ob DSM 7.3 das lockert, ist offen (Hinweis im Tool).
+
+---
+
+# Datenbank-Aktualisierung 26.11.2026
+
+Preise erneut über Preisvergleichs-Snippets (Geizhals/heise, Stand Oktober/November 2026) und alternate.de geprüft. Kennzeichnung im Tool jetzt „Preis belegt“ (Beleg nicht älter als ca. 6 Wochen); Grenzfälle (Einzel- oder Marketplace-Angebot, Beleg älter) bleiben Schätzung.
+
+- **Preise mit neuem Beleg (47):** u. a. QNAP TS-233 249 €, TS-433 450 €, TS-264 496 €, TS-473A 992 €; Asustor AS6804T 1.632 €; UGREEN DXP8800 Plus 1.097 €, DXP6800 Pro 849 €, DXP4800 Pro 600 €; WD Red Pro 16 TB 743 €, IronWolf Pro 16 TB 671 €, Toshiba N300 18 TB 989 €, Exos M 30 TB 1.329 €; WD Red SN700 1 TB 328 €; Kingston DDR5-ECC 32 GB 1.176 €; Synology D4ES03-16G 349 €, SNV5420-800G 886 €, RS1221+ 1.458 €, RX418 564 €.
+- **Neu belegt ohne Änderung (31):** u. a. alle aktuellen Synology-Plus-Geräte, DX517/DX525, Synology-Karten, HAT3300-4T/HAT3310-12T/HAT3320-20T.
+- **Als Schätzung zurückgestuft:** QNAP TS-464 (641 €), UGREEN DXP4800 Plus (514 €), TerraMaster F4-424 Pro, Minisforum N5 Pro (999 €), D4ECSO-2666-16G (185 €), DX1222, QNAP QXG-10G1T.
+- **WD Red Pro 24 TB:** auf das Nachfolgemodell WD241KFGX umgestellt (1.309 €, Datenblatt 3,9/6,4 W).
+- **Neue Teile:** WD Red Pro 26 TB, Seagate IronWolf Pro 28/30/32 TB, Seagate Exos M 32 TB, Toshiba MG11 24 TB; UGREEN DXP6800 Plus, DXP6800 Ultra, DXP8800 Ultra; Minisforum N5 Max (128 GB). Einzelne Gerätefelder dieser Neuzugänge (RAM-Steckplätze, Leerlauf-Watt, Geräusch) sind aus Schwestermodellen übernommen.
+- **Synology:** Laut Synology-Newsroom keine neuen DiskStations, HAT-Größen, SSDs oder Karten seit Juli 2026 außer der bereits enthaltenen neo+-Reihe.
+- **Nicht aufgenommen:** QNAP TS-h265/TS-h465 (kein Euro-Preis), Exos M 36 TB (nicht im Handel), Asustor Flashstor Gen3 (keine 3,5″-Schächte).
+- **Modellkorrektur:** Der CPU-Bonus im Homelab-Profil ist ab Index 80 gedeckelt, sonst gewann die 2.719-€-N5-Max allein über die Rechenleistung.
