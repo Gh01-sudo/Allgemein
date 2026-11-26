@@ -5,7 +5,7 @@ Interaktives Fahrwerks-Dashboard für die Suzuki GSX-R 1000 K7 (2007–2008) mit
 `index.html` im Browser öffnen. Enthält:
 
 - Setup & Simulation: Viertelfahrzeug-Modell je Achse für sechs Fahrsituationen (Bodenwelle, Schlagloch, Bremsrippen, Bremsung 0,8 g, Beschleunigung 0,6 g, Kurve 45°), immer im Vergleich zur Serie
-- Live-Seitenansicht mit echter Kinematik: Lenkkopfwinkel, Nachlauf, Radstand, Nickwinkel
+- Live-Seitenansicht mit echter Kinematik: Lenkkopfwinkel, Nachlauf, Radstand, Nickwinkel, Sitzhöhe (Werksmaß 810 mm ohne Fahrer, mit Durchhang live)
 - Durchhang-Messassistent mit konkreter Vorspann-Empfehlung
 - Fahrverhalten-Diagnose mit Testknöpfen
 - Technische Daten mit Prüfstatus und Quellen (doppelte Prüfung), Modellannahmen, Rechenprüfungen

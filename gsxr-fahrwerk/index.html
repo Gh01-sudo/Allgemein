@@ -64,6 +64,9 @@ button{font:inherit;color:inherit}
 @media (max-width:1100px){.stage{grid-template-columns:minmax(0,1fr)}}
 .bikebox{position:relative;background:radial-gradient(1200px 500px at 60% 30%,var(--accent-soft),transparent 70%),var(--bg2);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
 .bikebox svg{display:block;width:100%;height:auto}
+.bikebox .blab{font-family:var(--f-mono,'JetBrains Mono',monospace);font-size:32px}
+.bikebox .blab.l1{font-size:34px}
+@media (max-width:700px){.bikebox .blab{font-size:54px}.bikebox .blab.l1{font-size:66px}.bikebox .blab.l2{display:none}}
 .gridbg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px;opacity:.35;pointer-events:none;mask-image:linear-gradient(to bottom,#000 40%,transparent)}
 .hud{position:absolute;left:14px;top:12px;display:flex;flex-direction:column;gap:2px;pointer-events:none}
 .hud .big{font-family:var(--f-display);font-size:1.05rem;font-weight:600}
@@ -220,7 +223,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="bikebox">
       <div class="gridbg"></div>
       <div class="hud"><span class="big" id="hudTitle">Statisch mit Fahrer</span><span class="sub" id="hudSub">Seitenansicht maßstäblich, Federwege real</span></div>
-      <svg id="bike" viewBox="-380 -1230 2220 1380" role="img" aria-label="Seitenansicht der GSX-R 1000 K7 als Schema mit Gabel, Federbein und Geometrie"></svg>
+      <svg id="bike" viewBox="-380 -1230 2220 1450" role="img" aria-label="Seitenansicht der GSX-R 1000 K7 als Schema mit Gabel, Federbein und Geometrie"></svg>
       <div class="player">
         <div class="seg" id="scenSeg" role="group" aria-label="Fahrsituation"></div>
         <button class="btn pri" id="playBtn" aria-label="Simulation abspielen">▶ Abspielen</button>
@@ -409,7 +412,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const G = 9.81, DEG = Math.PI / 180;
-const fmt = (v, d = 0) => (Number.isFinite(v) ? v : 0).toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (v, d = 0) => { let x = Number.isFinite(v) ? +v.toFixed(d) : 0; if (x === 0) x = 0; return x.toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }); }; // ohne „-0“
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
@@ -418,7 +421,7 @@ const M = {
   rake0: 23.75, trail0: 98, wb0: 1415,
   Rf: 299.9, Rr: 310.9,            // 120/70-17: 215,9 + 84 mm ; 190/50-17: 215,9 + 95 mm
   travelF: 125, travelR: 130,
-  bikeWet: 200, frontShare: 0.51, fuelFull: 17.5 * 0.745,
+  bikeWet: 212, frontShare: 0.51, fuelFull: 17.5 * 0.745,
   muF: 17, muR: 22,
   kFstock: 9.57, kRstock: 99, MR: 2.05,
   riderFront: 0.40, passFront: 0.05,
@@ -697,19 +700,24 @@ const el = (tag, attrs = {}, parent = svg) => { const e = document.createElement
 const P = p => `${p.x.toFixed(1)},${(-p.y).toFixed(1)}`;
 const poly = pts => 'M' + pts.map(P).join('L') + 'Z';
 const line = (a, b) => `M${P(a)}L${P(b)}`;
+// Umrisse in mm, Ursprung Hinterachse am Boden, Maschine ohne Fahrer (Referenzlage = Werksmaße).
+// Fixmaße: Sitzhöhe 810 mm (tiefster Punkt Fahrersitz), Bodenfreiheit 130 mm, Gesamthöhe ca. 1130 mm,
+// Felge 17" (Radius 215,9 mm), Bremsscheiben 310 / 220 mm. Die übrigen Umrisse sind schematisch.
 const SH = {
-  frame: [[1080, 930], [900, 830], [700, 640], [590, 520], [545, 420], [590, 360], [680, 400], [860, 560], [1060, 680], [1150, 770]],
-  engine: [[640, 520], [760, 560], [960, 720], [1060, 690], [1085, 560], [1030, 420], [1000, 330], [880, 255], [700, 265], [620, 350]],
-  tank: [[1085, 950], [1020, 1005], [900, 1022], [780, 985], [722, 905], [800, 862], [1000, 880]],
-  seat: [[722, 905], [610, 850], [490, 838], [478, 812], [610, 808], [735, 862]],
-  tail: [[490, 838], [300, 905], [120, 965], [92, 945], [140, 905], [360, 800], [560, 760], [650, 790], [610, 808], [478, 812]],
-  fairing: [[1090, 1000], [1230, 1040], [1330, 940], [1362, 830], [1310, 700], [1200, 570], [1130, 430], [1045, 322], [900, 268], [720, 258], [645, 330], [700, 450], [880, 500], [1000, 600], [1075, 760], [1095, 900]],
-  screen: [[1090, 1000], [1170, 1120], [1236, 1045], [1180, 1012]],
-  muffler: [[560, 470], [360, 600], [330, 560], [530, 430]],
+  frame: [[1123, 925], [1060, 905], [880, 800], [720, 690], [620, 660], [560, 620], [535, 480], [520, 380], [560, 310], [640, 310], [670, 390], [720, 500], [820, 585], [1000, 690], [1150, 745], [1190, 770]],
+  engine: [[655, 560], [640, 420], [650, 300], [700, 205], [760, 165], [980, 160], [1060, 215], [1085, 320], [1095, 430], [1120, 560], [1080, 650], [1000, 690], [880, 640], [760, 600]],
+  tank: [[1110, 930], [1040, 975], [900, 985], [760, 950], [665, 872], [700, 820], [850, 800], [1000, 850]],
+  seat: [[665, 872], [600, 836], [540, 812], [490, 810], [430, 814], [395, 826], [395, 798], [560, 785], [690, 835]],
+  pillion: [[400, 830], [180, 905], [172, 930], [200, 938], [402, 866]],
+  tail: [[400, 830], [180, 905], [60, 945], [-45, 985], [-60, 965], [-35, 935], [120, 875], [330, 790], [520, 745], [650, 730], [700, 800], [600, 790], [400, 800]],
+  fairing: [[1110, 930], [1180, 1010], [1250, 1000], [1345, 985], [1390, 920], [1400, 860], [1370, 800], [1290, 740], [1215, 650], [1185, 540], [1110, 420], [1090, 300], [1060, 220], [1000, 155], [930, 135], [730, 140], [660, 190], [640, 300], [700, 420], [800, 520], [900, 600], [1000, 700], [1070, 800]],
+  screen: [[1250, 1000], [1345, 985], [1320, 1030], [1232, 1128], [1192, 1085]],
+  muffler: [[700, 180], [650, 200], [560, 420], [480, 610], [470, 640], [120, 760], [95, 840], [130, 862], [490, 730], [525, 640], [600, 440], [740, 210]],
 };
 const toPts = a => a.map(([x, y]) => ({ x, y }));
 for (const k in SH) SH[k] = toPts(SH[k]);
-const SHOCK_TOP = { x: 640, y: 640 }, COG = { x: 740, y: 620 };
+const SHOCK_TOP = { x: 575, y: 640 }, COG = { x: M.wb0 * M.frontShare, y: M.hBike * 1000 };
+const SEAT_PT = { x: 490, y: 810 }, SEAT_H0 = 810, RIM_R = 215.9;
 let G_ = {};
 function buildSvg() {
   svg.innerHTML = '';
@@ -724,9 +732,10 @@ function buildSvg() {
   // Räder
   for (const w of ['R', 'F']) {
     const g = el('g'); G_['wheel' + w] = g;
-    el('circle', { r: w === 'F' ? M.Rf : M.Rr, fill: 'none', stroke: 'var(--tyre)', 'stroke-width': w === 'F' ? 70 : 88 }, g);
-    el('circle', { r: w === 'F' ? M.Rf : M.Rr, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 3, opacity: .55 }, g);
-    el('circle', { r: 216, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 7 }, g);
+    const R = w === 'F' ? M.Rf : M.Rr;   // Reifen liegt zwischen Felgenhorn und Außendurchmesser, berührt den Boden genau
+    el('circle', { r: ((R + RIM_R) / 2).toFixed(1), fill: 'none', stroke: 'var(--tyre)', 'stroke-width': (R - RIM_R).toFixed(1) }, g);
+    el('circle', { r: R - 1.5, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 3, opacity: .55 }, g);
+    el('circle', { r: RIM_R, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 7 }, g);
     el('circle', { r: w === 'F' ? 155 : 110, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 12, 'stroke-dasharray': '10 7', opacity: .7 }, g);
     const sp = el('g', {}, g); G_['spokes' + w] = sp;
     for (let i = 0; i < 3; i++) { const a = i * 120 * DEG; el('path', { d: `M0,0 L${(Math.cos(a) * 212).toFixed(1)},${(Math.sin(a) * 212).toFixed(1)} M0,0 L${(Math.cos(a + .28) * 212).toFixed(1)},${(Math.sin(a + .28) * 212).toFixed(1)}`, stroke: 'var(--metal)', 'stroke-width': 10, 'stroke-linecap': 'round' }, sp); }
@@ -735,13 +744,16 @@ function buildSvg() {
   G_.swingarm = el('path', { stroke: 'var(--metal)', 'stroke-width': 34, 'stroke-linecap': 'round', fill: 'none' });
   G_.fairing = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3, 'stroke-dasharray': '3 6' });
   G_.engine = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 4, opacity: .95 });
-  G_.muffler = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 4 });
+  G_.muffler = el('path', { fill: 'var(--metal)', 'fill-opacity': .28, stroke: 'var(--line2)', 'stroke-width': 4 });
   G_.frame = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--accent)', 'stroke-width': 5 });
   G_.shockBody = el('path', { stroke: 'var(--metal)', 'stroke-width': 26, 'stroke-linecap': 'round', fill: 'none' });
   G_.shockSpring = el('path', { stroke: 'var(--rear)', 'stroke-width': 9, fill: 'none', 'stroke-linejoin': 'round' });
   G_.tank = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
-  G_.seat = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 3 });
   G_.tail = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
+  G_.seat = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 3 });
+  G_.pillion = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 3, opacity: .8 });
+  G_.seatDim = el('path', { stroke: 'var(--muted)', 'stroke-width': 2.5, 'stroke-dasharray': '10 8', fill: 'none' });
+  G_.seatMark = el('path', { stroke: 'var(--fg)', 'stroke-width': 4, fill: 'none' });
   G_.screen = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--xray-line)', 'stroke-width': 2 });
   G_.forkInner = el('path', { stroke: 'var(--front)', 'stroke-width': 30, 'stroke-linecap': 'butt', fill: 'none' });
   G_.oring = el('path', { stroke: 'var(--bad)', 'stroke-width': 12, fill: 'none' });
@@ -754,14 +766,16 @@ function buildSvg() {
   el('path', { d: 'M-22,0A22,22 0 0,1 0,-22L0,0Z M22,0A22,22 0 0,1 0,22L0,0Z', fill: 'var(--fg)' }, G_.cog);
   G_.loadF = el('path', { stroke: 'var(--front)', 'stroke-width': 7, fill: 'none', 'marker-end': 'url(#arw)' });
   G_.loadR = el('path', { stroke: 'var(--rear)', 'stroke-width': 7, fill: 'none', 'marker-end': 'url(#arw)' });
-  const T = (cls, fill = 'var(--fg)', size = 34, anchor = 'middle') => el('text', { fill, 'font-size': size, 'font-family': 'JetBrains Mono, monospace', 'text-anchor': anchor });
-  G_.tRake = T('', 'var(--accent)', 36, 'start');
-  G_.tTrail = T('', 'var(--warn)', 32);
-  G_.tWb = T('', 'var(--muted)', 32);
-  G_.tF = T('', 'var(--front)', 34, 'end');
-  G_.tR = T('', 'var(--rear)', 34, 'start');
-  G_.tLoadF = T('', 'var(--front)', 28);
-  G_.tLoadR = T('', 'var(--rear)', 28);
+  // Beschriftung: Klasse steuert die Größe (auf schmalen Bildschirmen per CSS größer)
+  const T = (cls, fill = 'var(--fg)', anchor = 'middle') => el('text', { class: 'blab ' + cls, fill, 'text-anchor': anchor });
+  G_.tRake = T('l1', 'var(--accent)', 'end');
+  G_.tTrail = T('l1', 'var(--warn)', 'end');
+  G_.tWb = T('l1', 'var(--muted)');
+  G_.tSeat = T('ls', 'var(--fg)');
+  G_.tF = T('l2', 'var(--front)', 'end');
+  G_.tR = T('l2', 'var(--rear)', 'end');
+  G_.tLoadF = T('l2', 'var(--front)', 'end');
+  G_.tLoadR = T('l2', 'var(--rear)', 'start');
 }
 let wheelRot = 0;
 function drawBike(st) {
@@ -770,7 +784,7 @@ function drawBike(st) {
   // Boden
   const pts = [];
   for (let x = -380; x <= 1840; x += 20) pts.push({ x, y: st.road ? st.road(x) : 0 });
-  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L1840,150L-380,150Z`);
+  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L1840,220L-380,220Z`);
   // Räder
   wheelRot = -(st.dist || 0) / M.Rf / DEG;
   G_.wheelF.setAttribute('transform', `translate(${P(p.axF)})`);
@@ -779,7 +793,7 @@ function drawBike(st) {
   G_.spokesR.setAttribute('transform', `rotate(${(-(st.dist || 0) / M.Rr / DEG).toFixed(1)})`);
   // Chassis
   const tr = arr => poly(arr.map(W));
-  for (const k of ['frame', 'engine', 'tank', 'seat', 'tail', 'fairing', 'screen', 'muffler']) G_[k].setAttribute('d', tr(SH[k]));
+  for (const k of ['frame', 'engine', 'tank', 'seat', 'pillion', 'tail', 'fairing', 'screen', 'muffler']) G_[k].setAttribute('d', tr(SH[k]));
   const piv = W(PIV);
   G_.swingarm.setAttribute('d', line(piv, p.axR));
   // Federbein: oben am Rahmen, unten Umlenkung (Punkt auf der Schwinge, 25 % ab Drehpunkt, 45 mm darunter)
@@ -806,7 +820,10 @@ function drawBike(st) {
   G_.clamps.setAttribute('d', line(axT, topC) + line(axB, botC));
   const bar = W({ x: onFork(665).x - 95, y: onFork(665).y + 10 });
   G_.bar.setAttribute('d', line(fk(665), bar));
-  G_.caliper.setAttribute('d', poly([{ x: ax.x + 120, y: ax.y + 150 }, { x: ax.x + 175, y: ax.y + 95 }, { x: ax.x + 195, y: ax.y + 120 }, { x: ax.x + 140, y: ax.y + 180 }].map(q => q)));
+  // Radialsattel hinter dem Gleitrohr, über dem Bremsscheibenrand (Scheibe 310 mm)
+  const fu = { x: Math.cos(ang), y: Math.sin(ang) }, fb = { x: -fu.y, y: fu.x };   // fb zeigt nach hinten
+  const cal = (a, b) => ({ x: ax.x + fu.x * a + fb.x * b, y: ax.y + fu.y * a + fb.y * b });
+  G_.caliper.setAttribute('d', poly([cal(25, 105), cal(140, 105), cal(140, 160), cal(25, 160)]));
   // Schwerpunkt
   const cg = W(COG); G_.cog.setAttribute('transform', `translate(${P(cg)})`);
   // Lenkachse bis Boden + Nachlauf
@@ -816,20 +833,25 @@ function drawBike(st) {
   G_.axisLine.setAttribute('d', line(A, Gp));
   const cp = { x: ax.x, y: st.road ? st.road(ax.x) : 0 };
   G_.trailSeg.setAttribute('d', line({ x: Gp.x, y: Gp.y - 6 }, { x: cp.x, y: cp.y - 6 }));
-  G_.wbDim.setAttribute('d', line({ x: 0, y: -95 }, { x: ax.x, y: -95 }));
-  // Lastpfeile
+  G_.wbDim.setAttribute('d', line({ x: 0, y: -50 }, { x: ax.x, y: -50 }));
+  // Sitzhöhe: tiefster Punkt des Fahrersitzes, senkrecht zum Boden
+  const sp = W(SEAT_PT), seatH = sp.y - (st.road ? st.road(sp.x) : 0);
+  G_.seatDim.setAttribute('d', line(sp, { x: sp.x, y: sp.y - seatH }));
+  G_.seatMark.setAttribute('d', line({ x: sp.x - 40, y: sp.y }, { x: sp.x + 40, y: sp.y }));
+  // Lastpfeile außerhalb der Reifen
   const lf = clamp((st.ftF || 0) / 40, 0, 220), lr = clamp((st.ftR || 0) / 40, 0, 220);
-  G_.loadF.setAttribute('d', line({ x: ax.x + 330, y: 40 + lf }, { x: ax.x + 330, y: 40 }));
-  G_.loadR.setAttribute('d', line({ x: -300, y: 40 + lr }, { x: -300, y: 40 }));
+  G_.loadF.setAttribute('d', line({ x: Math.max(ax.x + M.Rf + 45, 1770), y: 30 + lf }, { x: Math.max(ax.x + M.Rf + 45, 1770), y: 30 }));
+  G_.loadR.setAttribute('d', line({ x: -350, y: 30 + lr }, { x: -350, y: 30 }));
   // Texte
   const tx = (e, p, s) => { e.setAttribute('x', p.x.toFixed(0)); e.setAttribute('y', (-p.y).toFixed(0)); e.textContent = s; };
-  tx(G_.tRake, { x: A.x + 30, y: A.y + 10 }, `${fmt(p.rake, 2)}°`);
-  tx(G_.tTrail, { x: (Gp.x + cp.x) / 2, y: -50 }, `Nachlauf ${fmt(p.trail, 1)} mm`);
-  tx(G_.tWb, { x: ax.x / 2, y: -140 }, `Radstand ${fmt(p.wb, 0)} mm`);
-  tx(G_.tF, { x: 1830, y: 1070 }, `Gabel ${fmt(st.sF, 0)} / ${M.travelF} mm`);
-  tx(G_.tR, { x: -360, y: 1070 }, `Hinten ${fmt(st.xR, 0)} / ${M.travelR} mm`);
-  tx(G_.tLoadF, { x: ax.x + 330, y: 60 + lf + 30 }, `${fmt((st.ftF || 0) / 1000, 2)} kN`);
-  tx(G_.tLoadR, { x: -300, y: 60 + lr + 30 }, `${fmt((st.ftR || 0) / 1000, 2)} kN`);
+  tx(G_.tRake, { x: A.x - 25, y: A.y + 5 }, `Lenkkopf ${fmt(p.rake, 2)}°`);
+  tx(G_.tWb, { x: ax.x / 2, y: -122 }, `Radstand ${fmt(p.wb, 0)} mm`);
+  tx(G_.tTrail, { x: 1830, y: -122 }, `Nachlauf ${fmt(p.trail, 1)} mm`);
+  tx(G_.tSeat, { x: sp.x, y: sp.y + 150 }, `Sitzhöhe ${fmt(seatH, 0)} mm (leer ${SEAT_H0})`);
+  tx(G_.tF, { x: 1830, y: 1175 }, `Federweg vorn ${fmt(st.sF, 0)} / ${M.travelF} mm`);
+  tx(G_.tR, { x: 1830, y: 1120 }, `Federweg hinten ${fmt(st.xR, 0)} / ${M.travelR} mm`);
+  tx(G_.tLoadR, { x: -370, y: -186 }, `Radlast hinten ${fmt((st.ftR || 0) / 1000, 2)} kN`);
+  tx(G_.tLoadF, { x: 1830, y: -186 }, `Radlast vorn ${fmt((st.ftF || 0) / 1000, 2)} kN`);
   return p;
 }
 
@@ -1298,16 +1320,19 @@ const SRC = {
   MCN: ['MCN Test GSX-R1000 2007–2008', 'https://motorcyclenews.com/bike-reviews/suzuki/gsx-r1000/2007'],
   PS: ['1000PS Modellseite 2007', 'https://1000ps.com/en-us/model/16/suzuki-gsx-r-1000/2007'],
   KT: ['K-Tech Federn K7/K8 (M-Sliders)', 'https://msliders.com/products/rear-shock-spring-gsx-r-1000-k7-k8'],
-  SF: ['suzuki-forums.net: HS/LS Compression K7/K8', 'https://www.suzuki-forums.net/threads/high-and-low-compression-on-gsxr1000-k7-k8.1283/']
+  SF: ['suzuki-forums.net: HS/LS Compression K7/K8', 'https://www.suzuki-forums.net/threads/high-and-low-compression-on-gsxr1000-k7-k8.1283/'],
+  MO: ['MOTORRAD Top-Test GSX-R 1000 (2007)', 'https://www.motorradonline.de/supersportler/top-test-suzuki-gsx-r-1000-der-siebte-streich/'],
+  MS: ['motorcyclespecs.co.za GSX-R1000 2007', 'https://www.motorcyclespecs.co.za/model/suzu/suzuki_gsxr1000%2007.htm'],
+  SC: ['suzukicycles.org Modelljahr 2007', 'https://www.suzukicycles.org/2000-2009/2007a.shtml']
 };
 const STATL = { ok2: ['good', '2 Quellen'], ok1: ['info', '1 Quelle'], conf: ['warn', 'abweichend'], open: ['mut', 'offen'], model: ['mut', 'Modell'] };
 const DATA = [
   ['Motor', 'Bauart', 'Reihenvierzylinder, flüssigkeitsgekühlt, DOHC, 4 Ventile je Zylinder', 'ok1', ['MD'], ''],
   ['Motor', 'Hubraum', '999 cm³ (998,6 cm³)', 'ok2', ['AM', 'MD'], 'Gegenprobe: 73,4² × π/4 × 59,0 × 4 = 998,6 cm³'],
   ['Motor', 'Bohrung × Hub', '73,4 × 59,0 mm', 'ok2', ['MD', 'AM'], 'Rechnerisch konsistent mit 998,6 cm³'],
-  ['Motor', 'Verdichtung', '12,5 : 1', 'ok1', ['MD'], ''],
-  ['Motor', 'Nennleistung', '178–185 PS bei 12.000 /min', 'conf', ['PS', 'MCN'], 'Drehzahl 12.000 /min bestätigt (MCN). Leistungsangaben schwanken je nach Markt und Quelle. Fahrzeugschein, Feld P.2, zeigt den Wert deiner Maschine.'],
-  ['Motor', 'Drehmoment', 'ca. 117 Nm bei ca. 10.000 /min', 'open', [], 'Nicht doppelt bestätigt'],
+  ['Motor', 'Verdichtung', '12,5 : 1', 'ok2', ['MD', 'MO'], ''],
+  ['Motor', 'Nennleistung', '185 PS (136 kW) bei 12.000 /min', 'ok2', ['MO', 'SC'], 'MOTORRAD maß auf dem Prüfstand rund 180 PS. Länderversionen können abweichen, Fahrzeugschein Feld P.2 zeigt den Wert deiner Maschine.'],
+  ['Motor', 'Drehmoment', '117 Nm bei 10.000 /min', 'ok2', ['MO', 'MD'], 'suzukicycles.org nennt 116,7 Nm'],
   ['Motor', 'Gemischaufbereitung', 'Saugrohreinspritzung mit Doppel-Drosselklappen', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
   ['Elektronik', 'Fahrmodi S-DMS', 'Drei Motorkennfelder A / B / C, am rechten Lenkerschalter', 'open', [], 'Beeinflusst nur die Leistungsentfaltung, nicht das Fahrwerk'],
   ['Elektronik', 'Lenkungsdämpfer', 'Hydraulisch, elektronisch geregelt (geschwindigkeitsabhängig), nicht von Hand einstellbar', 'ok1', ['CW'], 'Cycle World nennt den elektronischen Lenkungsdämpfer als Stabilitätsfaktor'],
@@ -1316,24 +1341,25 @@ const DATA = [
   ['Fahrwerk', 'Gabel', 'KYB Upside-Down, 43 mm, voll einstellbar: Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'SF'], 'Getrennte HS/LS-Druckstufe in mehreren K7-Threads bestätigt'],
   ['Fahrwerk', 'Federweg vorn', '125 mm', 'ok1', ['MD'], 'bikez führt 125 mm teils unter Bodenfreiheit, daher nur eine belastbare Quelle'],
   ['Fahrwerk', 'Federbein', 'Zentralfederbein mit Umlenkung, voll einstellbar: Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'DE'], 'Höhenverstellung am Federbein: im Werkstatthandbuch prüfen'],
-  ['Fahrwerk', 'Federweg hinten', '130 mm', 'open', [], 'Nicht doppelt bestätigt; Modell rechnet mit 130 mm Radweg'],
+  ['Fahrwerk', 'Federweg hinten', '130 mm', 'conf', ['MD', 'MS', 'MO'], 'moto-data und motorcyclespecs: 130 mm; MOTORRAD-Datenblatt: 135 mm. Modell rechnet mit 130 mm Radweg'],
   ['Fahrwerk', 'Federrate Gabel (Serie)', '0,976 kg/mm je Holm ≈ 9,57 N/mm', 'ok1', ['TK'], 'Angabe ohne Einheit veröffentlicht, kg/mm abgeleitet; Traxxion-Ersatz 0,975 kg/mm passt dazu'],
   ['Fahrwerk', 'Federrate Federbein (Serie)', '10,1 kg/mm ≈ 99 N/mm', 'ok1', ['TK', 'KT'], 'K-Tech bietet 95 / 105 / 110 N/mm an, Serie liegt plausibel dazwischen'],
-  ['Geometrie', 'Lenkkopfwinkel', '23,75° (23° 45′)', 'ok2', ['CW', 'MD'], 'Einzelne Datenbanken runden auf 24°'],
-  ['Geometrie', 'Nachlauf', '98 mm', 'ok2', ['BW', 'MD'], 'Cycle World nennt 3,92 in ≈ 99,6 mm'],
-  ['Geometrie', 'Radstand', '1415 mm', 'ok2', ['MD', 'CW'], 'Cycle World: Radstand gegenüber K6 verlängert'],
+  ['Geometrie', 'Lenkkopfwinkel', '23,75° (23° 45′)', 'ok2', ['CW', 'MO'], 'MOTORRAD gibt 66,2° zur Waagerechten an, also 23,8° zur Senkrechten. moto-data rundet auf 24°'],
+  ['Geometrie', 'Nachlauf', '98 mm', 'ok2', ['MO', 'MD'], 'Cycle World nennt 3,92 in ≈ 99,6 mm'],
+  ['Geometrie', 'Radstand', '1415 mm', 'ok2', ['MO', 'MD'], 'Cycle World: Radstand gegenüber K6 verlängert'],
   ['Geometrie', 'Gabel-Offset (abgeleitet)', `${fmt(M.offset, 1)} mm`, 'model', [], 'Aus Lenkkopfwinkel, Nachlauf und Reifenradius 299,9 mm berechnet'],
-  ['Abmessungen', 'Sitzhöhe', '810 mm', 'ok1', ['CC'], 'CycleChaos: 810 mm für K5 bis L6'],
-  ['Abmessungen', 'Bodenfreiheit', '130 mm', 'ok1', ['CC'], 'Allgemeine Angabe für die Baureihe'],
-  ['Abmessungen', 'Trockengewicht', '172 kg', 'ok2', ['MH', 'MD'], ''],
-  ['Abmessungen', 'Fahrfertig (Modellwert)', 'ca. 200 kg', 'model', [], 'Trocken 172 kg + Kraftstoff, Öl, Kühlmittel, Batterie; Modellannahme'],
-  ['Abmessungen', 'Tankinhalt', '17,5 l', 'conf', ['CC', 'BZ'], 'bikez nennt 18 l'],
-  ['Räder & Reifen', 'Reifen vorn', '120/70 ZR17', 'open', [], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.1) prüfen'],
-  ['Räder & Reifen', 'Reifen hinten', '190/50 ZR17', 'open', [], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.2) prüfen'],
+  ['Abmessungen', 'Sitzhöhe', '810 mm', 'ok2', ['MO', 'SC', 'MD'], 'Ohne Fahrer gemessen; die Seitenansicht zeigt den Wert mit Fahrer-Durchhang zusätzlich an'],
+  ['Abmessungen', 'Bodenfreiheit', '130 mm', 'ok2', ['SC', 'MD'], ''],
+  ['Abmessungen', 'Länge × Breite × Höhe', '2045 × 720 × 1130 mm', 'ok2', ['SC', 'MD'], 'MOTORRAD hat 2060 × 780 × 1140 mm nachgemessen (mit Spiegeln)'],
+  ['Abmessungen', 'Trockengewicht', '172 kg', 'ok2', ['SC', 'MD'], ''],
+  ['Abmessungen', 'Gewicht vollgetankt', '212 kg (gewogen)', 'ok1', ['MO'], 'MOTORRAD-Messung; moto-data nennt 192 kg „wet“ ohne Angabe zum Tank. Modell rechnet mit 212 kg'],
+  ['Abmessungen', 'Tankinhalt', '17,5 l', 'ok2', ['MO', 'MD'], 'bikez nennt 18 l'],
+  ['Räder & Reifen', 'Reifen vorn', '120/70 ZR17 auf 3.50 × 17', 'ok2', ['MO', 'MD'], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.1) prüfen'],
+  ['Räder & Reifen', 'Reifen hinten', '190/50 ZR17 auf 6.00 × 17', 'ok2', ['MO', 'MD'], 'Am Reifen und in der Zulassungsbescheinigung (Feld 15.2) prüfen'],
   ['Räder & Reifen', 'Luftdruck vorn (kalt)', '2,50 bar (250 kPa, 36 psi), solo und mit Sozius', 'ok1', ['SZ'], 'Suzuki-Vorgabe der Baureihe; Aufkleber an der Schwinge deiner K7 vergleichen'],
   ['Räder & Reifen', 'Luftdruck hinten (kalt)', '2,90 bar (290 kPa, 42 psi), solo und mit Sozius', 'ok1', ['SZ'], 'wie oben'],
-  ['Bremsen', 'Vorn', '2 Scheiben 310 mm, radial verschraubte Vierkolben-Sättel', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
-  ['Bremsen', 'Hinten', '1 Scheibe 220 mm, Einkolben-Sattel', 'open', [], 'Aus Fachliteratur, hier nicht gegengeprüft'],
+  ['Bremsen', 'Vorn', '2 Scheiben 310 mm, radial verschraubte Vierkolben-Festsättel', 'ok2', ['MO', 'MS'], ''],
+  ['Bremsen', 'Hinten', '1 Scheibe 220 mm, Einkolben-Schwimmsattel', 'ok2', ['MO', 'MS'], ''],
   ['Werkseinstellung', 'Gabel Vorspannung', '4 Ringe sichtbar', 'conf', ['GX', 'DE'], 'gixxer.com: 4 Ringe; gsx-r1000.de: 3,5 Ringe'],
   ['Werkseinstellung', 'Gabel Zugstufe', '6 Klicks offen ab ganz zu', 'ok2', ['GX', 'DE'], ''],
   ['Werkseinstellung', 'Gabel Druckstufe Low-Speed', '14 Klicks offen', 'conf', ['GX', 'DE'], 'Zwei Quellen 14, ein Beitrag nennt 10'],
@@ -1371,11 +1397,13 @@ function renderCheck() {
     ['Freier Durchhang Serie (Plausibilität)', `${fmt(s0.freeF, 1)} / ${fmt(s0.freeR, 1)} mm`, s0.freeF > 12 && s0.freeF < 32 && s0.freeR > 3 && s0.freeR < 20],
     ['Federraten-Umrechnung', `0,976 kg/mm × 9,81 = ${fmt(0.976 * 9.81, 2)} N/mm · 10,1 kg/mm = ${fmt(10.1 * 9.81, 1)} N/mm`, true],
     ['Grundvorspannung aus Kalibrierung', `Gabel ${fmt(P0F, 1)} mm je Feder · Federbein ${fmt(P0R, 1)} mm`, P0F > 5 && P0F < 40 && P0R > 2 && P0R < 20],
+    ['Sitzhöhe in der Referenzlage (Werk 810 mm)', `${fmt(p0.W(SEAT_PT).y, 1)} mm`, Math.abs(p0.W(SEAT_PT).y - SEAT_H0) < 0.5],
+    ['Reifen berührt den Boden (Referenzlage)', `vorn ${fmt(p0.axF.y - M.Rf, 1)} mm · hinten ${fmt(p0.axR.y - M.Rr, 1)} mm Abstand`, Math.abs(p0.axF.y - M.Rf) < 0.5 && Math.abs(p0.axR.y - M.Rr) < 0.5],
     ['Bremsszenario Serie 80 kg: Gabel nutzt', `${fmt(STOCKRUN ? STOCKRUN.brake.kF.maxX : 0, 0)} von 125 mm`, true]
   ];
   $('#mathChecks').innerHTML = chk.map(([a, b, ok]) => `<li><span class="chip ${ok ? 'good' : 'bad'}">${ok ? 'OK' : 'prüfen'}</span> <b>${a}:</b> <span class="mono">${b}</span></li>`).join('');
   const mt = [
-    ['Masse fahrfertig', '200 kg, 51 % vorn', 'Schätzung aus 172 kg trocken'],
+    ['Masse vollgetankt', '212 kg, 51 % vorn', 'MOTORRAD-Messung; Verteilung geschätzt'],
     ['Ungefederte Massen', '17 kg vorn · 22 kg hinten', 'Rad, Reifen, Bremse, Gleitrohre bzw. Schwingenanteil'],
     ['Fahrer-Gewichtsverteilung', '40 % vorn · 60 % hinten', 'Sportliche Sitzposition; Sozius 5 / 95 %'],
     ['Schwerpunkthöhe', 'Maschine 0,55 m · Fahrer 0,92 m', 'Für Lastverlagerung beim Bremsen und Beschleunigen'],
