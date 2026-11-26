@@ -13,6 +13,12 @@ Interaktiver NAS-Konfigurator nach dem Vorbild der PC-Werkbank: Du wählst Gerä
 - **Prüfung:** Schächte inkl. Erweiterung, RAID-Mindestanzahl, SMR/Desktop-Platten, Synology-Laufwerksrichtlinie 2025 (Festplatten frei, M.2 nur Synology), freigegebene RAM-Module je Modell, identische Module, ECC/Nicht-ECC bei neo+, Karten-Freigaben je Modell, M.2-Plätze, Transcoding, Docker/VMs, USV, Backup (3-2-1), Füllstand, Lautstärke, Daten heute größer als Kapazitätsziel.
 - **RAID-Rechner (eigener Reiter):** Platten auch unterschiedlich groß; SHR, SHR-2, Basic, JBOD, RAID 0/1/5/6/10, RAIDZ1/2/3 mit Nutzkapazität, TiB, Ausfalltoleranz, Redundanz, ungenutztem Platz, Effizienz und Tempo; Aufteilung je Platte und Übernahme der Ausfallsicherheit in die Konfiguration.
 
+## Bedienung
+- **Frontplatte:** Das NAS als Gerät mit Laufwerksschlitten. Ein leerer Schacht („+“) fügt eine Platte hinzu, ein belegter öffnet die Plattenauswahl. LEDs zeigen Daten (blau) und Redundanz (orange), der Balken darunter Nutzkapazität, Ziel und heutige Daten.
+- **Rückgängig / Wiederholen:** jede Änderung, auch per Strg+Z und Strg+Y; ein Hinweis unten rechts zeigt, was sich geändert hat und was es kostet.
+- **Schnellsuche:** Strg+K (Mac: ⌘K) durchsucht alle Teile, zeigt Preis und ob das Teil passt, Enter übernimmt.
+- **Schnellfilter** in der Teileauswahl (z. B. Plattengröße, Synology HAT, 10 GbE, ECC), Nutzkapazität als Regler.
+
 ## Wie bei der PC-Werkbank
 - **Steckbrief**, **„Besser“-Tipp** und **„Bessere Wahl“** im Auswahlfenster mit Live-Vorschau (Preis, Nutzkapazität, Strom, Lautstärke)
 - **Dashboard (Cockpit):** Instrumente, Kennzahlen, Aufgaben und Dienste, Leistungsprofil (Netzdiagramm), zwei Konfigurationen nebeneinander, andere Geräte für deine Platten, Vergleich mit Cloud-Speicher über 5 Jahre, Sparen ohne Nachteile, Regler mit „Rückgängig“, Kapazität je Ausfallsicherheit, Kostenverteilung, Preis pro TB aller Platten, Stufe rauf/runter, Strom/Lautstärke/Prüfung. Abschnitte einklappbar.
