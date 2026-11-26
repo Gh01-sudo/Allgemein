@@ -133,3 +133,26 @@ Preise erneut über Preisvergleichs-Snippets (Geizhals/heise, Stand Oktober/Nove
 - **Synology:** Laut Synology-Newsroom keine neuen DiskStations, HAT-Größen, SSDs oder Karten seit Juli 2026 außer der bereits enthaltenen neo+-Reihe.
 - **Nicht aufgenommen:** QNAP TS-h265/TS-h465 (kein Euro-Preis), Exos M 36 TB (nicht im Handel), Asustor Flashstor Gen3 (keine 3,5″-Schächte).
 - **Modellkorrektur:** Der CPU-Bonus im Homelab-Profil ist ab Index 80 gedeckelt, sonst gewann die 2.719-€-N5-Max allein über die Rechenleistung.
+
+---
+
+# Verifizierungsrunde 3 und neue Modelle (26.11.2026)
+
+Zwei unabhängige Prüfer haben erneut jede Angabe geprüft: Synology-Geräte und -Zubehör gegen synology.com (Spec-Seiten, Plus-/Enterprise-HAT-Seiten, DDR4-Seite, „Applied Models“) sowie alle übrigen Teile gegen Hersteller-Datenblätter (WD, Seagate, QNAP) und Geizhals-Produktseiten mit Preisstand 26.11.2026 (über den Geizhals-Ableger von PCGH, gleiche Artikel-IDs). „Preis belegt“ gilt nur bei deutschem Beleg ≤ 6 Wochen ohne Einzel- oder Marketplace-Ausreißer.
+
+## Wichtigste Korrekturen
+- **Preise:** u. a. QNAP TS-233 239 €, TS-433 399 €, TS-264 446 €, TS-464 619 €, TS-664 774 €, TS-473A 899 €; UGREEN DXP6800 Ultra 1.160 €, DXP8800 Ultra 1.437 €, DXP2800 GT 399 €, DXP4800 GT 499 €; Asustor AS6804T 1.520 €; Exos X20 1.449 €, Exos M 30 TB 1.509 €, Toshiba N300 8 TB 355 €, N300 18 TB 690 € (neues MN11ACA18TS); WD Red SN700 2 TB 585 €; Kingston DDR5-ECC 32 GB 1.373 €; Synology DS1825neo+ 1.249 €, D4ES02-8G 405 €, HAT3310-16T 679 €.
+- **Datenblätter:** WD Red Plus 12 TB jetzt WD120EFGX (6,1/8,8 W, 260 MB/s); WD Red Pro und IronWolf Pro laut Hersteller ohne Schachtgrenze; Seagate-/WD-Leistungs- und Geräuschwerte nach aktuellen Datenblättern; Asustor AS5404T 4 GB RAM (max. 16 GB); UGREEN DXP2800 GT nur 1× 10 GbE; QNAP- und TerraMaster-Leerlauf/Geräusch nach Herstellerangaben; RX418 ist 1 HE, 6,4 W.
+- **Auf Schätzung zurückgestuft:** alle Preise ohne frischen deutschen Beleg (u. a. DS725+, DS2422+, ältere Synology-RAM-Module, Karten, DX-Einheiten, TerraMaster F2-/F4-424, Minisforum N5 Max, Crucial DDR5 48/64 GB). Google One 30 TB entfernt (nicht mehr als eigenes Abo belegbar).
+- **Bewusst nicht übernommen:** Datenblatt-Geräuschwerte der Synology-Geräte (gemessen mit Platten; das Tool addiert das Plattengeräusch selbst).
+
+## Neue Modelle (38)
+- **Synology:** DS1823xs+, RS1226+ (mit Regel: Fremdplatten nur bei Migration), HAT3300 6 TB, HAT5320 8 TB, HAT5300 12 TB.
+- **Festplatten:** WD Red Plus 6/10 TB, WD Red Pro 8/12/20/22 TB, WD Ultrastar HC570 22 TB, Seagate IronWolf 6/10 TB, IronWolf Pro 8/12/20 TB, Exos X22 22 TB, Toshiba MG09 18 TB, Toshiba N300 4/6/10/12/14/16 TB.
+- **NAS:** QNAP TS-216G, Asustor AS5402T, AS6702T.
+- **SSD:** WD Red SN700 4 TB, Samsung 990 Pro 1/2 TB, Kingston KC3000 1/2 TB.
+- **Netzwerk:** ASUS XG-C100C, QNAP QXG-5G1T-111C.
+- **USV:** Eaton 5E 900/1200 Gen2, APC BX1600MI, APC BR1500GI.
+- **USB-Backup:** WD Elements 14/18/22 TB, Seagate Expansion 24 TB.
+
+Unsichere Einzelfelder neuer Einträge (z. B. Toshiba-Durchsatz, USV-Akkukapazität, Leistungsaufnahme der Netzwerkkarten) sind aus Händler-Datenblättern oder Schwestermodellen übernommen. Der Direktvergleich nimmt jetzt bis zu 6 Modelle auf.
