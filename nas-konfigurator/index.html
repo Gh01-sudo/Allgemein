@@ -558,6 +558,36 @@ kbd{font-family:var(--f-mono);font-size:10.5px;border:1px solid var(--line);bord
 .capbar .mk.data-mk span{top:auto;bottom:-18px}
 .fp-acts{display:flex;flex-wrap:wrap;gap:8px}
 .fp-empty{display:flex;flex-direction:column;gap:10px;align-items:flex-start}
+/* Direktvergleich */
+.dc-card{gap:12px}
+.dc-tools{display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center}
+.dc-tools .sel{min-width:min(100%,260px)}
+.dc{width:100%;border-collapse:separate;border-spacing:0;font-size:13px;min-width:720px}
+.dc th,.dc td{padding:8px 10px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.dc thead th{border-top:0;vertical-align:bottom}
+.dc-c0{width:170px;font-family:var(--f-mono);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.dc-h{position:relative;padding-top:14px!important;min-width:170px}
+.dc-h .dc-sw{position:absolute;left:10px;right:10px;top:0;height:4px;border-radius:0 0 3px 3px;background:var(--mc)}
+.dc-h b{display:block;font-family:var(--f-display);font-size:16px;line-height:1.15}
+.dc-pr{display:block;font-family:var(--f-mono);font-size:18px;font-weight:600;color:var(--mc);margin:4px 0}
+.dc-st{display:inline-block;font-family:var(--f-mono);font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:5px;margin-right:4px}
+.dc-st.ok{background:var(--ok-soft);color:var(--ok)}.dc-st.warn{background:var(--warn-soft);color:var(--warn)}.dc-st.error{background:var(--bad-soft);color:var(--bad)}
+.dc-act{display:flex;gap:4px;flex-wrap:wrap;margin-top:8px}
+.dc td.n{font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.dc td.best{background:var(--ok-soft);color:var(--ok);font-weight:700}
+.dc-star{color:var(--ok)}
+.dc tr.grp td{background:var(--sunk);font-family:var(--f-mono);font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--accent);font-weight:700}
+.dc tr.diff td:first-child{box-shadow:inset 3px 0 0 var(--warn)}
+.dc tbody td:first-child{color:var(--muted);font-weight:600;white-space:nowrap}
+.dc-bh{font-size:15px;margin:6px 0 2px;display:flex;gap:10px;align-items:baseline}
+.dc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,300px),1fr));gap:16px 22px}
+.dc-m{display:flex;flex-direction:column;gap:5px}
+.dc-m small{text-transform:none;letter-spacing:0}
+.dc-bar{display:grid;grid-template-columns:minmax(0,120px) minmax(0,1fr) auto;gap:8px;align-items:center;font-size:12px}
+.dc-bn{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--muted)}
+.dc-bt{height:10px;border-radius:5px;background:var(--sunk);overflow:hidden}
+.dc-bt span{display:block;height:100%;border-radius:5px;transition:width .4s}
+.dc-bv{font-family:var(--f-mono);font-size:12px;white-space:nowrap}.dc-bv.best{color:var(--ok);font-weight:700}
 /* Schnellfilter in der Auswahl */
 .pchips{display:flex;flex-wrap:wrap;gap:6px}
 .pchips .chip{font-size:12.5px;padding:4px 10px}
@@ -763,6 +793,19 @@ kbd{font-family:var(--f-mono);font-size:10.5px;border:1px solid var(--line);bord
       <h2>Vergleich <span class="eyebrow">alle Teile einer Kategorie, sortierbar</span></h2>
       <div class="cat-chips" id="cChips"></div>
       <label class="switch" style="font-weight:500"><input type="checkbox" id="cOnlyOk"> Nur Teile zeigen, die zu meinem System passen</label>
+    </section>
+    <section class="card dc-card" aria-label="Direktvergleich" id="dcCard">
+      <h2>Direktvergleich <span class="eyebrow" id="dcSub">bis zu 4 Modelle, alle Daten</span></h2>
+      <div class="dc-tools">
+        <label class="ctl-label" for="dcAdd">Modell hinzufügen</label>
+        <select id="dcAdd" class="sel"></select>
+        <span class="sb-sp"></span>
+        <button type="button" class="btn" data-act="dcClear">Auswahl leeren</button>
+        <button type="button" class="btn primary" data-act="dcPdf" id="dcPdfBtn"><svg viewBox="0 0 20 20" aria-hidden="true" width="15" height="15" style="vertical-align:-2px;margin-right:5px"><path d="M10 3v10m0 0-4-4m4 4 4-4M4 16h12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Als PDF speichern</button>
+      </div>
+      <p class="toast" id="dcMsg" role="status" aria-live="polite"></p>
+      <div class="scroll" id="dcTable"></div>
+      <div class="dc-bars" id="dcBars"></div>
     </section>
     <section class="card" aria-label="Preis-Leistung" id="cScatterCard"><h2>Preis-Leistung <span class="eyebrow" id="cScatterSub"></span></h2><div id="cScatter"></div></section>
     <section class="card" aria-label="Tabelle"><div class="scroll" id="cTable"></div><p class="subline" id="cNote"></p></section>
@@ -2326,12 +2369,165 @@ function renderCompare(parts){
   const col=cols.find(c=>c.k===cmpSort.k)||cols[1];
   rows.sort((a,b)=>{const x=col.v(a.p),y=col.v(b.p);return (typeof x==="string"?x.localeCompare(y):x-y)*cmpSort.dir;});
   const best={};cols.forEach(c=>{if(!c.best)return;const vals=rows.filter(r=>!r.p.none).map(r=>c.v(r.p));if(vals.length)best[c.k]=c.best==="max"?Math.max(...vals):Math.min(...vals);});
-  $("#cTable").innerHTML=`<table class="vtable"><thead><tr>${cols.map(c=>`<th data-sort="${c.k}"${cmpSort.k===c.k?` aria-sort="${cmpSort.dir>0?"ascending":"descending"}"`:""}>${esc(c.l)}</th>`).join("")}<th></th></tr></thead><tbody>${rows.map(r=>`<tr class="${cur&&r.p.id===cur.id?"cur":""}${r.err?" bad":""}">${cols.map((c,i)=>{const v=c.v(r.p);return i===0?`<td><b>${esc(v)}</b>${r.p.eol?' <span class="subline">(Auslauf)</span>':""}${r.err?' <span class="subline" style="color:var(--bad)">passt nicht</span>':r.warn?' <span class="subline" style="color:var(--warn)">Hinweis</span>':""}</td>`:`<td class="n${best[c.k]===v&&!r.p.none?" best":""}">${esc(c.f(v))}</td>`;}).join("")}<td class="n">${cur&&r.p.id===cur.id?"aktuell":`<button type="button" class="btn" data-act="take" data-cat="${cmpCat}" data-id="${esc(r.p.id)}">Übernehmen</button>`}</td></tr>`).join("")}</tbody></table>`;
+  $("#cTable").innerHTML=`<table class="vtable"><thead><tr><th title="Für den Direktvergleich auswählen">Vergl.</th>${cols.map(c=>`<th data-sort="${c.k}"${cmpSort.k===c.k?` aria-sort="${cmpSort.dir>0?"ascending":"descending"}"`:""}>${esc(c.l)}</th>`).join("")}<th></th></tr></thead><tbody>${rows.map(r=>`<tr class="${cur&&r.p.id===cur.id?"cur":""}${r.err?" bad":""}"><td>${r.p.none?"":`<input type="checkbox" data-dc="${esc(r.p.id)}" aria-label="${esc(r.p.name)} vergleichen"${dcIds(cmpCat).includes(r.p.id)?" checked":""}>`}</td>${cols.map((c,i)=>{const v=c.v(r.p);return i===0?`<td><b>${esc(v)}</b>${r.p.eol?' <span class="subline">(Auslauf)</span>':""}${r.err?' <span class="subline" style="color:var(--bad)">passt nicht</span>':r.warn?' <span class="subline" style="color:var(--warn)">Hinweis</span>':""}</td>`:`<td class="n${best[c.k]===v&&!r.p.none?" best":""}">${esc(c.f(v))}</td>`;}).join("")}<td class="n">${cur&&r.p.id===cur.id?"aktuell":`<button type="button" class="btn" data-act="take" data-cat="${cmpCat}" data-id="${esc(r.p.id)}">Übernehmen</button>`}</td></tr>`).join("")}</tbody></table>`;
   $("#cNote").textContent=`Grün: Bestwert der Spalte. Spaltenkopf anklicken zum Sortieren.${QTY_CATS.includes(cmpCat)?` Stückpreise; geprüft mit ${ctx.q[cmpCat]} Stück.`:""}${cmpCat==="hdd"?" Festplatten-Preise ändern sich derzeit wöchentlich.":""}`;
   const pts=rows.filter(r=>!r.p.none).map(r=>({p:r.p,x:cmpCat==="bak"?r.p.price+60*bakMonthly(r.p):r.p.price,y:perfOf(cmpCat,r.p),bad:r.err}));
   $("#cScatterSub").textContent=`${PERF_LABEL[cmpCat]} gegen ${cmpCat==="bak"?"Kosten über 5 Jahre":"Preis"}`;
   $("#cScatter").innerHTML=scatterSvg(pts,cur);
+  renderDirect(parts);
 }
+/* ---------- Direktvergleich ---------- */
+const DCKEY="naswerkbank.direct";
+let dcSel=(()=>{try{return JSON.parse(localStorage.getItem(DCKEY)||"{}")||{};}catch(e){return {};}})();
+function dcSave(){try{localStorage.setItem(DCKEY,JSON.stringify(dcSel));}catch(e){}}
+const DC_COL=["#0E6A71","#4D45B5","#C9731F","#2F6FE0"];
+/* ohne eigene Auswahl: aktuelles Teil plus die nächsten sinnvollen Alternativen */
+function dcIds(cat){
+  if(Array.isArray(dcSel[cat]))return dcSel[cat].filter(id=>get(cat,id));
+  const parts=resolve(state.picks),cur=parts[cat],out=[];if(cur&&!cur.none)out.push(cur.id);
+  if(cur&&!cur.none){const ctx=withPart(parts,cat,null);if(QTY_CATS.includes(cat))ctx.q[cat]=parts.q[cat];betterOptions(cat,cur,ctx,2).forEach(o=>out.push(o.id));
+    const sv=savingsList(parts).find(x=>x.c===cat);if(sv&&out.length<4)out.push(sv.p.id);}
+  if(out.length<3){/* auffüllen mit passenden Modellen in ähnlicher Preislage */
+    const ctx=withPart(parts,cat,null),q=QTY_CATS.includes(cat)?parts.q[cat]:undefined,ref=cur&&!cur.none?cur.price:0;
+    DB[cat].filter(p=>!p.none&&!p.eol&&!out.includes(p.id)&&(cat!=="nas"||P().brand!=="syno"||p.brand==="Synology"))
+      .filter(p=>!issuesFor(cat,p,ctx,q).some(i=>i.level==="error")).sort((a,b)=>Math.abs(a.price-ref)-Math.abs(b.price-ref))
+      .slice(0,3-out.length).forEach(p=>out.push(p.id));}
+  return [...new Set(out)].slice(0,4);
+}
+function dcToggle(cat,id,on){let l=dcIds(cat).slice();if(on){if(!l.includes(id)){if(l.length>=4)l.shift();l.push(id);}}else l=l.filter(x=>x!==id);dcSel[cat]=l;dcSave();}
+/* Alle Vergleichsdaten für Bildschirm und PDF */
+function dcData(cat){
+  const parts=resolve(state.picks),ids=dcIds(cat),items=ids.map(id=>get(cat,id)).filter(Boolean);
+  const cols=cmpCols(cat).filter(c=>c.k!=="name"),num=cols.filter(c=>c.best&&items.every(p=>typeof c.v(p)==="number"));
+  const best={};num.forEach(c=>{const v=items.map(p=>c.v(p));best[c.k]=c.best==="max"?Math.max(...v):Math.min(...v);});
+  const q=QTY_CATS.includes(cat)?(parts.q[cat]||(cat==="hdd"?bestQty(parts.nas,items[0]||DB.hdd[1]):1)):undefined;
+  const ctx=withPart(parts,cat,null);
+  const per=items.map(p=>{const test=withPart(parts,cat,p,q!=null?(cat==="ram"?pickQty("ram",p):q):undefined),m=calc(test),iss=checkAll(test).filter(i=>i.cats.includes(cat)),own=issuesFor(cat,p,ctx,q);
+    const lv=own.some(i=>i.level==="error")?"error":own.some(i=>i.level==="warn")?"warn":"ok";
+    return {p,m,lv,first:(own.find(i=>i.level==="error")||own.find(i=>i.level==="warn")||{}).msg||"",rows:specRows(cat,p,test),pc:prosCons(cat,p,test),
+      bests:num.filter(c=>c.v(p)===best[c.k]).length,cur:parts[cat]&&parts[cat].id===p.id,iss};});
+  const keys=[];per.forEach(x=>x.rows.forEach(r=>{if(!keys.includes(r[0]))keys.push(r[0]);}));
+  const conf=[["Gesamtpreis",x=>eur(x.m.total)],["Laufend pro Jahr",x=>eur(x.m.run)],["Nutzkapazität",x=>fmtTB(x.m.usable)],["Durchsatz",x=>x.m.sp.eff+" MB/s"],["Strom Ø",x=>Math.round(x.m.pw.avg)+" W"],["Lautstärke",x=>Math.round(x.m.nz.db)+" dB(A)"],["Konflikte / Hinweise",x=>`${x.iss.filter(i=>i.level==="error").length} / ${x.iss.filter(i=>i.level==="warn").length}`]];
+  const confNum={"Gesamtpreis":[x=>x.m.total,"min"],"Laufend pro Jahr":[x=>x.m.run,"min"],"Nutzkapazität":[x=>x.m.usable,"max"],"Durchsatz":[x=>x.m.sp.eff,"max"],"Strom Ø":[x=>x.m.pw.avg,"min"],"Lautstärke":[x=>x.m.nz.db,"min"]};
+  return {cat,parts,items,per,cols:num,allCols:cols,best,keys,conf,confNum,q};
+}
+function renderDirect(parts){
+  const cat=cmpCat,D=dcData(cat),n=D.per.length;
+  $("#dcSub").textContent=`${CAT_LABEL[cat]} · ${n} von 4 Modellen`;
+  $("#dcAdd").innerHTML=`<option value="">${n>=4?"Höchstens 4 – erst eines entfernen":"Modell wählen …"}</option>`+DB[cat].filter(p=>!p.none&&!dcIds(cat).includes(p.id)).map(p=>`<option value="${esc(p.id)}">${esc(p.name)}${p.eol?" (Auslauf)":""}</option>`).join("");
+  $("#dcAdd").disabled=n>=4;$("#dcPdfBtn").disabled=!n;
+  if(!n){$("#dcTable").innerHTML=`<p class="subline">Noch nichts ausgewählt. Über „Modell hinzufügen“ oder die Häkchen in der Tabelle unten bis zu 4 Modelle wählen.</p>`;$("#dcBars").innerHTML="";return;}
+  const head=D.per.map((x,i)=>`<th class="dc-h" style="--mc:${DC_COL[i]}"><span class="dc-sw"></span><b>${esc(x.p.name)}</b><span class="dc-pr">${cat==="bak"&&bakMonthly(x.p)?eur2(bakMonthly(x.p))+"/Monat":eur(x.p.price)}</span>
+    <span class="dc-st ${x.lv}">${x.lv==="ok"?"passt":x.lv==="warn"?"Hinweis":"passt nicht"}</span>${x.p.chk?'<span class="tag rec">Preis belegt</span>':""}
+    <span class="dc-act">${x.cur?'<span class="tag user">aktuell</span>':`<button type="button" class="btn" data-act="take" data-cat="${cat}" data-id="${esc(x.p.id)}">Übernehmen</button>`}<button type="button" class="btn ghost" data-act="dcDel" data-id="${esc(x.p.id)}" aria-label="${esc(x.p.name)} aus dem Vergleich nehmen">Entfernen</button></span></th>`).join("");
+  const grp=t=>`<tr class="grp"><td colspan="${n+1}">${esc(t)}</td></tr>`;
+  let body=grp("Kennzahlen");
+  D.cols.forEach(c=>{body+=`<tr><td>${esc(c.l)}</td>${D.per.map(x=>{const v=c.v(x.p),b=v===D.best[c.k]&&n>1;return `<td class="n${b?" best":""}">${esc(c.f(v))}${b?' <span class="dc-star" aria-label="Bestwert">★</span>':""}</td>`;}).join("")}</tr>`;});
+  D.allCols.filter(c=>!D.cols.includes(c)).forEach(c=>{body+=`<tr><td>${esc(c.l)}</td>${D.per.map(x=>`<td class="n">${esc(c.f(c.v(x.p)))}</td>`).join("")}</tr>`;});
+  body+=`<tr><td>Bestwerte</td>${D.per.map(x=>`<td class="n"><b>${x.bests}</b> von ${D.cols.length}</td>`).join("")}</tr>`;
+  body+=grp("Mit deiner Konfiguration");
+  D.conf.forEach(([l,f])=>{const cn=D.confNum[l];let bv=null;if(cn&&n>1){const v=D.per.map(cn[0]);bv=cn[1]==="max"?Math.max(...v):Math.min(...v);}
+    body+=`<tr><td>${esc(l)}</td>${D.per.map(x=>{const b=cn&&n>1&&cn[0](x)===bv;return `<td class="n${b?" best":""}">${esc(f(x))}</td>`;}).join("")}</tr>`;});
+  body+=`<tr><td>Prüfung</td>${D.per.map(x=>`<td class="subline">${x.first?esc(x.first):"✓ passt zu deinen Teilen"}</td>`).join("")}</tr>`;
+  body+=grp("Datenblatt");
+  D.keys.forEach(k=>{const vals=D.per.map(x=>{const r=x.rows.find(r=>r[0]===k);return r?String(r[1]):"–";});const diff=new Set(vals).size>1;
+    body+=`<tr${diff?' class="diff"':""}><td>${esc(k)}</td>${vals.map(v=>`<td>${esc(v)}</td>`).join("")}</tr>`;});
+  const li=(a,cls)=>a.length?`<ul class="pc">${a.map(t=>`<li class="${cls}"><span></span><span>${esc(t)}</span></li>`).join("")}</ul>`:'<span class="subline">–</span>';
+  body+=grp("Stärken")+`<tr><td></td>${D.per.map(x=>`<td>${li(x.pc.P,"p")}</td>`).join("")}</tr>`;
+  body+=grp("Schwächen")+`<tr><td></td>${D.per.map(x=>`<td>${li(x.pc.C,"c")}</td>`).join("")}</tr>`;
+  body+=grp("Hinweise")+`<tr><td></td>${D.per.map(x=>`<td>${li(x.pc.N,"n")}</td>`).join("")}</tr>`;
+  $("#dcTable").innerHTML=`<table class="dc"><thead><tr><th class="dc-c0">Merkmal</th>${head}</tr></thead><tbody>${body}</tbody></table>`;
+  /* Balken je Kennzahl */
+  $("#dcBars").innerHTML=D.cols.length?`<h3 class="dc-bh">Im Bild <span class="eyebrow">★ = Bestwert</span></h3><div class="dc-grid">${D.cols.map(c=>{const vals=D.per.map(x=>c.v(x.p)),mx=Math.max(...vals.map(Math.abs),1e-9);
+    return `<div class="dc-m"><span class="ctl-label">${esc(c.l)} <small>(${c.best==="max"?"mehr ist besser":"weniger ist besser"})</small></span>${D.per.map((x,i)=>{const v=vals[i],b=v===D.best[c.k]&&n>1;
+      return `<div class="dc-bar" data-tip="${esc(x.p.name)}: ${esc(c.f(v))}"><span class="dc-bn">${esc(x.p.name.replace(/^(Synology|Seagate|Toshiba|WD|UGREEN NASync|QNAP|TerraMaster|Asustor|Minisforum) /,""))}</span><span class="dc-bt"><span style="width:${Math.max(2,v/mx*100)}%;background:${DC_COL[i]}"></span></span><span class="dc-bv${b?" best":""}">${esc(c.f(v))}${b?" ★":""}</span></div>`;}).join("")}</div>`;}).join("")}</div>`:"";
+}
+/* ---------- PDF ---------- */
+let jsPdfP=null;
+function loadJsPdf(){if(window.jspdf)return Promise.resolve(window.jspdf);if(jsPdfP)return jsPdfP;
+  jsPdfP=new Promise((res,rej)=>{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js";sc.onload=()=>window.jspdf?res(window.jspdf):rej(new Error("jsPDF"));sc.onerror=()=>{jsPdfP=null;rej(new Error("jsPDF"));};document.head.appendChild(sc);});return jsPdfP;}
+const pdfT=s=>String(s).replace(/≈/g,"ca.").replace(/→/g,"->").replace(/≥/g,">=").replace(/≤/g,"<=").replace(/✓/g,"").replace(/★/g,"*").replace(/[−‑‒]/g,"-").replace(/[  ]/g," ").replace(/[^\x09\x0A\x20-\x7E\xA0-\xFF€„“”‚‘’–—…•×]/g,"").trim();
+const hex=h=>[parseInt(h.slice(1,3),16),parseInt(h.slice(3,5),16),parseInt(h.slice(5,7),16)];
+function buildPdf(jspdf,D){
+  const {jsPDF}=jspdf,doc=new jsPDF({orientation:"landscape",unit:"mm",format:"a4"}),W=297,H=210,M=12,today=new Date().toLocaleDateString("de-DE",{day:"2-digit",month:"long",year:"numeric"});
+  const INK=[15,26,30],MUT=[85,100,106],LINE=[211,220,222],SUNK=[244,247,247],ACC=[14,106,113],OK=[34,120,58],OKS=[220,239,225],WARN=[154,91,0],WARNS=[247,233,210],BAD=[180,35,24],BADS=[249,222,219];
+  const n=D.per.length,cols=D.per.map((_,i)=>hex(DC_COL[i]));
+  const set=(c,t)=>{if(t==="f")doc.setFillColor(...c);else if(t==="d")doc.setDrawColor(...c);else doc.setTextColor(...c);};
+  const font=(sz,st)=>{doc.setFont("helvetica",st||"normal");doc.setFontSize(sz);};
+  const txt=(t,x,y,o)=>doc.text(pdfT(t),x,y,o||{});
+  const wrap=(t,w)=>doc.splitTextToSize(pdfT(t),w);
+  let page=1;
+  const band=(title,sub)=>{set(ACC,"f");doc.rect(0,0,W,22,"F");set([12,88,94],"f");doc.rect(0,22,W,1.2,"F");
+    /* Laufwerks-Signet */
+    for(let i=0;i<4;i++){set([255,255,255],"f");doc.roundedRect(M+i*4.2,5.5,3.2,11,0.6,0.6,"F");set(i===3?[217,130,43]:[47,111,224],"f");doc.rect(M+i*4.2+0.6,14,2,1,"F");}
+    set([255,255,255]);font(17,"bold");txt(title,M+21,12);font(9);txt(sub,M+21,18);font(8);txt("Stand Preise: Oktober/November 2026 · erstellt "+today,W-M,18,{align:"right"});};
+  const foot=()=>{set(LINE,"d");doc.setLineWidth(0.2);doc.line(M,H-10,W-M,H-10);set(MUT);font(7);
+    txt("NAS-Werkbank · Richtwerte und Preise ohne Gewähr; „Preis belegt“ = Preisvergleichs-Beleg Okt./Nov. 2026, sonst Schätzung. Vor dem Kauf prüfen.",M,H-6);txt("Seite "+page,W-M,H-6,{align:"right"});};
+  const newPage=()=>{foot();doc.addPage();page++;band("Direktvergleich "+CAT_LABEL[D.cat],D.per.map(x=>x.p.name).join("  ·  "));return 30;};
+  /* Seite 1: Titel, Karten, Diagramme */
+  band("Direktvergleich "+CAT_LABEL[D.cat],`${n} Modelle · ${PROFILE_NAME[state.profile]} · Ziel ${fmtTB(P().cap)}, ${P().red} Platte(n) Ausfallsicherheit${state.budget?" · Budget "+eur(state.budget):""}`);
+  const cw=(W-2*M-(n-1)*5)/n,ch=50,cy=30;
+  D.per.forEach((x,i)=>{const cx=M+i*(cw+5);set(SUNK,"f");set(LINE,"d");doc.setLineWidth(0.25);doc.roundedRect(cx,cy,cw,ch,2.5,2.5,"FD");
+    set(cols[i],"f");doc.roundedRect(cx,cy,cw,4,2.5,2.5,"F");doc.rect(cx,cy+2,cw,2,"F");
+    set(MUT);font(7,"bold");txt((x.cur?"AKTUELL · ":"")+(x.p.brand||CAT_LABEL[D.cat]).toUpperCase(),cx+4,cy+9.5);
+    set(INK);font(11.5,"bold");const nm=wrap(x.p.name,cw-8).slice(0,2);doc.text(nm,cx+4,cy+15);
+    set(MUT);font(7.5);doc.text(wrap(spec(D.cat,x.p),cw-8).slice(0,3),cx+4,cy+15+nm.length*5);
+    set(cols[i]);font(17,"bold");txt(D.cat==="bak"&&bakMonthly(x.p)?eur2(bakMonthly(x.p))+"/M.":eur(x.p.price),cx+4,cy+44);
+    font(6.5,"bold");const pill=x.lv==="ok"?["PASST",OK,OKS]:x.lv==="warn"?["HINWEIS",WARN,WARNS]:["PASST NICHT",BAD,BADS];
+    const pw=doc.getTextWidth(pill[0])+5;set(pill[2],"f");doc.roundedRect(cx+cw-4-pw,cy+39.6,pw,5,1.5,1.5,"F");set(pill[1]);txt(pill[0],cx+cw-4-pw/2,cy+43.1,{align:"center"});
+    set(MUT);font(7);txt(`${x.bests} von ${D.cols.length} Bestwerten${x.p.chk?" · Preis belegt":" · Preis geschätzt"}`,cx+4,cy+48.3);});
+  /* Diagramme */
+  let y=cy+ch+9;set(INK);font(10.5,"bold");txt("Kennzahlen im Vergleich",M,y);set(MUT);font(7.5);txt("Balken je Modell, * = Bestwert",M+52,y);y+=4;
+  const gw=(W-2*M-8)/2,rowH=4.6;let colY=[y,y];
+  D.cols.forEach(c=>{const bh=6+n*rowH+4;let col=colY[0]<=colY[1]?0:1;
+    if(colY[col]+bh>H-14){const o=1-col;if(colY[o]+bh<=H-14)col=o;else{const ny=newPage();colY=[ny,ny];col=0;}}
+    const ox=M+col*(gw+8),gy=colY[col];colY[col]+=bh;
+    set(INK);font(8,"bold");txt(c.l,ox,gy+4);set(MUT);font(6.5);txt(c.best==="max"?"mehr ist besser":"weniger ist besser",ox+gw,gy+4,{align:"right"});
+    const vals=D.per.map(x=>c.v(x.p)),mx=Math.max(...vals.map(Math.abs),1e-9),lw=40,bw=gw-lw-24;
+    D.per.forEach((x,i)=>{const by=gy+6+i*rowH,v=vals[i],b=v===D.best[c.k]&&n>1;set(MUT);font(6.5);txt(x.p.name.replace(/^(Synology|Seagate|Toshiba|WD|UGREEN NASync|QNAP|TerraMaster|Asustor|Minisforum) /,"").slice(0,26),ox,by+2.9);
+      set(SUNK,"f");doc.roundedRect(ox+lw,by,bw,3.4,1,1,"F");set(cols[i],"f");doc.roundedRect(ox+lw,by,Math.max(1.2,bw*v/mx),3.4,1,1,"F");
+      set(b?OK:INK);font(7,b?"bold":"normal");txt(c.f(v)+(b?" *":""),ox+lw+bw+2,by+2.9);});});
+  /* Seite 2+: Tabelle */
+  let ty=newPage();const c0=52,cwT=(W-2*M-c0)/n;
+  const head=()=>{set(INK,"f");doc.rect(M,ty,W-2*M,9,"F");set([255,255,255]);font(8,"bold");txt("Merkmal",M+2,ty+5.8);
+    D.per.forEach((x,i)=>{const cx=M+c0+i*cwT;set(cols[i],"f");doc.rect(cx,ty,cwT,1.4,"F");set([255,255,255]);font(8,"bold");txt(wrap(x.p.name,cwT-4)[0],cx+2,ty+5.8);});ty+=9;};
+  head();let z=0;
+  const group=t=>{if(ty+8>H-14){ty=newPage();head();}set([220,238,239],"f");doc.rect(M,ty,W-2*M,6,"F");set(ACC);font(7.5,"bold");txt(t.toUpperCase(),M+2,ty+4.1);ty+=6;z=0;};
+  const row=(label,cells,bestIdx)=>{font(7.5);const lines=cells.map(c=>wrap(c,cwT-4)),lh=Math.max(1,...lines.map(l=>l.length),wrap(label,c0-4).length)*3.4+2.6;
+    if(ty+lh>H-14){ty=newPage();head();}
+    if(z++%2){set(SUNK,"f");doc.rect(M,ty,W-2*M,lh,"F");}
+    set(MUT);font(7.5,"bold");doc.text(wrap(label,c0-4),M+2,ty+4);
+    lines.forEach((l,i)=>{const cx=M+c0+i*cwT,b=bestIdx&&bestIdx.includes(i);if(b){set(OKS,"f");doc.rect(cx,ty,cwT,lh,"F");}set(b?OK:INK);font(7.5,b?"bold":"normal");doc.text(l,cx+2,ty+4);});
+    set(LINE,"d");doc.setLineWidth(0.1);doc.line(M,ty+lh,W-M,ty+lh);ty+=lh;};
+  group("Kennzahlen");
+  D.cols.forEach(c=>{const v=D.per.map(x=>c.v(x.p));row(c.l,v.map(c.f),n>1?v.map((a,i)=>a===D.best[c.k]?i:-1).filter(i=>i>=0):null);});
+  D.allCols.filter(c=>!D.cols.includes(c)).forEach(c=>row(c.l,D.per.map(x=>c.f(c.v(x.p)))));
+  group("Mit deiner Konfiguration");
+  D.conf.forEach(([l,f])=>{const cn=D.confNum[l];let bi=null;if(cn&&n>1){const v=D.per.map(cn[0]),bv=cn[1]==="max"?Math.max(...v):Math.min(...v);bi=v.map((a,i)=>a===bv?i:-1).filter(i=>i>=0);}row(l,D.per.map(f),bi);});
+  row("Prüfung",D.per.map(x=>x.first||"passt zu deinen Teilen"));
+  group("Datenblatt");
+  D.keys.forEach(k=>row(k,D.per.map(x=>{const r=x.rows.find(r=>r[0]===k);return r?String(r[1]):"–";})));
+  group("Stärken");row("",D.per.map(x=>x.pc.P.map(t=>"+ "+t).join("\n")||"–"));
+  group("Schwächen");row("",D.per.map(x=>x.pc.C.map(t=>"– "+t).join("\n")||"–"));
+  group("Hinweise");row("",D.per.map(x=>x.pc.N.map(t=>"• "+t).join("\n")||"–"));
+  foot();
+  return doc.output("blob");
+}
+async function savePdf(){
+  const D=dcData(cmpCat);if(!D.per.length)return;const btn=$("#dcPdfBtn");btn.disabled=true;flash("#dcMsg","PDF wird erstellt …");
+  const name=`NAS-Vergleich ${CAT_LABEL[cmpCat]} ${new Date().toISOString().slice(0,10)}.pdf`.replace(/[\/:*?"<>|]/g,"-");
+  try{
+    const jspdf=await loadJsPdf();const blob=buildPdf(jspdf,D);
+    let dl=null;try{dl=window.claude&&window.claude.use?await Promise.race([window.claude.use("downloads"),new Promise(r=>setTimeout(()=>r(null),3000))]):null;}catch(e){dl=null;}
+    if(dl){try{await dl.save({filename:name,data:blob});flash("#dcMsg",`„${name}“ gespeichert.`);}
+      catch(e){flash("#dcMsg",e&&e.code==="declined"?"Speichern abgebrochen.":e&&e.code==="rate_limited"?"Ein Speicherdialog ist schon offen. Kurz warten und erneut versuchen.":"Speichern ist in dieser Ansicht nicht möglich. Öffne die Seite im Browser.");}}
+    else{const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);flash("#dcMsg",`„${name}“ wird heruntergeladen.`);}
+  }catch(e){flash("#dcMsg","Die PDF-Bibliothek ließ sich nicht laden (keine Internetverbindung?). Bitte erneut versuchen.");}
+  finally{btn.disabled=false;}
+}
+document.addEventListener("change",e=>{const t=e.target;
+  if(t.dataset&&t.dataset.dc){dcToggle(cmpCat,t.dataset.dc,t.checked);render();}
+  else if(t.id==="dcAdd"&&t.value){dcToggle(cmpCat,t.value,true);render();}});
 function niceTicks(max,n){const raw=max/n,mag=Math.pow(10,Math.floor(Math.log10(raw))),step=[1,2,2.5,5,10].map(m=>m*mag).find(s=>s>=raw);const t=[];for(let v=0;v<=max+1e-9;v+=step)t.push(Math.round(v*100)/100);return t;}
 function scatterSvg(pts,cur){
   if(!pts.length)return "";
@@ -2582,6 +2778,9 @@ document.addEventListener("click",e=>{
   else if(act==="qty")setQty(cat,Number(el.dataset.d));
   else if(act==="bayAdd"){if(state.picks.hdd)setQty("hdd",1);else openPicker("hdd");}
   else if(act==="histUndo")histUndo();
+  else if(act==="dcPdf")savePdf();
+  else if(act==="dcDel"){dcToggle(cmpCat,el.dataset.id,false);render();}
+  else if(act==="dcClear"){dcSel[cmpCat]=[];dcSave();render();}
   else if(act==="histRedo")histRedo();
   else if(act==="cmdkOpen")openCmdk();
   else if(act==="setred")setRed(Number(el.dataset.red));
