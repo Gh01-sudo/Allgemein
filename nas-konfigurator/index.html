@@ -492,6 +492,14 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
 .sb-state.ok{background:var(--ok-soft);color:var(--ok)}.sb-state.warn{background:var(--warn-soft);color:var(--warn)}.sb-state.bad{background:var(--bad-soft);color:var(--bad)}
 @media (max-width:640px){.topbar{position:static}.statusbar{gap:6px 14px;padding:8px 10px}.leds{display:none}.sb-dev{max-width:100%;flex-basis:100%}.sb-sp{display:none}}
 .tag.up{display:inline-block;width:auto}
+.dash-nav{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;padding:4px 0 2px}
+.dash-nav .chip{font-size:12.5px;padding:4px 10px;font-weight:600}
+.dash-nav .chip.off{color:var(--muted);border-style:dashed}
+.plist3 li.none{color:var(--muted)}.plist3.c li.none::before{content:"✓";color:var(--ok)}
+.cpanel>h2{padding-bottom:2px}
+.cpanel.collapsed{background:var(--sunk)}
+.cpanel.collapsed>h2{color:var(--muted)}
+.dash{gap:16px}
 .tabs{border-bottom:1px solid var(--line);margin-top:6px}
 .tabs button{font-size:16px;font-weight:600;padding:10px 14px;letter-spacing:.01em}
 .tabs button[aria-selected="true"]{color:var(--accent);border-bottom-color:var(--accent)}
@@ -558,7 +566,13 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <div class="kpis kpis-slim" id="dKpis"></div>
     </section>
     <div class="dash-tools"><button type="button" class="btn primary" data-act="openSave">Speichern / Laden</button><button type="button" class="btn" data-act="openPrint">Drucken</button><button type="button" class="btn" data-act="openAll">Alle Abschnitte öffnen</button><button type="button" class="btn" data-act="closeAll">Alle schließen</button></div>
+    <nav class="dash-nav" id="dNav" aria-label="Abschnitte im Dashboard"></nav>
     <div class="dash">
+      <section class="card span12 cpanel" aria-label="Regler">
+        <h2><span class="ph-dot"></span>Regler <span class="eyebrow">ändern die Bauteile</span></h2>
+        <div class="sliders grid2" id="dSliders"></div>
+        <div id="dUndo"></div>
+      </section>
       <section class="card span12 cpanel" aria-label="Aufgaben und Dienste">
         <h2><span class="ph-dot"></span>Aufgaben und Dienste <span class="eyebrow">geschätzte Werte für deine Konfiguration</span></h2>
         <div class="scroll" id="dApps"></div>
@@ -590,11 +604,6 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
       <section class="card span12 cpanel" aria-label="Sparpotenzial">
         <h2><span class="ph-dot"></span>Sparen ohne Nachteile <span class="eyebrow">gleichwertige, günstigere Teile</span></h2>
         <div id="dSave"></div>
-      </section>
-      <section class="card span12 cpanel" aria-label="Regler">
-        <h2><span class="ph-dot"></span>Regler <span class="eyebrow">ändern die Bauteile</span></h2>
-        <div class="sliders grid2" id="dSliders"></div>
-        <div id="dUndo"></div>
       </section>
       <section class="card span7 cpanel" aria-label="Ausfallsicherheit">
         <h2><span class="ph-dot"></span>Kapazität je Ausfallsicherheit <span class="eyebrow">mit deinen Platten</span></h2>
@@ -770,6 +779,7 @@ body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset
           <option value="perf">Leistung / Klasse</option>
         </select>
         <label><input type="checkbox" id="pCompat" checked> Nur passende</label>
+        <label id="pBrandLbl" hidden><input type="checkbox" id="pBrand" checked> Nur Synology</label>
       </div>
       <p class="panel-note" id="pNote"></p>
     </div>
@@ -1491,7 +1501,7 @@ function betterOptions(cat,cur,ctx,max){
   const base=betterMetric(cat,cur,withQ);let best=base;const front=[];
   const list=DB[cat].filter(p=>p.id!==cur.id&&!p.none&&!p.eol)
     .filter(p=>{const iss=issuesFor(cat,p,ctx,QTY_CATS.includes(cat)?q:undefined);return !iss.some(i=>i.level==="error"||i.level==="warn");})
-    .filter(p=>cat!=="nas"||p.bays>=(ctx.q.hdd||0))
+    .filter(p=>cat!=="nas"||(p.bays>=(ctx.q.hdd||0)&&(P().brand!=="syno"||p.brand==="Synology")))
     .sort((a,b)=>priceOf(cat,a,withQ)-priceOf(cat,b,withQ));
   const minGain=cat==="nas"?4:0.5;
   for(const p of list){const m=betterMetric(cat,p,withQ);if(m>best+minGain){front.push(p);best=m;}}
@@ -1845,7 +1855,7 @@ function savingsList(parts){
   for(const c of CATK){const cur=parts[c];if(!cur||cur.none)continue;
     const ctx=withPart(parts,c,null);if(QTY_CATS.includes(c))ctx.q[c]=parts.q[c];
     const base=betterMetric(c,cur,parts),own=checkAll(parts).filter(i=>i.cats.includes(c)&&(i.level==="error"||i.level==="warn")).length;
-    DB[c].forEach(p=>{if(p.id===cur.id||p.none||p.eol)return;
+    DB[c].forEach(p=>{if(p.id===cur.id||p.none||p.eol)return;if(c==="nas"&&P().brand==="syno"&&p.brand!=="Synology")return;
       const d=priceOf(c,cur,parts)-priceOf(c,p,parts);if(d<10)return;
       const test=withPart(parts,c,p,QTY_CATS.includes(c)?parts.q[c]:undefined);
       if(betterMetric(c,p,test)<base-0.01)return;
@@ -1877,12 +1887,15 @@ function renderCost(parts,m){
    ${bakMonthly(parts.bak)?`<div class="kv"><span>Cloud-Backup pro Jahr</span><span class="num">${eur(12*bakMonthly(parts.bak))}</span></div>`:""}
    <div class="kv"><span>Gesamt über 5 Jahre</span><span class="num">${eur(m.total+5*m.run)}</span></div>`;
 }
+let perTbAll=false;
 function renderPerTb(parts){
-  const list=DB.hdd.filter(h=>!h.eol).map(h=>({h,v:h.price/h.tb})).sort((a,b)=>a.v-b.v),max=Math.max(...list.map(x=>x.v));
+  const all=DB.hdd.filter(h=>!h.eol).map(h=>({h,v:h.price/h.tb})).sort((a,b)=>a.v-b.v),max=Math.max(...all.map(x=>x.v));
   const cur=parts.hdd&&parts.hdd.id;
+  const list=perTbAll?all:all.filter((x,i)=>i<10||x.h.id===cur);
   $("#dPerTb").innerHTML=list.map(x=>`<div class="bar-row click${x.h.id===cur?" cur":""}" data-act="take" data-cat="hdd" data-id="${esc(x.h.id)}" role="button" tabindex="0" data-tip="${esc(x.h.name)}: ${esc(eur(x.h.price))} · ${esc(CLS_LABEL[x.h.cls])}${x.h.smr?" · SMR":""}">
     <span class="lbl">${esc(x.h.name.replace(/^(Seagate|Toshiba|Synology|WD) /,""))}</span><span class="bar-track"><span class="bar-fill" style="width:${x.v/max*100}%;background:var(${x.h.cls==="ent"?"--c8":x.h.cls==="naspro"?"--c2":x.h.smr?"--c6":"--c1"})"></span></span><span class="num">${num(x.v,1)} €</span></div>`).join("")+
-   `<div class="legend"><span><i style="background:var(--c1)"></i>NAS</span><span><i style="background:var(--c2)"></i>NAS-Pro</span><span><i style="background:var(--c8)"></i>Enterprise</span><span><i style="background:var(--c6)"></i>SMR</span></div>`;
+   `<div class="legend"><span><i style="background:var(--c1)"></i>NAS</span><span><i style="background:var(--c2)"></i>NAS-Pro</span><span><i style="background:var(--c8)"></i>Enterprise</span><span><i style="background:var(--c6)"></i>SMR</span></div>
+   ${all.length>list.length||perTbAll?`<button type="button" class="btn" data-act="perTbToggle">${perTbAll?"Nur die 10 günstigsten zeigen":`Alle ${all.length} Platten zeigen`}</button>`:""}`;
 }
 function renderSteps(parts){
   const h=parts.hdd,n=parts.q.hdd,nas=parts.nas,rows=[];if(!h||!nas){$("#dSteps").innerHTML="";return;}
@@ -1922,9 +1935,11 @@ function renderDash(parts,issues){
   initCollapse();
 }
 const CKEY="naswerkbank.collapsed";
-function loadCollapsed(){try{return new Set(JSON.parse(localStorage.getItem(CKEY)||"[]"));}catch(e){return new Set();}}
+const CDEFAULT=["Zwei Konfigurationen","Preis pro TB","Aktuelle Bauteile"];
+function loadCollapsed(){try{const r=localStorage.getItem(CKEY);return new Set(r===null?CDEFAULT:JSON.parse(r));}catch(e){return new Set(CDEFAULT);}}
+function renderDashNav(){const set=loadCollapsed();$("#dNav").innerHTML='<span class="ctl-label">Springen zu</span>'+[...document.querySelectorAll("#viewDash .cpanel")].map(sec=>{const k=sec.getAttribute("aria-label");return `<button type="button" class="chip${set.has(k)?" off":""}" data-jump="${esc(k)}">${esc(k)}</button>`;}).join("");}
 function saveCollapsed(set){try{localStorage.setItem(CKEY,JSON.stringify([...set]));}catch(e){}}
-function initCollapse(){
+function initCollapse(){setTimeout(renderDashNav,0);
   const set=loadCollapsed();
   document.querySelectorAll("#viewDash .cpanel").forEach(sec=>{
     const h=sec.querySelector(":scope>h2");if(!h)return;
@@ -1934,6 +1949,8 @@ function initCollapse(){
   });
 }
 document.addEventListener("click",e=>{
+  const j=e.target.closest("[data-jump]");if(j){const k=j.dataset.jump,set=loadCollapsed();if(set.has(k)){set.delete(k);saveCollapsed(set);initCollapse();}
+    const sec=[...document.querySelectorAll("#viewDash .cpanel")].find(x=>x.getAttribute("aria-label")===k);if(sec)sec.scrollIntoView({block:"start",behavior:matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth"});return;}
   if(e.target.closest("select,input,a,.row-btns,button:not(.tg)"))return;
   const h=e.target.closest("#viewDash .cpanel>h2");if(!h)return;
   const sec=h.parentElement,key=sec.getAttribute("aria-label"),set=loadCollapsed();
@@ -1986,7 +2003,7 @@ function renderOverview(parts,issues){
   CATS.forEach(c=>{const x=parts[c.k];if(!x)return;const pc=prosCons(c.k,x,parts);pc.P.slice(0,2).forEach(t=>pros.push(`${c.label}: ${t}`));pc.C.forEach(t=>cons.push(`${c.label}: ${t}`));});
   issues.filter(i=>i.level!=="info").forEach(i=>cons.push(i.msg));
   $("#oPros").innerHTML=pros.map(t=>`<li>${esc(t)}</li>`).join("")||"<li>–</li>";
-  $("#oCons").innerHTML=[...new Set(cons)].map(t=>`<li>${esc(t)}</li>`).join("")||"<li>Keine Schwachstellen gefunden.</li>";
+  $("#oCons").innerHTML=[...new Set(cons)].map(t=>`<li>${esc(t)}</li>`).join("")||'<li class="none">Keine Schwachstellen gefunden.</li>';
   const path=[];
   CATS.forEach(c=>{const x=parts[c.k];if(!x||x.none)return;const ctx=withPart(parts,c.k,null);if(QTY_CATS.includes(c.k))ctx.q[c.k]=parts.q[c.k];
     const o=betterOptions(c.k,x,ctx,1)[0];if(!o)return;const d=priceOf(c.k,o,parts)-priceOf(c.k,x,parts);
@@ -2157,7 +2174,8 @@ function renderPicker(){
   let rec=null;if(state.picks[cat]&&state.picks[cat].src==="auto")rec=get(cat,cur);
   $("#pNote").textContent=cat==="hdd"?"Geprüft gegen dein NAS. Die Stückzahl wird passend zum Kapazitätsziel gesetzt und lässt sich danach mit − / + ändern.":"Geprüft gegen deine Teile. „Wirkung“ zeigt die Änderung gegenüber jetzt.";
   const q=$("#pSearch").value.trim().toLowerCase(),onlyOk=$("#pCompat").checked,sort=$("#pSort").value;
-  let rows=DB[cat].map(p=>{const qq=pickQty(cat,p),iss=issuesFor(cat,p,ctx,qq);const lvl=iss.some(i=>i.level==="error")?"error":iss.some(i=>i.level==="warn")?"warn":"ok";return {p,iss,lvl,qq};});
+  const synOnly=cat==="nas"&&P().brand==="syno"&&$("#pBrand").checked;$("#pBrandLbl").hidden=!(cat==="nas"&&P().brand==="syno");
+  let rows=DB[cat].filter(p=>!synOnly||p.brand==="Synology").map(p=>{const qq=pickQty(cat,p),iss=issuesFor(cat,p,ctx,qq);const lvl=iss.some(i=>i.level==="error")?"error":iss.some(i=>i.level==="warn")?"warn":"ok";return {p,iss,lvl,qq};});
   if(q)rows=rows.filter(r=>(r.p.name+" "+spec(cat,r.p)).toLowerCase().includes(q));
   const hidden=onlyOk?rows.filter(r=>r.lvl==="error").length:0;if(onlyOk)rows=rows.filter(r=>r.lvl!=="error");
   rows.sort((a,b)=>{if(sort==="price")return a.p.price-b.p.price;if(sort==="priceDesc")return b.p.price-a.p.price;if(sort==="perf")return perfOf(cat,b.p)-perfOf(cat,a.p);
@@ -2372,6 +2390,7 @@ document.addEventListener("click",e=>{
     if(cat==="nas"&&state.picks.hdd&&(state.picks.hdd.qty||1)>(p.expUnit?p.exp:p.bays)){state.picks.hdd.qty=p.expUnit?p.exp:p.bays;}
     if(cat==="nas")for(const c of ["ram","nic","ssd","exp"])if(state.picks[c]&&state.picks[c].src==="auto")delete state.picks[c];
     recompute();}
+  else if(act==="perTbToggle"){perTbAll=!perTbAll;render();}
   else if(act==="undo"){if(undoSnap&&undoKey()===undoAfter){state=JSON.parse(undoSnap);save();renderSliders();render();}undoSnap=null;undoAfter=null;$("#dUndo").innerHTML="";}
 });
 $("#picker").addEventListener("click",e=>{if(e.target.id==="picker")closePicker();});
@@ -2379,6 +2398,7 @@ document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!$("#picker").hidde
 $("#pSearch").addEventListener("input",renderPicker);
 $("#pSort").addEventListener("change",renderPicker);
 $("#pCompat").addEventListener("change",renderPicker);
+$("#pBrand").addEventListener("change",renderPicker);
 document.addEventListener("toggle",e=>{const d=e.target;if(d&&d.dataset&&d.dataset.brief){if(d.open)openBriefs.add(d.dataset.brief);else openBriefs.delete(d.dataset.brief);}},true);
 const tipEl=document.createElement("div");tipEl.className="tip-float";tipEl.hidden=true;tipEl.setAttribute("role","tooltip");document.body.appendChild(tipEl);
 const hideTip=()=>{tipEl.hidden=true;};
