@@ -11,7 +11,7 @@
   --accent:#4a8dff; --accent-ink:#0a0f15; --accent-soft:rgba(74,141,255,.14);
   --front:#52b4ff; --rear:#ffaa3b; --ghost:#6e8093;
   --good:#38cf8e; --warn:#ffb020; --bad:#ff5d62;
-  --rider:rgba(160,180,205,.30); --rider-edge:rgba(190,210,235,.45); --xray:rgba(120,170,230,.10); --xray-line:rgba(150,195,245,.55); --metal:#9fb3c8; --tyre:#1b242e;
+  --rider:rgba(150,172,200,.34); --rider-edge:rgba(170,192,220,.55); --road:#1a2430; --sky:rgba(74,141,255,.07); --shadow:rgba(0,0,0,.55); --post:#3a4a5c; --lane:rgba(230,236,242,.35); --tread:rgba(255,255,255,.10); --disc:rgba(150,170,195,.25); --seat:#1c2733; --caliper:#c9a227; --lamp:rgba(255,236,170,.75); --air:rgba(160,200,255,.14); --oil:rgba(196,140,40,.22); --tube:rgba(150,180,210,.08); --xray:rgba(120,170,230,.10); --xray-line:rgba(150,195,245,.55); --metal:#9fb3c8; --tyre:#1b242e;
   --f-display:"Chakra Petch","Bahnschrift","Segoe UI",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
@@ -23,7 +23,7 @@
   --accent:#1d5fd8; --accent-ink:#ffffff; --accent-soft:rgba(29,95,216,.10);
   --front:#1b74cc; --rear:#c76a00; --ghost:#9aa9b8;
   --good:#11935c; --warn:#b97800; --bad:#d42f35;
-  --rider:rgba(60,80,110,.22); --rider-edge:rgba(40,60,90,.4); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
+  --rider:rgba(60,80,110,.26); --rider-edge:rgba(40,60,90,.45); --road:#c9d3de; --sky:rgba(29,95,216,.08); --shadow:rgba(20,30,45,.35); --post:#9aa9b8; --lane:rgba(255,255,255,.95); --tread:rgba(255,255,255,.12); --disc:rgba(80,100,125,.22); --seat:#3a4552; --caliper:#c9a227; --lamp:rgba(255,200,60,.85); --air:rgba(29,95,216,.10); --oil:rgba(196,130,20,.22); --tube:rgba(40,80,130,.06); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
   color-scheme:light;
 }}
 :root[data-theme="light"]{
@@ -32,7 +32,7 @@
   --accent:#1d5fd8; --accent-ink:#ffffff; --accent-soft:rgba(29,95,216,.10);
   --front:#1b74cc; --rear:#c76a00; --ghost:#9aa9b8;
   --good:#11935c; --warn:#b97800; --bad:#d42f35;
-  --rider:rgba(60,80,110,.22); --rider-edge:rgba(40,60,90,.4); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
+  --rider:rgba(60,80,110,.26); --rider-edge:rgba(40,60,90,.45); --road:#c9d3de; --sky:rgba(29,95,216,.08); --shadow:rgba(20,30,45,.35); --post:#9aa9b8; --lane:rgba(255,255,255,.95); --tread:rgba(255,255,255,.12); --disc:rgba(80,100,125,.22); --seat:#3a4552; --caliper:#c9a227; --lamp:rgba(255,200,60,.85); --air:rgba(29,95,216,.10); --oil:rgba(196,130,20,.22); --tube:rgba(40,80,130,.06); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -65,7 +65,7 @@ button{font:inherit;color:inherit}
 @media (min-width:1101px){.stage-r{position:sticky;top:calc(env(safe-area-inset-top,0px) + 8px);max-height:calc(100vh - 16px);overflow-y:auto;scrollbar-width:thin}}
 @media (max-width:1100px){.stage{grid-template-columns:minmax(0,1fr)}}
 .bikebox{position:relative;background:radial-gradient(1200px 500px at 60% 30%,var(--accent-soft),transparent 70%),var(--bg2);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
-.bikebox #bike{display:block;width:100%;height:auto}
+.bikebox #bike{display:block;width:100%;height:auto;aspect-ratio:2220/1400}
 #leanG{flex:none;width:76px;height:76px}
 [hidden]{display:none!important}
 .gridbg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px;opacity:.35;pointer-events:none;mask-image:linear-gradient(to bottom,#000 40%,transparent)}
@@ -115,6 +115,11 @@ button{font:inherit;color:inherit}
 tr.grow td{background:var(--bg2);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding:5px 10px}
 tr.act td{background:var(--accent-soft)}
 .dz{color:var(--dim)}
+.dlive{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start}
+@media (max-width:900px){.dlive{grid-template-columns:minmax(0,1fr)}}
+#cut{width:100%;height:auto;display:block;background:var(--bg2);border:1px solid var(--line);border-radius:10px}
+.sw{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.dhist .tablewrap table{font-size:.76rem}
 .player{display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;padding:10px 14px;border-top:1px solid var(--line);background:var(--panel)}
 .seg{display:flex;flex-wrap:wrap;gap:4px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:3px}
 .seg button{border:0;background:transparent;padding:6px 10px;border-radius:7px;cursor:pointer;font-size:.8rem;color:var(--muted);white-space:nowrap}
@@ -253,7 +258,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="brand">
       <div class="lbl">Suzuki GSX-R 1000 · K7 (2007–2008) · Serienfahrwerk KYB</div>
       <h1>K7 <span>Fahrwerkslabor</span></h1>
-      <p>Durchhang, Dämpfung, Geometrie und Reifendruck durchspielen. Jede Änderung läuft durch ein physikalisches Fahrzeugmodell mit Nickbewegung, 14 Fahrsituationen und frei einstellbaren Hindernissen und wird gegen die Serie oder ein gemerktes Setup verglichen.</p>
+      <p>Durchhang, Dämpfung, Geometrie und Reifendruck durchspielen. Jede Änderung läuft durch ein physikalisches Fahrzeugmodell mit Nickbewegung, Ventil-Dämpfern, Reibung und echter Straßenrauheit. 14 Fahrsituationen mit frei einstellbaren Hindernissen, Vergleich mit der Serie oder einem gemerkten Setup.</p>
     </div>
     <div class="pills">
       <span class="pill"><span class="dot" id="statusDot"></span>Setup-Index <b id="pillScore">–</b></span>
@@ -287,6 +292,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         </div>
         <div class="obst">
           <div class="obst-h"><span class="lbl">Hindernis &amp; Fahrzustand</span><span class="note" id="obstDesc"></span><button class="btn sm" id="obstReset">Standardwerte</button></div>
+          <div class="inline" style="flex-wrap:wrap"><span class="lbl">Straßenzustand</span><div class="seg" id="roughSeg" role="group" aria-label="Straßenzustand"></div><span class="note">gilt für alle Situationen, Rauheit nach ISO 8608</span></div>
           <div class="obst-g" id="obstCtl"></div>
           <canvas class="cv" id="profCv" height="70" aria-label="Fahrbahnprofil"></canvas>
         </div>
@@ -300,6 +306,13 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="legend" style="margin-bottom:6px"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Serie</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nickwinkel</span></div>
         <canvas class="cv" id="timeCv" height="420" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
         <p class="note" id="timeNote"></p>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Dämpfer live</h3><span class="note">Schnittbild läuft mit der Animation. Orange = Druckstufe, blau = Zugstufe.</span></div>
+        <div class="dlive">
+          <svg id="cut" viewBox="0 0 600 405" role="img" aria-label="Schnittbild von Gabel und Federbein mit Feder, Kolben, Ventilen, Luftpolster und Ausgleichsbehälter"></svg>
+          <div class="dhist"><div class="lbl" style="margin-bottom:4px">Dämpfergeschwindigkeit in dieser Situation</div><canvas class="cv" id="histCv" height="220" aria-label="Histogramm der Dämpfergeschwindigkeiten"></canvas><div id="histStats"></div></div>
+        </div>
       </div>
     </div>
     <aside class="stage-r">
@@ -426,9 +439,12 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
       <h3 style="margin-bottom:8px">So rechnet das Modell</h3>
       <ul class="list">
         <li><b>Halbfahrzeug mit Nicken:</b> Aufbau mit Hub- und Nickbewegung, Vorder- und Hinterrad als ungefederte Massen, Reifen als Feder mit Dämpfung, Abheben möglich. Front und Heck beeinflussen sich gegenseitig. Integration mit 0,2 ms Schrittweite über 2,6 bis 7 s.</li>
+        <li><b>Reifen rollt über Kanten:</b> Die Radmitte folgt der Hüllkurve eines Rades mit echtem Radius (300 / 311 mm). Scharfe Kanten werden dadurch so verschliffen, wie es ein rollendes Rad tut.</li>
+        <li><b>Straßenrauheit:</b> Zufallsprofil nach ISO 8608 aus 48 Wellenlängen von 0,08 bis 20 m. Klassen A, B, C mit 16, 64 und 256 · 10⁻⁶ m³. Die Bewertung trennt das Grundrauschen der Straße von der Reaktion auf das Hindernis und zählt das Rauschen nur zur Hälfte.</li>
+        <li><b>Reibung:</b> Losbrechkraft von Dichtungen und Gleitbuchsen, 60 N in der Gabel und 30 N am Hinterrad. Sie macht kleine Stöße härter, als es die Dämpfung allein täte.</li>
         <li><b>Gabel:</b> zwei lineare Stahlfedern mit Vorspannung, adiabates Luftpolster (Ölstand verändert das Luftvolumen), Endanschlag mit progressivem Puffer. Kräfte werden über den Lenkkopfwinkel in die Senkrechte umgerechnet.</li>
         <li><b>Federbein:</b> Radfederrate = Federrate / Übersetzung², leicht progressiv durch die Umlenkung.</li>
-        <li><b>Dämpfer:</b> Low-Speed-Kennlinie bis zum Knick, darüber High-Speed-Steigung. Jeder Klick ändert die Low-Speed-Kraft um etwa 7,5 %, jede Umdrehung High-Speed um etwa 26 %. Klickwirkung ist relativ zur Serie kalibriert.</li>
+        <li><b>Dämpfer als Ventilmodell:</b> Je Richtung zwei parallele Ölwege. Die Bypass-Nadel (Low-Speed) hat einen laminaren und einen quadratischen Anteil; ihr Querschnitt wächst mit den Klicks (Nadelkegel, Exponent 1,4). Daher wirken Klicks nahe „ganz zu“ stark und weit offen kaum noch. Das Shim-Paket (High-Speed) öffnet ab einer Öffnungskraft, die der High-Speed-Einsteller vorspannt. Die Kennlinie wird je Einstellung als Tabelle berechnet und im Schnittbild sichtbar gemacht.</li>
         <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Beim Bremsen wirkt zusätzlich die axiale Komponente der Bremskraft in der Gabel, beim Beschleunigen 90 % Anti-Squat durch den Kettenzug.</li>
         <li><b>Kurven:</b> Fliehkraft erhöht die Last um 1/cos(Schräglage). Fahrbahnwellen wirken in Schräglage nur mit ihrem Anteil in Fahrzeugebene.</li>
         <li><b>Geometrie:</b> echte ebene Kinematik mit Schwinge und Gabel. Lenkkopfwinkel, Nachlauf und Radstand ergeben sich aus der Nickstellung des Rahmens.</li>
@@ -571,24 +587,93 @@ function sags(st) {
   return { sagF, sagR, freeF, freeR, L };
 }
 
-/* ============================ DÄMPFER ============================ */
+/* ============================ DÄMPFER (Ventilmodell) ============================ */
+// Je Richtung zwei parallele Ölwege: Bypass-Nadel (Low-Speed, laminar + quadratisch) und Shim-Paket (High-Speed, öffnet ab Öffnungskraft).
+// Die Klick-Einsteller verändern den Nadelquerschnitt, die High-Speed-Einsteller die Vorspannung des Shim-Pakets.
 const CC = {
   F: 2 * Math.sqrt((2 * M.kFstock * 1000 / (COSR * COSR)) * REF.msF),
   R: 2 * Math.sqrt((M.kRstock * 1000 / (M.MR * M.MR)) * REF.msR)
 };
-function damping(st) {
-  const a = M.clickAlpha, b = M.hsBeta;
-  return {
-    F: { ls: M.zeta.fLS * CC.F * Math.exp(-a * (st.fLS - STOCK.fLS)), hsr: M.hsRatioStock * Math.exp(-b * (st.fHS - STOCK.fHS)),
-         reb: M.zeta.fReb * CC.F * Math.exp(-a * (st.fReb - STOCK.fReb)), vk: M.vkF },
-    R: { ls: M.zeta.rLS * CC.R * Math.exp(-a * (st.rLS - STOCK.rLS)), hsr: M.hsRatioStock * Math.exp(-b * (st.rHS - STOCK.rHS)),
-         reb: M.zeta.rReb * CC.R * Math.exp(-a * (st.rReb - STOCK.rReb)), vk: M.vkR }
-  };
+const DAMP = { area0: 3, areaExp: 1.4, linShare: 0.6, hsFc: 0.35, hsSlope: 0.25, dv: 0.01, n: 400 };
+const clickArea = n => DAMP.area0 + Math.pow(Math.max(0, n), DAMP.areaExp);
+function circuit(cls, vk, hsr, nClick, nStock, tHS, tStock) {
+  const r = clickArea(nClick) / clickArea(nStock);
+  const cl = DAMP.linShare * cls / r, kq = (1 - DAMP.linShare) * cls / vk / (r * r);
+  const hsAdj = tHS == null ? 0 : tStock - tHS;
+  const Fc = cls * vk * Math.max(0.3, 1 + DAMP.hsFc * hsAdj);
+  const cs = cls * hsr * (tHS == null ? 1 : Math.exp(DAMP.hsSlope * hsAdj));
+  const vb = F => (-cl + Math.sqrt(cl * cl + 4 * kq * F)) / (2 * kq);
+  const vt = F => vb(F) + Math.max(0, F - Fc) / cs;
+  const tab = new Float64Array(DAMP.n + 1);
+  let hi = 10;
+  for (let i = 1; i <= DAMP.n; i++) {
+    const v = i * DAMP.dv; while (vt(hi) < v) hi *= 2;
+    let lo = tab[i - 1], h = hi;
+    for (let k = 0; k < 44; k++) { const m = (lo + h) / 2; if (vt(m) < v) lo = m; else h = m; }
+    tab[i] = (lo + h) / 2;
+  }
+  return { tab, Fc, cs, cl, kq, vb };
 }
-function dampF(v, c) {
-  if (v >= 0) return v < c.vk ? c.ls * v : c.ls * c.vk + c.ls * c.hsr * (v - c.vk);
-  const a = -v;
-  return -(a < M.vkReb ? c.reb * a : c.reb * M.vkReb + c.reb * M.rebHs * (a - M.vkReb));
+const DCACHE = new Map();
+function damping(st) {
+  const key = [st.fReb, st.fLS, st.fHS, st.rReb, st.rLS, st.rHS].join('|');
+  if (DCACHE.has(key)) return DCACHE.get(key);
+  const zF = M.zeta, d = {
+    F: { comp: circuit(zF.fLS * CC.F, M.vkF, M.hsRatioStock, st.fLS, STOCK.fLS, st.fHS, STOCK.fHS),
+         reb: circuit(zF.fReb * CC.F, M.vkReb, M.rebHs, st.fReb, STOCK.fReb, null, null) },
+    R: { comp: circuit(zF.rLS * CC.R, M.vkR, M.hsRatioStock, st.rLS, STOCK.rLS, st.rHS, STOCK.rHS),
+         reb: circuit(zF.rReb * CC.R, M.vkReb, M.rebHs, st.rReb, STOCK.rReb, null, null) }
+  };
+  if (DCACHE.size > 60) DCACHE.clear();
+  DCACHE.set(key, d); return d;
+}
+function lookF(cir, v) {
+  const x = v / DAMP.dv, i = Math.floor(x), t = cir.tab;
+  if (i >= DAMP.n) return t[DAMP.n] + (t[DAMP.n] - t[DAMP.n - 1]) * (x - DAMP.n);
+  return t[i] + (t[i + 1] - t[i]) * (x - i);
+}
+function dampF(v, c) { return v >= 0 ? lookF(c.comp, v) : -lookF(c.reb, -v); }
+// Anteil des Ölstroms durch das Shim-Paket (0 = nur Nadel, 1 = nur Shims)
+function shimShare(v, c) { const cir = v >= 0 ? c.comp : c.reb, a = Math.abs(v); if (a < 1e-4) return 0; const F = lookF(cir, a); return clamp(Math.max(0, F - cir.Fc) / cir.cs / a, 0, 1); }
+
+/* ============================ FAHRBAHN: Rauheit & Reifen-Abrollen ============================ */
+// Rauheit nach ISO 8608: Gd(n) = Gd(n0)·(n/n0)^-2, n0 = 0,1 Zyklen/m. Klassen A/B/C = 16 / 64 / 256 ·10⁻⁶ m³.
+const ROUGH = { glatt: { n: 'glatt', g: 0 }, gut: { n: 'gut (ISO A)', g: 16e-6 }, mittel: { n: 'mittel (ISO B)', g: 64e-6 }, schlecht: { n: 'schlecht (ISO C)', g: 256e-6 } };
+let roughness = 'gut';
+const RCOMP = (() => {
+  let seed = 917; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const N = 48, n0 = 0.05, n1 = 12, q = Math.pow(n1 / n0, 1 / N), out = [];
+  for (let i = 0; i < N; i++) { const n = n0 * Math.pow(q, i + 0.5); out.push({ k: 2 * Math.PI * n, n, dn: n * (q - 1) / Math.sqrt(q), ph: 2 * Math.PI * rnd() }); }
+  return out;
+})();
+const RDX = 0.005; // Rasterweite Fahrbahn 5 mm
+const RTAB = {};
+function roughTable(cls, len) {
+  const g = ROUGH[cls].g, n = Math.ceil(len / RDX) + 1, have = RTAB[cls];
+  if (have && have.length >= n) return have;
+  const t = new Float64Array(n);
+  if (g > 0) { const amps = RCOMP.map(c => Math.sqrt(2 * g * Math.pow(c.n / 0.1, -2) * c.dn)); for (let i = 0; i < n; i++) { const d = i * RDX; let z = 0; for (let j = 0; j < RCOMP.length; j++) z += amps[j] * Math.sin(RCOMP[j].k * d + RCOMP[j].ph); t[i] = z; } }
+  RTAB[cls] = t; return t;
+}
+const SCACHE = new Map();
+// Bereitet eine Situation vor: Rohprofil + Rauheit als Raster, dazu die Hüllkurve, auf der die Radmitte eines starren Rades abrollt.
+function prepScen(name, v, P) {
+  const key = name + JSON.stringify(P) + v.toFixed(3) + roughness;
+  if (SCACHE.has(key)) return SCACHE.get(key);
+  const sc = scenDef(name, v, P), off = 3, len = v * sc.T + off + 3, n = Math.ceil(len / RDX) + 1;
+  const rt = roughTable(roughness, len + 1), raw = new Float64Array(n);
+  for (let i = 0; i < n; i++) { const d = i * RDX - off; raw[i] = sc.road(d) + rt[i]; }
+  const env = R => {
+    const w = Math.round(0.16 / RDX), e = new Float64Array(n), drop = [];
+    for (let j = -w; j <= w; j += 2) { const x = j * RDX; drop.push([j, R - Math.sqrt(R * R - x * x)]); }
+    for (let i = 0; i < n; i++) { let m = -1e9; for (const [j, dz] of drop) { const k = i + j; if (k < 0 || k >= n) continue; const z = raw[k] - dz; if (z > m) m = z; } e[i] = m; }
+    return e;
+  };
+  const eF = env(M.Rf / 1000), eR = env(M.Rr / 1000);
+  const look = arr => d => { const x = (d + off) / RDX, i = Math.floor(x); if (i < 0) return arr[0]; if (i >= n - 1) return arr[n - 1]; return arr[i] + (arr[i + 1] - arr[i]) * (x - i); };
+  sc.raw = look(raw); sc.envF = look(eF); sc.envR = look(eR); sc.tStart = Math.max(0.15, Math.min(sc.start / v, sc.T));
+  if (SCACHE.size > 80) SCACHE.clear();
+  SCACHE.set(key, sc); return sc;
 }
 
 /* ============================ SZENARIEN ============================ */
@@ -680,8 +765,9 @@ function scenDef(name, v, P) {
 }
 
 /* ============================ SIMULATION (Halbfahrzeug mit Nicken) ============================ */
-// Freiheitsgrade: Hub und Nicken des Aufbaus, Hub von Vorder- und Hinterrad. Reifen können abheben.
-const K_PITCH = 0.48; // Trägheitsradius Nicken in m (Modellannahme)
+// Freiheitsgrade: Hub und Nicken des Aufbaus, Hub von Vorder- und Hinterrad. Reifen rollen als Hüllkurve über Kanten und können abheben.
+const K_PITCH = 0.48;       // Trägheitsradius Nicken in m (Modellannahme)
+const FRIC = { F: 60, R: 30, v0: 0.004 }; // Losbrechreibung Gabel (beide Holme, axial) und Federbein (am Rad) in N
 function simRun(st, sc, v, L) {
   const dmp = damping(st), wb = M.wb0 / 1000;
   const msF = L.msF, msR = L.msR, m = msF + msR, a = wb * msR / m, b = wb * msF / m, I = m * K_PITCH * K_PITCH;
@@ -689,17 +775,21 @@ function simRun(st, sc, v, L) {
   const FvF = x => forkAx(x / COSR, st) / COSR, FvR = x => rearW(x, st);
   const x0F = solve(FvF, msF * G, -5, M.travelF * COSR + 10), x0R = solve(FvR, msR * G, -5, M.travelR + 10);
   const d0F = (msF + M.muF) * G / ktF, d0R = (msR + M.muR) * G / ktR;
+  const frF = FRIC.F / COSR, frR = FRIC.R;
   let z = 0, vz = 0, th = 0, w = 0, zf = 0, vf = 0, zr = 0, vr = 0;
-  let pF = sc.road(0), pR = sc.road(-wb);
+  const eF = sc.envF, eR = sc.envR;
+  let pF = eF(0), pR = eR(-wb);
   const n = Math.floor(sc.T / DT);
-  const mk = () => ({ t: [], x: [], ft: [], zu: [], as: [] });
+  const mk = () => ({ t: [], x: [], ft: [], zu: [], as: [], v: [], fd: [] });
   const F = mk(), R = mk(), pitch = [], axg = [], lean = [];
   for (let i = 0; i <= n; i++) {
     const t = i * DT, nf = sc.nfac(t), ax = sc.ax(t) * G;
-    const rF = sc.road(v * t), rR = sc.road(v * t - wb), vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
+    const rF = eF(v * t), rR = eR(v * t - wb), vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
     const yF = z + a * th, yR = z - b * th, vyF = vz + a * w, vyR = vz - b * w;
     const xF = x0F + (zf - yF) * 1000, xR = x0R + (zr - yR) * 1000;
-    const FF = FvF(xF) + dampF(vf - vyF, dmp.F), FR = FvR(xR) + dampF(vr - vyR, dmp.R);
+    const uF = vf - vyF, uR = vr - vyR;
+    const dF = dampF(uF, dmp.F) + frF * Math.tanh(uF / FRIC.v0), dR = dampF(uR, dmp.R) + frR * Math.tanh(uR / FRIC.v0);
+    const FF = FvF(xF) + dF, FR = FvR(xR) + dR;
     let tF = ktF * (d0F + rF - zf); tF = tF > 0 ? Math.max(0, tF + M.ctire * (vrF - vf)) : 0;
     let tR = ktR * (d0R + rR - zr); tR = tR > 0 ? Math.max(0, tR + M.ctire * (vrR - vr)) : 0;
     const Fx = L.tot * ax;                                     // Längskraft gesamt
@@ -713,8 +803,8 @@ function simRun(st, sc, v, L) {
     vz += az * DT; w += aw * DT; vf += af * DT; vr += ar * DT;
     z += vz * DT; th += w * DT; zf += vf * DT; zr += vr * DT;
     if (i % REC === 0) {
-      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + a * aw);
-      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - b * aw);
+      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + a * aw); F.v.push(uF); F.fd.push(dF);
+      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - b * aw); R.v.push(uR); R.fd.push(dR);
       pitch.push(-th / DEG); axg.push(ax / G); lean.push(sc.lean ? sc.lean(t) : 0);
     }
   }
@@ -723,22 +813,34 @@ function simRun(st, sc, v, L) {
   return { F, R, pitch, axg, lean, T: sc.T };
 }
 function kpiAxle(o, sc) {
-  const dtr = DT * REC, i0 = Math.round(0.25 / dtr), iE = Math.round(sc.tEnd / dtr), n = o.t.length, W = Math.round(0.15 / dtr);
+  // Grundrauheit der Straße wird vor dem Hindernis gemessen und nur zur Hälfte bewertet,
+  // damit Hindernis-Reaktion und Straßenrauschen getrennt bleiben.
+  const dtr = DT * REC, n = o.t.length, i0 = Math.round(0.25 / dtr), iE = Math.round(sc.tEnd / dtr), W = Math.round(0.15 / dtr);
+  const iS = Math.max(Math.round(0.05 / dtr) + 5, Math.min(n - 1, Math.round((sc.tStart || 0.4) / dtr)));
   const pre = [0]; for (let i = 0; i < n; i++) pre.push(pre[i] + o.ft[i]);
+  const ma = i => { const a = Math.max(0, i - W), b = Math.min(n, i + W + 1); return (pre[b] - pre[a]) / (b - a); };
+  // Grundrauschen
+  let bx = 0, bx2 = 0, bf2 = 0, ba2 = 0, bn = 0;
+  for (let i = Math.round(0.05 / dtr); i < iS; i++) { bx += o.x[i]; bx2 += o.x[i] * o.x[i]; bf2 += (o.ft[i] - ma(i)) ** 2; ba2 += o.as[i] * o.as[i]; bn++; }
+  const sdX = bn ? Math.sqrt(Math.max(0, bx2 / bn - (bx / bn) ** 2)) : 0, cvB = bn ? Math.sqrt(bf2 / bn) / o.static : 0, rmsB = bn ? Math.sqrt(ba2 / bn) : 0;
   let mx = -1e9, mn = 1e9, f2 = 0, cnt = 0, lift = 0, acc2 = 0, minAfter = 1e9;
   for (let i = i0; i < n; i++) {
     mx = Math.max(mx, o.x[i]); mn = Math.min(mn, o.x[i]);
-    const a = Math.max(0, i - W), b = Math.min(n, i + W + 1), ma = (pre[b] - pre[a]) / (b - a);  // gleitender Mittelwert = quasistatische Last
-    f2 += (o.ft[i] - ma) ** 2; cnt++;
+    f2 += (o.ft[i] - ma(i)) ** 2; cnt++;
     if (o.ft[i] < 0.05 * o.static) lift += dtr * 1000;
     acc2 += o.as[i] * o.as[i];
     if (i >= iE) minAfter = Math.min(minAfter, o.x[i]);
   }
-  const fin = o.x[n - 1]; let settle = 0;
-  for (let i = n - 1; i >= iE; i--) { if (Math.abs(o.x[i] - fin) > 1.5) { settle = o.t[i] - sc.tEnd; break; } }
+  // Beruhigung auf geglättetem Signal, Toleranz wächst mit dem Grundrauschen
+  const K = Math.round(0.04 / dtr), xs = i => { let s = 0, c = 0; for (let j = Math.max(0, i - K); j <= Math.min(n - 1, i + K); j++) { s += o.x[j]; c++; } return s / c; };
+  const tail = Math.round(0.2 / dtr); let fin = 0; for (let i = n - tail; i < n; i++) fin += o.x[i]; fin /= tail;
+  const tol = 1.5 + 3 * sdX; let settle = 0;
+  for (let i = n - 1 - K; i >= iE; i -= 2) { if (Math.abs(xs(i) - fin) > tol) { settle = o.t[i] - sc.tEnd; break; } }
+  const cvT = Math.sqrt(f2 / cnt) / o.static, rmsT = Math.sqrt(acc2 / cnt);
+  const cv = Math.sqrt(Math.max(0, cvT * cvT - cvB * cvB)) + 0.5 * cvB, rms = Math.sqrt(Math.max(0, rmsT * rmsT - rmsB * rmsB)) + 0.5 * rmsB;
   return {
     usage: mx / o.travel, maxX: mx, minX: mn, bottom: mx > o.travel - 3, topout: minAfter < 1,
-    cv: Math.sqrt(f2 / cnt) / o.static, lift, rms: Math.sqrt(acc2 / cnt), settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter)
+    cv, cvRoad: cvB, lift, rms, rmsRoad: rmsB, settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter - 2 * sdX)
   };
 }
 function subScores(k, sc) {
@@ -809,19 +911,50 @@ const SH = {
   tail: [[490, 838], [300, 905], [120, 965], [92, 945], [140, 905], [360, 800], [560, 760], [650, 790], [610, 808], [478, 812]],
   fairing: [[1090, 1000], [1230, 1040], [1330, 940], [1362, 830], [1310, 700], [1200, 570], [1130, 430], [1045, 322], [900, 268], [720, 258], [645, 330], [700, 450], [880, 500], [1000, 600], [1075, 760], [1095, 900]],
   screen: [[1090, 1000], [1170, 1120], [1236, 1045], [1180, 1012]],
-  muffler: [[560, 470], [360, 600], [330, 560], [530, 430]],
+  muffler: [[520, 520], [300, 650], [255, 640], [250, 600], [470, 470], [510, 475]],
+  header: [[1100, 520], [1020, 330], [900, 285], [700, 300], [560, 430], [520, 500]],
+  intake: [[1230, 760], [1300, 760], [1290, 720], [1220, 730]],
 };
 const toPts = a => a.map(([x, y]) => ({ x, y }));
 for (const k in SH) SH[k] = toPts(SH[k]);
-const SHOCK_TOP = { x: 640, y: 640 }, COG = { x: 740, y: 620 };
+const SHOCK_TOP = { x: 640, y: 640 }, COG = { x: 740, y: 620 }, CSHAFT = { x: 660, y: 385 };
+// Geschlossene, weiche Kontur (Catmull-Rom → Bézier)
+function smoothClosed(pts, k = 0.5) {
+  const n = pts.length; let d = `M${P(pts[0])}`;
+  for (let i = 0; i < n; i++) {
+    const p0 = pts[(i - 1 + n) % n], p1 = pts[i], p2 = pts[(i + 1) % n], p3 = pts[(i + 2) % n];
+    const c1 = { x: p1.x + (p2.x - p0.x) * k / 3, y: p1.y + (p2.y - p0.y) * k / 3 }, c2 = { x: p2.x - (p3.x - p1.x) * k / 3, y: p2.y - (p3.y - p1.y) * k / 3 };
+    d += `C${P(c1)} ${P(c2)} ${P(p2)}`;
+  }
+  return d + 'Z';
+}
+function smoothOpen(pts, k = 0.5) {
+  const n = pts.length; let d = `M${P(pts[0])}`;
+  for (let i = 0; i < n - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(n - 1, i + 2)];
+    d += `C${P({ x: p1.x + (p2.x - p0.x) * k / 3, y: p1.y + (p2.y - p0.y) * k / 3 })} ${P({ x: p2.x - (p3.x - p1.x) * k / 3, y: p2.y - (p3.y - p1.y) * k / 3 })} ${P(p2)}`;
+  }
+  return d;
+}
+const VIEWS = { all: '-380 -1240 2220 1400', front: '860 -1160 1060 1300', rear: '-400 -1080 1220 1240' };
+let viewMode = 'all';
 let G_ = {};
 function buildSvg() {
   svg.innerHTML = '';
   const defs = el('defs');
-  defs.innerHTML = `<linearGradient id="gFork" x1="0" x2="1"><stop offset="0" stop-color="var(--metal)" stop-opacity=".55"/><stop offset=".5" stop-color="var(--metal)"/><stop offset="1" stop-color="var(--metal)" stop-opacity=".45"/></linearGradient>
-  <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--line2)" stop-opacity=".8"/><stop offset="1" stop-color="var(--line2)" stop-opacity="0"/></linearGradient>
+  defs.innerHTML = `<linearGradient id="gFork" x1="0" x2="1"><stop offset="0" stop-color="var(--metal)" stop-opacity=".5"/><stop offset=".45" stop-color="var(--metal)"/><stop offset="1" stop-color="var(--metal)" stop-opacity=".4"/></linearGradient>
+  <linearGradient id="gInner" x1="0" x2="1"><stop offset="0" stop-color="var(--front)" stop-opacity=".55"/><stop offset=".4" stop-color="var(--front)"/><stop offset="1" stop-color="var(--front)" stop-opacity=".5"/></linearGradient>
+  <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--road)"/><stop offset="1" stop-color="var(--road)" stop-opacity="0"/></linearGradient>
+  <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky)" stop-opacity="0"/><stop offset="1" stop-color="var(--sky)"/></linearGradient>
+  <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".30"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".08"/></linearGradient>
+  <radialGradient id="gShadow"><stop offset="0" stop-color="var(--shadow)"/><stop offset="1" stop-color="var(--shadow)" stop-opacity="0"/></radialGradient>
   <marker id="arw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker>`;
+  el('rect', { x: -2000, y: -1300, width: 6000, height: 1300, fill: 'url(#gSky)' });
+  G_.posts = el('g');
+  for (let i = 0; i < 6; i++) { const g = el('g', {}, G_.posts); el('rect', { x: -9, y: -1000, width: 18, height: 1000, rx: 5, fill: 'var(--post)' }, g); el('rect', { x: -9, y: -930, width: 18, height: 90, fill: 'var(--warn)', opacity: .8 }, g); }
   G_.ground = el('path', { fill: 'url(#gGround)', stroke: 'var(--muted)', 'stroke-width': 3 });
+  G_.lane = el('path', { stroke: 'var(--lane)', 'stroke-width': 10, 'stroke-dasharray': '600 400', fill: 'none' });
+  G_.shadow = el('ellipse', { rx: 900, ry: 34, fill: 'url(#gShadow)' });
   G_.axisLine = el('path', { stroke: 'var(--accent)', 'stroke-width': 3, 'stroke-dasharray': '18 12', fill: 'none', opacity: .8 });
   G_.trailSeg = el('path', { stroke: 'var(--warn)', 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round' });
   G_.wbDim = el('path', { stroke: 'var(--muted)', 'stroke-width': 2.5, fill: 'none', 'marker-start': 'url(#arw)', 'marker-end': 'url(#arw)' });
@@ -829,101 +962,124 @@ function buildSvg() {
   G_.gBody = el('path', { fill: 'none', stroke: 'var(--ghost)', 'stroke-width': 4, 'stroke-dasharray': '14 10' }, G_.ghost);
   G_.gWF = el('circle', { r: M.Rf, fill: 'none', stroke: 'var(--ghost)', 'stroke-width': 5, 'stroke-dasharray': '14 10' }, G_.ghost);
   G_.gWR = el('circle', { r: M.Rr, fill: 'none', stroke: 'var(--ghost)', 'stroke-width': 5, 'stroke-dasharray': '14 10' }, G_.ghost);
+  G_.chain = el('path', { stroke: 'var(--metal)', 'stroke-width': 9, fill: 'none', 'stroke-dasharray': '10 5', opacity: .8 });
   // Räder
   for (const w of ['R', 'F']) {
-    const g = el('g'); G_['wheel' + w] = g;
-    el('circle', { r: w === 'F' ? M.Rf : M.Rr, fill: 'none', stroke: 'var(--tyre)', 'stroke-width': w === 'F' ? 70 : 88 }, g);
-    el('circle', { r: w === 'F' ? M.Rf : M.Rr, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 3, opacity: .55 }, g);
-    el('circle', { r: 216, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 7 }, g);
-    el('circle', { r: w === 'F' ? 155 : 110, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 12, 'stroke-dasharray': '10 7', opacity: .7 }, g);
+    const R = w === 'F' ? M.Rf : M.Rr, g = el('g'); G_['wheel' + w] = g;
+    el('circle', { r: R - (w === 'F' ? 35 : 44), fill: 'none', stroke: 'var(--tyre)', 'stroke-width': w === 'F' ? 72 : 90 }, g);
+    const tread = el('circle', { r: R - 6, fill: 'none', stroke: 'var(--tread)', 'stroke-width': 10, 'stroke-dasharray': '22 30' }, g); G_['tread' + w] = tread;
+    el('circle', { r: 222, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 9 }, g);
+    el('circle', { r: 208, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 3, opacity: .5 }, g);
     const sp = el('g', {}, g); G_['spokes' + w] = sp;
-    for (let i = 0; i < 3; i++) { const a = i * 120 * DEG; el('path', { d: `M0,0 L${(Math.cos(a) * 212).toFixed(1)},${(Math.sin(a) * 212).toFixed(1)} M0,0 L${(Math.cos(a + .28) * 212).toFixed(1)},${(Math.sin(a + .28) * 212).toFixed(1)}`, stroke: 'var(--metal)', 'stroke-width': 10, 'stroke-linecap': 'round' }, sp); }
-    el('circle', { r: 26, fill: 'var(--bg2)', stroke: 'var(--metal)', 'stroke-width': 6 }, g);
+    el('circle', { r: w === 'F' ? 155 : 110, fill: 'var(--disc)', stroke: 'var(--metal)', 'stroke-width': 4, opacity: .9 }, sp);
+    el('circle', { r: w === 'F' ? 130 : 92, fill: 'none', stroke: 'var(--bg2)', 'stroke-width': 9, 'stroke-dasharray': '3 16' }, sp);
+    if (w === 'R') el('circle', { r: 105, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 10, 'stroke-dasharray': '6 8', opacity: .8 }, sp);
+    for (let i = 0; i < 3; i++) { const a = i * 120 * DEG; el('path', { d: `M0,0 L${(Math.cos(a) * 214).toFixed(1)},${(Math.sin(a) * 214).toFixed(1)} M0,0 L${(Math.cos(a + .28) * 214).toFixed(1)},${(Math.sin(a + .28) * 214).toFixed(1)}`, stroke: 'var(--metal)', 'stroke-width': 13, 'stroke-linecap': 'round' }, sp); }
+    el('circle', { r: 30, fill: 'var(--bg2)', stroke: 'var(--metal)', 'stroke-width': 7 }, g);
   }
-  G_.swingarm = el('path', { stroke: 'var(--metal)', 'stroke-width': 34, 'stroke-linecap': 'round', fill: 'none' });
-  G_.fairing = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3, 'stroke-dasharray': '3 6' });
+  G_.swingarm = el('path', { fill: 'var(--metal)', stroke: 'var(--line2)', 'stroke-width': 3 });
+  G_.fairing = el('path', { fill: 'url(#gBody)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
+  G_.header = el('path', { fill: 'none', stroke: 'var(--metal)', 'stroke-width': 16, 'stroke-linecap': 'round', opacity: .55 });
   G_.engine = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 4, opacity: .95 });
-  G_.muffler = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 4 });
-  G_.frame = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--accent)', 'stroke-width': 5 });
-  G_.shockBody = el('path', { stroke: 'var(--metal)', 'stroke-width': 26, 'stroke-linecap': 'round', fill: 'none' });
-  G_.shockSpring = el('path', { stroke: 'var(--rear)', 'stroke-width': 9, fill: 'none', 'stroke-linejoin': 'round' });
-  G_.tank = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
-  G_.seat = el('path', { fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 3 });
-  G_.tail = el('path', { fill: 'var(--xray)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
+  G_.muffler = el('path', { fill: 'var(--panel2)', stroke: 'var(--metal)', 'stroke-width': 5 });
+  G_.frame = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--accent)', 'stroke-width': 6, 'stroke-linejoin': 'round' });
+  G_.shockBody = el('path', { stroke: 'var(--metal)', 'stroke-width': 30, 'stroke-linecap': 'round', fill: 'none' });
+  G_.shockRod = el('path', { stroke: 'var(--fg)', 'stroke-width': 10, 'stroke-linecap': 'round', fill: 'none', opacity: .8 });
+  G_.shockSpring = el('path', { stroke: 'var(--rear)', 'stroke-width': 10, fill: 'none', 'stroke-linejoin': 'round' });
+  G_.tank = el('path', { fill: 'url(#gBody)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
+  G_.seat = el('path', { fill: 'var(--seat)', stroke: 'var(--line2)', 'stroke-width': 3 });
+  G_.tail = el('path', { fill: 'url(#gBody)', stroke: 'var(--xray-line)', 'stroke-width': 3 });
   G_.screen = el('path', { fill: 'var(--accent-soft)', stroke: 'var(--xray-line)', 'stroke-width': 2 });
-  G_.rider = el('path', { fill: 'none', stroke: 'var(--rider)', 'stroke-width': 62, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
-  G_.helmet = el('path', { fill: 'var(--rider)', stroke: 'var(--rider-edge)', 'stroke-width': 4 });
-  G_.forkInner = el('path', { stroke: 'var(--front)', 'stroke-width': 30, 'stroke-linecap': 'butt', fill: 'none' });
+  G_.intake = el('path', { fill: 'var(--bg2)', stroke: 'var(--xray-line)', 'stroke-width': 2 });
+  G_.lamp = el('ellipse', { rx: 34, ry: 20, fill: 'var(--lamp)' });
+  G_.riderLeg = el('path', { fill: 'none', stroke: 'var(--rider)', 'stroke-width': 64, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  G_.riderBody = el('path', { fill: 'none', stroke: 'var(--rider)', 'stroke-width': 92, 'stroke-linecap': 'round' });
+  G_.riderArm = el('path', { fill: 'none', stroke: 'var(--rider)', 'stroke-width': 46, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' });
+  G_.helmet = el('path', { fill: 'var(--rider-edge)', stroke: 'var(--rider-edge)', 'stroke-width': 4 });
+  G_.visor = el('path', { fill: 'var(--accent)', opacity: .5 });
+  G_.forkInner = el('path', { stroke: 'url(#gInner)', 'stroke-width': 32, 'stroke-linecap': 'butt', fill: 'none' });
   G_.oring = el('path', { stroke: 'var(--bad)', 'stroke-width': 12, fill: 'none' });
-  G_.forkOuter = el('path', { stroke: 'url(#gFork)', 'stroke-width': 46, 'stroke-linecap': 'butt', fill: 'none' });
-  G_.clamps = el('path', { stroke: 'var(--metal)', 'stroke-width': 26, 'stroke-linecap': 'round', fill: 'none' });
+  G_.forkOuter = el('path', { stroke: 'url(#gFork)', 'stroke-width': 48, 'stroke-linecap': 'butt', fill: 'none' });
+  G_.clamps = el('path', { stroke: 'var(--metal)', 'stroke-width': 28, 'stroke-linecap': 'round', fill: 'none' });
   G_.bar = el('path', { stroke: 'var(--metal)', 'stroke-width': 18, 'stroke-linecap': 'round', fill: 'none' });
-  G_.caliper = el('path', { fill: 'var(--bad)', opacity: .85 });
+  G_.caliper = el('path', { fill: 'var(--caliper)', stroke: 'var(--line2)', 'stroke-width': 3 });
   G_.cog = el('g');
   el('circle', { r: 22, fill: 'var(--bg)', stroke: 'var(--fg)', 'stroke-width': 4 }, G_.cog);
   el('path', { d: 'M-22,0A22,22 0 0,1 0,-22L0,0Z M22,0A22,22 0 0,1 0,22L0,0Z', fill: 'var(--fg)' }, G_.cog);
-  G_.loadF = el('path', { stroke: 'var(--front)', 'stroke-width': 7, fill: 'none', 'marker-end': 'url(#arw)' });
-  G_.loadR = el('path', { stroke: 'var(--rear)', 'stroke-width': 7, fill: 'none', 'marker-end': 'url(#arw)' });
-  const T = (cls, fill = 'var(--fg)', size = 34, anchor = 'middle') => el('text', { fill, 'font-size': size, 'font-family': 'JetBrains Mono, monospace', 'text-anchor': anchor });
-  G_.tRake = T('', 'var(--accent)', 36, 'start');
-  G_.tTrail = T('', 'var(--warn)', 32);
-  G_.tWb = T('', 'var(--muted)', 32);
-  G_.tF = T('', 'var(--front)', 34, 'end');
-  G_.tR = T('', 'var(--rear)', 34, 'start');
-  G_.tLoadF = T('', 'var(--front)', 28);
-  G_.tLoadR = T('', 'var(--rear)', 28);
+  G_.loadF = el('path', { stroke: 'var(--front)', 'stroke-width': 8, fill: 'none', 'marker-end': 'url(#arw)' });
+  G_.loadR = el('path', { stroke: 'var(--rear)', 'stroke-width': 8, fill: 'none', 'marker-end': 'url(#arw)' });
+  const T = (fill = 'var(--fg)', size = 34, anchor = 'middle') => el('text', { fill, 'font-size': size, 'font-family': 'JetBrains Mono, monospace', 'text-anchor': anchor, 'paint-order': 'stroke', stroke: 'var(--bg2)', 'stroke-width': 8 });
+  G_.tRake = T('var(--accent)', 36, 'start');
+  G_.tTrail = T('var(--warn)', 32);
+  G_.tWb = T('var(--muted)', 32);
+  G_.tLoadF = T('var(--front)', 28);
+  G_.tLoadR = T('var(--rear)', 28);
+  svg.setAttribute('viewBox', VIEWS[viewMode]);
 }
-let wheelRot = 0;
 function drawBike(st) {
-  // st: {sF, xR, hF, hR, dist, ftF, ftR, prot, shim}
-  const p = pose(st.sF, st.xR, st.prot, st.shim, st.hF, st.hR), W = p.W;
-  // Boden
+  const p = pose(st.sF, st.xR, st.prot, st.shim, st.hF, st.hR), W = p.W, dist = st.dist || 0;
+  // Umgebung: Boden mit Rauheit, Leitlinie und Leitpfosten (Parallaxe)
   const pts = [];
-  for (let x = -380; x <= 1840; x += 20) pts.push({ x, y: st.road ? st.road(x) : 0 });
-  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L1840,150L-380,150Z`);
+  for (let x = -400; x <= 1860; x += 10) pts.push({ x, y: st.road ? st.road(x) : 0 });
+  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L1860,160L-400,160Z`);
+  G_.lane.setAttribute('d', 'M-400,28L1860,28'); G_.lane.setAttribute('stroke-dashoffset', (dist % 1000).toFixed(0));
+  const sp = 900, off = (dist * 0.45) % sp;
+  [...G_.posts.children].forEach((g, i) => g.setAttribute('transform', `translate(${(-400 + i * sp - off + sp).toFixed(0)},0) scale(.75)`));
+  G_.shadow.setAttribute('cx', (p.wb / 2).toFixed(0)); G_.shadow.setAttribute('cy', 8);
   // Räder
-  wheelRot = -(st.dist || 0) / M.Rf / DEG;
   G_.wheelF.setAttribute('transform', `translate(${P(p.axF)})`);
   G_.wheelR.setAttribute('transform', `translate(${P(p.axR)})`);
-  G_.spokesF.setAttribute('transform', `rotate(${(-(st.dist || 0) / M.Rf / DEG).toFixed(1)})`);
-  G_.spokesR.setAttribute('transform', `rotate(${(-(st.dist || 0) / M.Rr / DEG).toFixed(1)})`);
-  // Chassis
-  const tr = arr => poly(arr.map(W));
-  for (const k of ['frame', 'engine', 'tank', 'seat', 'tail', 'fairing', 'screen', 'muffler']) G_[k].setAttribute('d', tr(SH[k]));
+  G_.spokesF.setAttribute('transform', `rotate(${(dist / M.Rf / DEG).toFixed(1)})`);
+  G_.spokesR.setAttribute('transform', `rotate(${(dist / M.Rr / DEG).toFixed(1)})`);
+  G_.treadF.setAttribute('stroke-dashoffset', (-dist % 52).toFixed(1)); G_.treadR.setAttribute('stroke-dashoffset', (-dist % 52).toFixed(1));
+  // Aufbau
+  for (const k of ['engine', 'tank', 'seat', 'tail', 'fairing', 'muffler']) G_[k].setAttribute('d', smoothClosed(SH[k].map(W)));
+  G_.frame.setAttribute('d', poly(SH.frame.map(W)));
+  G_.screen.setAttribute('d', smoothClosed(SH.screen.map(W), .3)); G_.intake.setAttribute('d', poly(SH.intake.map(W)));
+  G_.header.setAttribute('d', smoothOpen(SH.header.map(W)));
+  const lp = W({ x: 1338, y: 860 }); G_.lamp.setAttribute('cx', lp.x.toFixed(1)); G_.lamp.setAttribute('cy', (-lp.y).toFixed(1));
   const piv = W(PIV);
-  G_.swingarm.setAttribute('d', line(piv, p.axR));
-  // Federbein: oben am Rahmen, unten Umlenkung (Punkt auf der Schwinge, 25 % ab Drehpunkt, 45 mm darunter)
-  const sa = { x: p.axR.x - piv.x, y: p.axR.y - piv.y }, sl = Math.hypot(sa.x, sa.y);
-  const lk = { x: piv.x + sa.x * 0.25 + (sa.y / sl) * 45, y: piv.y + sa.y * 0.25 - (sa.x / sl) * 45 };
-  const top = W(SHOCK_TOP);
-  G_.shockBody.setAttribute('d', line(top, lk));
-  const dx = lk.x - top.x, dy = lk.y - top.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
-  const comp = clamp((st.xR) / M.travelR, 0, 1.1);
-  const s0 = 40, s1 = L - 60, coils = 7; let d = `M${P({ x: top.x + ux * s0, y: top.y + uy * s0 })}`;
-  for (let i = 0; i <= coils * 2; i++) { const tt = s0 + (s1 - s0) * i / (coils * 2) * (1 - comp * 0.25); const off = (i % 2 ? 1 : -1) * 34; d += `L${P({ x: top.x + ux * tt + nx * off, y: top.y + uy * tt + ny * off })}`; }
+  // Schwinge als verjüngter Körper
+  const sa = { x: p.axR.x - piv.x, y: p.axR.y - piv.y }, sl = Math.hypot(sa.x, sa.y), nx0 = -sa.y / sl, ny0 = sa.x / sl;
+  const q = (pt, wdt) => ({ x: pt.x + nx0 * wdt, y: pt.y + ny0 * wdt });
+  G_.swingarm.setAttribute('d', `M${P(q(piv, 34))}L${P(q(p.axR, 18))}L${P(q(p.axR, -18))}L${P(q(piv, -46))}Z`);
+  // Kette: Ritzel → Kettenblatt
+  const cs = W(CSHAFT), rs = 45, rr = 105;
+  G_.chain.setAttribute('d', `M${P({ x: cs.x, y: cs.y + rs })}L${P({ x: p.axR.x, y: p.axR.y + rr })}M${P({ x: cs.x, y: cs.y - rs })}L${P({ x: p.axR.x, y: p.axR.y - rr })}`);
+  G_.chain.setAttribute('stroke-dashoffset', (-dist % 15).toFixed(1));
+  // Federbein über Umlenkung
+  const lk = { x: piv.x + sa.x * 0.25 - nx0 * 45, y: piv.y + sa.y * 0.25 - ny0 * 45 };
+  const top = W(SHOCK_TOP), dx = lk.x - top.x, dy = lk.y - top.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L, nx = -uy, ny = ux;
+  const comp = clamp(st.xR / M.travelR, 0, 1.1), bodyEnd = { x: top.x + ux * L * 0.55, y: top.y + uy * L * 0.55 };
+  G_.shockBody.setAttribute('d', line(top, bodyEnd)); G_.shockRod.setAttribute('d', line(bodyEnd, lk));
+  const s0 = 40, s1 = L - 50, coils = 7; let d = `M${P({ x: top.x + ux * s0, y: top.y + uy * s0 })}`;
+  for (let i = 0; i <= coils * 2; i++) { const tt = s0 + (s1 - s0) * i / (coils * 2) * (1 - comp * 0.25); const o = (i % 2 ? 1 : -1) * 36; d += `L${P({ x: top.x + ux * tt + nx * o, y: top.y + uy * tt + ny * o })}`; }
   G_.shockSpring.setAttribute('d', d);
   // Gabel
-  const fk = t => W(onFork(t)); // Chassis-fest
-  const ax = p.axF;
+  const fk = t => W(onFork(t)), ax = p.axF;
   const outerBot = fk(170), topC = fk(700), botC = fk(545);
   G_.forkOuter.setAttribute('d', line(outerBot, topC));
   G_.forkInner.setAttribute('d', line(ax, fk(240)));
   const sMaxDelta = (st.sMax != null ? st.sMax : st.sF) - REFC.sF + st.prot;
   const ang = Math.atan2(topC.y - outerBot.y, topC.x - outerBot.x), px = -Math.sin(ang) * 22, py = Math.cos(ang) * 22;
-  const orP = fk(p.ds + (170 - Math.max(0, sMaxDelta)) - 0); // Position O-Ring auf Gleitrohr
+  const orP = fk(p.ds + (170 - Math.max(0, sMaxDelta)));
   G_.oring.setAttribute('d', `M${P({ x: orP.x - px, y: orP.y - py })}L${P({ x: orP.x + px, y: orP.y + py })}`);
   const axT = W(onAxis(690)), axB = W(onAxis(535));
   G_.clamps.setAttribute('d', line(axT, topC) + line(axB, botC));
   const bar = W({ x: onFork(665).x - 95, y: onFork(665).y + 10 });
   G_.bar.setAttribute('d', line(fk(665), bar));
-  G_.caliper.setAttribute('d', poly([{ x: ax.x + 120, y: ax.y + 150 }, { x: ax.x + 175, y: ax.y + 95 }, { x: ax.x + 195, y: ax.y + 120 }, { x: ax.x + 140, y: ax.y + 180 }].map(q => q)));
-  // Fahrer (sportliche Haltung, fest zum Rahmen)
-  G_.rider.style.display = G_.helmet.style.display = st.rider ? '' : 'none';
+  const cal = a => ({ x: ax.x + Math.cos(a * DEG) * 150, y: ax.y + Math.sin(a * DEG) * 150 });
+  G_.caliper.setAttribute('d', `M${P(cal(28))}A150,150 0 0,0 ${P(cal(62))}L${P({ x: ax.x + Math.cos(62 * DEG) * 195, y: ax.y + Math.sin(62 * DEG) * 195 })}A195,195 0 0,1 ${P({ x: ax.x + Math.cos(28 * DEG) * 195, y: ax.y + Math.sin(28 * DEG) * 195 })}Z`);
+  // Fahrer
+  for (const k of ['riderLeg', 'riderBody', 'riderArm', 'helmet', 'visor']) G_[k].style.display = st.rider ? '' : 'none';
   if (st.rider) {
-    const hip = W({ x: 585, y: 875 }), sh = W({ x: 880, y: 1095 }), elb = W({ x: 960, y: 985 }), knee = W({ x: 850, y: 790 }), foot = W({ x: 590, y: 585 });
-    G_.rider.setAttribute('d', `M${P(foot)}L${P(knee)}L${P(hip)}L${P(sh)}L${P(elb)}L${P(bar)}`);
-    const hc = W({ x: 975, y: 1170 });
-    G_.helmet.setAttribute('d', `M${hc.x - 80},${-hc.y}a80,74 0 1,1 160,0a80,74 0 1,1 -160,0Z M${hc.x + 30},${-hc.y - 10}h60v30h-60z`);
+    const hip = W({ x: 590, y: 880 }), sh = W({ x: 870, y: 1080 }), elb = W({ x: 965, y: 975 }), knee = W({ x: 845, y: 760 }), foot = W({ x: 600, y: 575 });
+    G_.riderLeg.setAttribute('d', smoothOpen([foot, knee, hip], .2));
+    G_.riderBody.setAttribute('d', smoothOpen([hip, W({ x: 720, y: 1010 }), sh], .6));
+    G_.riderArm.setAttribute('d', `M${P(sh)}L${P(elb)}L${P(bar)}`);
+    const hc = W({ x: 975, y: 1165 });
+    G_.helmet.setAttribute('d', `M${(hc.x - 82).toFixed(1)},${(-hc.y).toFixed(1)}a82,76 0 1,1 164,0a82,76 0 1,1 -164,0Z`);
+    G_.visor.setAttribute('d', `M${(hc.x + 20).toFixed(1)},${(-hc.y - 30).toFixed(1)}q55,5 62,40l-60,6z`);
   }
   // Vergleich als Geist
   G_.ghost.style.display = st.ghost ? '' : 'none';
@@ -933,28 +1089,151 @@ function drawBike(st) {
     G_.gWF.setAttribute('cx', pg.axF.x.toFixed(1)); G_.gWF.setAttribute('cy', (-pg.axF.y).toFixed(1));
     G_.gWR.setAttribute('cx', pg.axR.x.toFixed(1)); G_.gWR.setAttribute('cy', (-pg.axR.y).toFixed(1));
   }
-  // Schwerpunkt
   const cg = W(COG); G_.cog.setAttribute('transform', `translate(${P(cg)})`);
-  // Lenkachse bis Boden + Nachlauf
+  // Lenkachse und Nachlauf
   const A = W(onAxis(900)), A2 = W(onAxis(0));
   const ux2 = A.x - A2.x, uy2 = A.y - A2.y, gy = st.road ? st.road(A2.x) : 0;
   const tg = (gy - A2.y) / uy2, Gp = { x: A2.x + ux2 * tg, y: gy };
   G_.axisLine.setAttribute('d', line(A, Gp));
   const cp = { x: ax.x, y: st.road ? st.road(ax.x) : 0 };
   G_.trailSeg.setAttribute('d', line({ x: Gp.x, y: Gp.y - 6 }, { x: cp.x, y: cp.y - 6 }));
-  G_.wbDim.setAttribute('d', line({ x: 0, y: -95 }, { x: ax.x, y: -95 }));
-  // Lastpfeile
+  G_.wbDim.setAttribute('d', line({ x: 0, y: -100 }, { x: ax.x, y: -100 }));
   const lf = clamp((st.ftF || 0) / 40, 0, 220), lr = clamp((st.ftR || 0) / 40, 0, 220);
   G_.loadF.setAttribute('d', line({ x: ax.x + 330, y: 40 + lf }, { x: ax.x + 330, y: 40 }));
   G_.loadR.setAttribute('d', line({ x: -300, y: 40 + lr }, { x: -300, y: 40 }));
-  // Texte
   const tx = (e, p, s) => { e.setAttribute('x', p.x.toFixed(0)); e.setAttribute('y', (-p.y).toFixed(0)); e.textContent = s; };
   tx(G_.tRake, { x: A.x + 30, y: A.y + 10 }, `${fmt(p.rake, 2)}°`);
-  tx(G_.tTrail, { x: (Gp.x + cp.x) / 2, y: -50 }, `Nachlauf ${fmt(p.trail, 1)} mm`);
-  tx(G_.tWb, { x: ax.x / 2, y: -140 }, `Radstand ${fmt(p.wb, 0)} mm`);
+  tx(G_.tTrail, { x: (Gp.x + cp.x) / 2, y: -55 }, `Nachlauf ${fmt(p.trail, 1)} mm`);
+  tx(G_.tWb, { x: ax.x / 2, y: -150 }, `Radstand ${fmt(p.wb, 0)} mm`);
   tx(G_.tLoadF, { x: ax.x + 330, y: 60 + lf + 30 }, `${fmt((st.ftF || 0) / 1000, 2)} kN`);
   tx(G_.tLoadR, { x: -300, y: 60 + lr + 30 }, `${fmt((st.ftR || 0) / 1000, 2)} kN`);
   return p;
+}
+
+/* ============================ DÄMPFER LIVE: Schnittbild & Histogramm ============================ */
+const cut = $('#cut'), CUT = {};
+function cel(tag, attrs, parent = cut) { const e = document.createElementNS(NS, tag); for (const k in attrs) e.setAttribute(k, attrs[k]); parent.appendChild(e); return e; }
+function ctext(x, y, s, attrs = {}) { const t = cel('text', Object.assign({ x, y, 'font-size': 11, fill: 'var(--muted)', 'font-family': 'JetBrains Mono, monospace' }, attrs)); t.textContent = s; return t; }
+function buildCut() {
+  cut.innerHTML = '';
+  // ---------- Gabel ----------
+  ctext(20, 16, 'GABEL (Schnitt, ein Holm)', { fill: 'var(--front)', 'font-weight': 600 });
+  cel('rect', { x: 66, y: 26, width: 88, height: 12, rx: 3, fill: 'var(--metal)' });
+  ctext(160, 30, 'Vorspannung · Zugstufe', { 'font-size': 10 });
+  CUT.fAir = cel('rect', { x: 84, y: 40, width: 52, height: 60, fill: 'var(--air)' });
+  CUT.fOil = cel('rect', { x: 84, y: 100, width: 52, height: 200, fill: 'var(--oil)' });
+  CUT.fAirT = ctext(160, 70, '', { fill: 'var(--fg)', 'font-size': 10 });
+  CUT.fOilT = ctext(160, 84, '', { 'font-size': 10 });
+  CUT.fCart = cel('rect', { x: 101, y: 60, width: 18, height: 240, fill: 'none', stroke: 'var(--line2)', 'stroke-width': 1.5 });
+  CUT.fSpring = cel('path', { fill: 'none', stroke: 'var(--front)', 'stroke-width': 3, 'stroke-linejoin': 'round' });
+  CUT.fOuter = cel('rect', { x: 72, y: 32, width: 76, height: 196, rx: 6, fill: 'var(--tube)', stroke: 'var(--metal)', 'stroke-width': 2 });
+  CUT.fInner = cel('rect', { x: 82, y: 150, width: 56, height: 180, rx: 3, fill: 'none', stroke: 'var(--front)', 'stroke-width': 2.5 });
+  CUT.fRod = cel('path', { stroke: 'var(--fg)', 'stroke-width': 3, opacity: .7 });
+  CUT.fPiston = cel('rect', { x: 97, y: 0, width: 26, height: 9, rx: 2, fill: 'var(--metal)' });
+  CUT.fShimC = cel('path', { fill: 'none', stroke: 'var(--warn)', 'stroke-width': 2.5 });
+  CUT.fShimR = cel('path', { fill: 'none', stroke: 'var(--front)', 'stroke-width': 2.5 });
+  CUT.fFlow = cel('path', { fill: 'none', 'stroke-width': 3, 'stroke-linecap': 'round' });
+  CUT.fNeedle = cel('circle', { cx: 160, cy: 0, r: 6, fill: 'var(--bg2)', stroke: 'var(--line2)', 'stroke-width': 2 });
+  CUT.fNeedleT = ctext(170, 0, 'Nadel (LS)', { 'font-size': 10 });
+  CUT.fBracket = cel('rect', { x: 66, y: 330, width: 88, height: 26, rx: 5, fill: 'var(--metal)' });
+  CUT.fAxle = cel('circle', { cx: 110, cy: 343, r: 8, fill: 'var(--bg2)', stroke: 'var(--line2)', 'stroke-width': 2 });
+  CUT.fBrT = ctext(160, 0, 'Druckstufe LS/HS', { 'font-size': 10 });
+  CUT.fState = ctext(20, 380, '', { fill: 'var(--fg)', 'font-size': 11 });
+  CUT.fVals = ctext(20, 396, '', { 'font-size': 10.5 });
+  // ---------- Federbein ----------
+  const X = 300;
+  ctext(X, 16, 'FEDERBEIN (Schnitt)', { fill: 'var(--rear)', 'font-weight': 600 });
+  cel('circle', { cx: X + 80, cy: 32, r: 10, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 4 });
+  CUT.rBody = cel('rect', { x: X + 55, y: 44, width: 50, height: 170, rx: 6, fill: 'var(--oil)', stroke: 'var(--metal)', 'stroke-width': 2 });
+  cel('path', { d: `M${X + 105},60 C${X + 130},60 ${X + 130},50 ${X + 150},50`, stroke: 'var(--metal)', 'stroke-width': 6, fill: 'none' });
+  cel('rect', { x: X + 150, y: 40, width: 46, height: 150, rx: 8, fill: 'var(--tube)', stroke: 'var(--metal)', 'stroke-width': 2 });
+  CUT.rGas = cel('rect', { x: X + 154, y: 44, width: 38, height: 60, fill: 'var(--air)' });
+  CUT.rFP = cel('rect', { x: X + 152, y: 104, width: 42, height: 8, rx: 2, fill: 'var(--metal)' });
+  CUT.rOilR = cel('rect', { x: X + 154, y: 112, width: 38, height: 74, fill: 'var(--oil)' });
+  ctext(X + 200, 70, 'Gas', { 'font-size': 10 }); ctext(X + 200, 150, 'Öl', { 'font-size': 10 });
+  ctext(X + 200, 184, 'Druck LS/HS', { 'font-size': 10 });
+  CUT.rNeedle = cel('circle', { cx: X + 173, cy: 198, r: 6, fill: 'var(--bg2)', stroke: 'var(--line2)', 'stroke-width': 2 });
+  CUT.rRod = cel('path', { stroke: 'var(--fg)', 'stroke-width': 5, opacity: .75 });
+  CUT.rPiston = cel('rect', { x: X + 58, y: 0, width: 44, height: 10, rx: 2, fill: 'var(--metal)' });
+  CUT.rShimC = cel('path', { fill: 'none', stroke: 'var(--warn)', 'stroke-width': 2.5 });
+  CUT.rShimR = cel('path', { fill: 'none', stroke: 'var(--front)', 'stroke-width': 2.5 });
+  CUT.rFlow = cel('path', { fill: 'none', 'stroke-width': 3, 'stroke-linecap': 'round' });
+  CUT.rSpring = cel('path', { fill: 'none', stroke: 'var(--rear)', 'stroke-width': 4, 'stroke-linejoin': 'round' });
+  CUT.rCollar = cel('rect', { x: X + 38, y: 66, width: 84, height: 8, rx: 2, fill: 'var(--metal)' });
+  CUT.rSeat = cel('rect', { x: X + 38, y: 0, width: 84, height: 8, rx: 2, fill: 'var(--metal)' });
+  CUT.rEye = cel('circle', { cx: X + 80, cy: 0, r: 10, fill: 'none', stroke: 'var(--metal)', 'stroke-width': 4 });
+  CUT.rEyeT = ctext(X + 96, 0, 'Zugstufe', { 'font-size': 10 });
+  CUT.rState = ctext(X, 380, '', { fill: 'var(--fg)', 'font-size': 11 });
+  CUT.rVals = ctext(X, 396, '', { 'font-size': 10.5 });
+}
+const zig = (x0, x1, y0, y1, n) => { let d = `M${(x0 + x1) / 2},${y0.toFixed(1)}`; for (let i = 1; i <= n * 2; i++) d += `L${i % 2 ? x0 : x1},${(y0 + (y1 - y0) * i / (n * 2)).toFixed(1)}`; return d + `L${(x0 + x1) / 2},${y1.toFixed(1)}`; };
+function flowArrows(x, y, v, w) {
+  const a = Math.min(1, Math.abs(v) / 1.2), len = 10 + 34 * a, dir = v >= 0 ? -1 : 1; if (Math.abs(v) < 0.01) return '';
+  let d = ''; for (const dx of [-w, w]) { const y2 = y + dir * len; d += `M${x + dx},${y}L${x + dx},${y2.toFixed(1)}M${x + dx - 4},${(y2 - dir * 6).toFixed(1)}L${x + dx},${y2.toFixed(1)}L${x + dx + 4},${(y2 - dir * 6).toFixed(1)}`; }
+  return d;
+}
+function stateText(v, sh) { if (Math.abs(v) < 0.01) return 'Ruhe'; const dir = v > 0 ? 'Druckstufe' : 'Zugstufe'; return `${dir}: ${sh < 0.08 ? 'Nadel (Low-Speed)' : sh > 0.6 ? 'Shims weit offen (High-Speed)' : 'Nadel + Shims'}`; }
+function drawCut(i) {
+  if (!RUN) return;
+  const r = RUN[scenario], d = damping(S);
+  // Gabel
+  const s = clamp(r.F.x[i], 0, M.travelF + 2), sp = s * 0.9, vF = r.F.v[i] / COSR, shF = shimShare(r.F.v[i], d.F);
+  const yIt = 150 - sp, yBot = 330 - sp;
+  CUT.fInner.setAttribute('y', yIt); CUT.fInner.setAttribute('height', yBot - yIt);
+  CUT.fBracket.setAttribute('y', yBot); CUT.fAxle.setAttribute('cy', yBot + 13);
+  CUT.fBrT.setAttribute('y', yBot + 18);
+  const V0 = M.airV0 - S.fOil * 1e-3 * M.oilArea, V = Math.max(V0 - M.airA * s * 1e-3, V0 * 0.08), airPx = 18 + 62 * V / M.airV0;
+  CUT.fAir.setAttribute('height', airPx.toFixed(1)); CUT.fOil.setAttribute('y', (40 + airPx).toFixed(1)); CUT.fOil.setAttribute('height', Math.max(0, yBot - 40 - airPx).toFixed(1));
+  const pAir = airF(s, S.fOil) / (2 * M.airA) / 1e5;
+  CUT.fAirT.textContent = `Luft ${fmt(pAir, 2)} bar Ü`; CUT.fOilT.textContent = `Ölstand ${S.fOil >= 0 ? '+' : ''}${fmt(S.fOil)} mm`;
+  CUT.fSpring.setAttribute('d', zig(90, 130, 42, yIt, 9));
+  const yP = yBot - 150;
+  CUT.fRod.setAttribute('d', `M110,${yBot}L110,${yP + 9}`); CUT.fPiston.setAttribute('y', yP);
+  const bend = 9 * shF;
+  CUT.fShimC.setAttribute('d', vF > 0 ? `M99,${yP - 1}Q110,${(yP - 1 - bend).toFixed(1)} 121,${yP - 1}` : `M99,${yP - 1}L121,${yP - 1}`);
+  CUT.fShimR.setAttribute('d', vF < 0 ? `M99,${yP + 10}Q110,${(yP + 10 + bend).toFixed(1)} 121,${yP + 10}` : `M99,${yP + 10}L121,${yP + 10}`);
+  CUT.fFlow.setAttribute('d', flowArrows(110, yP + 4, vF, 18)); CUT.fFlow.setAttribute('stroke', vF >= 0 ? 'var(--warn)' : 'var(--front)');
+  CUT.fNeedle.setAttribute('cy', yP + 4); CUT.fNeedleT.setAttribute('y', yP + 8);
+  CUT.fNeedle.setAttribute('fill', Math.abs(vF) > 0.01 && shF < 0.95 ? (vF > 0 ? 'var(--warn)' : 'var(--front)') : 'var(--bg2)');
+  CUT.fState.textContent = stateText(vF, shF);
+  CUT.fVals.textContent = `${fmt(s, 0)} mm · ${vF >= 0 ? '+' : ''}${fmt(vF, 2)} m/s · Dämpfer ${fmt(r.F.fd[i] * COSR, 0)} N`;
+  // Federbein
+  const X = 300, xr = clamp(r.R.x[i], 0, M.travelR + 2), str = xr / M.MR, spx = str * 2.1, vR = r.R.v[i] * M.MR, shR = shimShare(r.R.v[i], d.R);
+  const yEye = 340 - spx, yPp = 196 - spx;
+  CUT.rEye.setAttribute('cy', yEye); CUT.rEyeT.setAttribute('y', yEye + 4);
+  CUT.rRod.setAttribute('d', `M${X + 80},${yPp + 10}L${X + 80},${yEye - 10}`); CUT.rPiston.setAttribute('y', yPp);
+  CUT.rShimC.setAttribute('d', vR > 0 ? `M${X + 60},${yPp - 1}Q${X + 80},${(yPp - 1 - 9 * shR).toFixed(1)} ${X + 100},${yPp - 1}` : `M${X + 60},${yPp - 1}L${X + 100},${yPp - 1}`);
+  CUT.rShimR.setAttribute('d', vR < 0 ? `M${X + 60},${yPp + 11}Q${X + 80},${(yPp + 11 + 9 * shR).toFixed(1)} ${X + 100},${yPp + 11}` : `M${X + 60},${yPp + 11}L${X + 100},${yPp + 11}`);
+  CUT.rFlow.setAttribute('d', flowArrows(X + 80, yPp + 5, vR / M.MR * 1.6, 12)); CUT.rFlow.setAttribute('stroke', vR >= 0 ? 'var(--warn)' : 'var(--front)');
+  const ySeat = yEye - 22, yCol = 66 - (S.rPre) * 1.5;
+  CUT.rCollar.setAttribute('y', yCol.toFixed(1)); CUT.rSeat.setAttribute('y', ySeat);
+  CUT.rSpring.setAttribute('d', zig(X + 42, X + 118, yCol + 8, ySeat, 7));
+  const fp = 104 - str * 0.35; CUT.rFP.setAttribute('y', fp.toFixed(1)); CUT.rGas.setAttribute('height', (fp - 44).toFixed(1)); CUT.rOilR.setAttribute('y', (fp + 8).toFixed(1)); CUT.rOilR.setAttribute('height', (186 - fp - 8).toFixed(1));
+  CUT.rNeedle.setAttribute('fill', vR > 0.01 && shR < 0.95 ? 'var(--warn)' : 'var(--bg2)');
+  CUT.rState.textContent = stateText(vR, shR);
+  CUT.rVals.textContent = `Hub ${fmt(str, 1)} mm · ${vR >= 0 ? '+' : ''}${fmt(vR / M.MR, 2)} m/s am Rad`;
+}
+function drawHist() {
+  const cv = $('#histCv'), { c, w, h } = prep(cv), r = RUN[scenario];
+  const vmax = 1.5, bw = 0.05, nb = Math.round(2 * vmax / bw), i0 = Math.round(0.25 / (DT * REC));
+  const hist = arr => { const hh = new Array(nb).fill(0); let n = 0; for (let i = i0; i < arr.length; i++) { const b = Math.floor((clamp(arr[i], -vmax + 1e-6, vmax - 1e-6) + vmax) / bw); hh[b]++; n++; } return hh.map(x => x / n * 100); };
+  const vFa = r.F.v.map(v => v / COSR), hF = hist(vFa), hR = hist(r.R.v);
+  const top = Math.max(5, Math.ceil(Math.max(...hF, ...hR) / 5) * 5), yt = [0, top / 2, top];
+  const A = axes(c, 44, 16, w - 56, h - 50, -vmax, vmax, 0, top, [-1.5, -1, -.5, 0, .5, 1, 1.5], yt, 'Geschwindigkeit m/s (− Zug · + Druck)', 'Zeitanteil %', v => fmt(v, 1), v => fmt(v));
+  c.fillStyle = css('--accent-soft'); c.fillRect(A.X(-M.vkReb), 16, A.X(M.vkReb) - A.X(-M.vkReb), h - 50);
+  c.fillStyle = css('--muted'); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('Low-Speed', A.X(0), 18);
+  const bars = (hh, col, off) => { c.fillStyle = col; c.globalAlpha = .75; hh.forEach((v, b) => { const x0 = A.X(-vmax + b * bw), x1 = A.X(-vmax + (b + 1) * bw), mid = (x0 + x1) / 2; c.fillRect(off ? mid : x0 + 0.5, A.Y(v), (x1 - x0) / 2 - 0.5, A.Y(0) - A.Y(v)); }); c.globalAlpha = 1; };
+  bars(hF, css('--front'), false); bars(hR, css('--rear'), true);
+  const stats = (arr, vkC) => {
+    let cl = 0, ch = 0, rl = 0, rh = 0, sc = 0, nc = 0, sr = 0, nr = 0, n = 0;
+    for (let i = i0; i < arr.length; i++) { const v = arr[i]; n++; if (v >= 0) { v < vkC ? cl++ : ch++; sc += v; nc++; } else { -v < M.vkReb ? rl++ : rh++; sr -= v; nr++; } }
+    return { cl: cl / n * 100, ch: ch / n * 100, rl: rl / n * 100, rh: rh / n * 100, ac: nc ? sc / nc : 0, ar: nr ? sr / nr : 0 };
+  };
+  const sF = stats(vFa, M.vkF / COSR), sR = stats(r.R.v, M.vkR);
+  const bal = s => s.ar > 0 ? s.ac / s.ar : 1;
+  const row = (l, s, col) => `<tr><td><span class="sw" style="background:${col}"></span>${l}</td><td class="n">${fmt(s.cl, 0)} %</td><td class="n">${fmt(s.ch, 0)} %</td><td class="n">${fmt(s.rl, 0)} %</td><td class="n">${fmt(s.rh, 0)} %</td><td class="n">${fmt(s.ac, 2)}/${fmt(s.ar, 2)} m/s</td><td class="n">${fmt(bal(s), 2)}</td></tr>`;
+  $('#histStats').innerHTML = `<div class="tablewrap"><table><thead><tr><th></th><th>Druck LS</th><th>Druck HS</th><th>Zug LS</th><th>Zug HS</th><th>Ø Druck/Zug</th><th>Bal.</th></tr></thead><tbody>${row('Gabel', sF, 'var(--front)')}${row('Federbein', sR, 'var(--rear)')}</tbody></table></div>
+    <p class="note" style="margin-top:6px">Balance = mittlere Druck- durch mittlere Zuggeschwindigkeit. Werte um 1,0 bis 1,2 gelten als ausgewogen. Deutlich darüber: Zugstufe bremst stark, das Fahrwerk kann sich auf Wellen zusammenziehen. Deutlich darunter: Zugstufe zu offen.</p>`;
 }
 
 /* ============================ STEUERELEMENTE ============================ */
@@ -1092,7 +1371,7 @@ function recommend(st) {
   // Bremsreserve der Gabel prüfen: erst Ölstand, dann Low-Speed-Druckstufe
   const vB = speed / 3.6;
   for (let i = 0; i < 4; i++) {
-    const scB = scenDef('brake', vB, SP.brake), r = kpiAxle(simRun(out, scB, vB, L).F, scB);
+    const scB = prepScen('brake', vB, SP.brake), r = kpiAxle(simRun(out, scB, vB, L).F, scB);
     if (r.usage <= 0.9) break;
     if (out.fOil < 10) out.fOil = Math.min(10, out.fOil + 5); else out.fLS = Math.max(0, out.fLS - 1);
   }
@@ -1119,7 +1398,7 @@ const cmpLabel = () => CMPMODE === 'pin' && PINNED ? 'Gemerkt' : 'Serie';
 function runAll(st, v) {
   const L = loads(st), res = {};
   for (const name of Object.keys(SCEN)) {
-    const sc = scenDef(name, v / 3.6, SP[name]);
+    const sc = prepScen(name, v / 3.6, SP[name]);
     const r = simRun(st, sc, v / 3.6, L);
     const kF = kpiAxle(r.F, sc), kR = kpiAxle(r.R, sc);
     const w = PROFILES[st.profile].w, sF = subScores(kF, sc), sR = subScores(kR, sc);
@@ -1130,7 +1409,7 @@ function runAll(st, v) {
   return res;
 }
 function runOne(st, v, name, res) {
-  const L = loads(st), sc = scenDef(name, v / 3.6, SP[name]), r = simRun(st, sc, v / 3.6, L);
+  const L = loads(st), sc = prepScen(name, v / 3.6, SP[name]), r = simRun(st, sc, v / 3.6, L);
   const kF = kpiAxle(r.F, sc), kR = kpiAxle(r.R, sc), w = PROFILES[st.profile].w, sF = subScores(kF, sc), sR = subScores(kR, sc);
   const avg = key => (sF[key] + sR[key]) / 2;
   res[name] = Object.assign(r, { kF, kR, sF, sR, sc, score: w.comfort * avg('comfort') + w.grip * avg('grip') + w.control * avg('control') + w.reserve * avg('reserve') });
@@ -1155,6 +1434,7 @@ function renderAll() {
   $('#cmpName').textContent = cmpLabel();
   renderKpis(sc, scC); renderMatrix(); renderRecs(); renderGeo(); renderSagBars(); renderObst(); drawProfile();
   drawFV(); drawSpring(); renderDials(); renderSagTab();
+  drawHist();
   showFrame(+$('#scrub').value);
 }
 function renderKpis(sc, scC) {
@@ -1205,7 +1485,7 @@ function drawProfile() {
   const cv = $('#profCv'), { c, w, h } = prep(cv), sc = RUN[scenario].sc, v = speed / 3.6;
   const d0 = 0, d1 = Math.max(sc.start + 4, v * sc.T * 0.9);
   const N = 400; let mn = 0, mx = 0; const ys = [];
-  for (let i = 0; i <= N; i++) { const y = sc.road(d0 + (d1 - d0) * i / N) * 1000; ys.push(y); mn = Math.min(mn, y); mx = Math.max(mx, y); }
+  for (let i = 0; i <= N; i++) { const y = sc.raw(d0 + (d1 - d0) * i / N) * 1000; ys.push(y); mn = Math.min(mn, y); mx = Math.max(mx, y); }
   const pad = Math.max(2, (mx - mn) * 0.15); mn -= pad; mx += pad;
   const X = i => 40 + (w - 52) * i / N, Y = y => 8 + (h - 26) * (1 - (y - mn) / (mx - mn));
   c.fillStyle = css('--line2'); c.beginPath(); c.moveTo(X(0), h - 18); ys.forEach((y, i) => c.lineTo(X(i), Y(y))); c.lineTo(X(N), h - 18); c.closePath(); c.globalAlpha = .5; c.fill(); c.globalAlpha = 1;
@@ -1387,7 +1667,7 @@ function frameState(run, i, ex) {
   return {
     sF: run.F.x0 + (run.F.x[i] - run.F.x0) * ex, xR: run.R.x0 + (run.R.x[i] - run.R.x0) * ex, hF: run.F.zu[i] * ex, hR: run.R.zu[i] * ex,
     dist: v * t * 1000, ftF: run.F.ft[i], ftR: run.R.ft[i], sMax: run.F.x0 + (sMax - run.F.x0) * ex,
-    road: x => sc.road(v * t - M.wb0 / 1000 + x / 1000) * 1000 * ex, t
+    road: x => sc.raw(v * t - M.wb0 / 1000 + x / 1000) * 1000 * ex, t
   };
 }
 function showFrame(i) {
@@ -1407,7 +1687,7 @@ function showFrame(i) {
   const ln = r.lean[i] || 0, lg = $('#leanG');
   lg.toggleAttribute('hidden', !SCEN[scenario].p.some(p => p.k === 'lean'));
   $('#leanBike').setAttribute('transform', `rotate(${(-ln).toFixed(1)} 0 14)`); $('#leanT').textContent = `${fmt(Math.abs(ln))}°`;
-  renderTele(i); drawTime(); drawProfile();
+  renderTele(i); drawTime(); drawProfile(); drawCut(i);
 }
 function renderTele(i) {
   const r = RUN[scenario], c = COMP[scenario];
@@ -1439,7 +1719,7 @@ $('#speed').addEventListener('input', e => { speed = +e.target.value; $('#speedO
 function setScenario(k) {
   scenario = k; $$('#scenSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === k));
   const len = RUN[scenario].F.t.length; $('#scrub').max = len - 1; $('#scrub').value = 0; playT = 0;
-  renderKpis(overall(RUN, S, SG), overall(COMP, compSetup(), SGc)); renderMatrix(); renderObst(); drawProfile();
+  renderKpis(overall(RUN, S, SG), overall(COMP, compSetup(), SGc)); renderMatrix(); renderObst(); drawProfile(); drawHist();
   if (!playing) setPlaying(true); else showFrame(0);
 }
 {
@@ -1454,6 +1734,9 @@ $('#cmpSeg').addEventListener('click', e => {
   CMPMODE = b.dataset.cmp; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule();
 });
 $('#pinBtn').addEventListener('click', () => { PINNED = pick(S); CMPMODE = 'pin'; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.cmp === 'pin')); schedule(); toast('Setup gemerkt. Änderungen werden jetzt damit verglichen.'); });
+$('#roughSeg').innerHTML = Object.entries(ROUGH).map(([k, r]) => `<button data-r="${k}" aria-pressed="${k === roughness}">${r.n}</button>`).join('');
+$('#roughSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; roughness = b.dataset.r; $$('#roughSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule(); });
+
 /* ============================ REGISTER ============================ */
 $$('.tabs button').forEach(b => b.addEventListener('click', () => {
   $$('.tabs button').forEach(x => x.setAttribute('aria-selected', x === b));
@@ -1624,7 +1907,7 @@ function renderCheck() {
     ['Freier Durchhang Serie (Plausibilität)', `${fmt(s0.freeF, 1)} / ${fmt(s0.freeR, 1)} mm`, s0.freeF > 12 && s0.freeF < 32 && s0.freeR > 3 && s0.freeR < 20],
     ['Federraten-Umrechnung', `0,976 kg/mm × 9,81 = ${fmt(0.976 * 9.81, 2)} N/mm · 10,1 kg/mm = ${fmt(10.1 * 9.81, 1)} N/mm`, true],
     ['Grundvorspannung aus Kalibrierung', `Gabel ${fmt(P0F, 1)} mm je Feder · Federbein ${fmt(P0R, 1)} mm`, P0F > 5 && P0F < 40 && P0R > 2 && P0R < 20],
-    ['Bremsung 0,8 g, Serie, 80 kg: Gabel nutzt', `${fmt((() => { const st = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, profile: 'sport' }, STOCK), sc = scenDef('brake', 80 / 3.6, { g: 0.8, ramp: 0.35, h: 0 }); return kpiAxle(simRun(st, sc, 80 / 3.6, loads(st)).F, sc).maxX; })(), 0)} von 125 mm`, true]
+    ['Bremsung 0,8 g, Serie, 80 kg: Gabel nutzt', `${fmt((() => { const st = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, profile: 'sport' }, STOCK), sc = prepScen('brake', 80 / 3.6, { g: 0.8, ramp: 0.35, h: 0 }); return kpiAxle(simRun(st, sc, 80 / 3.6, loads(st)).F, sc).maxX; })(), 0)} von 125 mm`, true]
   ];
   $('#mathChecks').innerHTML = chk.map(([a, b, ok]) => `<li><span class="chip ${ok ? 'good' : 'bad'}">${ok ? 'OK' : 'prüfen'}</span> <b>${a}:</b> <span class="mono">${b}</span></li>`).join('');
   const mt = [
@@ -1636,10 +1919,13 @@ function renderCheck() {
     ['Kalibrierung Vorspannung', '80 kg Fahrer → 36 mm vorn / 32 mm hinten in Serie', 'Aus Forenangaben zum Serien-Durchhang der K7 (vorn 35–40 mm)'],
     ['Vorspannring Gabel', '1 Ring ≈ 1 mm Vorspannung', 'Ringabstand am Einsteller; mit Messschieber prüfen'],
     ['Klickbereich', `0–${M.clicksMax} Klicks, HS 0–${M.hsMax} Umdrehungen`, 'Gesamtzahl je Einsteller an deiner Maschine zählen'],
-    ['Klickwirkung', '≈ 7,5 % Low-Speed-Kraft je Klick · ≈ 26 % je HS-Umdrehung', 'Relativ zur Serie; nahe „ganz zu“ wirken Klicks in der Realität stärker'],
+    ['Nadelquerschnitt', 'A(n) = 3 + n^1,4 (n = Klicks offen)', 'Kegelnadel: Klicks nahe „ganz zu“ wirken stark, weit offen schwach'],
+    ['Shim-Paket', 'Öffnet bei Knickgeschwindigkeit; je HS-Umdrehung zu +35 % Öffnungskraft, +28 % Steigung', 'Relativ zur Serie kalibriert'],
+    ['Reibung', 'Gabel 60 N axial (beide Holme) · Federbein 30 N am Rad', 'Dichtungen und Gleitbuchsen, typische Größenordnung'],
     ['Dämpfungsmaß Serie', 'Zug vorn ζ 0,55 · Druck vorn ζ 0,28 · Zug hinten ζ 0,60 · Druck hinten ζ 0,30', 'Übliche Werte für Straßen-Supersportler'],
     ['Luftpolster Gabel', '260 cm³ je Holm, Kolbenfläche 14,5 cm², Adiabatenexponent 1,4', 'Ölstand +1 mm ≈ −1,7 cm³ Luft'],
     ['Reifensteifigkeit', '175 N/mm vorn bei 2,5 bar · 210 N/mm hinten bei 2,9 bar', 'Skaliert mit Luftdruck^0,9'],
+    ['Straßenrauheit', 'ISO 8608 Klasse A / B / C', 'Standard „gut“ (Klasse A); umschaltbar unter Hindernis & Fahrzustand'],
     ['Anti-Squat', '90 %', 'Kettenzug stützt das Heck beim Beschleunigen'],
     ['Schwinge', '575 mm, 10° Neigung', 'Für die Geometrie-Kinematik'],
     ['Nickträgheit', 'Trägheitsradius 0,48 m', 'Gefederte Masse inkl. Fahrer; bestimmt, wie schnell die Maschine nickt']
@@ -1690,7 +1976,7 @@ $('#impBtn').addEventListener('click', () => {
 
 /* ============================ START ============================ */
 let toastT; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
-initRef(); buildSvg(); buildControls(); libLoad(); scenario = 'bump';
+initRef(); buildSvg(); buildCut(); buildControls(); libLoad(); scenario = 'bump';
 recompute(); renderDiag(); renderData(); renderCheck(); renderLib();
 try { const t = localStorage.getItem('k7lab.tab'); if (t && $(`[data-tab="${t}"]`)) $(`[data-tab="${t}"]`).click(); } catch (e) {}
 let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); drawProfile(); }, 120); });
