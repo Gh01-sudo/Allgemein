@@ -39,7 +39,7 @@
 body{background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:14px;line-height:1.5;
   padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
-.wrap{max-width:1480px;margin:0 auto}
+.wrap{max-width:1840px;margin:0 auto}
 h1,h2,h3{font-family:var(--f-display);text-wrap:balance;margin:0;letter-spacing:.01em}
 h2{font-size:1.25rem}
 h3{font-size:1rem}
@@ -50,8 +50,8 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* Kopf */
-.top{display:flex;flex-wrap:wrap;gap:12px 24px;align-items:flex-end;justify-content:space-between;padding-block:22px 14px;border-bottom:1px solid var(--line)}
-.brand h1{font-size:clamp(1.5rem,3.2vw,2.3rem);font-weight:700;line-height:1.05}
+.top{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-end;justify-content:space-between;padding-block:14px 10px;border-bottom:1px solid var(--line)}
+.brand h1{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:700;line-height:1.05}
 .brand h1 span{color:var(--accent)}
 .brand p{margin:4px 0 0;color:var(--muted);max-width:70ch}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
@@ -115,6 +115,76 @@ button{font:inherit;color:inherit}
 tr.grow td{background:var(--bg2);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding:5px 10px}
 tr.act td{background:var(--accent-soft)}
 .dz{color:var(--dim)}
+/* Prüfstand */
+.bench{margin-top:10px;display:flex;flex-direction:column;gap:10px}
+.parc{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:5px}
+@media (max-width:1500px){.parc{grid-template-columns:repeat(7,minmax(0,1fr))}}
+@media (max-width:1000px){.parc{grid-template-columns:repeat(5,minmax(0,1fr))}}
+@media (max-width:640px){.parc{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.pt{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:4px 6px 4px 11px;cursor:pointer;min-width:0;display:flex;flex-direction:column;gap:0;color:var(--fg)}
+.pt::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:4px;border-radius:2px;background:var(--st)}
+.pt:hover{border-color:var(--line2)}
+.pt .pg{display:none}
+.pt .pn{font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pt .ps{font-family:var(--f-mono);font-size:1rem;font-weight:600;font-variant-numeric:tabular-nums}
+.pt .pd{font-size:.7rem;font-weight:600;margin-left:4px}
+.pt[aria-pressed="true"]{border-color:var(--accent);background:var(--accent-soft);box-shadow:inset 0 0 0 1px var(--accent)}
+.cond-wrap{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr);gap:12px;align-items:stretch}
+@media (max-width:1000px){.cond-wrap{grid-template-columns:minmax(0,1fr)}}
+.condcard,.obstcard{padding:10px 14px}
+.roughseg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.roughseg button{font-size:.7rem;padding:4px 6px}
+
+.obstcard .obst-g{grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:4px 14px}
+.bench-main{display:grid;grid-template-columns:280px minmax(0,1fr) 280px;gap:10px;align-items:start}
+.bikebox #bike{max-height:38vh}
+@media (max-height:820px){.bikebox #bike{max-height:34vh}}
+.bikebox .player{flex-direction:row;flex-wrap:wrap;align-items:center}
+.bikebox .player .player-row{flex:1 1 auto}
+.bikebox .obst{padding:6px 12px 8px;border-top:1px solid var(--line);background:var(--panel2);display:flex;flex-direction:column;gap:2px}
+.obst-row{display:grid;grid-template-columns:auto minmax(0,1.3fr) minmax(0,1fr);gap:6px 14px;align-items:center}
+@media (max-width:900px){.obst-row{grid-template-columns:minmax(0,1fr)}}
+.obst-t{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
+.bikebox .obst .note{display:none}
+.bikebox .player{padding:8px 12px}
+.player-row.opts{gap:4px 14px}
+.bikebox .tele{padding:8px 12px}
+@media (max-width:1180px){.bench-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"c c" "f r"}.bench-main .center{grid-area:c}.side-f{grid-area:f}.side-r{grid-area:r}}
+@media (max-width:700px){.bench-main{grid-template-columns:minmax(0,1fr);grid-template-areas:"c" "f" "r"}}
+.side{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.side-h{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:3px 0 3px 9px;border-left:3px solid var(--c);font-family:var(--f-display);font-weight:600;font-size:.95rem}
+.side-n{display:flex;justify-content:space-between;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);padding:0 30px}
+.brow{padding:3px 5px;border-radius:8px;transition:background .5s}
+.brow.flash{background:var(--accent-soft);transition:none}
+.brow-h{display:flex;align-items:baseline;gap:6px;font-size:.78rem}
+.brow-h label{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.bdelta{font-family:var(--f-mono);font-size:.66rem;color:var(--dim);white-space:nowrap}
+.bdelta.chg{color:var(--accent);font-weight:600}
+.brow-h output{font-size:.8rem;font-weight:600;white-space:nowrap;font-family:var(--f-mono)}
+.brow-h output.chg{color:var(--accent)}
+.brow-c{display:grid;grid-template-columns:26px minmax(0,1fr) 26px;gap:5px;align-items:center}
+.brow-c button{height:24px;border-radius:6px;border:1px solid var(--line2);background:var(--panel2);cursor:pointer;font-weight:700;line-height:1;padding:0;color:var(--fg)}
+.brow-c button:hover{border-color:var(--accent);color:var(--accent)}
+.brow .rng{height:22px}
+.rng input.inv{direction:rtl}
+.side .geo-grid{gap:6px}.side .gcell{padding:6px 8px}.side .gcell .v{font-size:.98rem}.side .gcell .d{font-size:.66rem}
+.profwrap .seg button{padding:5px 8px;font-size:.74rem}
+.center{display:flex;flex-direction:column;gap:10px;min-width:0}
+.change{display:flex;flex-wrap:wrap;gap:4px 14px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);font-size:.8rem;min-height:42px}
+.change .cl{font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600}
+.change b{font-weight:600}
+.change .eff{font-family:var(--f-mono);font-size:.76rem;white-space:nowrap}
+.change.new{animation:pulse 1.4s ease-out}
+@keyframes pulse{0%{border-color:var(--accent);box-shadow:0 0 0 4px var(--accent-soft)}100%{border-color:var(--line);box-shadow:0 0 0 0 transparent}}
+.bench-low .kpis{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.bench-low .kpi{padding:8px 10px}.bench-low .kpi .v{font-size:1.15rem}
+.kpi.flash{animation:pulse 1.2s ease-out}
+.bench-low{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;align-items:start}
+@media (max-width:1180px){.bench-low{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}}
+.center .scope{padding:10px 12px}.center .scope .card-h{margin-bottom:4px}
+@media (max-width:700px){.bench-low{grid-template-columns:minmax(0,1fr)}}
+.bench-low #histStats table{font-size:.72rem}
+.bikebox .player{gap:8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
 .dlive{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.25fr);gap:16px;align-items:start}
 @media (max-width:900px){.dlive{grid-template-columns:minmax(0,1fr)}}
 #cut{width:100%;height:auto;display:block;background:var(--bg2);border:1px solid var(--line);border-radius:10px}
@@ -155,7 +225,7 @@ tr.act td{background:var(--accent-soft)}
 .panel{padding-top:16px}
 
 /* Setup */
-.setup{display:grid;grid-template-columns:380px minmax(0,1fr);gap:16px;align-items:start}
+.setup{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;align-items:start}
 @media (max-width:1000px){.setup{grid-template-columns:minmax(0,1fr)}}
 .controls{display:flex;flex-direction:column;gap:10px;min-width:0}
 details.grp{background:var(--panel);border:1px solid var(--line);border-radius:12px;overflow:hidden}
@@ -258,7 +328,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="brand">
       <div class="lbl">Suzuki GSX-R 1000 · K7 (2007–2008) · Serienfahrwerk</div>
       <h1>K7 <span>Fahrwerkslabor</span></h1>
-      <p>Durchhang, Dämpfung, Geometrie und Reifendruck durchspielen. Jede Änderung läuft durch ein physikalisches Fahrzeugmodell mit Nickbewegung, Ventil-Dämpfern, Reibung und echter Straßenrauheit. 14 Fahrsituationen mit frei einstellbaren Hindernissen, Vergleich mit der Serie oder einem gemerkten Setup.</p>
+      <p>Fahrwerks-Prüfstand: Jede Einstellung wirkt sofort auf 14 Prüfsituationen. Physikalisches Modell mit Nicken, Ventil-Dämpfern, Reibung, Fahrer und Straßenrauheit.</p>
     </div>
     <div class="pills">
       <span class="pill"><span class="dot" id="statusDot"></span>Setup-Index <b id="pillScore">–</b></span>
@@ -268,69 +338,96 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     </div>
   </header>
 
-  <section class="stage" aria-label="Simulation">
-    <div class="stage-l">
-      <div class="bikebox">
-        <div class="gridbg"></div>
-        <div class="hud">
-          <div><span class="big" id="hudTitle">Statisch mit Fahrer</span><span class="sub" id="hudSub">Seitenansicht maßstäblich, Federwege real</span></div>
-          <svg id="leanG" viewBox="-30 -30 60 60" width="54" height="54" aria-hidden="true" hidden><circle r="27" fill="var(--panel)" stroke="var(--line2)"/><path d="M-24,14H24" stroke="var(--muted)" stroke-width="2"/><g id="leanBike"><path d="M0,14V-14" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/><circle cy="-16" r="4" fill="var(--accent)"/></g><text id="leanT" y="26" text-anchor="middle" font-size="9" fill="var(--fg)" font-family="JetBrains Mono, monospace"></text></svg>
-        </div>
-        <svg id="bike" viewBox="-380 -1230 2220 1380" role="img" aria-label="Seitenansicht der GSX-R 1000 K7 als Schema mit Fahrer, Gabel, Federbein und Geometrie"></svg>
-        <div class="tele" id="tele"></div>
-        <div class="player">
-          <div class="scen" id="scenSeg" role="group" aria-label="Fahrsituation"></div>
-          <div class="player-row">
-            <button class="btn pri" id="playBtn" aria-label="Simulation abspielen">▶ Abspielen</button>
-            <label class="inline" for="speed">Tempo <input type="range" id="speed" min="20" max="280" step="5" value="80"><output id="speedO" class="mono">80 km/h</output></label>
-            <label class="inline" for="slowmo"><input type="checkbox" id="slowmo"> Zeitlupe ¼</label>
-            <label class="inline" for="exag"><input type="checkbox" id="exag"> Bewegung ×3</label>
-            <label class="inline" for="ghostOn"><input type="checkbox" id="ghostOn" checked> Vergleich im Bild</label>
-            <label class="inline" for="riderOn"><input type="checkbox" id="riderOn" checked> Fahrer</label>
+  <section class="bench" aria-label="Prüfstand">
+    <div class="parc" id="scenSeg" role="group" aria-label="Prüfsituation wählen"></div>
+    <div class="bench-main">
+      <aside class="side side-f" aria-label="Gabel und Prüfbedingungen einstellen">
+        <div class="side-h" style="--c:var(--front)"><span>Gabel vorn</span><span class="chip mut" id="chgF">Serie</span></div>
+        <div class="side-n"><span>weicher</span><span>härter</span></div>
+        <div id="sideF"></div>
+        <div class="side-h" style="--c:var(--muted);margin-top:8px"><span>Prüfbedingungen</span></div>
+        <div id="cond"></div>
+        <div class="lbl" style="margin-top:4px">Straße</div>
+        <div class="seg roughseg" id="roughSeg" role="group" aria-label="Straßenzustand"></div>
+      </aside>
+      <div class="center">
+        <div class="bikebox">
+          <div class="gridbg"></div>
+          <div class="hud">
+            <div><span class="big" id="hudTitle">Statisch mit Fahrer</span><span class="sub" id="hudSub">Seitenansicht maßstäblich, Federwege real</span></div>
+            <svg id="leanG" viewBox="-30 -30 60 60" width="54" height="54" aria-hidden="true" hidden><circle r="27" fill="var(--panel)" stroke="var(--line2)"/><path d="M-24,14H24" stroke="var(--muted)" stroke-width="2"/><g id="leanBike"><path d="M0,14V-14" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/><circle cy="-16" r="4" fill="var(--accent)"/></g><text id="leanT" y="26" text-anchor="middle" font-size="9" fill="var(--fg)" font-family="JetBrains Mono, monospace"></text></svg>
           </div>
-          <div class="scrub"><span class="lbl">t</span><input type="range" id="scrub" min="0" max="1299" value="0" aria-label="Zeitpunkt"><output id="tO" class="mono">0,00 s</output></div>
+          <svg id="bike" viewBox="-380 -1230 2220 1380" role="img" aria-label="Seitenansicht der GSX-R 1000 K7 als Schema mit Fahrer, Gabel, Federbein und Geometrie"></svg>
+          <div class="tele" id="tele"></div>
+          <div class="player">
+            <div class="player-row">
+              <button class="btn pri" id="playBtn" aria-label="Simulation abspielen">▶ Abspielen</button>
+              <div class="scrub"><span class="lbl">t</span><input type="range" id="scrub" min="0" max="1299" value="0" aria-label="Zeitpunkt"><output id="tO" class="mono">0,00 s</output></div>
+              <div class="inline"><span>Vergleich</span><div class="seg" id="cmpSeg" role="group" aria-label="Vergleich mit"><button data-cmp="prev" aria-pressed="true">Vorher</button><button data-cmp="stock" aria-pressed="false">Serie</button><button data-cmp="pin" aria-pressed="false" id="cmpPinBtn">Gemerkt</button></div><button class="btn sm" id="pinBtn">Merken</button></div>
+            </div>
+            <div class="player-row opts">
+              <label class="inline" for="slowmo"><input type="checkbox" id="slowmo"> Zeitlupe ¼</label>
+              <label class="inline" for="exag"><input type="checkbox" id="exag"> Bewegung ×3</label>
+              <label class="inline" for="ghostOn"><input type="checkbox" id="ghostOn" checked> Vergleich im Bild</label>
+              <label class="inline" for="riderOn"><input type="checkbox" id="riderOn" checked> Fahrer</label>
+            </div>
+          </div>
+          <div class="obst">
+            <div class="obst-row">
+              <div class="obst-t"><span class="lbl" id="obstTitle">Hindernis</span><button class="btn sm" id="obstReset">Standard</button></div>
+              <div class="obst-g" id="obstCtl"></div>
+              <canvas class="cv" id="profCv" height="56" aria-label="Fahrbahnprofil"></canvas>
+            </div>
+            <p class="note" id="obstDesc"></p>
+          </div>
         </div>
-        <div class="obst">
-          <div class="obst-h"><span class="lbl">Hindernis &amp; Fahrzustand</span><span class="note" id="obstDesc"></span><button class="btn sm" id="obstReset">Standardwerte</button></div>
-          <div class="inline" style="flex-wrap:wrap"><span class="lbl">Straßenzustand</span><div class="seg" id="roughSeg" role="group" aria-label="Straßenzustand"></div><span class="note">gilt für alle Situationen, Rauheit nach ISO 8608</span></div>
-          <div class="obst-g" id="obstCtl"></div>
-          <canvas class="cv" id="profCv" height="70" aria-label="Fahrbahnprofil"></canvas>
+        <div class="change" id="change" role="status" aria-live="polite"></div>
+        <div class="card scope">
+          <div class="card-h"><h3 id="tcTitle">Messschrieb</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Vorher</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nicken</span></div></div>
+          <canvas class="cv" id="timeCv" height="270" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
+          <p class="note" id="timeNote"></p>
         </div>
       </div>
-      <div class="kpis" id="kpis"></div>
+      <aside class="side side-r" aria-label="Federbein und Reifen einstellen">
+        <div class="side-h" style="--c:var(--rear)"><span>Federbein hinten</span><span class="chip mut" id="chgR">Serie</span></div>
+        <div class="side-n"><span>weicher</span><span>härter</span></div>
+        <div id="sideR"></div>
+        <div class="side-h" style="--c:var(--accent);margin-top:8px"><span>Reifen (kalt)</span><span class="chip mut" id="chgT">Serie</span></div>
+        <div id="sideT"></div>
+        <div class="side-h" style="--c:var(--muted);margin-top:8px"><span>Profil &amp; Aktionen</span></div>
+        <div class="profwrap"></div>
+        <div class="btnrow"><button class="btn sm" data-act="stock">Serie</button><button class="btn sm pri" data-act="rec">Empfehlung</button><button class="btn sm" data-act="undo" id="undoBtn" disabled>Rückgängig</button></div>
+        <div class="lbl" style="margin-top:6px">Fahrer-Durchhang gegen Ziel</div>
+        <div class="bars" id="sagBars"></div>
+      </aside>
+    </div>
+    <div class="bench-low">
       <div class="card">
-        <div class="card-h">
-          <h3 id="tcTitle">Zeitverlauf</h3>
-          <div class="inline"><span>Vergleich:</span><div class="seg" id="cmpSeg" role="group" aria-label="Vergleich mit"><button data-cmp="stock" aria-pressed="true">Serie</button><button data-cmp="pin" aria-pressed="false" id="cmpPinBtn">Gemerkt</button></div><button class="btn sm" id="pinBtn">Aktuelles Setup merken</button></div>
-        </div>
-        <div class="legend" style="margin-bottom:6px"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Serie</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nickwinkel</span></div>
-        <canvas class="cv" id="timeCv" height="420" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
-        <p class="note" id="timeNote"></p>
+        <div class="card-h"><h3>Messwerte</h3><span class="chip info" id="geoMode">statisch</span></div>
+        <div class="kpis" id="kpis"></div>
+        <div class="lbl" style="margin:10px 0 6px">Geometrie</div>
+        <div class="geo-grid" id="geoGrid"></div>
       </div>
       <div class="card">
-        <div class="card-h"><h3>Dämpfer live</h3><span class="note">Schnittbild läuft mit der Animation. Orange = Druckstufe, blau = Zugstufe.</span></div>
-        <div class="dlive">
-          <svg id="cut" viewBox="0 0 600 405" role="img" aria-label="Schnittbild von Gabel und Federbein mit Feder, Kolben, Ventilen, Luftpolster und Ausgleichsbehälter"></svg>
-          <div class="dhist"><div class="lbl" style="margin-bottom:4px">Dämpfergeschwindigkeit in dieser Situation</div><canvas class="cv" id="histCv" height="220" aria-label="Histogramm der Dämpfergeschwindigkeiten"></canvas><div id="histStats"></div></div>
-        </div>
+        <div class="card-h"><h3>Dämpfer live</h3><span class="note">orange Druck · blau Zug</span></div>
+        <svg id="cut" viewBox="0 0 600 405" role="img" aria-label="Schnittbild von Gabel und Federbein mit Feder, Kolben, Ventilen, Luftpolster und Ausgleichsbehälter"></svg>
+        <div class="lbl" style="margin:8px 0 4px">Dämpfergeschwindigkeit</div>
+        <canvas class="cv" id="histCv" height="170" aria-label="Histogramm der Dämpfergeschwindigkeiten"></canvas>
+        <div id="histStats"></div>
+      </div>
+      <div class="card">
+        <div class="card-h"><h3>Kennlinien</h3><div class="legend"><span><i style="background:var(--front)"></i>vorn</span><span><i style="background:var(--rear)"></i>hinten</span><span><i class="dash"></i>Vergleich</span></div></div>
+        <div class="lbl">Dämpfung: Kraft über Radgeschwindigkeit</div>
+        <canvas class="cv" id="fvCv" height="210" aria-label="Dämpfungskraft über Radgeschwindigkeit"></canvas>
+        <div class="lbl" style="margin-top:8px">Federn: Kraft über Federweg</div>
+        <canvas class="cv" id="spCv" height="210" aria-label="Federkraft über Federweg"></canvas>
+        <p class="note">Punkte = Durchhang mit Fahrer. Gabel inklusive Luftpolster.</p>
       </div>
     </div>
-    <aside class="stage-r">
-      <div class="card quick" id="quick" aria-label="Fahrwerk direkt einstellen"></div>
-      <div class="geo" aria-label="Geometrie">
-        <div class="card-h" style="margin:0"><h2>Geometrie</h2><span class="chip info" id="geoMode">statisch</span></div>
-        <div class="geo-grid" id="geoGrid"></div>
-        <div>
-          <div class="lbl" style="margin-bottom:6px">Fahrer-Durchhang gegen Ziel</div>
-          <div class="bars" id="sagBars"></div>
-        </div>
-        <p class="note">Referenz: Werksgeometrie (23,75° / 98 mm / 1415 mm) bezogen auf die Maschine ohne Fahrer mit Serieneinstellung.</p>
-      </div>
-    </aside>
   </section>
 
   <nav class="tabs" role="tablist" aria-label="Bereiche">
-    <button role="tab" aria-selected="true" data-tab="t-setup" id="tab-setup">Setup &amp; Simulation</button>
+    <button role="tab" aria-selected="true" data-tab="t-setup" id="tab-setup">Auswertung</button>
     <button role="tab" aria-selected="false" data-tab="t-sag" id="tab-sag">Durchhang messen</button>
     <button role="tab" aria-selected="false" data-tab="t-diag" id="tab-diag">Fahrverhalten-Diagnose</button>
     <button role="tab" aria-selected="false" data-tab="t-data" id="tab-data">Technische Daten</button>
@@ -341,7 +438,6 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
   <!-- SETUP -->
   <section class="panel" id="t-setup" role="tabpanel" aria-labelledby="tab-setup">
     <div class="setup">
-      <div class="controls" id="controls"></div>
       <div class="results">
         <div class="card">
           <div class="card-h"><h3>Testparcours: alle Fahrsituationen</h3><span class="note" id="matrixNote">aktuelles Setup gegen Vergleich, gleicher Fahrer, gleiche Hindernisse</span></div>
@@ -350,18 +446,6 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="card">
           <div class="card-h"><h3>Analyse &amp; Empfehlungen</h3><button class="btn sm pri" data-act="rec">Empfehlung übernehmen</button></div>
           <div class="recs" id="recs"></div>
-        </div>
-        <div class="two">
-          <div class="card">
-            <div class="card-h"><h3>Dämpferkennlinien</h3><div class="legend"><span><i style="background:var(--front)"></i>vorn</span><span><i style="background:var(--rear)"></i>hinten</span><span><i class="dash"></i>Vergleich</span></div></div>
-            <canvas class="cv" id="fvCv" height="260" aria-label="Dämpfungskraft über Radgeschwindigkeit"></canvas>
-            <p class="note">Kraft am Rad über Einfedergeschwindigkeit. Rechts Druckstufe, links Zugstufe. Der Knick markiert den Übergang Low-Speed zu High-Speed.</p>
-          </div>
-          <div class="card">
-            <div class="card-h"><h3>Federkennlinien</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel (axial)</span><span><i style="background:var(--rear)"></i>Rad hinten</span><span><i class="dash"></i>Vergleich</span></div></div>
-            <canvas class="cv" id="spCv" height="260" aria-label="Federkraft über Federweg"></canvas>
-            <p class="note">Gabel: zwei Stahlfedern plus Luftpolster (Ölstand). Hinten: Feder über Umlenkhebel, leicht progressiv. Punkte = Durchhang mit Fahrer.</p>
-          </div>
         </div>
         <div class="card">
           <div class="card-h"><h3>Einstellkarte</h3><span class="note">So stellst du es an der Maschine ein. Klicks immer von ganz zu (im Uhrzeigersinn) zurückzählen.</span></div>
@@ -1030,20 +1114,20 @@ function buildSvg() {
   G_.loadF = el('path', { stroke: 'var(--front)', 'stroke-width': 8, fill: 'none', 'marker-end': 'url(#arw)' });
   G_.loadR = el('path', { stroke: 'var(--rear)', 'stroke-width': 8, fill: 'none', 'marker-end': 'url(#arw)' });
   const T = (fill = 'var(--fg)', size = 34, anchor = 'middle') => el('text', { fill, 'font-size': size, 'font-family': 'JetBrains Mono, monospace', 'text-anchor': anchor, 'paint-order': 'stroke', stroke: 'var(--bg2)', 'stroke-width': 8 });
-  G_.tRake = T('var(--accent)', 36, 'start');
-  G_.tTrail = T('var(--warn)', 32);
-  G_.tWb = T('var(--muted)', 32);
-  G_.tLoadF = T('var(--front)', 28);
-  G_.tLoadR = T('var(--rear)', 28);
+  G_.tRake = T('var(--accent)', 50, 'start');
+  G_.tTrail = T('var(--warn)', 44);
+  G_.tWb = T('var(--muted)', 42);
+  G_.tLoadF = T('var(--front)', 40);
+  G_.tLoadR = T('var(--rear)', 40);
   svg.setAttribute('viewBox', VIEWS[viewMode]);
 }
 function drawBike(st) {
   const p = pose(st.sF, st.xR, st.prot, st.shim, st.hF, st.hR), W = p.W, dist = st.dist || 0;
   // Umgebung: Boden mit Rauheit, Leitlinie und Leitpfosten (Parallaxe)
   const pts = [];
-  for (let x = -400; x <= 1860; x += 10) pts.push({ x, y: st.road ? st.road(x) : 0 });
-  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L1860,160L-400,160Z`);
-  G_.lane.setAttribute('d', 'M-400,28L1860,28'); G_.lane.setAttribute('stroke-dashoffset', (dist % 1000).toFixed(0));
+  for (let x = -2400; x <= 4000; x += x < -400 || x > 1860 ? 40 : 10) pts.push({ x, y: st.road ? st.road(x) : 0 });
+  G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L4000,400L-2400,400Z`);
+  G_.lane.setAttribute('d', 'M-2400,28L4000,28'); G_.lane.setAttribute('stroke-dashoffset', (dist % 1000).toFixed(0));
   const sp = 900, off = (dist * 0.45) % sp;
   [...G_.posts.children].forEach((g, i) => g.setAttribute('transform', `translate(${(-400 + i * sp - off + sp).toFixed(0)},0) scale(.75)`));
   G_.shadow.setAttribute('cx', (p.wb / 2).toFixed(0)); G_.shadow.setAttribute('cy', 8);
@@ -1294,78 +1378,62 @@ const LOADKEYS = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
 const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40 }, STOCK);
 const findCtl = k => CTL.flatMap(g => g.items).find(c => c.k === k);
 const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false">${p.name}</button>`).join('')}</div>`;
-function buildControls() {
-  let h = `<div class="card" style="padding:12px 14px"><div class="sel"><span class="lbl">Einsatzprofil</span>${profSeg()}</div>
-  <div class="btnrow" style="margin-top:10px"><button class="btn" data-act="stock">Serie laden</button><button class="btn pri" data-act="rec">Empfehlung berechnen</button></div></div>`;
-  for (const g of CTL) {
-    h += `<details class="grp" id="${g.id}" ${g.closed ? '' : 'open'}><summary>${g.grp}<span class="tag" id="${g.id}-tag"></span></summary><div class="grp-b">`;
-    for (const c of g.items) {
-      const pct = ((STOCK_ALL[c.k] - c.min) / (c.max - c.min)) * 100;
-      h += `<div class="ctl"><div class="ctl-h"><label for="c-${c.k}">${c.label}</label><output id="o-${c.k}"></output></div>
-      <div class="ctl-r"><button data-k="${c.k}" data-dir="-1" aria-label="${c.label} verringern">−</button>
-      <div class="rng"><input type="range" id="c-${c.k}" data-k="${c.k}" min="${c.min}" max="${c.max}" step="${c.step}"><span class="stk" style="left:calc(${pct}% + ${(8 - pct * 0.16).toFixed(1)}px)" title="Serie"></span></div>
-      <button data-k="${c.k}" data-dir="1" aria-label="${c.label} erhöhen">+</button></div>
-      <div class="ctl-f"><span>${c.hint}</span><span class="stock">Serie ${fmt(STOCK_ALL[c.k], c.d)}</span></div></div>`;
-    }
-    h += `</div></details>`;
-  }
-  $('#controls').innerHTML = h;
-  // Schnellzugriff neben der Simulation
-  const QG = [['Gabel vorn', 'var(--front)', ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt']], ['Federbein hinten', 'var(--rear)', ['rPre', 'rReb', 'rLS', 'rHS', 'rShim']], ['Reifen', 'var(--accent)', ['pF', 'pR']], ['Umgebung', 'var(--muted)', ['oilT']]];
-  let q = `<div class="card-h" style="margin-bottom:8px"><h2>Fahrwerk direkt</h2><span class="chip mut" id="qChg">Serie</span></div>
-    ${profSeg()}
-    <div class="btnrow" style="margin:8px 0 4px"><button class="btn sm" data-act="stock">Serie</button><button class="btn sm pri" data-act="rec">Empfehlung</button><button class="btn sm" data-act="undo" id="undoBtn" disabled>Rückgängig</button></div>
-    <div class="qload"><label for="q-rider" class="lbl">Fahrer</label><input type="range" id="q-rider" data-k="rider" min="50" max="140" step="1"><output id="qo-rider" class="mono"></output></div>`;
-  for (const [title, col, keys] of QG) {
-    q += `<div class="qgrp"><div class="qgrp-h" style="--c:${col}"><span>${title}</span><span class="note">${title === 'Umgebung' ? '← kälter · wärmer →' : '← weicher · härter →'}</span></div>`;
-    for (const k of keys) {
-      const c = findCtl(k);
-      q += `<div class="qrow" data-qk="${k}"><span class="qdial" id="qd-${k}"></span><span class="qlbl">${c.short}<small id="qs-${k}"></small></span><output id="qo-${k}" class="mono"></output>
-        <button data-k="${k}" data-dir="${c.hard === -1 ? 1 : -1}" aria-label="${c.label} weicher bzw. weniger">−</button><button data-k="${k}" data-dir="${c.hard === -1 ? -1 : 1}" aria-label="${c.label} härter bzw. mehr">+</button></div>`;
-    }
-    q += `</div>`;
-  }
-  q += `<p class="note" style="margin-top:6px">„+“ macht härter bzw. strammer: bei Klick-Einstellern heißt das zudrehen. Jede Änderung wird sofort neu simuliert, auch während die Animation läuft.</p>`;
-  $('#quick').innerHTML = q;
+const SIDE_F = ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt', 'kF'], SIDE_R = ['rPre', 'rReb', 'rLS', 'rHS', 'rShim', 'kR'], SIDE_T = ['pF', 'pR'];
+const COND = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
+const SHORT = { rider: 'Fahrer inkl. Ausrüstung', passenger: 'Sozius', luggage: 'Gepäck', fuel: 'Tank', oilT: 'Öltemperatur' };
+function ctlName(k) { const c = findCtl(k); return (SIDE_F.includes(k) ? 'Gabel · ' : SIDE_R.includes(k) ? 'Federbein · ' : SIDE_T.includes(k) ? 'Reifen · ' : '') + c.label; }
+function rowHtml(k) {
+  const c = findCtl(k), inv = c.hard === -1, pct = (STOCK_ALL[k] - c.min) / (c.max - c.min) * 100, p = inv ? 100 - pct : pct;
+  const minus = inv ? 1 : -1, soft = c.hard ? 'weicher' : 'weniger', hard = c.hard ? 'härter' : 'mehr';
+  return `<div class="brow" id="br-${k}" title="${c.hint}"><div class="brow-h"><label for="b-${k}">${SHORT[k] || c.short || c.label}</label><span class="bdelta" id="bd-${k}"></span><output id="bo-${k}"></output></div>
+    <div class="brow-c"><button data-k="${k}" data-dir="${minus}" aria-label="${c.label} ${soft}">−</button><div class="rng"><input type="range" id="b-${k}" data-k="${k}" min="${c.min}" max="${c.max}" step="${c.step}"${inv ? ' class="inv"' : ''}><span class="stk" style="left:calc(${p.toFixed(1)}% + ${(8 - p * 0.16).toFixed(1)}px)" title="Serie"></span></div><button data-k="${k}" data-dir="${-minus}" aria-label="${c.label} ${hard}">+</button></div></div>`;
 }
-let UNDO = [];
+function buildControls() {
+  $('#sideF').innerHTML = SIDE_F.map(rowHtml).join('');
+  $('#sideR').innerHTML = SIDE_R.map(rowHtml).join('');
+  $('#sideT').innerHTML = SIDE_T.map(rowHtml).join('');
+  $('.profwrap').innerHTML = profSeg();
+  $('#cond').innerHTML = COND.map(rowHtml).join('') + `<div class="brow" title="Fahrgeschwindigkeit in allen Situationen"><div class="brow-h"><label for="speed">Tempo</label><output id="speedO">${speed} km/h</output></div>
+    <div class="brow-c"><button data-spd="-5" aria-label="Tempo verringern">−</button><div class="rng"><input type="range" id="speed" min="20" max="280" step="5" value="${speed}"></div><button data-spd="5" aria-label="Tempo erhöhen">+</button></div></div>`;
+}
+let UNDO = [], PREV = null, LAST = null, fullT = null;
 function pushUndo() { UNDO.push(JSON.stringify(S)); if (UNDO.length > 40) UNDO.shift(); }
-function setVal(k, v) { const c = findCtl(k); pushUndo(); S[k] = clamp(+(+v).toFixed(3), c.min, c.max); schedule(); }
+// Merkt den Zustand vor einer Änderung: Grundlage für „Vorher“-Vergleich und Wirkungsanzeige
+function noteChange(label, k) {
+  pushUndo();
+  PREV = JSON.parse(JSON.stringify(S));
+  LAST = { label, k, from: k ? S[k] : null, scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN ? overall(RUN, S, SG) : null, t: Date.now() };
+}
+function liveUpdate() { schedule(true); clearTimeout(fullT); fullT = setTimeout(() => schedule(), 380); }
+function setVal(k, v) { const c = findCtl(k); noteChange(ctlName(k), k); S[k] = clamp(+(+v).toFixed(3), c.min, c.max); liveUpdate(); }
 document.addEventListener('input', e => {
   const k = e.target.dataset && e.target.dataset.k;
-  if (k && e.target.type === 'range') { if (!e.target._u) { pushUndo(); e.target._u = 1; } S[k] = parseFloat(e.target.value); schedule(); }
+  if (k && e.target.type === 'range') { if (!e.target._u) { noteChange(ctlName(k), k); e.target._u = 1; } S[k] = parseFloat(e.target.value); liveUpdate(); }
 });
 document.addEventListener('change', e => { if (e.target._u) e.target._u = 0; });
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.dir && b.dataset.k) { const c = findCtl(b.dataset.k); setVal(c.k, S[c.k] + c.step * +b.dataset.dir); }
-  else if (b.dataset.p) { pushUndo(); S.profile = b.dataset.p; schedule(); }
-  else if (b.dataset.act === 'stock') { pushUndo(); const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }; S = Object.assign({}, STOCK, keep); schedule(); toast('Serieneinstellung geladen'); }
+  if (b.dataset.spd) { speed = clamp(speed + +b.dataset.spd, 20, 280); $('#speed').value = speed; $('#speedO').textContent = `${speed} km/h`; liveUpdate(); }
+  else if (b.dataset.dir && b.dataset.k) { const c = findCtl(b.dataset.k); setVal(c.k, S[c.k] + c.step * +b.dataset.dir); }
+  else if (b.dataset.p) { noteChange('Einsatzprofil'); S.profile = b.dataset.p; schedule(); }
+  else if (b.dataset.act === 'stock') { noteChange('Serie geladen'); const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }; S = Object.assign({}, STOCK, keep); schedule(); toast('Serieneinstellung geladen'); }
   else if (b.dataset.act === 'rec') { applyRecommendation(); }
-  else if (b.dataset.act === 'undo') { if (UNDO.length) { S = JSON.parse(UNDO.pop()); schedule(); toast('Letzte Änderung zurückgenommen'); } }
+  else if (b.dataset.act === 'undo') { if (UNDO.length) { const back = JSON.parse(UNDO.pop()); PREV = JSON.parse(JSON.stringify(S)); LAST = { label: 'Rückgängig', scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN ? overall(RUN, S, SG) : null }; S = back; schedule(); toast('Letzte Änderung zurückgenommen'); } }
 });
+const FLASH = {};
 function syncControls() {
   for (const c of CTL.flatMap(g => g.items)) {
-    const inp = $('#c-' + c.k); if (inp && +inp.value !== S[c.k]) inp.value = S[c.k];
-    const o = $('#o-' + c.k); o.textContent = `${fmt(S[c.k], c.d)} ${c.unit}`;
-    const chg = Math.abs(S[c.k] - STOCK_ALL[c.k]) > 1e-6 && !LOADKEYS.includes(c.k);
-    o.classList.toggle('chg', chg);
-    const qo = ['rider', 'passenger', 'luggage', 'fuel'].includes(c.k) ? null : $('#qo-' + c.k);
-    if (qo) {
-      qo.textContent = `${fmt(S[c.k], c.d)} ${c.unit.split(' ')[0]}`; qo.classList.toggle('chg', chg);
-      const d = S[c.k] - STOCK_ALL[c.k];
-      $('#qs-' + c.k).textContent = chg ? ` ${d > 0 ? '+' : ''}${fmt(d, c.d)}` : ' Serie';
-      $('#qs-' + c.k).className = chg ? 'chgs' : '';
-      const frac = (S[c.k] - c.min) / (c.max - c.min), hardFrac = c.hard === -1 ? 1 - frac : frac;
-      $('#qd-' + c.k).innerHTML = dialSvg(hardFrac, c.k[0] === 'f' || c.k === 'pF' ? 'var(--front)' : c.k[0] === 'r' || c.k === 'pR' ? 'var(--rear)' : 'var(--accent)', (STOCK_ALL[c.k] - c.min) / (c.max - c.min), c.hard === -1);
-    }
+    const inp = $('#b-' + c.k); if (!inp) continue;
+    if (+inp.value !== S[c.k]) inp.value = S[c.k];
+    const o = $('#bo-' + c.k), d = S[c.k] - STOCK_ALL[c.k], chg = Math.abs(d) > 1e-6, env = LOADKEYS.includes(c.k);
+    o.textContent = `${fmt(S[c.k], c.d)} ${c.unit.split(' ')[0]}`; o.classList.toggle('chg', chg && !env);
+    const bd = $('#bd-' + c.k); bd.textContent = env ? '' : chg ? `${d > 0 ? '+' : ''}${fmt(d, c.d)}` : 'Serie'; bd.classList.toggle('chg', chg && !env);
+    if (FLASH[c.k] !== undefined && FLASH[c.k] !== S[c.k]) { const r = $('#br-' + c.k); r.classList.add('flash'); clearTimeout(r._t); r._t = setTimeout(() => r.classList.remove('flash'), 60); }
+    FLASH[c.k] = S[c.k];
   }
-  const qr = $('#q-rider'); if (+qr.value !== S.rider) qr.value = S.rider; $('#qo-rider').textContent = `${fmt(S.rider)} kg`;
   $$('.profSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === S.profile));
-  const nChg = g => g.items.filter(c => !LOADKEYS.includes(c.k) && Math.abs(S[c.k] - STOCK_ALL[c.k]) > 1e-6).length;
-  let tot = 0;
-  for (const g of CTL) { const t = $('#' + g.id + '-tag'); if (g.id === 'g-load') t.textContent = `${fmt(S.rider + S.passenger + S.luggage)} kg Zuladung`; else { const n = nChg(g); tot += n; t.textContent = n ? `${n} geändert` : 'Serie'; } }
-  $('#qChg').textContent = tot ? `${tot} geändert` : 'Serie'; $('#qChg').className = 'chip ' + (tot ? 'info' : 'mut');
+  const cnt = keys => keys.filter(k => Math.abs(S[k] - STOCK_ALL[k]) > 1e-6).length;
+  for (const [id, keys] of [['#chgF', SIDE_F], ['#chgR', SIDE_R], ['#chgT', SIDE_T]]) { const n = cnt(keys), e = $(id); e.textContent = n ? `${n} geändert` : 'Serie'; e.className = 'chip ' + (n ? 'info' : 'mut'); }
   $('#undoBtn').disabled = !UNDO.length;
 }
 /* ============================ EMPFEHLUNG ============================ */
@@ -1406,17 +1474,18 @@ function recommend(st) {
   if (rpRaw < -5) notes.push({ lvl: 'warn', t: 'Federbeinfeder eher zu hart', w: `Richtwert Feder: ${fmt(kRrec, 0)} N/mm.` });
   return { out, notes, kFrec, kRrec };
 }
-function applyRecommendation() { const r = recommend(S); S = r.out; schedule(); toast('Empfehlung übernommen. Jetzt mit Serie vergleichen und probefahren.'); }
+function applyRecommendation() { noteChange('Empfehlung übernommen'); const r = recommend(S); S = r.out; schedule(); toast('Empfehlung übernommen. Jetzt mit Serie vergleichen und probefahren.'); }
 
 /* ============================ RECHENLAUF & RENDER ============================ */
 let RUN = null, COMP = null, SG = null, SGc = null, playT = 0, playing = false, lastTs = 0, pending = false;
-let CMPMODE = 'stock', PINNED = null;
+let CMPMODE = 'prev', PINNED = null;
 function compSetup() {
   const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile };
   if (CMPMODE === 'pin' && PINNED) return Object.assign({}, PINNED, keep);
+  if (CMPMODE === 'prev') return Object.assign({}, PREV || S);
   return Object.assign({}, STOCK, keep);
 }
-const cmpLabel = () => CMPMODE === 'pin' && PINNED ? 'Gemerkt' : 'Serie';
+const cmpLabel = () => CMPMODE === 'pin' && PINNED ? 'Gemerkt' : CMPMODE === 'prev' ? 'Vorher' : 'Serie';
 function runAll(st, v) {
   const L = loads(st), res = {};
   for (const name of Object.keys(SCEN)) {
@@ -1454,7 +1523,7 @@ function renderAll() {
   $('#pillProfile').textContent = PROFILES[S.profile].name;
   $('#pillRider').textContent = `${fmt(S.rider)} kg${S.passenger ? ' + ' + fmt(S.passenger) + ' kg' : ''}`;
   $('#cmpName').textContent = cmpLabel();
-  renderKpis(sc, scC); renderMatrix(); renderRecs(); renderGeo(); renderSagBars(); renderObst(); drawProfile();
+  renderKpis(sc, scC); renderParc(); renderChange(sc); renderMatrix(); renderRecs(); renderGeo(); renderSagBars(); renderObst(); drawProfile();
   drawFV(); drawSpring(); renderDials(); renderSagTab();
   drawHist();
   showFrame(+$('#scrub').value);
@@ -1471,7 +1540,31 @@ function renderKpis(sc, scC) {
     { l: 'Haftung v / h', v: `${fmt(r.sF.grip)}<small> / </small>${fmt(r.sR.grip)}`, u: '', s: `abgehoben ${fmt(r.kF.lift)} / ${fmt(r.kR.lift)} ms`, st: scoreChip(Math.min(r.sF.grip, r.sR.grip)) },
     { l: 'Beruhigung v / h', v: `${fmt(r.kF.settle * 1000)}<small> / </small>${fmt(r.kR.settle * 1000)}`, u: 'ms', s: dl((r.kF.settle + r.kR.settle) * 500, (c.kF.settle + c.kR.settle) * 500, true), st: scoreChip(Math.min(r.sF.control, r.sR.control)) }
   ];
-  $('#kpis').innerHTML = tiles.map(t => `<div class="kpi" style="--st:var(--${t.st})"><div class="lbl">${t.l}</div><div class="v">${t.v}<small> ${t.u}</small></div><div class="s">${t.s}</div></div>`).join('');
+  const prev = renderKpis._p || [];
+  $('#kpis').innerHTML = tiles.map((t, i) => `<div class="kpi${prev[i] !== undefined && prev[i] !== t.v ? ' flash' : ''}" style="--st:var(--${t.st})"><div class="lbl">${t.l}</div><div class="v">${t.v}<small> ${t.u}</small></div><div class="s">${t.s}</div></div>`).join('');
+  renderKpis._p = tiles.map(t => t.v);
+}
+function renderParc() {
+  let h = '';
+  for (const [k, sc] of Object.entries(SCEN)) {
+    const r = RUN[k], c = COMP[k], d = r.score - c.score;
+    h += `<button class="pt" data-s="${k}" aria-pressed="${k === scenario}" style="--st:var(--${scoreChip(r.score)})" title="${sc.name}: ${sc.desc}"><span class="pg">${sc.grp}</span><span class="pn">${sc.short}</span><span class="ps">${fmt(r.score)}<span class="pd ${d > 0.5 ? 'delta-p' : d < -0.5 ? 'delta-n' : 'dz'}">${Math.abs(d) < 0.5 ? '±0' : (d > 0 ? '+' : '') + fmt(d)}</span></span></button>`;
+  }
+  $('#scenSeg').innerHTML = h;
+}
+function renderChange(idx) {
+  const box = $('#change');
+  if (!LAST) { box.innerHTML = `<span class="cl">Prüfstand bereit</span><span>Stell links an der Gabel oder rechts am Federbein etwas um. Die Maschine fährt sofort mit der neuen Einstellung, die gestrichelte Kontur zeigt den Zustand davor.</span>`; return; }
+  let what = `<b>${LAST.label}</b>`;
+  if (LAST.k) { const c = findCtl(LAST.k), to = S[LAST.k], dir = c.hard ? ((to - LAST.from) * (c.hard === -1 ? -1 : 1) > 0 ? 'härter' : 'weicher') : ''; what += ` <span class="mono">${fmt(LAST.from, c.d)} → ${fmt(to, c.d)} ${c.unit.split(' ')[0]}</span>${dir ? ` <span class="chip ${dir === 'härter' ? 'warn' : 'info'}">${dir}</span>` : ''}`; }
+  const a = LAST.run, b = RUN[LAST.scen];
+  let eff = '';
+  if (a && b) {
+    const e = (lbl, x, y, unit = '', inv = false, d = 0) => { const df = y - x, good = inv ? df < 0 : df > 0, cls = Math.abs(df) < (d ? 0.05 : 0.5) ? 'dz' : good ? 'delta-p' : 'delta-n'; return `<span class="eff">${lbl} ${fmt(x, d)} → <span class="${cls}">${fmt(y, d)}</span>${unit}</span>`; };
+    eff = `<span class="cl">Wirkung · ${SCEN[LAST.scen].short}</span>` + e('Note', a.score, b.score) + e('Gabel max', a.kF.maxX, b.kF.maxX, ' mm', true) + e('Hinten max', a.kR.maxX, b.kR.maxX, ' mm', true) + e('Haftung v', a.sF.grip, b.sF.grip) + e('Haftung h', a.sR.grip, b.sR.grip) + (LAST.idx != null ? e('Index', LAST.idx, idx) : '');
+  }
+  box.innerHTML = `<span class="cl">Letzte Änderung</span><span>${what}</span>${eff}`;
+  if (box._t !== LAST.t) { box.classList.remove('new'); void box.offsetWidth; box.classList.add('new'); box._t = LAST.t; }
 }
 function renderMatrix() {
   const cell = (a, b, d = 0) => { const diff = a - b; return `<td class="n">${fmt(a, d)} <span class="${diff > 0.5 ? 'delta-p' : diff < -0.5 ? 'delta-n' : ''}">${Math.abs(diff) >= 0.5 ? (diff > 0 ? '▲' : '▼') : '·'}</span></td>`; };
@@ -1493,7 +1586,7 @@ $('#matrix').addEventListener('click', e => { const tr = e.target.closest('tr[da
 /* Hindernis-Parameter */
 function renderObst() {
   const s = SCEN[scenario], host = $('#obstCtl');
-  $('#obstDesc').textContent = s.desc;
+  $('#obstDesc').textContent = s.desc; $('#obstTitle').textContent = `Hindernis: ${s.name}`; $('#obstTitle').title = s.desc;
   if (host.dataset.s !== scenario) {
     host.dataset.s = scenario;
     host.innerHTML = s.p.map(p => `<div class="op"><div class="ctl-h"><label for="sp-${p.k}">${p.l}</label><output id="spo-${p.k}"></output></div><input type="range" id="sp-${p.k}" data-sp="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${SP[scenario][p.k]}"></div>`).join('');
@@ -1740,25 +1833,22 @@ function setPlaying(on) {
 $('#playBtn').addEventListener('click', () => setPlaying(!playing));
 $('#scrub').addEventListener('input', e => { if (playing) setPlaying(false); showFrame(+e.target.value); });
 for (const id of ['exag', 'ghostOn', 'riderOn']) $('#' + id).addEventListener('change', () => showFrame(+$('#scrub').value));
-$('#speed').addEventListener('input', e => { speed = +e.target.value; $('#speedO').textContent = `${speed} km/h`; schedule(true); clearTimeout(obstT); obstT = setTimeout(() => schedule(), 500); });
+document.addEventListener('input', e => { if (e.target.id === 'speed') { speed = +e.target.value; $('#speedO').textContent = `${speed} km/h`; liveUpdate(); } });
 function setScenario(k) {
   scenario = k; $$('#scenSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === k));
+  if (LAST) LAST.run = null;
   const len = RUN[scenario].F.t.length; $('#scrub').max = len - 1; $('#scrub').value = 0; playT = 0;
   renderKpis(overall(RUN, S, SG), overall(COMP, compSetup(), SGc)); renderMatrix(); renderObst(); drawProfile(); drawHist();
   if (!playing) setPlaying(true); else showFrame(0);
 }
-{
-  let h = '', g = '';
-  for (const [k, s] of Object.entries(SCEN)) { if (s.grp !== g) { if (g) h += '</div>'; g = s.grp; h += `<div class="scen-g"><span class="lbl">${g}</span>`; } h += `<button data-s="${k}" aria-pressed="${k === scenario}">${s.short}</button>`; }
-  $('#scenSeg').innerHTML = h + '</div>';
-}
 $('#scenSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setScenario(b.dataset.s); });
 $('#cmpSeg').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.cmp === 'pin' && !PINNED) { toast('Erst „Aktuelles Setup merken“ drücken'); return; }
+  if (b.dataset.cmp === 'pin' && !PINNED) { toast('Erst „Merken“ drücken'); return; }
   CMPMODE = b.dataset.cmp; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule();
 });
 $('#pinBtn').addEventListener('click', () => { PINNED = pick(S); CMPMODE = 'pin'; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.cmp === 'pin')); schedule(); toast('Setup gemerkt. Änderungen werden jetzt damit verglichen.'); });
+$('#hudTitle').closest('.bikebox').addEventListener('dblclick', () => setPlaying(!playing));
 $('#roughSeg').innerHTML = Object.entries(ROUGH).map(([k, r]) => `<button data-r="${k}" aria-pressed="${k === roughness}">${r.n}</button>`).join('');
 $('#roughSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; roughness = b.dataset.r; $$('#roughSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule(); });
 
@@ -1838,7 +1928,7 @@ function renderDiag() {
 $('#t-diag').addEventListener('click', e => {
   const s = e.target.closest('[data-d]'); if (s) { DSEL.has(s.dataset.d) ? DSEL.delete(s.dataset.d) : DSEL.add(s.dataset.d); renderDiag(); return; }
   const a = e.target.closest('[data-da]');
-  if (a) { const d = DIAG.find(x => x.id === a.dataset.da), [k, dv, lbl] = d.a[+a.dataset.i], c = findCtl(k); S[k] = clamp(+(S[k] + dv).toFixed(3), c.min, c.max); schedule(); toast(`${lbl}: jetzt ${fmt(S[k], c.d)} ${c.unit}`); return; }
+  if (a) { const d = DIAG.find(x => x.id === a.dataset.da), [k, dv, lbl] = d.a[+a.dataset.i], c = findCtl(k); noteChange(ctlName(k), k); S[k] = clamp(+(S[k] + dv).toFixed(3), c.min, c.max); schedule(); toast(`${lbl}: jetzt ${fmt(S[k], c.d)} ${c.unit}`); return; }
   const sc = e.target.closest('[data-ds]'); if (sc) { $('#tab-setup').click(); setScenario(sc.dataset.ds); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 });
 
@@ -2039,6 +2129,7 @@ $('#impBtn').addEventListener('click', () => {
 let toastT; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
 initRef(); buildSvg(); buildCut(); buildControls(); libLoad(); scenario = 'bump';
 recompute(); renderDiag(); renderData(); renderCheck(); renderLib();
+if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(true);
 try { const t = localStorage.getItem('k7lab.tab'); if (t && $(`[data-tab="${t}"]`)) $(`[data-tab="${t}"]`).click(); } catch (e) {}
 let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); drawProfile(); }, 120); });
 matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawTime(); drawFV(); drawSpring(); drawProfile(); });
