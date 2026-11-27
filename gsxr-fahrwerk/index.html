@@ -1,3 +1,7 @@
+<!doctype html>
+<html lang="de">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>K7 Fahrwerkslabor</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -11,7 +15,7 @@
   --accent:#4a8dff; --accent-ink:#0a0f15; --accent-soft:rgba(74,141,255,.14);
   --front:#52b4ff; --rear:#ffaa3b; --ghost:#6e8093;
   --good:#38cf8e; --warn:#ffb020; --bad:#ff5d62;
-  --rider:rgba(150,172,200,.34); --rider-edge:rgba(170,192,220,.55); --road:#1a2430; --sky:rgba(74,141,255,.07); --shadow:rgba(0,0,0,.55); --post:#3a4a5c; --lane:rgba(230,236,242,.35); --tread:rgba(255,255,255,.10); --disc:rgba(150,170,195,.25); --seat:#1c2733; --caliper:#c9a227; --lamp:rgba(255,236,170,.75); --air:rgba(160,200,255,.14); --oil:rgba(196,140,40,.22); --tube:rgba(150,180,210,.08); --xray:rgba(120,170,230,.10); --xray-line:rgba(150,195,245,.55); --metal:#9fb3c8; --tyre:#1b242e;
+  --comp:#ff9a3c; --reb:#2fd3c4; --rider:rgba(150,172,200,.34); --rider-edge:rgba(170,192,220,.55); --road:#1a2430; --sky:rgba(74,141,255,.07); --shadow:rgba(0,0,0,.55); --post:#3a4a5c; --lane:rgba(230,236,242,.35); --tread:rgba(255,255,255,.10); --disc:rgba(150,170,195,.25); --seat:#1c2733; --caliper:#c9a227; --lamp:rgba(255,236,170,.75); --air:rgba(160,200,255,.14); --oil:rgba(196,140,40,.22); --tube:rgba(150,180,210,.08); --xray:rgba(120,170,230,.10); --xray-line:rgba(150,195,245,.55); --metal:#9fb3c8; --tyre:#1b242e;
   --f-display:"Chakra Petch","Bahnschrift","Segoe UI",system-ui,sans-serif;
   --f-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
   --f-mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
@@ -23,7 +27,7 @@
   --accent:#1d5fd8; --accent-ink:#ffffff; --accent-soft:rgba(29,95,216,.10);
   --front:#1b74cc; --rear:#c76a00; --ghost:#9aa9b8;
   --good:#11935c; --warn:#b97800; --bad:#d42f35;
-  --rider:rgba(60,80,110,.26); --rider-edge:rgba(40,60,90,.45); --road:#c9d3de; --sky:rgba(29,95,216,.08); --shadow:rgba(20,30,45,.35); --post:#9aa9b8; --lane:rgba(255,255,255,.95); --tread:rgba(255,255,255,.12); --disc:rgba(80,100,125,.22); --seat:#3a4552; --caliper:#c9a227; --lamp:rgba(255,200,60,.85); --air:rgba(29,95,216,.10); --oil:rgba(196,130,20,.22); --tube:rgba(40,80,130,.06); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
+  --comp:#d0680a; --reb:#0d8f84; --rider:rgba(60,80,110,.26); --rider-edge:rgba(40,60,90,.45); --road:#c9d3de; --sky:rgba(29,95,216,.08); --shadow:rgba(20,30,45,.35); --post:#9aa9b8; --lane:rgba(255,255,255,.95); --tread:rgba(255,255,255,.12); --disc:rgba(80,100,125,.22); --seat:#3a4552; --caliper:#c9a227; --lamp:rgba(255,200,60,.85); --air:rgba(29,95,216,.10); --oil:rgba(196,130,20,.22); --tube:rgba(40,80,130,.06); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
   color-scheme:light;
 }}
 :root[data-theme="light"]{
@@ -32,7 +36,7 @@
   --accent:#1d5fd8; --accent-ink:#ffffff; --accent-soft:rgba(29,95,216,.10);
   --front:#1b74cc; --rear:#c76a00; --ghost:#9aa9b8;
   --good:#11935c; --warn:#b97800; --bad:#d42f35;
-  --rider:rgba(60,80,110,.26); --rider-edge:rgba(40,60,90,.45); --road:#c9d3de; --sky:rgba(29,95,216,.08); --shadow:rgba(20,30,45,.35); --post:#9aa9b8; --lane:rgba(255,255,255,.95); --tread:rgba(255,255,255,.12); --disc:rgba(80,100,125,.22); --seat:#3a4552; --caliper:#c9a227; --lamp:rgba(255,200,60,.85); --air:rgba(29,95,216,.10); --oil:rgba(196,130,20,.22); --tube:rgba(40,80,130,.06); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
+  --comp:#d0680a; --reb:#0d8f84; --rider:rgba(60,80,110,.26); --rider-edge:rgba(40,60,90,.45); --road:#c9d3de; --sky:rgba(29,95,216,.08); --shadow:rgba(20,30,45,.35); --post:#9aa9b8; --lane:rgba(255,255,255,.95); --tread:rgba(255,255,255,.12); --disc:rgba(80,100,125,.22); --seat:#3a4552; --caliper:#c9a227; --lamp:rgba(255,200,60,.85); --air:rgba(29,95,216,.10); --oil:rgba(196,130,20,.22); --tube:rgba(40,80,130,.06); --xray:rgba(40,90,160,.07); --xray-line:rgba(30,80,150,.55); --metal:#5d7389; --tyre:#2a333d;
   color-scheme:light;
 }
 *{box-sizing:border-box}
@@ -115,6 +119,15 @@ button{font:inherit;color:inherit}
 tr.grow td{background:var(--bg2);font-size:.68rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:600;padding:5px 10px}
 tr.act td{background:var(--accent-soft)}
 .dz{color:var(--dim)}
+@media (min-width:1700px){.bikebox .obst .obst-row{grid-template-columns:auto minmax(0,1.3fr) minmax(0,1fr)}}
+@media (max-width:1699px){.bikebox .obst #profCv{grid-column:1/-1}}
+@media (max-width:1700px){.bikebox .tele{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:760px){.bikebox .tele{grid-template-columns:repeat(2,minmax(0,1fr))}}
+.glow{filter:drop-shadow(0 0 8px currentColor)}
+.mleg{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}.mleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:4px}
+.profwrap .seg{display:grid;grid-template-columns:1fr 1fr}
+.roughseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
+.roughseg button,.profwrap .seg button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Prüfstand */
 .bench{margin-top:10px;display:flex;flex-direction:column;gap:10px}
 .parc{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:5px}
@@ -138,15 +151,17 @@ tr.act td{background:var(--accent-soft)}
 .bench-main{display:grid;grid-template-columns:280px minmax(0,1fr) 280px;gap:10px;align-items:start}
 .bikebox #bike{max-height:38vh}
 @media (max-height:820px){.bikebox #bike{max-height:34vh}}
-.bikebox .player{flex-direction:row;flex-wrap:wrap;align-items:center}
-.bikebox .player .player-row{flex:1 1 auto}
+.bikebox .player{flex-direction:column;align-items:stretch;gap:6px}
+.bikebox .player .player-row{flex:none;width:100%}
+.bikebox .player .scrub{flex:1 1 200px}
 .bikebox .obst{padding:6px 12px 8px;border-top:1px solid var(--line);background:var(--panel2);display:flex;flex-direction:column;gap:2px}
-.obst-row{display:grid;grid-template-columns:auto minmax(0,1.3fr) minmax(0,1fr);gap:6px 14px;align-items:center}
+.obst-row{display:grid;grid-template-columns:auto minmax(0,1fr);gap:6px 14px;align-items:center}
 @media (max-width:900px){.obst-row{grid-template-columns:minmax(0,1fr)}}
 .obst-t{display:flex;flex-direction:column;gap:4px;align-items:flex-start}
 .bikebox .obst .note{display:none}
 .bikebox .player{padding:8px 12px}
 .player-row.opts{gap:4px 14px}
+.ratebox{flex-wrap:wrap}.ratebox input{width:140px}.ratebox output{min-width:52px}.ratebox .seg button{padding:4px 7px;font-size:.72rem}
 .bikebox .tele{padding:8px 12px}
 @media (max-width:1180px){.bench-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"c c" "f r"}.bench-main .center{grid-area:c}.side-f{grid-area:f}.side-r{grid-area:r}}
 @media (max-width:700px){.bench-main{grid-template-columns:minmax(0,1fr);grid-template-areas:"c" "f" "r"}}
@@ -209,7 +224,7 @@ tr.act td{background:var(--accent-soft)}
 .gcell{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:8px 10px;min-width:0}
 .gcell .v{font-family:var(--f-mono);font-size:1.15rem;font-weight:600;font-variant-numeric:tabular-nums}
 .gcell .d{font-family:var(--f-mono);font-size:.72rem;color:var(--muted)}
-.gcell.live{border-color:var(--accent)}
+.gcell.live{border-color:var(--line2)}
 .d.up{color:var(--warn)} .d.dn{color:var(--front)}
 .bars{display:flex;flex-direction:column;gap:8px}
 .bar{display:grid;grid-template-columns:70px minmax(0,1fr) 64px;gap:8px;align-items:center;font-size:.78rem}
@@ -354,7 +369,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="bikebox">
           <div class="gridbg"></div>
           <div class="hud">
-            <div><span class="big" id="hudTitle">Statisch mit Fahrer</span><span class="sub" id="hudSub">Seitenansicht maßstäblich, Federwege real</span></div>
+            <div><span class="big" id="hudTitle">Statisch mit Fahrer</span><span class="sub" id="hudSub">Seitenansicht maßstäblich, Federwege real</span><span class="sub mleg"><i style="background:var(--comp)"></i>federt ein <i style="background:var(--reb)"></i>federt aus</span></div>
             <svg id="leanG" viewBox="-30 -30 60 60" width="54" height="54" aria-hidden="true" hidden><circle r="27" fill="var(--panel)" stroke="var(--line2)"/><path d="M-24,14H24" stroke="var(--muted)" stroke-width="2"/><g id="leanBike"><path d="M0,14V-14" stroke="var(--accent)" stroke-width="5" stroke-linecap="round"/><circle cy="-16" r="4" fill="var(--accent)"/></g><text id="leanT" y="26" text-anchor="middle" font-size="9" fill="var(--fg)" font-family="JetBrains Mono, monospace"></text></svg>
           </div>
           <svg id="bike" viewBox="-380 -1230 2220 1380" role="img" aria-label="Seitenansicht der GSX-R 1000 K7 als Schema mit Fahrer, Gabel, Federbein und Geometrie"></svg>
@@ -366,7 +381,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
               <div class="inline"><span>Vergleich</span><div class="seg" id="cmpSeg" role="group" aria-label="Vergleich mit"><button data-cmp="prev" aria-pressed="true">Vorher</button><button data-cmp="stock" aria-pressed="false">Serie</button><button data-cmp="pin" aria-pressed="false" id="cmpPinBtn">Gemerkt</button></div><button class="btn sm" id="pinBtn">Merken</button></div>
             </div>
             <div class="player-row opts">
-              <label class="inline" for="slowmo"><input type="checkbox" id="slowmo"> Zeitlupe ¼</label>
+              <div class="inline ratebox"><label for="rate">Wiedergabe</label><input type="range" id="rate" min="0" max="100" step="0.5" value="85" aria-valuetext="1,00-fach"><output id="rateO" class="mono">1,00×</output><div class="seg" id="rateSeg" role="group" aria-label="Wiedergabe-Voreinstellungen"><button data-rate="0.05">1/20</button><button data-rate="0.1">1/10</button><button data-rate="0.25">¼</button><button data-rate="0.5">½</button><button data-rate="1" aria-pressed="true">1×</button><button data-rate="2">2×</button></div></div>
               <label class="inline" for="exag"><input type="checkbox" id="exag"> Bewegung ×3</label>
               <label class="inline" for="ghostOn"><input type="checkbox" id="ghostOn" checked> Vergleich im Bild</label>
               <label class="inline" for="riderOn"><input type="checkbox" id="riderOn" checked> Fahrer</label>
@@ -384,7 +399,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="change" id="change" role="status" aria-live="polite"></div>
         <div class="card scope">
           <div class="card-h"><h3 id="tcTitle">Messschrieb</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Vorher</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nicken</span></div></div>
-          <canvas class="cv" id="timeCv" height="270" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
+          <canvas class="cv" id="timeCv" height="330" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
           <p class="note" id="timeNote"></p>
         </div>
       </div>
@@ -409,7 +424,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="geo-grid" id="geoGrid"></div>
       </div>
       <div class="card">
-        <div class="card-h"><h3>Dämpfer live</h3><span class="note">orange Druck · blau Zug</span></div>
+        <div class="card-h"><h3>Dämpfer live</h3><span class="note mleg"><i style="background:var(--comp)"></i>Druckstufe <i style="background:var(--reb)"></i>Zugstufe</span></div>
         <svg id="cut" viewBox="0 0 600 405" role="img" aria-label="Schnittbild von Gabel und Federbein mit Feder, Kolben, Ventilen, Luftpolster und Ausgleichsbehälter"></svg>
         <div class="lbl" style="margin:8px 0 4px">Dämpfergeschwindigkeit</div>
         <canvas class="cv" id="histCv" height="170" aria-label="Histogramm der Dämpfergeschwindigkeiten"></canvas>
@@ -522,7 +537,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="card" style="margin-top:14px">
       <h3 style="margin-bottom:8px">So rechnet das Modell</h3>
       <ul class="list">
-        <li><b>Halbfahrzeug mit Nicken:</b> Aufbau mit Hub- und Nickbewegung, Vorder- und Hinterrad als ungefederte Massen, Reifen als Feder mit Dämpfung, Abheben möglich. Front und Heck beeinflussen sich gegenseitig. Integration mit 0,2 ms Schrittweite über 2,6 bis 7 s.</li>
+        <li><b>Halbfahrzeug mit Nicken:</b> Aufbau mit Hub- und Nickbewegung, Vorder- und Hinterrad als ungefederte Massen, Reifen als Feder mit Dämpfung, Abheben möglich. Front und Heck beeinflussen sich gegenseitig. Integration mit 0,2 ms Schrittweite, bis das Hindernis überfahren ist und 1,1 s nachschwingen konnte (2,6 bis 30 s). Vor jedem Fahrmanöver liegen 0,4 s Geradeausfahrt.</li>
         <li><b>Reifen rollt über Kanten:</b> Die Radmitte folgt der Hüllkurve eines Rades mit echtem Radius (300 / 311 mm). Scharfe Kanten werden dadurch so verschliffen, wie es ein rollendes Rad tut.</li>
         <li><b>Straßenrauheit:</b> Zufallsprofil nach ISO 8608 aus 48 Wellenlängen von 0,08 bis 20 m. Klassen A, B, C mit 16, 64 und 256 · 10⁻⁶ m³. Die Bewertung trennt das Grundrauschen der Straße von der Reaktion auf das Hindernis und zählt das Rauschen nur zur Hälfte.</li>
         <li><b>Reibung:</b> Losbrechkraft von Dichtungen und Gleitbuchsen, 60 N in der Gabel und 30 N am Hinterrad. Beim Bremsen biegt sich die Gabel und die Buchsen klemmen stärker (+6 % der Bremskraft). Das macht kleine Stöße in der Bremszone härter.</li>
@@ -536,7 +551,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Beim Bremsen wirkt zusätzlich die axiale Komponente der Bremskraft in der Gabel, beim Beschleunigen 90 % Anti-Squat durch den Kettenzug.</li>
         <li><b>Kurven:</b> Fliehkraft erhöht die Last um 1/cos(Schräglage). Fahrbahnwellen wirken in Schräglage nur mit ihrem Anteil in Fahrzeugebene.</li>
         <li><b>Geometrie:</b> echte ebene Kinematik mit Schwinge und Gabel. Lenkkopfwinkel, Nachlauf und Radstand ergeben sich aus der Nickstellung des Rahmens.</li>
-        <li><b>Grenzen:</b> keine Reifenseitenkräfte, kein Flex, keine Reibung der Gleitbuchsen, kein Temperatureinfluss auf das Öl. Das Modell zeigt Richtungen und Größenordnungen. Die Probefahrt entscheidet.</li>
+        <li><b>Grenzen:</b> keine Reifenseitenkräfte, keine Rahmen- und Gabelelastizität (das Klemmen der Buchsen beim Bremsen ist nur als Reibungszuschlag erfasst). Das Modell zeigt Richtungen und Größenordnungen. Die Probefahrt entscheidet.</li>
       </ul>
     </div>
   </section>
@@ -580,7 +595,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => Array.from(r.querySelectorAll(s));
 const G = 9.81, DEG = Math.PI / 180;
-const fmt = (v, d = 0) => (Number.isFinite(v) ? v : 0).toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d });
+const fmt = (v, d = 0) => { const x = Number.isFinite(v) ? +v.toFixed(d) : 0; return (x === 0 ? 0 : x).toLocaleString('de-DE', { minimumFractionDigits: d, maximumFractionDigits: d }); }; // x === 0 fängt auch -0 ab
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
 
@@ -755,15 +770,22 @@ function prepScen(name, v, P) {
   const sc = scenDef(name, v, P), off = 3, len = v * sc.T + off + 3, n = Math.ceil(len / RDX) + 1;
   const rt = roughTable(roughness, len + 1), raw = new Float64Array(n);
   for (let i = 0; i < n; i++) { const d = i * RDX - off; raw[i] = sc.road(d) + rt[i]; }
+  let rmin = Infinity, rmax = -Infinity; for (let i = 0; i < n; i++) { if (raw[i] < rmin) rmin = raw[i]; if (raw[i] > rmax) rmax = raw[i]; }
+  const span = rmax - rmin;
   const env = R => {
-    const w = Math.round(0.16 / RDX), e = new Float64Array(n), drop = [];
-    for (let j = -w; j <= w; j += 2) { const x = j * RDX; drop.push([j, R - Math.sqrt(R * R - x * x)]); }
+    // jeder Rasterpunkt bis zum Radradius, sonst Sägezahn und abgeschnittene hohe Kanten. Punkte, deren Absenkung größer
+    // als der ganze Höhenumfang des Profils ist, können nie das Maximum liefern und werden ausgelassen (exakt, nur schneller).
+    const xr = span >= R ? R : Math.sqrt(2 * R * span - span * span);
+    const w = Math.min(Math.round(R / RDX) - 1, Math.ceil(xr / RDX) + 1), e = new Float64Array(n), drop = [];
+    for (let j = -w; j <= w; j++) { const x = j * RDX; drop.push([j, R - Math.sqrt(R * R - x * x)]); }
     for (let i = 0; i < n; i++) { let m = -1e9; for (const [j, dz] of drop) { const k = i + j; if (k < 0 || k >= n) continue; const z = raw[k] - dz; if (z > m) m = z; } e[i] = m; }
     return e;
   };
   const eF = env(M.Rf / 1000), eR = env(M.Rr / 1000);
   const look = arr => d => { const x = (d + off) / RDX, i = Math.floor(x); if (i < 0) return arr[0]; if (i >= n - 1) return arr[n - 1]; return arr[i] + (arr[i + 1] - arr[i]) * (x - i); };
   sc.raw = look(raw); sc.envF = look(eF); sc.envR = look(eR); sc.tStart = Math.max(0.15, Math.min(sc.start / v, sc.T));
+  // Grundrauschen nur bis kurz vor dem ersten Radkontakt mit dem Hindernis (das Rad berührt eine Kante schon bis zu einem Radius davor) bzw. bis zum Manöverbeginn
+  sc.tNoise = Math.max(0.1, Math.min(sc.tStart, sc.quiet) - Math.max(0.05, 0.35 / v));
   if (SCACHE.size > 80) SCACHE.clear();
   SCACHE.set(key, sc); return sc;
 }
@@ -807,7 +829,8 @@ function smooth(x) { x = clamp(x, 0, 1); return x * x * (3 - 2 * x); }
 const cosBump = (d, x0, L, h) => (d >= x0 && d <= x0 + L) ? h * (1 - Math.cos(2 * Math.PI * (d - x0) / L)) / 2 : 0;
 function scenDef(name, v, P) {
   const D = Math.max(3, v * 0.4), wbm = M.wb0 / 1000, mm = 0.001;
-  const def = { road: () => 0, nfac: () => 1, ax: () => 0, tEnd: 0.4, start: D };
+  const T0 = 0.4; // gerader Vorlauf vor jedem Fahrmanöver: Messfenster für das Grundrauschen der Straße
+  const def = { road: () => 0, nfac: () => 1, ax: () => 0, tEnd: 0.4, start: D, quiet: Infinity }; // quiet: Beginn des Fahrmanövers
   const tex = () => 0; // Feintextur kommt aus der Straßenrauheit (ISO 8608)
   switch (name) {
     case 'bump': def.road = d => cosBump(d, D, P.L, P.h * mm); def.tEnd = (D + P.L + wbm) / v; break;
@@ -815,44 +838,45 @@ function scenDef(name, v, P) {
     case 'stepup': def.road = d => P.h * mm * smooth((d - D) / P.r); def.tEnd = (D + P.r + wbm) / v; break;
     case 'stepdown': def.road = d => -P.h * mm * smooth((d - D) / P.r); def.tEnd = (D + P.r + wbm) / v; break;
     case 'joints': def.road = d => { let z = 0; for (let i = 0; i < P.n; i++) z += cosBump(d, D + i * P.sp, P.w, P.h * mm); return z; }; def.tEnd = (D + (P.n - 1) * P.sp + P.w + wbm) / v; break;
-    case 'ripples': def.road = d => (d >= D && d <= D + P.len) ? P.h * mm * (1 - Math.cos(2 * Math.PI * (d - D) / P.wl)) / 2 : 0; def.tEnd = (D + P.len + wbm) / v; break;
+    case 'ripples': { const Lr = Math.max(1, Math.round(P.len / P.wl)) * P.wl; // ganze Wellen, sonst endet die Strecke mit einer Kante
+      def.road = d => (d >= D && d <= D + Lr) ? P.h * mm * (1 - Math.cos(2 * Math.PI * (d - D) / P.wl)) / 2 : 0; def.tEnd = (D + Lr + wbm) / v; break; }
     case 'waves': def.road = d => (d >= D && d <= D + P.n * P.wl) ? P.h * mm * (1 - Math.cos(2 * Math.PI * (d - D) / P.wl)) / 2 : 0; def.tEnd = (D + P.n * P.wl + wbm) / v; break;
     case 'crest': def.road = d => cosBump(d, D, P.L, P.h); def.tEnd = (D + P.L + wbm) / v; break;
     case 'dip': def.road = d => -cosBump(d, D, P.L, P.h); def.tEnd = (D + P.L + wbm) / v; break;
     case 'brake': {
-      const t1 = 0.3 + P.ramp + 1.2;
-      def.ax = t => -P.g * smooth((t - 0.3) / P.ramp) * (1 - smooth((t - t1) / 0.3));
-      const Dr = v * (0.3 + P.ramp);
-      def.road = d => tex(d) + (P.h > 0 && d >= Dr && d <= Dr + 6 ? P.h * mm * (1 - Math.cos(2 * Math.PI * (d - Dr) / 1.1)) / 2 : 0);
-      def.tEnd = t1 + 0.3; break;
+      const t1 = T0 + P.ramp + 1.2;
+      def.ax = t => -P.g * smooth((t - T0) / P.ramp) * (1 - smooth((t - t1) / 0.3));
+      const Dr = v * (T0 + P.ramp), Lb = 5 * 1.1; // fünf ganze Rippen, damit die Bremszone nicht mit einer Kante endet
+      def.road = d => tex(d) + (P.h > 0 && d >= Dr && d <= Dr + Lb ? P.h * mm * (1 - Math.cos(2 * Math.PI * (d - Dr) / 1.1)) / 2 : 0);
+      def.tEnd = t1 + 0.3; def.quiet = T0; break;
     }
     case 'accel': {
-      def.ax = t => P.g * smooth((t - 0.3) / 0.35) * (1 - smooth((t - 1.6) / 0.3));
-      const Db = v * 0.9; def.road = d => tex(d) + cosBump(d, Db, 0.8, P.h * mm);
-      def.tEnd = 1.9; break;
+      def.ax = t => P.g * smooth((t - T0) / 0.35) * (1 - smooth((t - T0 - 1.3) / 0.3));
+      const Db = v * (T0 + 0.6); def.road = d => tex(d) + cosBump(d, Db, 0.8, P.h * mm);
+      def.tEnd = T0 + 1.6; def.quiet = T0; break;
     }
     case 'corner': {
-      const lean = t => P.lean * smooth((t - 0.1) / 0.5); def.lean = lean;
+      const lean = t => P.lean * smooth((t - T0) / 0.5); def.lean = lean;
       def.nfac = t => 1 / Math.cos(lean(t) * DEG);
-      const Dc = v * 0.9, cl = Math.cos(P.lean * DEG);
+      const Dc = v * (T0 + 0.8), cl = Math.cos(P.lean * DEG);
       def.road = d => (cosBump(d, Dc, 1.0, P.h * mm) + cosBump(d, Dc + 6, 1.0, P.h * mm)) * cl;
-      def.tEnd = Math.max(0.6, (Dc + 7 + wbm) / v); def.start = Dc; break;
+      def.tEnd = Math.max(T0 + 0.5, (Dc + 7 + wbm) / v); def.start = Dc; def.quiet = T0; break;
     }
     case 'trail': {
-      def.ax = t => -P.g * smooth((t - 0.1) / 0.2) * (1 - smooth((t - 0.5) / 1.0));
-      const lean = t => P.lean * smooth((t - 0.5) / 1.0); def.lean = lean;
+      def.ax = t => -P.g * smooth((t - T0) / 0.2) * (1 - smooth((t - T0 - 0.4) / 1.0));
+      const lean = t => P.lean * smooth((t - T0 - 0.4) / 1.0); def.lean = lean;
       def.nfac = t => 1 / Math.cos(lean(t) * DEG);
-      const Da = v * 1.55, cl = Math.cos(P.lean * DEG);
+      const Da = v * (T0 + 1.45), cl = Math.cos(P.lean * DEG);
       def.road = d => tex(d) + cosBump(d, Da, 0.9, P.h * mm) * cl;
-      def.tEnd = Math.max(1.6, (Da + 0.9 + wbm) / v); def.start = Da; break;
+      def.tEnd = Math.max(T0 + 1.5, (Da + 0.9 + wbm) / v); def.start = Da; def.quiet = T0; break;
     }
     case 'chicane': {
-      const T = P.T, lean = t => (t > 0.2 && t < 0.2 + 2 * T) ? P.lean * Math.pow(Math.abs(Math.sin(Math.PI * (t - 0.2) / T)), 0.7) * (t - 0.2 < T ? 1 : -1) : 0;
+      const T = P.T, lean = t => (t > T0 && t < T0 + 2 * T) ? P.lean * Math.pow(Math.abs(Math.sin(Math.PI * (t - T0) / T)), 0.7) * (t - T0 < T ? 1 : -1) : 0;
       def.lean = lean; def.nfac = t => 1 / Math.cos(lean(t) * DEG); def.road = tex;
-      def.tEnd = 0.2 + 2 * T; break;
+      def.tEnd = T0 + 2 * T; def.quiet = T0; break;
     }
   }
-  def.T = clamp(def.tEnd + 1.1, 2.6, 7);
+  def.T = clamp(def.tEnd + 1.1, 2.6, 30); // lange Hindernisse auch bei wenig Tempo ganz überfahren
   return def;
 }
 
@@ -889,15 +913,16 @@ function simRun(st, sc, v, L) {
     const rF = eF(v * t), rR = eR(v * t - wb), vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
     const yF = z + ac * th, yR = z - bc * th, vyF = vz + ac * w, vyR = vz - bc * w;
     const xF = x0F + (zf - yF) * 1000, xR = x0R + (zr - yR) * 1000;
-    const X = L.tot * ax + Fd, Fb = X < 0 ? -X : 0;               // Längskraft am Boden, Bremskraft vorn
+    let tF = ktF * (d0F + rF - zf); tF = tF > 0 ? Math.max(0, tF + M.ctire * (vrF - vf)) : 0;
+    let tR = ktR * (d0R + rR - zr); tR = tR > 0 ? Math.max(0, tR + M.ctire * (vrR - vr)) : 0;
+    const Xn = L.tot * ax + Fd;                                    // nötige Längskraft am Boden
+    const X = Xn < 0 ? (tF > 0 ? Xn : 0) : (tR > 0 ? Xn : 0), Fb = X < 0 ? -X : 0; // Bremsen nur mit Vorderrad-, Antrieb nur mit Hinterradkontakt
     const uF = vf - vyF, uR = vr - vyR;
     const dF = dampF(uF, dmp.F) + (frF + FRIC.muBrake * Fb) * Math.tanh(uF / FRIC.v0), dR = dampF(uR, dmp.R) + frR * Math.tanh(uR / FRIC.v0);
     const FF = FvF(xF) + dF, FR = FvR(xR) + dR;
-    let tF = ktF * (d0F + rF - zf); tF = tF > 0 ? Math.max(0, tF + M.ctire * (vrF - vf)) : 0;
-    let tR = ktR * (d0R + rR - zr); tR = tR > 0 ? Math.max(0, tR + M.ctire * (vrR - vr)) : 0;
     const pairF = Fb * TANR;                                       // Bremskraft-Anteil entlang der Gabel
     const pairR = X > 0 ? M.antiSquat * X * L.h / wb : 0;          // Anti-Squat aus dem Kettenzug
-    const My = L.tot * ax * L.h + Fd * AERO.hcp;                   // Nickmoment aus Trägheit und Luftwiderstand
+    const My = (X - Fd) * L.h + Fd * AERO.hcp;                     // Nickmoment um den Schwerpunkt: Längskraft am Boden und Luftwiderstand (in der Luft nur dieser)
     let Fs = 0, ad = 0;
     if (mrd > 0) { const ys = z + lr * th, vys = vz + lr * w; Fs = mrd * G + RIDER.k * (ys - zd) + RIDER.c * (vys - vd); ad = (Fs - mrd * G * nf) / mrd; }
     const az = (FF + FR - Fs - mc * G * nf - pairF + pairR) / mc;
@@ -921,12 +946,14 @@ function kpiAxle(o, sc) {
   // Grundrauheit der Straße wird vor dem Hindernis gemessen und nur zur Hälfte bewertet,
   // damit Hindernis-Reaktion und Straßenrauschen getrennt bleiben.
   const dtr = DT * REC, n = o.t.length, i0 = Math.round(0.25 / dtr), iE = Math.round(sc.tEnd / dtr), W = Math.round(0.15 / dtr);
-  const iS = Math.max(Math.round(0.05 / dtr) + 5, Math.min(n - 1, Math.round((sc.tStart || 0.4) / dtr)));
+  const tQ = sc.tNoise != null ? sc.tNoise : (sc.tStart || 0.4); // Ende des Messfensters für das Grundrauschen (siehe prepScen)
+  const iS = Math.max(Math.round(0.05 / dtr) + 5, Math.min(n - 1, Math.round(tQ / dtr)));
   const pre = [0]; for (let i = 0; i < n; i++) pre.push(pre[i] + o.ft[i]);
   const ma = i => { const a = Math.max(0, i - W), b = Math.min(n, i + W + 1); return (pre[b] - pre[a]) / (b - a); };
   // Grundrauschen
   let bx = 0, bx2 = 0, bf2 = 0, ba2 = 0, bn = 0;
-  for (let i = Math.round(0.05 / dtr); i < iS; i++) { bx += o.x[i]; bx2 += o.x[i] * o.x[i]; bf2 += (o.ft[i] - ma(i)) ** 2; ba2 += (o.ar || o.as)[i] ** 2; bn++; }
+  const maB = i => { const a = Math.max(0, i - W), b = Math.min(iS, i + W + 1); return (pre[b] - pre[a]) / (b - a); }; // Mittel nur aus dem Vorlauf, sonst zählt der Stoß zum Grundrauschen
+  for (let i = Math.round(0.05 / dtr); i < iS; i++) { bx += o.x[i]; bx2 += o.x[i] * o.x[i]; bf2 += (o.ft[i] - maB(i)) ** 2; ba2 += (o.ar || o.as)[i] ** 2; bn++; }
   const sdX = bn ? Math.sqrt(Math.max(0, bx2 / bn - (bx / bn) ** 2)) : 0, cvB = bn ? Math.sqrt(bf2 / bn) / o.static : 0, rmsB = bn ? Math.sqrt(ba2 / bn) : 0;
   let mx = -1e9, mn = 1e9, f2 = 0, cnt = 0, lift = 0, acc2 = 0, minAfter = 1e9;
   for (let i = i0; i < n; i++) {
@@ -986,7 +1013,7 @@ function pose(sF, xR, prot, shim, hF = 0, hR = 0) {
     const c = Math.cos(psi), s = Math.sin(psi);
     return P => { const dx = P.x - PIV.x, dy = P.y - PIV.y; return { x: pv.x + c * dx - s * dy, y: pv.y + s * dx + c * dy }; };
   };
-  let lo = -0.25, hi = 0.25;
+  let lo = -0.6, hi = 0.6;
   for (let i = 0; i < 40; i++) {
     const m = (lo + hi) / 2;
     const y = world(m)(axc).y - (M.Rf + hF);
@@ -1051,7 +1078,7 @@ function buildSvg() {
   <linearGradient id="gInner" x1="0" x2="1"><stop offset="0" stop-color="var(--front)" stop-opacity=".55"/><stop offset=".4" stop-color="var(--front)"/><stop offset="1" stop-color="var(--front)" stop-opacity=".5"/></linearGradient>
   <linearGradient id="gGround" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--road)"/><stop offset="1" stop-color="var(--road)" stop-opacity="0"/></linearGradient>
   <linearGradient id="gSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--sky)" stop-opacity="0"/><stop offset="1" stop-color="var(--sky)"/></linearGradient>
-  <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".30"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".08"/></linearGradient>
+  <linearGradient id="gBody" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--accent)" stop-opacity=".42"/><stop offset="1" stop-color="var(--accent)" stop-opacity=".14"/></linearGradient>
   <radialGradient id="gShadow"><stop offset="0" stop-color="var(--shadow)"/><stop offset="1" stop-color="var(--shadow)" stop-opacity="0"/></radialGradient>
   <marker id="arw" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="var(--muted)"/></marker>`;
   el('rect', { x: -2000, y: -1300, width: 6000, height: 1300, fill: 'url(#gSky)' });
@@ -1165,6 +1192,9 @@ function drawBike(st) {
   const outerBot = fk(170), topC = fk(700), botC = fk(545);
   G_.forkOuter.setAttribute('d', line(outerBot, topC));
   G_.forkInner.setAttribute('d', line(ax, fk(240)));
+  const mc = u => u > 0.03 ? 'var(--comp)' : u < -0.03 ? 'var(--reb)' : null, cF = mc(st.vF || 0), cR = mc(st.vR || 0);
+  G_.forkInner.setAttribute('stroke', cF || 'url(#gInner)'); G_.forkInner.style.color = cF || ''; G_.forkInner.classList.toggle('glow', !!cF);
+  G_.shockSpring.setAttribute('stroke', cR || 'var(--rear)'); G_.shockSpring.style.color = cR || ''; G_.shockSpring.classList.toggle('glow', !!cR);
   const sMaxDelta = (st.sMax != null ? st.sMax : st.sF) - REFC.sF + st.prot;
   const ang = Math.atan2(topC.y - outerBot.y, topC.x - outerBot.x), px = -Math.sin(ang) * 22, py = Math.cos(ang) * 22;
   const orP = fk(p.ds + (170 - Math.max(0, sMaxDelta)));
@@ -1235,8 +1265,8 @@ function buildCut() {
   CUT.fInner = cel('rect', { x: 82, y: 150, width: 56, height: 180, rx: 3, fill: 'none', stroke: 'var(--front)', 'stroke-width': 2.5 });
   CUT.fRod = cel('path', { stroke: 'var(--fg)', 'stroke-width': 3, opacity: .7 });
   CUT.fPiston = cel('rect', { x: 97, y: 0, width: 26, height: 9, rx: 2, fill: 'var(--metal)' });
-  CUT.fShimC = cel('path', { fill: 'none', stroke: 'var(--warn)', 'stroke-width': 2.5 });
-  CUT.fShimR = cel('path', { fill: 'none', stroke: 'var(--front)', 'stroke-width': 2.5 });
+  CUT.fShimC = cel('path', { fill: 'none', stroke: 'var(--comp)', 'stroke-width': 2.5 });
+  CUT.fShimR = cel('path', { fill: 'none', stroke: 'var(--reb)', 'stroke-width': 2.5 });
   CUT.fFlow = cel('path', { fill: 'none', 'stroke-width': 3, 'stroke-linecap': 'round' });
   CUT.fNeedle = cel('circle', { cx: 160, cy: 0, r: 6, fill: 'var(--bg2)', stroke: 'var(--line2)', 'stroke-width': 2 });
   CUT.fNeedleT = ctext(170, 0, 'Nadel (LS)', { 'font-size': 10 });
@@ -1260,8 +1290,8 @@ function buildCut() {
   CUT.rNeedle = cel('circle', { cx: X + 173, cy: 198, r: 6, fill: 'var(--bg2)', stroke: 'var(--line2)', 'stroke-width': 2 });
   CUT.rRod = cel('path', { stroke: 'var(--fg)', 'stroke-width': 5, opacity: .75 });
   CUT.rPiston = cel('rect', { x: X + 58, y: 0, width: 44, height: 10, rx: 2, fill: 'var(--metal)' });
-  CUT.rShimC = cel('path', { fill: 'none', stroke: 'var(--warn)', 'stroke-width': 2.5 });
-  CUT.rShimR = cel('path', { fill: 'none', stroke: 'var(--front)', 'stroke-width': 2.5 });
+  CUT.rShimC = cel('path', { fill: 'none', stroke: 'var(--comp)', 'stroke-width': 2.5 });
+  CUT.rShimR = cel('path', { fill: 'none', stroke: 'var(--reb)', 'stroke-width': 2.5 });
   CUT.rFlow = cel('path', { fill: 'none', 'stroke-width': 3, 'stroke-linecap': 'round' });
   CUT.rSpring = cel('path', { fill: 'none', stroke: 'var(--rear)', 'stroke-width': 4, 'stroke-linejoin': 'round' });
   CUT.rCollar = cel('rect', { x: X + 38, y: 66, width: 84, height: 8, rx: 2, fill: 'var(--metal)' });
@@ -1297,9 +1327,9 @@ function drawCut(i) {
   const bend = 9 * shF;
   CUT.fShimC.setAttribute('d', vF > 0 ? `M99,${yP - 1}Q110,${(yP - 1 - bend).toFixed(1)} 121,${yP - 1}` : `M99,${yP - 1}L121,${yP - 1}`);
   CUT.fShimR.setAttribute('d', vF < 0 ? `M99,${yP + 10}Q110,${(yP + 10 + bend).toFixed(1)} 121,${yP + 10}` : `M99,${yP + 10}L121,${yP + 10}`);
-  CUT.fFlow.setAttribute('d', flowArrows(110, yP + 4, vF, 18)); CUT.fFlow.setAttribute('stroke', vF >= 0 ? 'var(--warn)' : 'var(--front)');
+  CUT.fFlow.setAttribute('d', flowArrows(110, yP + 4, vF, 18)); CUT.fFlow.setAttribute('stroke', vF >= 0 ? 'var(--comp)' : 'var(--reb)');
   CUT.fNeedle.setAttribute('cy', yP + 4); CUT.fNeedleT.setAttribute('y', yP + 8);
-  CUT.fNeedle.setAttribute('fill', Math.abs(vF) > 0.01 && shF < 0.95 ? (vF > 0 ? 'var(--warn)' : 'var(--front)') : 'var(--bg2)');
+  CUT.fNeedle.setAttribute('fill', Math.abs(vF) > 0.01 && shF < 0.95 ? (vF > 0 ? 'var(--comp)' : 'var(--reb)') : 'var(--bg2)');
   CUT.fState.textContent = stateText(vF, shF);
   CUT.fVals.textContent = `${fmt(s, 0)} mm · ${vF >= 0 ? '+' : ''}${fmt(vF, 2)} m/s · Dämpfer ${fmt(r.F.fd[i] * COSR, 0)} N`;
   // Federbein
@@ -1309,12 +1339,12 @@ function drawCut(i) {
   CUT.rRod.setAttribute('d', `M${X + 80},${yPp + 10}L${X + 80},${yEye - 10}`); CUT.rPiston.setAttribute('y', yPp);
   CUT.rShimC.setAttribute('d', vR > 0 ? `M${X + 60},${yPp - 1}Q${X + 80},${(yPp - 1 - 9 * shR).toFixed(1)} ${X + 100},${yPp - 1}` : `M${X + 60},${yPp - 1}L${X + 100},${yPp - 1}`);
   CUT.rShimR.setAttribute('d', vR < 0 ? `M${X + 60},${yPp + 11}Q${X + 80},${(yPp + 11 + 9 * shR).toFixed(1)} ${X + 100},${yPp + 11}` : `M${X + 60},${yPp + 11}L${X + 100},${yPp + 11}`);
-  CUT.rFlow.setAttribute('d', flowArrows(X + 80, yPp + 5, vR / M.MR * 1.6, 12)); CUT.rFlow.setAttribute('stroke', vR >= 0 ? 'var(--warn)' : 'var(--front)');
+  CUT.rFlow.setAttribute('d', flowArrows(X + 80, yPp + 5, vR / M.MR * 1.6, 12)); CUT.rFlow.setAttribute('stroke', vR >= 0 ? 'var(--comp)' : 'var(--reb)');
   const ySeat = yEye - 22, yCol = 66 - (S.rPre) * 1.5;
   CUT.rCollar.setAttribute('y', yCol.toFixed(1)); CUT.rSeat.setAttribute('y', ySeat);
   CUT.rSpring.setAttribute('d', zig(X + 42, X + 118, yCol + 8, ySeat, 7));
   const fp = 104 - str * 0.35; CUT.rFP.setAttribute('y', fp.toFixed(1)); CUT.rGas.setAttribute('height', (fp - 44).toFixed(1)); CUT.rOilR.setAttribute('y', (fp + 8).toFixed(1)); CUT.rOilR.setAttribute('height', (186 - fp - 8).toFixed(1));
-  CUT.rNeedle.setAttribute('fill', vR > 0.01 && shR < 0.95 ? 'var(--warn)' : 'var(--bg2)');
+  CUT.rNeedle.setAttribute('fill', vR > 0.01 && shR < 0.95 ? 'var(--comp)' : 'var(--bg2)');
   CUT.rState.textContent = stateText(vR, shR);
   CUT.rVals.textContent = `Hub ${fmt(str, 1)} mm · ${vR >= 0 ? '+' : ''}${fmt(vR / M.MR, 2)} m/s am Rad`;
 }
@@ -1336,8 +1366,8 @@ function drawHist() {
   };
   const sF = stats(vFa, M.vkF / COSR), sR = stats(r.R.v, M.vkR);
   const bal = s => s.ar > 0 ? s.ac / s.ar : 1;
-  const row = (l, s, col) => `<tr><td><span class="sw" style="background:${col}"></span>${l}</td><td class="n">${fmt(s.cl, 0)} %</td><td class="n">${fmt(s.ch, 0)} %</td><td class="n">${fmt(s.rl, 0)} %</td><td class="n">${fmt(s.rh, 0)} %</td><td class="n">${fmt(s.ac, 2)}/${fmt(s.ar, 2)} m/s</td><td class="n">${fmt(bal(s), 2)}</td></tr>`;
-  $('#histStats').innerHTML = `<div class="tablewrap"><table><thead><tr><th></th><th>Druck LS</th><th>Druck HS</th><th>Zug LS</th><th>Zug HS</th><th>Ø Druck/Zug</th><th>Bal.</th></tr></thead><tbody>${row('Gabel', sF, 'var(--front)')}${row('Federbein', sR, 'var(--rear)')}</tbody></table></div>
+  const row = (l, s, col) => `<tr><td><span class="sw" style="background:${col}"></span>${l}</td><td class="n">${fmt(s.cl, 0)} %</td><td class="n">${fmt(s.ch, 0)} %</td><td class="n">${fmt(s.rl, 0)} %</td><td class="n">${fmt(s.rh, 0)} %</td><td class="n">${fmt(s.ac, 2)}/${fmt(s.ar, 2)}</td><td class="n">${fmt(bal(s), 2)}</td></tr>`;
+  $('#histStats').innerHTML = `<div class="tablewrap"><table><thead><tr><th></th><th title="Druckstufe Low-Speed">D LS</th><th title="Druckstufe High-Speed">D HS</th><th title="Zugstufe Low-Speed">Z LS</th><th title="Zugstufe High-Speed">Z HS</th><th title="mittlere Geschwindigkeit Druck / Zug in m/s">Ø D/Z</th><th title="Balance">Bal.</th></tr></thead><tbody>${row('Gabel', sF, 'var(--front)')}${row('Federbein', sR, 'var(--rear)')}</tbody></table></div>
     <p class="note" style="margin-top:6px">Balance = mittlere Druck- durch mittlere Zuggeschwindigkeit. Werte um 1,0 bis 1,2 gelten als ausgewogen. Deutlich darüber: Zugstufe bremst stark, das Fahrwerk kann sich auf Wellen zusammenziehen. Deutlich darunter: Zugstufe zu offen.</p>`;
 }
 
@@ -1370,14 +1400,15 @@ const CTL = [
     { k: 'pR', label: 'Luftdruck hinten (kalt)', short: 'Druck hinten', min: 1.8, max: 3.2, step: .05, unit: 'bar', d: 2, hint: 'Suzuki: 2,90 bar', hard: 1 }
   ] },
   { grp: 'Federn tauschen (Was-wäre-wenn)', id: 'g-spring', closed: true, items: [
-    { k: 'kF', label: 'Gabelfeder je Holm', short: 'Feder vorn', min: 8.0, max: 11.5, step: .05, unit: 'N/mm', d: 2, hint: 'Serie ≈ 9,57 N/mm (0,976 kg/mm)', hard: 1 },
+    { k: 'kF', label: 'Gabelfeder je Holm', short: 'Feder vorn', min: 7.97, max: 11.47, step: .05, /* Raster so gelegt, dass die Serie 9,57 genau einstellbar ist */ unit: 'N/mm', d: 2, hint: 'Serie ≈ 9,57 N/mm (0,976 kg/mm)', hard: 1 },
     { k: 'kR', label: 'Federbeinfeder', short: 'Feder hinten', min: 85, max: 120, step: 1, unit: 'N/mm', d: 0, hint: 'Serie ≈ 99 N/mm (10,1 kg/mm)', hard: 1 }
   ] }
 ];
 const LOADKEYS = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
 const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40 }, STOCK);
 const findCtl = k => CTL.flatMap(g => g.items).find(c => c.k === k);
-const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false">${p.name}</button>`).join('')}</div>`;
+const PSHORT = { komfort: 'Komfort', sport: 'Sportlich', track: 'Rennstrecke', regen: 'Nässe' };
+const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false" title="${p.name}">${PSHORT[k] || p.name}</button>`).join('')}</div>`;
 const SIDE_F = ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt', 'kF'], SIDE_R = ['rPre', 'rReb', 'rLS', 'rHS', 'rShim', 'kR'], SIDE_T = ['pF', 'pR'];
 const COND = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
 const SHORT = { rider: 'Fahrer inkl. Ausrüstung', passenger: 'Sozius', luggage: 'Gepäck', fuel: 'Tank', oilT: 'Öltemperatur' };
@@ -1399,26 +1430,31 @@ function buildControls() {
 let UNDO = [], PREV = null, LAST = null, fullT = null;
 function pushUndo() { UNDO.push(JSON.stringify(S)); if (UNDO.length > 40) UNDO.shift(); }
 // Merkt den Zustand vor einer Änderung: Grundlage für „Vorher“-Vergleich und Wirkungsanzeige
+function sameSetup(a, b) { return KEYS.every(k => a[k] === b[k]); }
 function noteChange(label, k) {
   pushUndo();
   PREV = JSON.parse(JSON.stringify(S));
-  LAST = { label, k, from: k ? S[k] : null, scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN ? overall(RUN, S, SG) : null, t: Date.now() };
+  LAST = { label, k, from: k ? S[k] : null, scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN && !RUNPART ? overall(RUN, S, SG) : null, t: Date.now() };
 }
 function liveUpdate() { schedule(true); clearTimeout(fullT); fullT = setTimeout(() => schedule(), 380); }
-function setVal(k, v) { const c = findCtl(k); noteChange(ctlName(k), k); S[k] = clamp(+(+v).toFixed(3), c.min, c.max); liveUpdate(); }
+// Tempo, Hindernis oder Straße geändert: die Wirkung der letzten Setup-Änderung ist nicht mehr vergleichbar
+function condChanged() { if (LAST) { LAST.run = null; LAST.idx = null; } }
+function setVal(k, v) { const c = findCtl(k), nv = clamp(+(+v).toFixed(3), c.min, c.max); if (nv === S[k]) return; noteChange(ctlName(k), k); S[k] = nv; liveUpdate(); }
+let dragEl = null; // Regler, dessen laufende Bewegung schon als Änderung vermerkt ist
 document.addEventListener('input', e => {
   const k = e.target.dataset && e.target.dataset.k;
-  if (k && e.target.type === 'range') { if (!e.target._u) { noteChange(ctlName(k), k); e.target._u = 1; } S[k] = parseFloat(e.target.value); liveUpdate(); }
+  if (k && e.target.type === 'range') { if (dragEl !== e.target) { noteChange(ctlName(k), k); dragEl = e.target; } S[k] = parseFloat(e.target.value); liveUpdate(); }
 });
-document.addEventListener('change', e => { if (e.target._u) e.target._u = 0; });
+// Bewegung endet mit change, oder ohne change, wenn der Regler auf den Ausgangswert zurückgezogen wurde
+for (const ev of ['change', 'pointerup', 'keyup']) document.addEventListener(ev, () => { dragEl = null; }, true);
 document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
-  if (b.dataset.spd) { speed = clamp(speed + +b.dataset.spd, 20, 280); $('#speed').value = speed; $('#speedO').textContent = `${speed} km/h`; liveUpdate(); }
+  if (b.dataset.spd) { const ns = clamp(speed + +b.dataset.spd, 20, 280); if (ns !== speed) { speed = ns; $('#speed').value = speed; $('#speedO').textContent = `${speed} km/h`; condChanged(); liveUpdate(); } }
   else if (b.dataset.dir && b.dataset.k) { const c = findCtl(b.dataset.k); setVal(c.k, S[c.k] + c.step * +b.dataset.dir); }
-  else if (b.dataset.p) { noteChange('Einsatzprofil'); S.profile = b.dataset.p; schedule(); }
-  else if (b.dataset.act === 'stock') { noteChange('Serie geladen'); const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }; S = Object.assign({}, STOCK, keep); schedule(); toast('Serieneinstellung geladen'); }
+  else if (b.dataset.p) { if (b.dataset.p !== S.profile) { noteChange('Einsatzprofil'); S.profile = b.dataset.p; schedule(); } }
+  else if (b.dataset.act === 'stock') { const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }, next = Object.assign({}, STOCK, keep); if (sameSetup(next, S)) { toast('Serieneinstellung ist schon eingestellt'); return; } noteChange('Serie geladen'); S = next; schedule(); toast('Serieneinstellung geladen'); }
   else if (b.dataset.act === 'rec') { applyRecommendation(); }
-  else if (b.dataset.act === 'undo') { if (UNDO.length) { const back = JSON.parse(UNDO.pop()); PREV = JSON.parse(JSON.stringify(S)); LAST = { label: 'Rückgängig', scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN ? overall(RUN, S, SG) : null }; S = back; schedule(); toast('Letzte Änderung zurückgenommen'); } }
+  else if (b.dataset.act === 'undo') { if (UNDO.length) { const back = JSON.parse(UNDO.pop()); PREV = JSON.parse(JSON.stringify(S)); LAST = { label: 'Rückgängig', scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN && !RUNPART ? overall(RUN, S, SG) : null, t: Date.now() }; S = back; schedule(); toast('Letzte Änderung zurückgenommen'); } }
 });
 const FLASH = {};
 function syncControls() {
@@ -1447,7 +1483,7 @@ function recommend(st) {
   // Vorspannung hinten
   const kw = st.kR / (M.MR * M.MR);
   const pRr = ((L.msR * G) / kw - pr.sagR - 0.1 * pr.sagR * pr.sagR / M.travelR) / M.MR;
-  let rp = pRr - P0R; const rpRaw = rp; rp = clamp(Math.round(rp * 2) / 2, -5, 12); out.rPre = rp;
+  let rp = pRr - P0R; const rpRaw = rp; rp = clamp(Math.round(rp * 2) / 2, -5, 12) + 0; out.rPre = rp; // + 0 macht aus -0 eine 0
   // Dämpfung
   const wcorr = Math.round((st.rider + st.passenger * 0.6 - 80) / 12);
   const o = pr.off;
@@ -1474,11 +1510,11 @@ function recommend(st) {
   if (rpRaw < -5) notes.push({ lvl: 'warn', t: 'Federbeinfeder eher zu hart', w: `Richtwert Feder: ${fmt(kRrec, 0)} N/mm.` });
   return { out, notes, kFrec, kRrec };
 }
-function applyRecommendation() { noteChange('Empfehlung übernommen'); const r = recommend(S); S = r.out; schedule(); toast('Empfehlung übernommen. Jetzt mit Serie vergleichen und probefahren.'); }
+function applyRecommendation() { const r = recommend(S); if (sameSetup(r.out, S)) { toast('Empfehlung ist schon eingestellt'); return; } noteChange('Empfehlung übernommen'); S = r.out; schedule(); toast('Empfehlung übernommen. Jetzt mit Serie vergleichen und probefahren.'); }
 
 /* ============================ RECHENLAUF & RENDER ============================ */
 let RUN = null, COMP = null, SG = null, SGc = null, playT = 0, playing = false, lastTs = 0, pending = false;
-let CMPMODE = 'prev', PINNED = null;
+let CMPMODE = 'prev', PINNED = null, RUNPART = false; // RUNPART: nur die aktuelle Situation ist neu gerechnet, die übrigen noch nicht
 function compSetup() {
   const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile };
   if (CMPMODE === 'pin' && PINNED) return Object.assign({}, PINNED, keep);
@@ -1509,8 +1545,8 @@ function schedule(onlyScen) { if (pending) { if (!onlyScen) pending = 'all'; ret
 function recompute(onlyScen) {
   syncControls();
   SG = sags(S); const cs = compSetup(); SGc = sags(cs);
-  if (onlyScen && RUN) { runOne(S, speed, scenario, RUN); runOne(cs, speed, scenario, COMP); }
-  else { RUN = runAll(S, speed); COMP = runAll(cs, speed); }
+  if (onlyScen && RUN) { runOne(S, speed, scenario, RUN); runOne(cs, speed, scenario, COMP); RUNPART = true; }
+  else { RUN = runAll(S, speed); COMP = runAll(cs, speed); RUNPART = false; if (!$('#t-lib').hidden) renderCmp(); }
   const len = RUN[scenario].F.t.length; $('#scrub').max = len - 1; if (+$('#scrub').value > len - 1) $('#scrub').value = len - 1;
   renderAll();
 }
@@ -1545,28 +1581,32 @@ function renderKpis(sc, scC) {
   renderKpis._p = tiles.map(t => t.v);
 }
 function renderParc() {
-  let h = '';
-  for (const [k, sc] of Object.entries(SCEN)) {
-    const r = RUN[k], c = COMP[k], d = r.score - c.score;
-    h += `<button class="pt" data-s="${k}" aria-pressed="${k === scenario}" style="--st:var(--${scoreChip(r.score)})" title="${sc.name}: ${sc.desc}"><span class="pg">${sc.grp}</span><span class="pn">${sc.short}</span><span class="ps">${fmt(r.score)}<span class="pd ${d > 0.5 ? 'delta-p' : d < -0.5 ? 'delta-n' : 'dz'}">${Math.abs(d) < 0.5 ? '±0' : (d > 0 ? '+' : '') + fmt(d)}</span></span></button>`;
+  // Kacheln einmal aufbauen und danach nur aktualisieren: ein Neuaufbau zwischen mousedown und mouseup verschluckt den Klick
+  const host = $('#scenSeg');
+  if (!host.children.length) host.innerHTML = Object.entries(SCEN).map(([k, sc]) => `<button class="pt" data-s="${k}" title="${sc.name}: ${sc.desc}"><span class="pg">${sc.grp}</span><span class="pn">${sc.short}</span><span class="ps"><span class="pv"></span><span class="pd"></span></span></button>`).join('');
+  for (const b of host.children) {
+    const k = b.dataset.s, r = RUN[k], c = COMP[k], d = r.score - c.score, pd = b.querySelector('.pd');
+    b.setAttribute('aria-pressed', k === scenario); b.style.setProperty('--st', `var(--${scoreChip(r.score)})`);
+    b.querySelector('.pv').textContent = fmt(r.score);
+    pd.className = 'pd ' + (d > 0.5 ? 'delta-p' : d < -0.5 ? 'delta-n' : 'dz'); pd.textContent = Math.abs(d) < 0.5 ? '±0' : (d > 0 ? '+' : '') + fmt(d);
   }
-  $('#scenSeg').innerHTML = h;
 }
 function renderChange(idx) {
   const box = $('#change');
   if (!LAST) { box.innerHTML = `<span class="cl">Prüfstand bereit</span><span>Stell links an der Gabel oder rechts am Federbein etwas um. Die Maschine fährt sofort mit der neuen Einstellung, die gestrichelte Kontur zeigt den Zustand davor.</span>`; return; }
   let what = `<b>${LAST.label}</b>`;
-  if (LAST.k) { const c = findCtl(LAST.k), to = S[LAST.k], dir = c.hard ? ((to - LAST.from) * (c.hard === -1 ? -1 : 1) > 0 ? 'härter' : 'weicher') : ''; what += ` <span class="mono">${fmt(LAST.from, c.d)} → ${fmt(to, c.d)} ${c.unit.split(' ')[0]}</span>${dir ? ` <span class="chip ${dir === 'härter' ? 'warn' : 'info'}">${dir}</span>` : ''}`; }
+  if (LAST.k) { const c = findCtl(LAST.k), to = S[LAST.k], dir = c.hard && to !== LAST.from ? ((to - LAST.from) * (c.hard === -1 ? -1 : 1) > 0 ? 'härter' : 'weicher') : ''; what += ` <span class="mono">${fmt(LAST.from, c.d)} → ${fmt(to, c.d)} ${c.unit.split(' ')[0]}</span>${dir ? ` <span class="chip ${dir === 'härter' ? 'warn' : 'info'}">${dir}</span>` : ''}`; }
   const a = LAST.run, b = RUN[LAST.scen];
   let eff = '';
   if (a && b) {
     const e = (lbl, x, y, unit = '', inv = false, d = 0) => { const df = y - x, good = inv ? df < 0 : df > 0, cls = Math.abs(df) < (d ? 0.05 : 0.5) ? 'dz' : good ? 'delta-p' : 'delta-n'; return `<span class="eff">${lbl} ${fmt(x, d)} → <span class="${cls}">${fmt(y, d)}</span>${unit}</span>`; };
-    eff = `<span class="cl">Wirkung · ${SCEN[LAST.scen].short}</span>` + e('Note', a.score, b.score) + e('Gabel max', a.kF.maxX, b.kF.maxX, ' mm', true) + e('Hinten max', a.kR.maxX, b.kR.maxX, ' mm', true) + e('Haftung v', a.sF.grip, b.sF.grip) + e('Haftung h', a.sR.grip, b.sR.grip) + (LAST.idx != null ? e('Index', LAST.idx, idx) : '');
+    eff = `<span class="cl">Wirkung · ${SCEN[LAST.scen].short}</span>` + e('Note', a.score, b.score) + e('Gabel max', a.kF.maxX, b.kF.maxX, ' mm', true) + e('Hinten max', a.kR.maxX, b.kR.maxX, ' mm', true) + e('Haftung v', a.sF.grip, b.sF.grip) + e('Haftung h', a.sR.grip, b.sR.grip) + (LAST.idx != null && !RUNPART ? e('Index', LAST.idx, idx) : '');
   }
   box.innerHTML = `<span class="cl">Letzte Änderung</span><span>${what}</span>${eff}`;
   if (box._t !== LAST.t) { box.classList.remove('new'); void box.offsetWidth; box.classList.add('new'); box._t = LAST.t; }
 }
 function renderMatrix() {
+  const cs = compSetup(); $('#matrixNote').textContent = `aktuelles Setup gegen ${cmpLabel()}, ${LOADKEYS.every(k => cs[k] === S[k]) ? 'gleicher Fahrer' : 'andere Beladung'}, gleiche Hindernisse`;
   const cell = (a, b, d = 0) => { const diff = a - b; return `<td class="n">${fmt(a, d)} <span class="${diff > 0.5 ? 'delta-p' : diff < -0.5 ? 'delta-n' : ''}">${Math.abs(diff) >= 0.5 ? (diff > 0 ? '▲' : '▼') : '·'}</span></td>`; };
   let h = `<thead><tr><th>Situation</th><th>Gabel max</th><th>Hinten max</th><th>Haftung v</th><th>Haftung h</th><th>Komfort</th><th>Kontrolle</th><th>Note</th><th>${cmpLabel()}</th></tr></thead><tbody>`;
   let grp = '';
@@ -1593,9 +1633,9 @@ function renderObst() {
   }
   for (const p of s.p) { $('#spo-' + p.k).textContent = `${fmt(SP[scenario][p.k], p.d || 0)} ${p.u}`; const i = $('#sp-' + p.k); if (+i.value !== SP[scenario][p.k]) i.value = SP[scenario][p.k]; }
 }
-$('#obstCtl').addEventListener('input', e => { const k = e.target.dataset.sp; if (k) { SP[scenario][k] = parseFloat(e.target.value); renderObst(); schedule(true); clearTimeout(obstT); obstT = setTimeout(() => schedule(), 500); } });
+$('#obstCtl').addEventListener('input', e => { const k = e.target.dataset.sp; if (k) { SP[scenario][k] = parseFloat(e.target.value); condChanged(); renderObst(); schedule(true); clearTimeout(obstT); obstT = setTimeout(() => schedule(), 500); } });
 let obstT;
-$('#obstReset').addEventListener('click', () => { for (const p of SCEN[scenario].p) SP[scenario][p.k] = p.def; schedule(); toast('Hindernis auf Standardwerte gesetzt'); });
+$('#obstReset').addEventListener('click', () => { for (const p of SCEN[scenario].p) SP[scenario][p.k] = p.def; condChanged(); schedule(); toast('Hindernis auf Standardwerte gesetzt'); });
 function drawProfile() {
   const cv = $('#profCv'), { c, w, h } = prep(cv), sc = RUN[scenario].sc, v = speed / 3.6;
   const d0 = 0, d1 = Math.max(sc.start + 4, v * sc.T * 0.9);
@@ -1661,7 +1701,7 @@ function renderGeo(live) {
   const cs = compSetup(), pS = pose(SGc.sagF, SGc.sagR, cs.fProt, cs.rShim);
   cells.push({ l: 'Gabel eingefedert', v: `${fmt(live ? live.sF : SG.sagF, 1)} mm`, d: `<span class="d">von ${M.travelF} mm · ${fmt((live ? live.sF : SG.sagF) / M.travelF * 100)} %</span>` });
   cells.push({ l: 'Hinten eingefedert', v: `${fmt(live ? live.xR : SG.sagR, 1)} mm`, d: `<span class="d">von ${M.travelR} mm · ${fmt((live ? live.xR : SG.sagR) / M.travelR * 100)} %</span>` });
-  cells.push({ l: `${cmpLabel()}, gleicher Fahrer`, v: `${fmt(pS.rake, 2)}°`, d: `<span class="d">Nachlauf ${fmt(pS.trail, 1)} mm</span>` });
+  cells.push({ l: `${cmpLabel()}, ${LOADKEYS.every(k => cs[k] === S[k]) ? 'gleicher Fahrer' : 'andere Beladung'}`, v: `${fmt(pS.rake, 2)}°`, d: `<span class="d">Nachlauf ${fmt(pS.trail, 1)} mm</span>` });
   cells.push({ l: 'Achslast vorn', v: `${fmt(SG.L.totF / SG.L.tot * 100, 1)} %`, d: `<span class="d">${fmt(SG.L.totF, 0)} von ${fmt(SG.L.tot, 0)} kg</span>` });
   $('#geoGrid').innerHTML = cells.map(c => `<div class="gcell ${live ? 'live' : ''}"><div class="lbl">${c.l}</div><div class="v">${c.v}</div>${c.d}</div>`).join('');
   $('#geoMode').textContent = live ? 'live' : 'statisch';
@@ -1674,9 +1714,10 @@ function renderSagBars() {
 
 /* ============================ CANVAS-DIAGRAMME ============================ */
 function prep(cv) {
-  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = +cv.getAttribute('height');
+  if (!cv.dataset.h) cv.dataset.h = cv.getAttribute('height'); // logische Höhe merken: cv.height spiegelt das height-Attribut
+  const dpr = window.devicePixelRatio || 1, w = cv.clientWidth, h = +cv.dataset.h;
   cv.style.height = h + 'px';
-  if (cv.width !== Math.round(w * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
+  if (cv.width !== Math.round(w * dpr) || cv.height !== Math.round(h * dpr)) { cv.width = Math.round(w * dpr); cv.height = Math.round(h * dpr); }
   const c = cv.getContext('2d'); c.setTransform(dpr, 0, 0, dpr, 0, 0); c.clearRect(0, 0, w, h);
   c.font = `11px ${css('--f-mono') || 'monospace'}`; return { c, w, h };
 }
@@ -1742,17 +1783,17 @@ let hoverI = null;
 function drawTime() {
   const cv = $('#timeCv'), { c, w, h } = prep(cv), r = RUN[scenario], s = COMP[scenario], T = r.T;
   const x0 = 52, pw = w - x0 - 12, gap = 30, avail = h - 22 - 3 * gap;
-  const h1 = avail * 0.46, h2 = avail * 0.30, h3 = avail * 0.24, y1 = 18, y2 = y1 + h1 + gap, y3 = y2 + h2 + gap;
+  const h1 = avail * 0.44, h2 = avail * 0.30, h3 = avail * 0.26, y1 = 18, y2 = y1 + h1 + gap, y3 = y2 + h2 + gap;
   const xt = []; for (let v = 0; v <= T + 1e-9; v += T > 4 ? 1 : 0.5) xt.push(v);
   const A = axes(c, x0, y1, pw, h1, 0, T, 0, 135, [], [0, 25, 50, 75, 100, 125], '', 'Federweg mm');
   c.strokeStyle = css('--bad'); c.setLineDash([4, 4]); for (const y of [125, 130]) { c.beginPath(); c.moveTo(x0, A.Y(y)); c.lineTo(x0 + pw, A.Y(y)); c.stroke(); } c.setLineDash([]);
   // Hindernis-Zeitfenster
   const sc = r.sc, v = speed / 3.6; c.fillStyle = css('--accent-soft');
-  const tF0 = sc.start / v; if (tF0 < T) c.fillRect(A.X(tF0), y1, Math.max(2, A.X(Math.min(T, sc.tEnd)) - A.X(tF0)), h1);
+  const tF0 = Math.min(sc.start / v, sc.quiet); if (tF0 < T) c.fillRect(A.X(tF0), y1, Math.max(2, A.X(Math.min(T, sc.tEnd)) - A.X(tF0)), h1);
   path(c, s.F.t, s.F.x, A.X, A.Y, css('--ghost'), 1.4, [5, 4]); path(c, s.R.t, s.R.x, A.X, A.Y, css('--ghost'), 1.4, [2, 3]);
   path(c, r.F.t, r.F.x, A.X, A.Y, css('--front'), 2.2); path(c, r.R.t, r.R.x, A.X, A.Y, css('--rear'), 2.2);
   const mx = Math.max(...r.F.ft, ...r.R.ft, ...s.F.ft, ...s.R.ft) / 1000;
-  const top = Math.ceil(mx / 0.5) * 0.5 || 1, yt2 = []; const st2 = top > 6 ? 2 : top > 3 ? 1 : 0.5; for (let q = 0; q <= top + 1e-9; q += st2) yt2.push(q);
+  const top = Math.ceil(mx / 0.5) * 0.5 || 1, yt2 = []; const nMax = Math.max(2, Math.floor(h2 / 24)), st2 = [0.5, 1, 2, 5].find(q => top / q <= nMax) || 5; for (let q = 0; q <= top + 1e-9; q += st2) yt2.push(q);
   const B = axes(c, x0, y2, pw, h2, 0, T, 0, top, [], yt2, '', 'Reifenlast kN', v => v, v => fmt(v, 1));
   const kN = a => a.map(q => q / 1000);
   path(c, s.F.t, kN(s.F.ft), B.X, B.Y, css('--ghost'), 1.2, [5, 4]); path(c, s.R.t, kN(s.R.ft), B.X, B.Y, css('--ghost'), 1.2, [2, 3]);
@@ -1784,7 +1825,7 @@ function frameState(run, i, ex) {
   let sMax = run.F.x0; for (let j = 0; j <= i; j++) sMax = Math.max(sMax, run.F.x[j]);
   return {
     sF: run.F.x0 + (run.F.x[i] - run.F.x0) * ex, xR: run.R.x0 + (run.R.x[i] - run.R.x0) * ex, hF: run.F.zu[i] * ex, hR: run.R.zu[i] * ex,
-    dist: v * t * 1000, ftF: run.F.ft[i], ftR: run.R.ft[i], sMax: run.F.x0 + (sMax - run.F.x0) * ex,
+    dist: v * t * 1000, ftF: run.F.ft[i], ftR: run.R.ft[i], vF: run.F.v[i], vR: run.R.v[i], sMax: run.F.x0 + (sMax - run.F.x0) * ex,
     road: x => sc.raw(v * t - M.wb0 / 1000 + x / 1000) * 1000 * ex, t
   };
 }
@@ -1801,6 +1842,7 @@ function showFrame(i) {
   let sub = `${speed} km/h · t = ${fmt(fs.t, 2)} s`;
   if (Math.abs(r.axg[i]) > 0.01) sub += ` · ${r.axg[i] < 0 ? 'Bremsen' : 'Beschleunigen'} ${fmt(Math.abs(r.axg[i]), 2)} g`;
   if (ex > 1) sub += ' · Bewegung ×3';
+  if (Math.abs(rate - 1) > 0.005) sub += ` · Wiedergabe ${fmt(rate, rate < 0.1 ? 3 : 2)}×`;
   $('#hudSub').textContent = sub;
   const ln = r.lean[i] || 0, lg = $('#leanG');
   lg.toggleAttribute('hidden', !SCEN[scenario].p.some(p => p.k === 'lean'));
@@ -1816,24 +1858,39 @@ function renderTele(i) {
     lamp('Vorderrad', r.F.ft[i], r.F.static) + lamp('Hinterrad', r.R.ft[i], r.R.static) +
     `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs · Luft<br><b class="mono">${fmt(r.axg[i], 2)} g · ${fmt(r.drag, 0)} N</b></span></div>`;
 }
+let rafId = 0; // genau eine laufende Abspielschleife
+// Wiedergabegeschwindigkeit: logarithmischer Regler von 0,02× bis 2× (Mitte des Weges = feine Zeitlupe)
+let rate = 1;
+const RATE_MIN = 0.02, RATE_MAX = 2, rateToPos = r => 100 * Math.log(r / RATE_MIN) / Math.log(RATE_MAX / RATE_MIN), posToRate = p => RATE_MIN * Math.pow(RATE_MAX / RATE_MIN, p / 100);
+function setRate(r, fromSlider) {
+  rate = clamp(r, RATE_MIN, RATE_MAX);
+  if (!fromSlider) $('#rate').value = (Math.round(rateToPos(rate) * 2) / 2).toFixed(1);
+  const txt = fmt(rate, rate < 0.1 ? 3 : 2);
+  $('#rateO').textContent = txt + '×'; $('#rate').setAttribute('aria-valuetext', txt + '-fach');
+  $$('#rateSeg button').forEach(b => b.setAttribute('aria-pressed', Math.abs(+b.dataset.rate - rate) < 0.004));
+  if (!playing) showFrame(+$('#scrub').value);
+}
+$('#rate').addEventListener('input', e => setRate(posToRate(+e.target.value), true));
+$('#rateSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setRate(+b.dataset.rate); });
 function loop(ts) {
   if (!playing) return;
   const dt = lastTs ? Math.min(0.1, (ts - lastTs) / 1000) : 0; lastTs = ts;
   const r = RUN[scenario];
-  playT += dt * ($('#slowmo').checked ? 0.25 : 1);
+  playT += dt * rate;
   if (playT > r.T) playT = 0;
   const i = clamp(Math.round(playT / (DT * REC)), 0, r.F.t.length - 1);
   $('#scrub').value = i; showFrame(i);
-  requestAnimationFrame(loop);
+  rafId = requestAnimationFrame(loop);
 }
 function setPlaying(on) {
   playing = on; $('#playBtn').textContent = on ? '❚❚ Pause' : '▶ Abspielen'; $('#playBtn').setAttribute('aria-label', on ? 'Simulation pausieren' : 'Simulation abspielen');
-  if (on) { lastTs = 0; playT = (+$('#scrub').value) * DT * REC; if (playT >= RUN[scenario].T - 0.01) playT = 0; requestAnimationFrame(loop); }
+  cancelAnimationFrame(rafId);
+  if (on) { lastTs = 0; playT = (+$('#scrub').value) * DT * REC; if (playT >= RUN[scenario].T - 0.01) playT = 0; rafId = requestAnimationFrame(loop); }
 }
 $('#playBtn').addEventListener('click', () => setPlaying(!playing));
 $('#scrub').addEventListener('input', e => { if (playing) setPlaying(false); showFrame(+e.target.value); });
 for (const id of ['exag', 'ghostOn', 'riderOn']) $('#' + id).addEventListener('change', () => showFrame(+$('#scrub').value));
-document.addEventListener('input', e => { if (e.target.id === 'speed') { speed = +e.target.value; $('#speedO').textContent = `${speed} km/h`; liveUpdate(); } });
+document.addEventListener('input', e => { if (e.target.id === 'speed') { speed = +e.target.value; $('#speedO').textContent = `${speed} km/h`; condChanged(); liveUpdate(); } });
 function setScenario(k) {
   scenario = k; $$('#scenSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.s === k));
   if (LAST) LAST.run = null;
@@ -1848,9 +1905,10 @@ $('#cmpSeg').addEventListener('click', e => {
   CMPMODE = b.dataset.cmp; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule();
 });
 $('#pinBtn').addEventListener('click', () => { PINNED = pick(S); CMPMODE = 'pin'; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.cmp === 'pin')); schedule(); toast('Setup gemerkt. Änderungen werden jetzt damit verglichen.'); });
-$('#hudTitle').closest('.bikebox').addEventListener('dblclick', () => setPlaying(!playing));
-$('#roughSeg').innerHTML = Object.entries(ROUGH).map(([k, r]) => `<button data-r="${k}" aria-pressed="${k === roughness}">${r.n}</button>`).join('');
-$('#roughSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; roughness = b.dataset.r; $$('#roughSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule(); });
+$('#hudTitle').closest('.bikebox').addEventListener('dblclick', e => { if (!e.target.closest('button, input, label, select, .player, .obst')) setPlaying(!playing); });
+const RSHORT = { glatt: 'glatt', gut: 'neu', mittel: 'normal', schlecht: 'schlecht', kaputt: 'sehr schlecht' };
+$('#roughSeg').innerHTML = Object.entries(ROUGH).map(([k, r]) => `<button data-r="${k}" aria-pressed="${k === roughness}" title="${r.n}">${RSHORT[k] || r.n}</button>`).join('');
+$('#roughSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (!b) return; roughness = b.dataset.r; $$('#roughSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); condChanged(); schedule(); });
 
 /* ============================ REGISTER ============================ */
 $$('.tabs button').forEach(b => b.addEventListener('click', () => {
@@ -1863,7 +1921,9 @@ $$('.tabs button').forEach(b => b.addEventListener('click', () => {
 
 /* ============================ DURCHHANG-TAB ============================ */
 const SAGIN = { L1: 180, L2: 158, L3: 143, R1: 600, R2: 588, R3: 568 };
+const SAGAT = { F: null, R: null }; // Vorspannung im Modell beim Eintragen der Messwerte (Bezug der Empfehlung); null: folgt dem Modell
 function renderSagTab() {
+  const baseF = SAGAT.F != null ? SAGAT.F : S.fPre;
   const [zf, zr] = SAGZ[S.profile], tf = PROFILES[S.profile].sagF, trr = PROFILES[S.profile].sagR;
   $('#sagTargets').innerHTML = `<thead><tr><th>Profil</th><th>Vorn mit Fahrer</th><th>Hinten mit Fahrer</th><th>Frei vorn</th><th>Frei hinten</th></tr></thead><tbody>` +
     Object.entries(PROFILES).map(([k, p]) => `<tr${k === S.profile ? ' style="background:var(--accent-soft)"' : ''}><td>${p.name}</td><td class="n">${SAGZ[k][0][0]}–${SAGZ[k][0][1]} mm</td><td class="n">${SAGZ[k][1][0]}–${SAGZ[k][1][1]} mm</td><td class="n">20–30 mm</td><td class="n">5–15 mm</td></tr>`).join('') + '</tbody>';
@@ -1873,33 +1933,41 @@ function renderSagTab() {
     const z = F ? zf : zr, t = F ? tf : trr, fz = F ? [20, 30] : [5, 15];
     const delta = rider - t;
     let action;
-    if (F) { const rings = clamp(S.fPre - delta / M.ringMm, 0, 8); action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(delta / M.ringMm), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(S.fPre, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.`; }
+    if (F) { const rings = clamp(baseF - delta / M.ringMm, 0, 8); action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(delta / M.ringMm), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(baseF, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.`; }
     else { const mm = delta / M.MR; action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: Feder um ${fmt(Math.abs(mm), 1)} mm ${delta > 0 ? 'zusätzlich spannen' : 'entspannen'} (1 mm an der Feder ≈ ${fmt(M.MR, 2)} mm am Rad).`; }
     let springNote = '';
     if (free < fz[0] - 3 && rider > z[0]) springNote = '<p class="warnbox" style="margin-top:8px">Wenig freier Durchhang bei viel Fahrer-Durchhang: die Feder ist für dein Gewicht zu weich. Vorspannung allein löst das nicht sauber.</p>';
     if (free > fz[1] + 5 && rider <= z[1]) springNote = '<p class="warnbox" style="margin-top:8px">Viel freier Durchhang bei passendem Fahrer-Durchhang: die Feder ist für dein Gewicht eher zu hart.</p>';
     const st = (val, zz) => val >= zz[0] && val <= zz[1] ? 'good' : 'warn';
-    return `<div class="card-h"><h3>${F ? 'Gabel vorn' : 'Federbein hinten'}</h3><span class="chip mut">Beispielwerte, eigene eintragen</span></div>
+    const shell = `<div class="card-h"><h3>${F ? 'Gabel vorn' : 'Federbein hinten'}</h3><span class="chip mut">Beispielwerte, eigene eintragen</span></div>
       <div class="fields">${a.map((k, i) => `<div class="fld"><label for="sg-${k}">${k} · ${['ausgefedert', 'ohne Fahrer', 'mit Fahrer'][i]}</label><input id="sg-${k}" data-k="${k}" type="number" step="0.5" inputmode="decimal" value="${SAGIN[k]}"></div>`).join('')}</div>
-      <div class="res3">
+      <div class="sag-out"></div>
+      <div class="btnrow" style="margin-top:10px"><button class="btn sm pri" data-apply="${side}">Ins Modell übernehmen</button></div>`;
+    const out = `<div class="res3">
         <div class="gcell"><div class="lbl">Frei</div><div class="v">${fmt(free, 1)} mm</div><span class="chip ${st(free, fz)}">Ziel ${fz[0]}–${fz[1]}</span></div>
         <div class="gcell"><div class="lbl">Mit Fahrer</div><div class="v">${fmt(rider, 1)} mm</div><span class="chip ${st(rider, z)}">Ziel ${z[0]}–${z[1]}</span></div>
         <div class="gcell"><div class="lbl">Abweichung</div><div class="v">${delta >= 0 ? '+' : ''}${fmt(delta, 1)} mm</div><span class="d">zu ${t} mm Ziel</span></div>
       </div>
-      <p style="margin:10px 0 0;font-size:.88rem"><b>${action}</b></p>${springNote}
-      <div class="btnrow" style="margin-top:10px"><button class="btn sm pri" data-apply="${side}">Ins Modell übernehmen</button></div>`;
+      <p style="margin:10px 0 0;font-size:.88rem"><b>${action}</b></p>${springNote}`;
+    return [shell, out];
   };
-  const keepFocus = document.activeElement && document.activeElement.id;
-  $('#sagFront').innerHTML = card('F'); $('#sagRear').innerHTML = card('R');
-  if (keepFocus && keepFocus.startsWith('sg-')) { const e = $('#' + keepFocus); if (e) { e.focus(); const l = e.value.length; try { e.setSelectionRange(l, l); } catch (x) {} } }
+  // Eingabefelder und Knopf nur einmal aufbauen: ein Neuaufbau im change-Ereignis zerstört das nächste Fokusziel (Tab oder Klick)
+  for (const [side, id] of [['F', '#sagFront'], ['R', '#sagRear']]) {
+    const host = $(id), [shell, out] = card(side);
+    if (!host.querySelector('.sag-out')) host.innerHTML = shell;
+    host.querySelector('.sag-out').innerHTML = out;
+  }
 }
-$('#t-sag').addEventListener('change', e => { const k = e.target.dataset.k; if (k) { SAGIN[k] = parseFloat(e.target.value) || 0; renderSagTab(); } });
+$('#t-sag').addEventListener('change', e => { const k = e.target.dataset.k; if (k) { const x = parseFloat(e.target.value); if (!Number.isFinite(x)) { e.target.value = SAGIN[k]; return; } SAGIN[k] = x; if (k[0] === 'L') SAGAT.F = S.fPre; else SAGAT.R = S.rPre; renderSagTab(); } });
 $('#t-sag').addEventListener('click', e => {
   const b = e.target.closest('[data-apply]'); if (!b) return;
-  const t = b.dataset.apply === 'F' ? PROFILES[S.profile].sagF : PROFILES[S.profile].sagR;
-  if (b.dataset.apply === 'F') { const d = (SAGIN.L1 - SAGIN.L3) - t; S.fPre = clamp(Math.round((S.fPre - d / M.ringMm) * 2) / 2, 0, 8); }
-  else { const d = (SAGIN.R1 - SAGIN.R3) - t; S.rPre = clamp(Math.round((S.rPre + d / M.MR) * 2) / 2, -5, 12); }
-  schedule(); toast('Vorspannung im Modell angepasst');
+  const F = b.dataset.apply === 'F', t = F ? PROFILES[S.profile].sagF : PROFILES[S.profile].sagR, k = F ? 'fPre' : 'rPre';
+  // Bezug ist die Vorspannung beim Messen, damit ein zweiter Klick die Korrektur nicht noch einmal aufschlägt
+  const base = F ? (SAGAT.F != null ? SAGAT.F : S.fPre) : (SAGAT.R != null ? SAGAT.R : S.rPre);
+  if (F) SAGAT.F = base; else SAGAT.R = base;
+  const nv = F ? clamp(Math.round((base - ((SAGIN.L1 - SAGIN.L3) - t) / M.ringMm) * 2) / 2, 0, 8) : clamp(Math.round((base + ((SAGIN.R1 - SAGIN.R3) - t) / M.MR) * 2) / 2, -5, 12) + 0;
+  if (nv === S[k]) { toast('Vorspannung im Modell passt schon zur Messung'); return; }
+  noteChange(ctlName(k), k); S[k] = nv; schedule(); toast('Vorspannung im Modell angepasst');
 });
 
 /* ============================ DIAGNOSE ============================ */
@@ -1919,7 +1987,9 @@ const DIAG = [
 ];
 const DSEL = new Set();
 function renderDiag() {
-  $('#symps').innerHTML = DIAG.map(d => `<button class="symp" data-d="${d.id}" aria-pressed="${DSEL.has(d.id)}">${d.t}</button>`).join('');
+  const sy = $('#symps'); // Knöpfe bleiben stehen, damit Tastaturfokus und Klick erhalten bleiben
+  if (!sy.children.length) sy.innerHTML = DIAG.map(d => `<button class="symp" data-d="${d.id}" aria-pressed="false">${d.t}</button>`).join('');
+  for (const b of sy.children) b.setAttribute('aria-pressed', DSEL.has(b.dataset.d));
   const sel = DIAG.filter(d => DSEL.has(d.id));
   $('#diag').innerHTML = sel.length ? sel.map(d => `<div class="card"><h3>${d.t}</h3><div class="lbl">Wahrscheinliche Ursachen</div><ol>${d.c.map(x => `<li>${x}</li>`).join('')}</ol>
     <div class="lbl" style="margin-bottom:6px">Test im Modell</div><div class="btnrow">${d.a.map((a, i) => `<button class="btn sm" data-da="${d.id}" data-i="${i}">${a[2]}</button>`).join('')}<button class="btn sm" data-ds="${d.scen}">Situation „${SCEN[d.scen].short}“ ansehen</button></div></div>`).join('')
@@ -1928,7 +1998,7 @@ function renderDiag() {
 $('#t-diag').addEventListener('click', e => {
   const s = e.target.closest('[data-d]'); if (s) { DSEL.has(s.dataset.d) ? DSEL.delete(s.dataset.d) : DSEL.add(s.dataset.d); renderDiag(); return; }
   const a = e.target.closest('[data-da]');
-  if (a) { const d = DIAG.find(x => x.id === a.dataset.da), [k, dv, lbl] = d.a[+a.dataset.i], c = findCtl(k); noteChange(ctlName(k), k); S[k] = clamp(+(S[k] + dv).toFixed(3), c.min, c.max); schedule(); toast(`${lbl}: jetzt ${fmt(S[k], c.d)} ${c.unit}`); return; }
+  if (a) { const d = DIAG.find(x => x.id === a.dataset.da), [k, dv, lbl] = d.a[+a.dataset.i], c = findCtl(k), nv = clamp(+(S[k] + dv).toFixed(3), c.min, c.max); if (nv === S[k]) { toast(`${lbl}: Einsteller steht schon am Anschlag`); return; } noteChange(ctlName(k), k); S[k] = nv; schedule(); toast(`${lbl}: jetzt ${fmt(S[k], c.d)} ${c.unit}`); return; }
   const sc = e.target.closest('[data-ds]'); if (sc) { $('#tab-setup').click(); setScenario(sc.dataset.ds); window.scrollTo({ top: 0, behavior: 'smooth' }); }
 });
 
@@ -2020,8 +2090,11 @@ const DATA = [
 let dataCat = 'Alle', dataStat = 'alle';
 function renderData() {
   const cats = ['Alle', ...new Set(DATA.map(d => d[0]))];
-  $('#dataCat').innerHTML = cats.map(c => `<button data-c="${c}" aria-pressed="${c === dataCat}">${c}</button>`).join('');
-  $('#dataStat').innerHTML = [['alle', 'Alle'], ['ok2', '2+ Quellen'], ['ok1', '1 Quelle'], ['conf', 'abweichend'], ['open', 'offen'], ['model', 'Modell']].map(([k, l]) => `<button data-st="${k}" aria-pressed="${k === dataStat}">${l}</button>`).join('');
+  const dc = $('#dataCat'), ds = $('#dataStat'); // Filterknöpfe nur einmal aufbauen, danach nur den Zustand setzen
+  if (!dc.children.length) dc.innerHTML = cats.map(c => `<button data-c="${c}" aria-pressed="false">${c}</button>`).join('');
+  if (!ds.children.length) ds.innerHTML = [['alle', 'Alle'], ['ok2', '2+ Quellen'], ['ok1', '1 Quelle'], ['conf', 'abweichend'], ['open', 'offen'], ['model', 'Modell']].map(([k, l]) => `<button data-st="${k}" aria-pressed="false">${l}</button>`).join('');
+  for (const b of dc.children) b.setAttribute('aria-pressed', b.dataset.c === dataCat);
+  for (const b of ds.children) b.setAttribute('aria-pressed', b.dataset.st === dataStat);
   const q = ($('#dataQ').value || '').toLowerCase();
   const rows = DATA.filter(d => (dataCat === 'Alle' || d[0] === dataCat) && (dataStat === 'alle' || d[3] === dataStat) && (!q || d.join(' ').toLowerCase().includes(q)));
   $('#dataTbl').innerHTML = `<thead><tr><th>Bereich</th><th>Merkmal</th><th>Wert</th><th>Status</th><th>Prüfrunde 2</th><th>Quellen &amp; Hinweis</th></tr></thead><tbody>` +
@@ -2087,17 +2160,29 @@ function renderCheck() {
 /* ============================ SETUP-BIBLIOTHEK ============================ */
 const KEYS = ['rider', 'passenger', 'luggage', 'fuel', 'oilT', 'profile', ...Object.keys(STOCK)];
 let LIB = [];
-function libLoad() { try { LIB = JSON.parse(localStorage.getItem('k7lab.setups') || '[]'); } catch (e) { LIB = []; } if (!Array.isArray(LIB)) LIB = []; }
+function libLoad() { try { LIB = JSON.parse(localStorage.getItem('k7lab.setups') || '[]'); } catch (e) { LIB = []; } if (!Array.isArray(LIB)) LIB = []; LIB = LIB.filter(s => s && typeof s === 'object' && s.v && typeof s.v === 'object'); }
 function libSave() { try { localStorage.setItem('k7lab.setups', JSON.stringify(LIB)); } catch (e) {} }
 const pick = st => { const o = {}; KEYS.forEach(k => o[k] = st[k]); return o; };
+// Übernimmt nur bekannte, gültige Werte (Import, gespeicherte Setups): Zahlen geklemmt, Profil nur wenn vorhanden
+function sanitize(v) {
+  const n = {}; if (!v || typeof v !== 'object') return n;
+  for (const k of KEYS) {
+    if (!(k in v)) continue;
+    if (k === 'profile') { if (typeof v[k] === 'string' && Object.prototype.hasOwnProperty.call(PROFILES, v[k])) n[k] = v[k]; continue; }
+    const x = typeof v[k] === 'number' ? v[k] : typeof v[k] === 'string' && v[k].trim() !== '' ? +v[k].replace(',', '.') : NaN, c = findCtl(k);
+    if (Number.isFinite(x)) n[k] = c ? clamp(x, c.min, c.max) : x;
+  }
+  return n;
+}
 function renderLib() {
   $('#libList').innerHTML = LIB.length ? LIB.map((s, i) => `<div class="rec" style="grid-template-columns:minmax(0,1fr) auto"><div><p><b>${esc(s.name)}</b></p><p class="why">${PROFILES[s.v.profile] ? PROFILES[s.v.profile].name : ''} · ${fmt(s.v.rider)} kg · Index ${fmt(s.score)}</p></div><div class="btnrow"><button class="btn sm" data-ld="${i}">Laden</button><button class="btn sm" data-del="${i}">Löschen</button></div></div>`).join('') : '<p class="note">Noch keine Setups gespeichert.</p>';
-  const opts = [['cur', 'Aktuelles Setup'], ['stock', 'Serie'], ...LIB.map((s, i) => ['l' + i, s.name])];
+  const opts = [['cur', 'Aktuelles Setup'], ['stock', 'Serie'], ...LIB.map((s, i) => [libKey(s, i), s.name])];
   for (const id of ['cmpA', 'cmpB']) { const sel = $('#' + id), v = sel.value || (id === 'cmpA' ? 'cur' : 'stock'); sel.innerHTML = opts.map(([k, l]) => `<option value="${k}">${esc(l)}</option>`).join(''); sel.value = opts.some(o => o[0] === v) ? v : (id === 'cmpA' ? 'cur' : 'stock'); }
   renderCmp();
 }
+const libKey = (s, i) => 'l' + (s.at || 'i' + i); // stabil, auch wenn ein früherer Eintrag gelöscht wird
 const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
-function getCmp(k) { if (k === 'cur') return pick(S); if (k === 'stock') return Object.assign(pick(S), STOCK); const s = LIB[+k.slice(1)]; return s ? Object.assign(pick(S), s.v) : pick(S); }
+function getCmp(k) { if (k === 'cur') return pick(S); if (k === 'stock') return Object.assign(pick(S), STOCK); const s = LIB.find((x, i) => libKey(x, i) === k); return s ? Object.assign(pick(S), sanitize(s.v)) : pick(S); }
 function renderCmp() {
   const a = getCmp($('#cmpA').value || 'cur'), b = getCmp($('#cmpB').value || 'stock');
   const ra = runAll(a, speed), rb = runAll(b, speed), sa = sags(a), sb = sags(b);
@@ -2115,13 +2200,13 @@ $('#cmpA').addEventListener('change', renderCmp); $('#cmpB').addEventListener('c
 $('#saveBtn').addEventListener('click', () => { const n = ($('#saveName').value || '').trim() || `Setup ${LIB.length + 1}`; LIB.push({ name: n, v: pick(S), score: overall(RUN, S, SG), at: Date.now() }); libSave(); renderLib(); $('#saveName').value = ''; toast(`„${n}“ gespeichert`); });
 $('#libList').addEventListener('click', e => {
   const l = e.target.closest('[data-ld]'), d = e.target.closest('[data-del]');
-  if (l) { S = Object.assign({}, S, LIB[+l.dataset.ld].v); schedule(); toast(`„${LIB[+l.dataset.ld].name}“ geladen`); }
+  if (l) { const next = Object.assign({}, S, sanitize(LIB[+l.dataset.ld].v)); if (!sameSetup(next, S)) { noteChange('Setup geladen'); S = next; schedule(); } toast(`„${LIB[+l.dataset.ld].name}“ geladen`); }
   if (d) { const i = +d.dataset.del; if (d.dataset.sure) { const n = LIB[i].name; LIB.splice(i, 1); libSave(); renderLib(); toast(`„${n}“ gelöscht`); } else { d.dataset.sure = '1'; d.textContent = 'Wirklich löschen?'; d.classList.add('pri'); } }
 });
 $('#expBtn').addEventListener('click', () => { $('#ioText').value = JSON.stringify({ app: 'K7 Fahrwerkslabor', v: 1, setup: pick(S) }, null, 2); });
 $('#copyBtn').addEventListener('click', () => { const t = $('#ioText'); if (!t.value) $('#expBtn').click(); navigator.clipboard.writeText(t.value).then(() => toast('In die Zwischenablage kopiert'), () => { t.select(); toast('Text markiert, jetzt mit Strg+C kopieren'); }); });
 $('#impBtn').addEventListener('click', () => {
-  try { const j = JSON.parse($('#ioText').value), v = j.setup || j, n = {}; for (const k of KEYS) if (k in v) n[k] = k === 'profile' ? (PROFILES[v[k]] ? v[k] : S.profile) : clamp(+v[k], (findCtl(k) || { min: -1e9 }).min, (findCtl(k) || { max: 1e9 }).max); S = Object.assign({}, S, n); schedule(); toast('Setup übernommen'); }
+  try { const j = JSON.parse($('#ioText').value), n = sanitize(j && (j.setup || j)); if (!Object.keys(n).length) throw new Error('kein Setup'); const next = Object.assign({}, S, n); if (!sameSetup(next, S)) { noteChange('Setup importiert'); S = next; schedule(); } toast('Setup übernommen'); }
   catch (e) { toast('Text ist kein gültiges Setup. Bitte den kompletten Export einfügen.'); }
 });
 
@@ -2131,6 +2216,6 @@ initRef(); buildSvg(); buildCut(); buildControls(); libLoad(); scenario = 'bump'
 recompute(); renderDiag(); renderData(); renderCheck(); renderLib();
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(true);
 try { const t = localStorage.getItem('k7lab.tab'); if (t && $(`[data-tab="${t}"]`)) $(`[data-tab="${t}"]`).click(); } catch (e) {}
-let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); drawProfile(); }, 120); });
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawTime(); drawFV(); drawSpring(); drawProfile(); });
+let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); drawProfile(); drawHist(); }, 120); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawTime(); drawFV(); drawSpring(); drawProfile(); drawHist(); });
 </script>
