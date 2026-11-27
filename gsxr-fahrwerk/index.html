@@ -143,6 +143,26 @@ tr.act td{background:var(--accent-soft)}
 .glow{filter:drop-shadow(0 0 8px currentColor)}
 .mleg{display:inline-flex;align-items:center;gap:5px;flex-wrap:wrap}.mleg i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-left:4px}
 .profwrap .seg{display:grid;grid-template-columns:1fr 1fr}
+.profinfo{font-size:.7rem;color:var(--muted);line-height:1.45;margin-top:6px}.profinfo b{color:var(--fg);font-weight:600}
+.pt .pw{position:absolute;right:6px;top:4px;font-size:.62rem;font-family:var(--f-mono);color:var(--accent)}
+.pt.w0{opacity:.45}.pt.w0 .pw{color:var(--dim)}
+#profDlg{width:min(980px,calc(100% - 24px));max-height:calc(100vh - 40px);overflow:auto;background:var(--panel);color:var(--fg);border:1px solid var(--line2);border-radius:14px;padding:16px 18px;box-shadow:0 30px 90px rgba(0,0,0,.5)}
+#profDlg::backdrop{background:rgba(0,0,0,.5)}
+.pe-h{display:flex;gap:12px;align-items:center;margin-bottom:8px}.pe-h>div:first-child{flex:1}.pe-h h2{font-size:1.15rem}
+.pe-idx{font-size:.8rem;color:var(--muted)}.pe-idx b{font-family:var(--f-mono);color:var(--fg);font-size:1.05rem}
+.pe-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;font-size:.8rem}
+.pe-row select,.pe-sec select{background:var(--panel2);color:var(--fg);border:1px solid var(--line2);border-radius:7px;padding:4px 6px;font:inherit}
+.pe-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (max-width:760px){.pe-grid{grid-template-columns:minmax(0,1fr)}}
+.pe-sec{border:1px solid var(--line);border-radius:10px;padding:10px 12px;background:var(--panel2)}
+.pe-sec h3{font-size:.86rem;margin-bottom:2px}.pe-sec>p{font-size:.7rem;color:var(--muted);margin:0 0 6px}
+.pe-sec.wide{grid-column:1/-1}
+.pe-c{display:grid;grid-template-columns:minmax(0,150px) minmax(0,1fr) 84px;gap:8px;align-items:center;font-size:.76rem;padding:2px 0}
+.pe-c input[type=range]{width:100%;accent-color:var(--accent)}.pe-c output{font-family:var(--f-mono);font-size:.74rem;text-align:right;white-space:nowrap}
+.pe-sw{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 14px}
+@media (max-width:760px){.pe-sw{grid-template-columns:minmax(0,1fr)}}
+.pe-sw .pe-c{grid-template-columns:minmax(0,1fr) 80px 52px}
+.pe-g{font-size:.64rem;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);grid-column:1/-1;margin-top:6px;border-bottom:1px solid var(--line)}
 .roughseg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr))}
 .roughseg button,.profwrap .seg button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Prüfstand */
@@ -660,6 +680,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Federbein:</b> Stickstoff-Gasdruck im Ausgleichsbehälter drückt die Kolbenstange heraus und steigt beim Einfedern. Gabel und Federbein haben Topout-Federn, die das Ausfedern bis zum Anschlag abfangen.</li>
         <li><b>Reifen:</b> leicht progressiv, bei hohem Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke statt Lauffläche). Kraftschluss trocken μ 1,25, im Profil Nässe μ 0,75: Fordert die Bremse mehr als der Reifen überträgt, meldet der Prüfstand „blockiert“, beim Beschleunigen „dreht durch“.</li>
         <li><b>Fahrer als eigene Masse:</b> 60 % des Fahrergewichts federn über Sitzbank und Beine (Eigenfrequenz ≈ 5 Hz). Komfort wird am Fahrer gemessen, nicht am Rahmen.</li>
+        <li><b>Rollwiderstand:</b> 1,8 % der Radlast (Beiwert 0,018, Modell, Literatur 0,015–0,025) wirkt am Boden gegen die Fahrt. Bei konstanter Fahrt muss das Hinterrad ihn zusätzlich zum Luftwiderstand antreiben, das erhöht den Kettenzug und damit den Anti-Squat; ohne Antrieb bremst er mit.</li>
         <li><b>Luftwiderstand:</b> cW·A 0,33 m² am Druckpunkt 0,75 m. Mit dem Tempo wird die Front leichter (≈ 320 N bei 200 km/h), der Kettenzug stützt das Heck. Die Bremse muss den Luftwiderstand nicht mit abbauen.</li>
         <li><b>Öltemperatur:</b> Kaltes Öl ist zäher und erhöht vor allem die Low-Speed-Dämpfung.</li>
         <li><b>Abgleich mit Messung:</b> MOTORRAD hat 10,1 m/s² mittlere Verzögerung gemessen und beschreibt ein abhebendes Hinterrad. Das Modell zeigt bei 1,03 g dasselbe.</li>
@@ -708,6 +729,12 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     Simulationswerkzeug zur Orientierung. Fahrwerksänderungen in kleinen Schritten vornehmen, beide Gabelholme immer identisch einstellen, nach jeder Änderung auf abgesperrtem Gelände oder ruhiger Strecke probefahren. Verbindlich sind die Suzuki-Werksunterlagen für dein Fahrzeug.
   </footer>
 </div>
+<dialog id="profDlg" aria-labelledby="peTitle">
+  <div class="pe-h"><div><div class="lbl">Fahrprofil</div><h2 id="peTitle">Eigenes Profil</h2></div><div class="pe-idx" id="peIdx"></div><button class="btn sm" id="peClose" aria-label="Schließen">Schließen</button></div>
+  <p class="note" style="margin:0 0 10px">Das Profil legt fest, <b>was</b> ein gutes Fahrwerk für dich ist: wie die Teilnoten gewichtet werden, welcher Durchhang das Ziel ist, welche Situationen im Index zählen und unter welchen Bedingungen geprüft wird. Die Physik ändert sich nur durch Nässe, Straße und Tempo. Alles wirkt sofort, der Index oben rechnet live mit.</p>
+  <div class="pe-row"><label for="peBase">Vorlage laden</label><select id="peBase"></select><button class="btn sm" id="peLoad">Übernehmen</button></div>
+  <div class="pe-grid" id="peBody"></div>
+</dialog>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script>
@@ -743,13 +770,29 @@ M.RfEff = (M.trail0 * Math.cos(M.rake0 * DEG) + M.offset) / Math.sin(M.rake0 * D
 const COSR = Math.cos(M.rake0 * DEG), TANR = Math.tan(M.rake0 * DEG);
 
 const STOCK = { fPre: 4, fReb: 6, fLS: 14, fHS: 3, fProt: 0, fOil: 0, rPre: 0, rReb: 12, rLS: 14, rHS: 3, rShim: 0, pF: 2.5, pR: 2.9, kF: 9.57, kR: 99 };
+// Einsatzprofile: Gewichtung der Teilnoten (w), Ziel-Durchhang (sagF/sagR = Mitte, SAGZ = Bereich), Dämpfer-Charakter für die
+// Empfehlung (off, + = Klicks offener / weicher), Luftdruck kalt, Gewicht jeder Fahrsituation im Index (sw, fehlt = 1),
+// typische Straße (rough), Tempo (v) und Nässe (wet, Reibwert nass).
 const PROFILES = {
-  komfort: { name: 'Straße komfortabel', sagF: 38, sagR: 33, off: { fReb: 1, fLS: 2, fHS: .5, rReb: 1, rLS: 2, rHS: .5 }, pF: 2.5, pR: 2.9, w: { comfort: .35, grip: .25, control: .2, reserve: .2 } },
-  sport: { name: 'Landstraße sportlich', sagF: 34, sagR: 30, off: { fReb: 0, fLS: 0, fHS: 0, rReb: 0, rLS: 0, rHS: 0 }, pF: 2.5, pR: 2.9, w: { comfort: .15, grip: .35, control: .3, reserve: .2 } },
-  track: { name: 'Rennstrecke', sagF: 30, sagR: 26, off: { fReb: -2, fLS: -3, fHS: -.5, rReb: -2, rLS: -3, rHS: -.5 }, pF: 2.2, pR: 2.0, w: { comfort: .05, grip: .4, control: .35, reserve: .2 } },
-  regen: { name: 'Nässe', sagF: 38, sagR: 33, off: { fReb: 2, fLS: 3, fHS: 1, rReb: 2, rLS: 3, rHS: 1 }, pF: 2.5, pR: 2.9, w: { comfort: .2, grip: .45, control: .2, reserve: .15 } }
+  komfort: { name: 'Straße komfortabel', short: 'Komfort', desc: 'Entspannt auf Landstraßen: Stöße weich wegfiltern, ruhig liegen.', sagF: 38, sagR: 33, off: { fReb: 1, fLS: 2, fHS: .5, rReb: 1, rLS: 2, rHS: .5 }, pF: 2.5, pR: 2.9, w: { comfort: .35, grip: .25, control: .2, reserve: .2 }, rough: 'mittel', v: 80, wet: false,
+    sw: { bump: 1.5, pothole: 1.5, joints: 1.5, ripples: 1.2, cycCity: 1.5, cycHwy: 1.5, cycTrack: 0.2, accel: 0.7, trail: 0.5, chicane: 0.6 } },
+  sport: { name: 'Landstraße sportlich', short: 'Sportlich', desc: 'Zügig über Landstraßen: Haftung und Kontrolle vor Komfort.', sagF: 34, sagR: 30, off: { fReb: 0, fLS: 0, fHS: 0, rReb: 0, rLS: 0, rHS: 0 }, pF: 2.5, pR: 2.9, w: { comfort: .15, grip: .35, control: .3, reserve: .2 }, rough: 'gut', v: 80, wet: false, sw: {} },
+  track: { name: 'Rennstrecke', short: 'Rennstrecke', desc: 'Glatter Asphalt, hartes Bremsen, Curbs: Haftung und Kontrolle, Komfort fast egal.', sagF: 30, sagR: 26, off: { fReb: -2, fLS: -3, fHS: -.5, rReb: -2, rLS: -3, rHS: -.5 }, pF: 2.2, pR: 2.0, w: { comfort: .05, grip: .4, control: .35, reserve: .2 }, rough: 'glatt', v: 140, wet: false,
+    sw: { cycTrack: 3, brake: 2, trail: 2, chicane: 2, corner: 2, accel: 2, cycLand: 0.5, cycCity: 0, cycHwy: 0.3, pothole: 0.3, stepup: 0.2, stepdown: 0.2, joints: 0.3 } },
+  regen: { name: 'Nässe', short: 'Nässe', desc: 'Nasse Fahrbahn (Reibwert 0,75): Haftung zählt am meisten, weiches und ruhiges Fahrwerk.', sagF: 38, sagR: 33, off: { fReb: 2, fLS: 3, fHS: 1, rReb: 2, rLS: 3, rHS: 1 }, pF: 2.5, pR: 2.9, w: { comfort: .2, grip: .45, control: .2, reserve: .15 }, rough: 'mittel', v: 70, wet: true,
+    sw: { brake: 1.5, trail: 1.3, joints: 1.3, cycTrack: 0.2, chicane: 0.7, accel: 0.7 } },
+  sozius: { name: 'Touren mit Sozius', short: 'Sozius', desc: 'Zu zweit mit Gepäck: Federweg-Reserve und Ruhe auf langen Wellen.', sagF: 37, sagR: 32, off: { fReb: 0, fLS: 0, fHS: 0, rReb: -1, rLS: -1, rHS: 0 }, pF: 2.5, pR: 2.9, w: { comfort: .3, grip: .2, control: .2, reserve: .3 }, rough: 'mittel', v: 90, wet: false,
+    sw: { waves: 1.5, crest: 1.3, dip: 1.5, cycLand: 1.5, cycHwy: 1.5, cycTrack: 0, chicane: 0.5, accel: 0.7, trail: 0.5 } },
+  stadt: { name: 'Stadt & schlechte Straßen', short: 'Stadt', desc: 'Schlaglöcher, Kanten, Kopfsteinpflaster: Komfort und Reserve, wenig Tempo.', sagF: 38, sagR: 33, off: { fReb: 1, fLS: 2, fHS: 1, rReb: 1, rLS: 2, rHS: 1 }, pF: 2.5, pR: 2.9, w: { comfort: .4, grip: .25, control: .15, reserve: .2 }, rough: 'schlecht', v: 50, wet: false,
+    sw: { cycCity: 3, pothole: 2, stepup: 2, stepdown: 2, bump: 2, cycTrack: 0, cycHwy: 0.5, chicane: 0.3, trail: 0.3, corner: 0.5 } }
 };
-const SAGZ = { komfort: [[35, 40], [30, 35]], sport: [[32, 36], [28, 32]], track: [[28, 32], [23, 28]], regen: [[35, 40], [30, 35]] };
+// Eigenes Profil: startet als Kopie von „sportlich“, wird im Editor verändert und im Browser gespeichert
+PROFILES.eigen = Object.assign(JSON.parse(JSON.stringify(PROFILES.sport)), { name: 'Eigenes Profil', short: 'Eigenes', desc: 'Selbst eingestellt.', wr: { comfort: 15, grip: 35, control: 30, reserve: 20 } });
+let PROFV = 0; // Versionszähler: ändert sich das eigene Profil, sind zwischengespeicherte Rechnungen ungültig
+const SAGZ = { komfort: [[35, 40], [30, 35]], sport: [[32, 36], [28, 32]], track: [[28, 32], [23, 28]], regen: [[35, 40], [30, 35]], sozius: [[35, 39], [30, 34]], stadt: [[35, 40], [30, 35]], eigen: [[32, 36], [28, 32]] };
+// Gewicht einer Fahrsituation im Index (Prüfstandsversuche immer 0)
+const swOf = (k, prof) => SCEN[k].rig ? 0 : ((PROFILES[prof] || PROFILES.sport).sw || {})[k] ?? 1;
+function swSum(prof) { let W = 0; for (const k of Object.keys(SCEN)) W += swOf(k, prof); return W; }
 
 let S = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40, profile: 'sport' }, STOCK);
 let scenario = 'bump', speed = 80;
@@ -1114,6 +1157,7 @@ const pw115 = r => { if (r >= 6) return Math.pow(r, 1.15); const q = r * 500, k 
 // Antrieb 17/43, Kette 530 (Teilung 15,875 mm): Teilkreisradien der Kettenräder
 const DRIVE = { zF: 17, zR: 43, pitch: 15.875 }, rSpr = z => DRIVE.pitch / (2 * Math.sin(Math.PI / z));
 const BRAKE = { rearShare: 0.15 };            // Anteil Hinterradbremse an der Bremskraft (Modell)
+const ROLL = { crr: 0.018 }; // Rollwiderstandsbeiwert Sportreifen auf Asphalt (Modell, Literatur 0,015–0,025)
 const MU = { dry: 1.25, wet: 0.75, slide: 0.85, ls: 0.08 };          // Kraftschluss Sportreifen trocken / nass (Modell, Literatur 1,2–1,4 trocken)
 // Anti-Squat aus Kettenzug-Geometrie (Schnittpunkt Kettentrum/Schwinge), abhängig vom Federweg hinten
 function antiSquatAt(xR, hMM) {
@@ -1147,12 +1191,12 @@ function simRun(st, sc, v, L) {
   // Gleichgewicht bei Fahrt: Luftwiderstand hebt die Front an, Kettenzug stützt das Heck
   const AST = []; for (let x = -10; x <= 150; x += 2) AST.push(antiSquatAt(x, L.h * 1000));
   const asAt = x => { const q = clamp((x + 10) / 2, 0, AST.length - 1.001), i = Math.floor(q); return AST[i] + (AST[i + 1] - AST[i]) * (q - i); };
-  const Fd = dragN(v), My0 = Fd * AERO.hcp;
+  const Fd = dragN(v), My0 = Fd * AERO.hcp, Frr0 = v > 0.3 ? ROLL.crr * L.tot * G : 0; // Luft- und Rollwiderstand bei konstanter Fahrt
   let pairR0 = 0, FF0 = msF * G - My0 / wb, FR0 = msR * G + My0 / wb, x0R = solve(FvR, FR0, -5, M.travelR + 10);
-  for (let k = 0; k < 3; k++) { pairR0 = asAt(x0R) * Fd * L.h / wb; FR0 = msR * G + My0 / wb - pairR0; x0R = solve(FvR, FR0, -5, M.travelR + 10); }
+  for (let k = 0; k < 3; k++) { pairR0 = asAt(x0R) * (Fd + Frr0) * L.h / wb; FR0 = msR * G + My0 / wb - pairR0; x0R = solve(FvR, FR0, -5, M.travelR + 10); }
   const x0F = solve(FvF, FF0, -5, M.travelF * COSR + 10);
   // Reifen: leicht progressiv, mit Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke)
-  const kv = Math.min(1.25, 1 + 0.08 * (v / 50) ** 2), mu = st.profile === 'regen' ? MU.wet : MU.dry;
+  const kv = Math.min(1.25, 1 + 0.08 * (v / 50) ** 2), mu = (PROFILES[st.profile] || PROFILES.sport).wet ? MU.wet : MU.dry;
   const d0F = (FF0 + M.muF * G) / (ktF * kv), d0R = (FR0 + pairR0 + M.muR * G) / (ktR * kv);
   const tyre = (kt, d0, d, k) => kt * k * d0 * pw115(Math.max(0, d) / d0); // k: Tempo-Faktor der Steifigkeit (aktuelles Tempo)
   const MUS = MU.slide; // Gleitreibung / Haftreibung, wenn das Rad blockiert oder durchdreht
@@ -1184,7 +1228,8 @@ function simRun(st, sc, v, L) {
     const kvt = Math.min(1.25, 1 + 0.08 * (vel / 50) ** 2); // Fliehkraft im Gürtel: Steifigkeit nach aktuellem Tempo
     let tF = dFt > 0 ? Math.max(0, tyre(ktF * kl, d0F, dFt, kvt) + M.ctire * (vrF - vf)) : 0;
     let tR = dRt > 0 ? Math.max(0, tyre(ktR * kl, d0R, dRt, kvt) + M.ctire * (vrR - vr)) : 0;
-    const Xn = L.tot * ax + Fdt;                                    // nötige Längskraft am Boden
+    const Frr = vel > 0.3 ? ROLL.crr * (tF + tR) : 0;                // Rollwiderstand aus der Walkarbeit, wächst mit der Radlast
+    const Xn = L.tot * ax + Fdt + Frr;                              // nötige Längskraft am Boden
     // Bremsen: braucht mindestens ein Rad am Boden (in der Luft bremst nur dessen Bremse nicht mehr); Antrieb nur mit Hinterradkontakt
     const X = Xn < 0 ? (tF > 0 || tR > 0 ? Xn : 0) : (tR > 0 ? Xn : 0), Fb = X < 0 ? -X : 0;
     const uF = vf - vyF, uR = vr - vyR;
@@ -1196,13 +1241,13 @@ function simRun(st, sc, v, L) {
     const slipF = FbQ > muF * tF + 1, slipR = X > 0 ? X > muR * tR + 1 : false;
     const FbF = slipF ? MUS * muF * tF : FbQ;                         // blockiertes Vorderrad überträgt nur Gleitreibung
     const Xa = X > 0 ? (slipR ? MUS * muR * tR : X) : -(FbF + FbR);   // tatsächliche Längskraft am Boden
-    const axA = (Xa - Fdt) / L.tot;                                   // tatsächliche Längsbeschleunigung
+    const axA = (Xa - Fdt - Frr) / L.tot;                                   // tatsächliche Längsbeschleunigung
     dFs += (dampF(uF, dmp.F) - dFs) * KLAG; dRs += (dampF(uR, dmp.R) - dRs) * KLAG; // Ventilkraft baut sich mit Zeitkonstante auf
     const dF = dFs + fricF(uF, frF + FRIC.muBrake * FbF), dR = dRs + fricF(uR, frR);
     const FF = SpF(xF) + dF, FR = SpR(xR) + dR;
     const pairF = FbF * Math.tan(M.rake0 * DEG + th);              // Bremskraft-Anteil entlang der Gabel, mit aktuellem Lenkkopfwinkel (taucht die Front ein, wird er steiler)
     const pairR = (Xa > 0 ? asAt(xR) * Xa * L.h / wb : 0) - FbR * hP / lP; // Kettenzug-Anti-Squat (hebt das Heck) und Hinterradbremse: Sattel an der Schwinge, die Bremskraft zieht das Rad zum Rahmen (federt ein)
-    const My = (Xa - Fdt) * L.h + Fdt * AERO.hcp;                     // Nickmoment um den Schwerpunkt: Längskraft am Boden und Luftwiderstand (in der Luft nur dieser)
+    const My = (Xa - Frr - Fdt) * L.h + Fdt * AERO.hcp;                     // Nickmoment um den Schwerpunkt: Längskraft am Boden und Luftwiderstand (in der Luft nur dieser)
     let Fs = 0, ad = 0;
     if (mrd > 0) { const ys = z + lr * th, vys = vz + lr * w; Fs = mrd * G + RIDER.k * (ys - zd) + RIDER.c * (vys - vd); ad = (Fs - mrd * G * nf) / mrd; }
     const az = (FF + FR - Fs - mc * G * nf - pairF + pairR) / mc;
@@ -1742,7 +1787,7 @@ const LOADKEYS = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
 const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100, oilT: 40 }, STOCK);
 const findCtl = k => CTL.flatMap(g => g.items).find(c => c.k === k);
 const PSHORT = { komfort: 'Komfort', sport: 'Sportlich', track: 'Rennstrecke', regen: 'Nässe' };
-const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false" title="${p.name}">${PSHORT[k] || p.name}</button>`).join('')}</div>`;
+const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false" title="${p.name}: ${p.desc}">${p.short || PSHORT[k] || p.name}</button>`).join('')}</div><div class="profinfo" id="profInfo"></div><button class="btn sm" id="profEdBtn" style="width:100%;margin-top:6px">Profil anpassen …</button>`;
 const SIDE_F = ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt', 'kF'], SIDE_R = ['rPre', 'rReb', 'rLS', 'rHS', 'rShim', 'kR'], SIDE_T = ['pF', 'pR'], SIDE_TF = ['pF'], SIDE_TR = ['pR'];
 const COND = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
 const SHORT = { rider: 'Fahrer inkl. Ausrüstung', passenger: 'Sozius', luggage: 'Gepäck', fuel: 'Tank', oilT: 'Öltemperatur' };
@@ -1757,7 +1802,7 @@ function scoreScen(st, name) {
 const LMAP = { key: '', done: '', res: {}, t: null };
 function mapVals(c) { const n = Math.min(13, Math.round((c.max - c.min) / c.step) + 1), out = new Set(); for (let i = 0; i < n; i++) out.add(+(c.min + Math.round((c.max - c.min) * i / (n - 1) / c.step) * c.step).toFixed(4)); return [...out]; }
 function mapSchedule() {
-  const key = JSON.stringify([S, scenario, speed, SP[scenario], roughness]);
+  const key = JSON.stringify([S, scenario, speed, SP[scenario], roughness, PROFV]);
   // LMAP.key bleibt nach dem Rechnen stehen: gleicher Schlüssel = läuft oder fertig. Ein Vergleich mit LMAP.done allein
   // ließe eine noch laufende Rechnung für einen anderen Zustand weiterlaufen und deren Farbbänder für den jetzigen zeichnen.
   if (key === LMAP.key) return;
@@ -1799,9 +1844,9 @@ const LOSSHINT = {
   reserve: a => `Vorspannung${a === 'vorn' ? ', Ölstand' : ''} oder härtere Feder ${a}`
 };
 function lossBreakdown(run, st, sg) {
-  const ks = Object.keys(SCEN).filter(k => !SCEN[k].rig), w = PROFILES[st.profile].w, n = ks.length, out = [];
+  const ks = Object.keys(SCEN).filter(k => swOf(k, st.profile) > 0), w = PROFILES[st.profile].w, W = swSum(st.profile) || 1, out = [];
   for (const [c, name] of CRIT) for (const ax of ['F', 'R']) {
-    let tot = 0; const per = ks.map(k => { const l = 0.75 * w[c] * (100 - run[k]['s' + ax][c]) / 2 / n; tot += l; return [k, l]; }).sort((a, b) => b[1] - a[1]);
+    let tot = 0; const per = ks.map(k => { const l = 0.75 * w[c] * (100 - run[k]['s' + ax][c]) / 2 * swOf(k, st.profile) / W; tot += l; return [k, l]; }).sort((a, b) => b[1] - a[1]);
     out.push({ id: c + ax, c, name: `${name} ${ax === 'F' ? 'vorn' : 'hinten'}`, ax: ax === 'F' ? 'vorn' : 'hinten', tot, top: per.filter(p => p[1] > 0.05).slice(0, 3) });
   }
   out.push({ id: 'static', c: 'static', name: 'Durchhang statisch', tot: 0.25 * (100 - staticScore(st, sg)), top: [] });
@@ -1821,19 +1866,19 @@ const TSTEP = { fPre: 1, fReb: 2, fLS: 2, fHS: 0.5, fOil: 5, fProt: 2, kF: 0.5, 
 const TOR = { key: '', done: '', res: {}, base: 0, t: null, vis: true, mode: 'all' };
 function torSchedule() {
   if (!RUN || RUNPART) return;
-  const key = JSON.stringify([S, speed, SP, roughness]);
+  const key = JSON.stringify([S, speed, SP, roughness, PROFV]);
   if (!TOR.vis) { if (key !== TOR.done) $('#torNote').textContent = 'wird gerechnet, sobald sichtbar'; return; }
   if (key === TOR.key) return; // wie bei der Landkarte: TOR.key bleibt nach dem Rechnen stehen, eine Rückkehr zu TOR.done muss die laufende Rechnung ablösen
-  TOR.key = key; TOR.res = {}; TOR.base = overall(RUN, S, SG); { const nk = Object.keys(SCEN).filter(k => !SCEN[k].rig); TOR.dyn0 = nk.reduce((a, k) => a + RUN[k].score, 0) / nk.length; TOR.stat0 = staticScore(S, SG); } clearTimeout(TOR.t);
-  const ks = Object.keys(SCEN).filter(k => !SCEN[k].rig), jobs = [], base = JSON.parse(JSON.stringify(S));
+  TOR.key = key; TOR.res = {}; TOR.base = overall(RUN, S, SG); { const nk = Object.keys(SCEN).filter(k => swOf(k, S.profile) > 0); TOR.W = swSum(S.profile) || 1; TOR.dyn0 = nk.reduce((a, k) => a + swOf(k, S.profile) * RUN[k].score, 0) / TOR.W; TOR.stat0 = staticScore(S, SG); } clearTimeout(TOR.t);
+  const ks = Object.keys(SCEN).filter(k => swOf(k, S.profile) > 0), jobs = [], base = JSON.parse(JSON.stringify(S));
   for (const k of MAPKEYS) { const c = findCtl(k), hs = c.hard || 1; for (const dir of [-1, 1]) { const v = clamp(+(base[k] + dir * hs * TSTEP[k]).toFixed(4), c.min, c.max); if (v !== base[k]) jobs.push({ k, dir, v, st: Object.assign({}, base, { [k]: v }), sum: 0, i: 0 }); else TOR.res[k + dir] = null; } }
   let j = 0; $('#torNote').textContent = `wird gerechnet … 0/${jobs.length}`;
   const step = () => {
     if (TOR.key !== key) return;
     const t0 = performance.now();
     while (j < jobs.length && performance.now() - t0 < 8) {
-      const q = jobs[j]; q.sum += scoreScen(q.st, ks[q.i++]);
-      if (q.i === ks.length) { { const dyn = 0.75 * (q.sum / ks.length - TOR.dyn0), stat = 0.25 * (staticScore(q.st, sags(q.st)) - TOR.stat0); TOR.res[q.k + q.dir] = { v: q.v, d: dyn + stat, dyn, stat }; } j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
+      const q = jobs[j], kk = ks[q.i++]; q.sum += swOf(kk, q.st.profile) * scoreScen(q.st, kk);
+      if (q.i === ks.length) { { const dyn = 0.75 * (q.sum / TOR.W - TOR.dyn0), stat = 0.25 * (staticScore(q.st, sags(q.st)) - TOR.stat0); TOR.res[q.k + q.dir] = { v: q.v, d: dyn + stat, dyn, stat }; } j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
     }
     if (j < jobs.length) TOR.t = setTimeout(step, 0); else TOR.done = key;
   };
@@ -1876,6 +1921,89 @@ const EXPL = {
   pR: 'Der Reifen ist auch eine Feder. Weniger Luftdruck: weicher, mehr Haftung, aber mehr Walken und Wärme. Vorgabe des Reifenherstellers beachten.'
 };
 document.addEventListener('click', e => { const b = e.target.closest('[data-tm]'); if (!b) return; TOR.mode = b.dataset.tm; document.querySelectorAll('#torMode button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawTor(); });
+// Profil-Kurzinfo unter der Auswahl
+function renderProfInfo() {
+  const p = PROFILES[S.profile], e = $('#profInfo'); if (!e || !p) return; const [zf, zr] = SAGZ[S.profile], w = p.w, pc = x => fmt(x * 100);
+  const zero = Object.keys(SCEN).filter(k => !SCEN[k].rig && swOf(k, S.profile) === 0).length, hi = Object.keys(SCEN).filter(k => swOf(k, S.profile) > 1.01).map(k => SCEN[k].short);
+  e.innerHTML = `${p.desc}<br>Gewichtung <b>Komfort ${pc(w.comfort)} · Haftung ${pc(w.grip)} · Kontrolle ${pc(w.control)} · Reserve ${pc(w.reserve)} %</b><br>Ziel-Durchhang <b>${zf[0]}–${zf[1]} / ${zr[0]}–${zr[1]} mm</b> · Luftdruck <b>${fmt(p.pF, 2)} / ${fmt(p.pR, 2)} bar</b><br>Straße <b>${ROUGH[p.rough].n}</b> · Tempo <b>${p.v} km/h</b>${p.wet ? ' · <b>nass</b>' : ''}${hi.length ? `<br>Zählt stärker: ${hi.join(', ')}` : ''}${zero ? ` · ${zero} Situation${zero > 1 ? 'en' : ''} ohne Gewicht` : ''}`;
+}
+// Straße und Tempo des Profils übernehmen
+function applyProfCond() {
+  const p = PROFILES[S.profile]; if (!p) return; let msg = [];
+  if (p.rough && p.rough !== roughness) { roughness = p.rough; $$('#roughSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.r === roughness)); msg.push('Straße ' + ROUGH[roughness].n); }
+  if (p.v && p.v !== speed) { speed = clamp(Math.round(p.v / 5) * 5, 20, 280); $('#speed').value = speed; $('#speedO').textContent = `${speed} km/h`; msg.push(`Tempo ${speed} km/h`); }
+  condChanged(); if (msg.length) toast(`${p.name}: ${msg.join(', ')} übernommen`);
+}
+// Eigenes Profil: Bereinigen, Laden, Speichern
+const PE_OFF = [['fReb', 'Zugstufe vorn', 4, 1], ['fLS', 'Druck LS vorn', 4, 1], ['fHS', 'Druck HS vorn', 1.5, .25], ['rReb', 'Zugstufe hinten', 4, 1], ['rLS', 'Druck LS hinten', 4, 1], ['rHS', 'Druck HS hinten', 1.5, .25]];
+function profFix(p) {
+  const e = PROFILES.eigen, num = (v, lo, hi, d) => Number.isFinite(+v) ? clamp(+v, lo, hi) : d;
+  if (!p || typeof p !== 'object') return;
+  if (typeof p.name === 'string') e.name = p.name.slice(0, 40);
+  if (p.wr) for (const k of ['comfort', 'grip', 'control', 'reserve']) e.wr[k] = num(p.wr[k], 0, 100, e.wr[k]);
+  if (Array.isArray(p.sagz)) SAGZ.eigen = [[num(p.sagz[0] && p.sagz[0][0], 15, 50, 32), num(p.sagz[0] && p.sagz[0][1], 15, 50, 36)], [num(p.sagz[1] && p.sagz[1][0], 15, 50, 28), num(p.sagz[1] && p.sagz[1][1], 15, 50, 32)]];
+  for (const [k, , m] of PE_OFF) if (p.off) e.off[k] = num(p.off[k], -m, m, 0);
+  e.pF = num(p.pF, 1.8, 3.0, 2.5); e.pR = num(p.pR, 1.8, 3.2, 2.9); e.v = num(p.v, 20, 280, 80); e.wet = !!p.wet;
+  if (typeof p.rough === 'string' && Object.prototype.hasOwnProperty.call(ROUGH, p.rough)) e.rough = p.rough;
+  e.sw = {}; if (p.sw && typeof p.sw === 'object') for (const k of Object.keys(SCEN)) if (!SCEN[k].rig && p.sw[k] !== undefined) e.sw[k] = num(p.sw[k], 0, 3, 1);
+  profSync();
+}
+function profSync() {
+  const e = PROFILES.eigen, t = Object.values(e.wr).reduce((a, b) => a + b, 0) || 1;
+  for (const k of ['comfort', 'grip', 'control', 'reserve']) e.w[k] = (e.wr[k] || 0) / t;
+  for (const z of SAGZ.eigen) if (z[0] > z[1]) z.reverse();
+  e.sagF = (SAGZ.eigen[0][0] + SAGZ.eigen[0][1]) / 2; e.sagR = (SAGZ.eigen[1][0] + SAGZ.eigen[1][1]) / 2; PROFV++;
+}
+function profSave() { try { const e = PROFILES.eigen; localStorage.setItem('k7lab.profile', JSON.stringify({ name: e.name, wr: e.wr, sagz: SAGZ.eigen, off: e.off, pF: e.pF, pR: e.pR, v: e.v, wet: e.wet, rough: e.rough, sw: e.sw })); } catch (err) { /* ohne Speicher weiterarbeiten */ } }
+try { const j = JSON.parse(localStorage.getItem('k7lab.profile') || 'null'); if (j) profFix(j); } catch (err) { /* kein gespeichertes Profil */ }
+function profFrom(k) {
+  const src = PROFILES[k], e = PROFILES.eigen; if (!src || k === 'eigen') return;
+  e.name = `Eigenes (aus ${src.short || src.name})`; e.desc = `Angepasst, Grundlage: ${src.name}.`;
+  e.wr = Object.fromEntries(Object.entries(src.w).map(([q, v]) => [q, Math.round(v * 100)])); e.off = Object.assign({}, src.off);
+  e.pF = src.pF; e.pR = src.pR; e.v = src.v; e.wet = src.wet; e.rough = src.rough; e.sw = Object.assign({}, src.sw); SAGZ.eigen = JSON.parse(JSON.stringify(SAGZ[k])); profSync();
+}
+function openProfEd() {
+  if (S.profile !== 'eigen') { profFrom(S.profile); noteChange('Eigenes Profil'); S.profile = 'eigen'; applyProfCond(); profSave(); schedule(); }
+  $('#peBase').innerHTML = Object.entries(PROFILES).filter(([k]) => k !== 'eigen').map(([k, p]) => `<option value="${k}">${p.name}</option>`).join('');
+  renderProfEd(); const d = $('#profDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
+}
+function renderProfEd() {
+  const e = PROFILES.eigen, row = (id, l, v, lo, hi, st, u, d = 0) => `<div class="pe-c"><label for="pe-${id}">${l}</label><input type="range" id="pe-${id}" data-pe="${id}" min="${lo}" max="${hi}" step="${st}" value="${v}"><output id="peo-${id}">${fmt(v, d)} ${u}</output></div>`;
+  const tot = Object.values(e.wr).reduce((a, b) => a + b, 0) || 1, wl = { comfort: 'Komfort', grip: 'Haftung', control: 'Kontrolle', reserve: 'Federweg-Reserve' };
+  let sw = '', grp = ''; for (const k of Object.keys(SCEN)) { if (SCEN[k].rig) continue; if (SCEN[k].grp !== grp) { grp = SCEN[k].grp; sw += `<div class="pe-g">${grp}</div>`; } sw += row('sw-' + k, SCEN[k].short, swOf(k, 'eigen'), 0, 3, .25, '×', 2); }
+  $('#peTitle').textContent = e.name;
+  $('#peBody').innerHTML = `
+  <div class="pe-sec"><h3>Was zählt: Gewichtung der Teilnoten</h3><p>Komfort = Beschleunigung am Fahrer, Haftung = gleichmäßige Radlast, Kontrolle = schnelle Beruhigung, Reserve = Federweg. Wird auf 100 % normiert.</p>
+    ${Object.keys(wl).map(k => row('w-' + k, wl[k], e.wr[k], 0, 100, 1, `= ${fmt(e.wr[k] / tot * 100)} %`)).join('')}</div>
+  <div class="pe-sec"><h3>Ziel-Durchhang mit Fahrer</h3><p>Bereich, in dem der statische Durchhang volle Punkte bekommt (25 % des Index). Die Empfehlung stellt die Vorspannung auf die Mitte.</p>
+    ${row('zf0', 'Gabel von', SAGZ.eigen[0][0], 20, 45, 1, 'mm')}${row('zf1', 'Gabel bis', SAGZ.eigen[0][1], 20, 45, 1, 'mm')}${row('zr0', 'Federbein von', SAGZ.eigen[1][0], 15, 40, 1, 'mm')}${row('zr1', 'Federbein bis', SAGZ.eigen[1][1], 15, 40, 1, 'mm')}</div>
+  <div class="pe-sec"><h3>Dämpfer-Charakter für die Empfehlung</h3><p>Klicks gegenüber Serie, die „Empfehlung“ zusätzlich einstellt. + = offener (weicher), − = geschlossener (straffer).</p>
+    ${PE_OFF.map(([k, l, m, st]) => row('off-' + k, l, e.off[k] || 0, -m, m, st, st < 1 ? 'Umdr.' : 'Kl.', st < 1 ? 2 : 0)).join('')}</div>
+  <div class="pe-sec"><h3>Bedingungen</h3><p>Gelten beim Wählen des Profils. Nässe senkt den Reibwert der Reifen von 1,25 auf 0,75.</p>
+    ${row('pF', 'Luftdruck vorn (Ziel)', e.pF, 1.8, 3.0, .05, 'bar', 2)}${row('pR', 'Luftdruck hinten (Ziel)', e.pR, 1.8, 3.2, .05, 'bar', 2)}${row('v', 'Tempo Einzelsituationen', e.v, 20, 200, 5, 'km/h')}
+    <div class="pe-c"><label for="pe-rough">Straße</label><select id="pe-rough" data-pe="rough">${Object.entries(ROUGH).map(([k, r]) => `<option value="${k}"${k === e.rough ? ' selected' : ''}>${r.n}</option>`).join('')}</select><span></span></div>
+    <div class="pe-c"><label for="pe-wet">Fahrbahn nass</label><input type="checkbox" id="pe-wet" data-pe="wet"${e.wet ? ' checked' : ''} style="justify-self:start"><span></span></div></div>
+  <div class="pe-sec wide"><h3>Welche Situationen im Index zählen</h3><p>Gewicht jeder Fahrsituation im Setup-Index: 0 = zählt nicht, 1 = normal, 3 = dreifach. Prüfstandsversuche zählen nie.</p><div class="pe-sw">${sw}</div></div>`;
+  renderPeIdx();
+}
+function renderPeIdx() { const e = $('#peIdx'); if (e && RUN && $('#profDlg').open) e.innerHTML = `Setup-Index <b>${fmt(overall(RUN, S, SG), 1)}</b>${RUNPART ? ' · rechnet …' : ''}`; }
+let peT = null;
+document.addEventListener('input', e => {
+  const id = e.target.dataset && e.target.dataset.pe; if (!id) return; const el = e.target, v = el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' ? el.value : +el.value, P = PROFILES.eigen;
+  if (id.startsWith('w-')) P.wr[id.slice(2)] = v; else if (id.startsWith('off-')) P.off[id.slice(4)] = v; else if (id.startsWith('sw-')) P.sw[id.slice(3)] = v;
+  else if (id === 'zf0') SAGZ.eigen[0][0] = v; else if (id === 'zf1') SAGZ.eigen[0][1] = v; else if (id === 'zr0') SAGZ.eigen[1][0] = v; else if (id === 'zr1') SAGZ.eigen[1][1] = v;
+  else if (id === 'pF' || id === 'pR' || id === 'v' || id === 'rough' || id === 'wet') P[id] = v;
+  profSync(); profSave();
+  if (id.startsWith('w-')) { const tot = Object.values(P.wr).reduce((a, b) => a + b, 0) || 1; for (const k of Object.keys(P.wr)) { const o = $('#peo-w-' + k); if (o) o.textContent = `${fmt(P.wr[k])} = ${fmt(P.wr[k] / tot * 100)} %`; } }
+  else { const o = $('#peo-' + id); if (o) { const st = +el.step || 1; o.textContent = `${fmt(v, st < 0.1 ? 2 : st < 1 ? 2 : 0)} ${o.textContent.split(' ').slice(1).join(' ')}`; } }
+  if (id === 'rough' || id === 'v') applyProfCond(); else if (id === 'wet') condChanged();
+  if (S.profile === 'eigen') { if (LAST) LAST.idx = null; clearTimeout(peT); peT = setTimeout(() => schedule(), 120); }
+});
+document.addEventListener('click', e => {
+  if (e.target.closest('#profEdBtn')) { openProfEd(); return; }
+  if (e.target.closest('#peClose')) { $('#profDlg').close ? $('#profDlg').close() : $('#profDlg').removeAttribute('open'); return; }
+  if (e.target.closest('#peLoad')) { profFrom($('#peBase').value); profSave(); applyProfCond(); renderProfEd(); schedule(); toast('Vorlage ins eigene Profil übernommen'); }
+});
 function rowHtml(k) {
   const c = findCtl(k), inv = c.hard === -1, pct = (STOCK_ALL[k] - c.min) / (c.max - c.min) * 100, p = inv ? 100 - pct : pct;
   const minus = inv ? 1 : -1, soft = c.hard ? 'weicher' : 'weniger', hard = c.hard ? 'härter' : 'mehr';
@@ -1914,7 +2042,7 @@ document.addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.spd) { const ns = clamp(speed + +b.dataset.spd, 20, 280); if (ns !== speed) { speed = ns; $('#speed').value = speed; $('#speedO').textContent = `${speed} km/h`; condChanged(); liveUpdate(); } }
   else if (b.dataset.dir && b.dataset.k) { const c = findCtl(b.dataset.k); setVal(c.k, S[c.k] + c.step * +b.dataset.dir); }
-  else if (b.dataset.p) { if (b.dataset.p !== S.profile) { noteChange('Einsatzprofil'); S.profile = b.dataset.p; schedule(); } }
+  else if (b.dataset.p) { if (b.dataset.p !== S.profile) { noteChange('Einsatzprofil'); S.profile = b.dataset.p; applyProfCond(); schedule(); } }
   else if (b.dataset.act === 'stock') { const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }, next = Object.assign({}, STOCK, keep); if (sameSetup(next, S)) { toast('Serieneinstellung ist schon eingestellt'); return; } noteChange('Serie geladen'); S = next; schedule(); toast('Serieneinstellung geladen'); }
   else if (b.dataset.act === 'rec') { applyRecommendation(); }
   else if (b.dataset.act === 'undo') { if (UNDO.length) { const back = JSON.parse(UNDO.pop()); PREV = JSON.parse(JSON.stringify(S)); LAST = { label: 'Rückgängig', scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN && !RUNPART ? overall(RUN, S, SG) : null, t: Date.now() }; S = back; schedule(); toast('Letzte Änderung zurückgenommen'); } }
@@ -1938,7 +2066,7 @@ function syncControls() {
 /* ============================ EMPFEHLUNG ============================ */
 const RECACHE = { key: '', val: null };
 function recommend(st) {
-  const key = JSON.stringify([st, speed, SP.brake, roughness]);
+  const key = JSON.stringify([st, speed, SP.brake, roughness, PROFV]);
   if (RECACHE.key === key) return { out: Object.assign({}, RECACHE.val.out), notes: RECACHE.val.notes.slice(), kFrec: RECACHE.val.kFrec, kRrec: RECACHE.val.kRrec };
   const val = recommendCalc(st); RECACHE.key = key; RECACHE.val = val;
   return { out: Object.assign({}, val.out), notes: val.notes.slice(), kFrec: val.kFrec, kRrec: val.kRrec };
@@ -2042,7 +2170,7 @@ function recompute(onlyScen) {
   renderAll(onlyScen && RUNPART);
 }
 // Prüfstandsversuche messen Kennwerte, sie sind keine Fahrsituation und zählen nicht zum Index
-function overall(run, st, sg) { const ks = Object.keys(run).filter(k => !SCEN[k].rig), dyn = ks.reduce((a, k) => a + run[k].score, 0) / ks.length; return 0.75 * dyn + 0.25 * staticScore(st, sg); }
+function overall(run, st, sg) { let W = 0, sum = 0; for (const k of Object.keys(run)) { const w = swOf(k, st.profile); W += w; sum += w * run[k].score; } const dyn = W > 0 ? sum / W : 100; return 0.75 * dyn + 0.25 * staticScore(st, sg); }
 function groupScores(run) { const g = {}; for (const k of Object.keys(SCEN)) { const n = SCEN[k].grp; (g[n] = g[n] || []).push(run[k].score); } return Object.entries(g).map(([n, a]) => ({ n, v: a.reduce((x, y) => x + y, 0) / a.length, rig: n === 'Prüfstand' })); }
 function renderGroups(sc) {
   $('#idxV').textContent = fmt(sc); const rf = $('#idxRing .rf'); rf.setAttribute('stroke-dasharray', `${clamp(sc, 0, 100).toFixed(1)} 100`); $('#idxRing').style.setProperty('--st', `var(--${scoreChip(sc)})`);
@@ -2057,7 +2185,7 @@ function renderAll(lite) {
   $('#pillProfile').textContent = PROFILES[S.profile].name;
   $('#pillRider').textContent = `${fmt(S.rider)} kg${S.passenger ? ' + ' + fmt(S.passenger) + ' kg' : ''}`;
   $('#cmpName').textContent = cmpLabel();
-  renderKpis(sc, scC); renderGroups(sc); renderParc(); renderChange(sc); renderGeo(); renderSagBars(); renderObst();
+  renderKpis(sc, scC); renderGroups(sc); renderProfInfo(); renderPeIdx(); renderParc(); renderChange(sc); renderGeo(); renderSagBars(); renderObst();
   showFrame(+$('#scrub').value); // zeichnet auch Fahrbahnprofil und Messschrieb
   if (lite) { clearTimeout(renderAll._t); renderAll._t = setTimeout(renderRest, 0); } else renderRest();
 }
@@ -2090,6 +2218,7 @@ function renderParc() {
     const k = b.dataset.s, r = RUN[k], c = COMP[k], d = r.score - c.score, pd = b.querySelector('.pd');
     b.setAttribute('aria-pressed', k === scenario); b.style.setProperty('--st', `var(--${scoreChip(r.score)})`); b.style.setProperty('--sw', `${clamp(r.score, 0, 100).toFixed(0)}%`);
     b.querySelector('.pv').textContent = fmt(r.score);
+    { const wv = swOf(k, S.profile); let pw = b.querySelector('.pw'); if (!pw) { pw = document.createElement('span'); pw.className = 'pw'; b.appendChild(pw); } pw.textContent = SCEN[k].rig || Math.abs(wv - 1) < 1e-9 ? '' : wv === 0 ? 'zählt nicht' : `×${fmt(wv, wv % 1 ? 2 : 0)}`; b.classList.toggle('w0', !SCEN[k].rig && wv === 0); }
     pd.className = 'pd ' + (d > 0.5 ? 'delta-p' : d < -0.5 ? 'delta-n' : 'dz'); pd.textContent = Math.abs(d) < 0.5 ? '±0' : (d > 0 ? '+' : '') + fmt(d);
   }
 }
@@ -2197,7 +2326,8 @@ function analysis() {
   if (geoS.trail < 88) items.push({ lvl: 'warn', t: `Nachlauf nur ${fmt(geoS.trail, 1)} mm`, w: 'Sehr kurzer Nachlauf: schnelles Einlenken, aber Kippeligkeit und Kickback-Neigung. Gabel weniger durchstecken oder Heck tiefer.' });
   if (geoS.trail > 104) items.push({ lvl: 'info', t: `Nachlauf ${fmt(geoS.trail, 1)} mm`, w: 'Stabil, aber träges Einlenken. Gabel 2–3 mm durchstecken oder Heck mit Distanz anheben.' });
   if (S.profile === 'track' && (S.pF > 2.4 || S.pR > 2.3)) items.push({ lvl: 'info', t: 'Luftdruck für die Rennstrecke prüfen', w: 'Straßendruck ist auf der Strecke meist zu hoch. Maßgeblich ist die Vorgabe des Reifenherstellers für deinen Reifen, gemessen warm.' });
-  if (S.profile !== 'track' && (Math.abs(S.pF - 2.5) > 0.05 || Math.abs(S.pR - 2.9) > 0.05)) items.push({ lvl: 'warn', t: 'Luftdruck weicht von Suzuki-Vorgabe ab', w: 'Für die Straße gelten 2,50 bar vorn und 2,90 bar hinten, kalt gemessen.' });
+  { const pp = PROFILES[S.profile]; if (S.profile !== 'track' && !(pp.pF === 2.5 && pp.pR === 2.9) && (Math.abs(S.pF - pp.pF) > 0.05 || Math.abs(S.pR - pp.pR) > 0.05)) items.push({ lvl: 'info', t: 'Luftdruck weicht vom Profil-Ziel ab', w: `Profil „${pp.name}“: ${fmt(pp.pF, 2)} bar vorn, ${fmt(pp.pR, 2)} bar hinten, kalt. Suzuki gibt für die Straße 2,50 / 2,90 bar vor.` }); }
+  if (S.profile !== 'track' && PROFILES[S.profile].pF === 2.5 && PROFILES[S.profile].pR === 2.9 && (Math.abs(S.pF - 2.5) > 0.05 || Math.abs(S.pR - 2.9) > 0.05)) items.push({ lvl: 'warn', t: 'Luftdruck weicht von Suzuki-Vorgabe ab', w: 'Für die Straße gelten 2,50 bar vorn und 2,90 bar hinten, kalt gemessen.' });
   if (!items.length) items.push({ lvl: 'good', t: 'Setup im Zielfenster', w: 'Durchhang und Dämpfung passen zum Profil. Feinarbeit jetzt über Probefahrt und Kabelbinder an Gabel und Federbein.' });
   return items;
 }
