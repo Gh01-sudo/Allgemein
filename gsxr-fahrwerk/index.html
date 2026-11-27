@@ -2074,6 +2074,8 @@ const SRC = {
   GX: ['gixxer.com: Suspension Setting K7-1000', 'https://www.gixxer.com/threads/suspension-setting-k7-1000.200643/'],
   GX2: ['gixxer.com: 2007 GSXR1000 Suspension Settings', 'https://www.gixxer.com/threads/2007-gsxr1000-suspension-settings.170551/'],
   DE: ['gsx-r1000.de: Fahrwerksabstimmung K7 org. Dämpfer', 'https://www.gsx-r1000.de/themen/fahrwerksabstimmung-k7-org-d%C3%A4mpfer.7783/'],
+  JT: ['JT Sprockets: GSX-R1000 2007–2008', 'https://www.jtsprockets.com/catalogue/model/s2579'],
+  SC: ['Sprocket Center: 530-Kettensatz GSX-R 1000 07–08', 'https://sprocketcenter.com/i-30498761-530-chain-kit-vortex-sprocket-set-with-choice-of-chain-suzuki-gsx-r-1000-07-08.html'],
   SF: ['suzuki-forums.net: HS/LS Compression K7/K8', 'https://www.suzuki-forums.net/threads/high-and-low-compression-on-gsxr1000-k7-k8.1283/']
 };
 const STATL = { ok2: ['good', '2+ Quellen'], ok1: ['info', '1 Quelle'], conf: ['warn', 'abweichend'], open: ['mut', 'offen'], model: ['mut', 'Modell'] };
@@ -2085,6 +2087,7 @@ const DATA = [
   ['Motor', 'Nennleistung', '136 kW (185 PS) bei 12.000 /min', 'ok2', ['MOT', 'MOG'], '185 PS × 0,7355 = 136,1 kW. Prüfstand MOTORRAD: 180 PS. Die 178 PS auf 1000PS sind der Wert der K5/K6. motorcyclespecs nennt 185,1 hp, aber 138 kW (Einheitenfehler).', 'Widerspruch aufgelöst'],
   ['Motor', 'Drehmoment', '117 Nm bei 10.000 /min', 'ok2', ['MOT', 'MCS'], 'K5/K6: 118 Nm bei 9.000 /min', 'neu bestätigt (Runde 1: offen)'],
   ['Motor', 'Getriebe-Übersetzungen', '2,562 · 2,052 · 1,714 · 1,500 · 1,360 · 1,269', 'ok1', ['MCS'], '6 Gänge', 'neu'],
+  ['Antrieb', 'Sekundärübersetzung', 'Ritzel 17 / Kettenrad 43 (2,53), Kette 530 mit 112 Gliedern', 'ok2', ['JT', 'SC'], 'Grundlage für das Anti-Squat aus der Kettenzug-Geometrie', 'neu'],
   ['Elektronik', 'Fahrmodi S-DMS', 'Drei Leistungskennfelder A / B / C, Schalter am Lenker', 'ok2', ['CW', 'BSA'], 'Beeinflusst nur die Leistungsentfaltung, nicht das Fahrwerk', 'neu bestätigt'],
   ['Elektronik', 'Lenkungsdämpfer', 'Hydraulisch, elektronisch geregelt: Magnetventil mit Kegelnadel, dämpft abhängig vom Tempo. Nicht von Hand einstellbar', 'ok2', ['CW', 'ULT', 'JB'], 'MOTORRAD: bei niedrigem Tempo kaum spürbar', 'neu bestätigt'],
   ['Antrieb', 'Getriebe / Kupplung', '6 Gänge, Anti-Hopping-Kupplung', 'ok1', ['CW', 'MCS'], '6 Gänge 2 Quellen; Anti-Hopping nur Cycle World', 'teilweise bestätigt'],
