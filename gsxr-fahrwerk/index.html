@@ -690,6 +690,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Federbein:</b> Stickstoff-Gasdruck im Ausgleichsbehälter drückt die Kolbenstange heraus und steigt beim Einfedern. Gabel und Federbein haben Topout-Federn, die das Ausfedern bis zum Anschlag abfangen.</li>
         <li><b>Reifen:</b> leicht progressiv, bei hohem Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke statt Lauffläche). Kraftschluss trocken μ 1,25, im Profil Nässe μ 0,75: Fordert die Bremse mehr als der Reifen überträgt, meldet der Prüfstand „blockiert“, beim Beschleunigen „dreht durch“.</li>
         <li><b>Fahrer als eigene Masse:</b> 60 % des Fahrergewichts federn über Sitzbank und Beine (Eigenfrequenz ≈ 5 Hz). Komfort wird am Fahrer gemessen, nicht am Rahmen.</li>
+        <li><b>Kontrollnote nach Manövern:</b> Nach dem Bremsen fährt die Maschine langsamer (weniger Luftauftrieb, die Front sitzt tiefer), nach dem Beschleunigen schneller, in Schräglage drückt die Fliehkraft das Fahrwerk tiefer. Überschwingen und Verhärten werden deshalb gegen die Gleichgewichtslage bei Endtempo und Endschräglage gemessen, und nach einem Manöver zählt Überschwingen erst, wenn das Fahrwerk diese Lage einmal erreicht hat. Die normale Rückkehr nach dem Gaswegnehmen ist kein Fehler.</li>
         <li><b>Temperatur der Gasfedern:</b> Stickstoff im Federbein und Luftpolster der Gabel folgen dem idealen Gasgesetz (Druck proportional zur absoluten Temperatur). Bezug ist die Öltemperatur 40 °C, dort gelten die geprüften Nennwerte. Bei 0 °C sitzt die Gabel mit 80 kg Fahrer rund 2,3 mm tiefer, bei 80 °C rund 2,2 mm höher; hinten ändert sich weniger als 0,5 mm.</li>
         <li><b>Aufstandsfläche:</b> Der Reifen überrollt kurze Kanten nicht wie ein starres Rad, sondern umschließt sie mit seinem Latsch (rund 14 cm lang). Die Hüllkurve wird deshalb zusätzlich über 8,5 cm gemittelt (Modell, etwa 60 % der Latschlänge wie in Tandem-Nocken-Reifenmodellen). Schmale Fugen und Kopfsteinpflaster stoßen dadurch weniger hart, große Hindernisse bleiben fast gleich. Im Bild zeigt der Strich unter jedem Reifen die Latschlänge aus der aktuellen Reifeneinfederung.</li>
         <li><b>Rollwiderstand:</b> 1,8 % der Radlast (Beiwert 0,018, Modell, Literatur 0,015–0,025) wirkt am Boden gegen die Fahrt. Bei konstanter Fahrt muss das Hinterrad ihn zusätzlich zum Luftwiderstand antreiben, das erhöht den Kettenzug und damit den Anti-Squat; ohne Antrieb bremst er mit.</li>
@@ -843,7 +844,7 @@ function preR(st) { return P0R + st.rPre; }
 // Gabel: axiale Kraft (N) bei axialem Weg s (mm)
 function forkAx(s, st) {
   const k = 2 * st.kF, p = preF(st), to = TOPOUT.F;
-  if (s < 0) return k * p - to.k * to.len + 2000 * s;
+  if (s < 0) return k * p + airF(0, st.fOil, tempF(st)) - to.k * to.len + 2000 * s; // Luftpolster wie bei s = 0, sonst springt die Kraft bei Öltemperatur ≠ 40 °C
   let F = k * (p + s) + airF(s, st.fOil, tempF(st));
   if (s < to.len) F -= to.k * (to.len - s);
   const b = M.travelF - 10;
@@ -1209,12 +1210,17 @@ function simRun(st, sc, v, L) {
   const ktF = M.ktF * Math.pow(st.pF / 2.5, 0.9) * 1000, ktR = M.ktR * Math.pow(st.pR / 2.9, 0.9) * 1000;
   const FvF = x => forkAx(x / COSR, st) / COSR, FvR = x => rearW(x, st);
   // Gleichgewicht bei Fahrt: Luftwiderstand hebt die Front an, Kettenzug stützt das Heck
-  const AST = []; for (let x = -10; x <= 150; x += 2) AST.push(antiSquatAt(x, L.h * 1000));
+  // Distanz am Federbein (Heckhöhe) stellt die Schwinge steiler, genau wie in pose(): gleicher Schwingenwinkel für das Anti-Squat
+  const AST = [], shR = (st.rShim || 0) * M.MR; for (let x = -10; x <= 150; x += 2) AST.push(antiSquatAt(x - shR, L.h * 1000));
   const asAt = x => { const q = clamp((x + 10) / 2, 0, AST.length - 1.001), i = Math.floor(q); return AST[i] + (AST[i + 1] - AST[i]) * (q - i); };
   const Fd = dragN(v), My0 = Fd * AERO.hcp, Frr0 = v > 0.3 ? ROLL.crr * L.tot * G : 0; // Luft- und Rollwiderstand bei konstanter Fahrt
   let pairR0 = 0, FF0 = msF * G - My0 / wb, FR0 = msR * G + My0 / wb, x0R = solve(FvR, FR0, -5, M.travelR + 10);
   for (let k = 0; k < 3; k++) { pairR0 = asAt(x0R) * (Fd + Frr0) * L.h / wb; FR0 = msR * G + My0 / wb - pairR0; x0R = solve(FvR, FR0, -5, M.travelR + 10); }
   const x0F = solve(FvF, FF0, -5, M.travelF * COSR + 10);
+  // Gleichgewicht bei beliebigem Tempo und Lastfaktor (Schräglage), ohne Längsbeschleunigung: Bezug für die Lage nach dem Manöver
+  const eqAt = (vv, nf) => { const fd = dragN(vv), my = fd * AERO.hcp, frr = vv > 0.3 ? ROLL.crr * L.tot * G * nf : 0; let pr = 0, fr = msR * G * nf + my / wb, xr = solve(FvR, fr, -5, M.travelR + 10);
+    for (let k = 0; k < 3; k++) { pr = asAt(xr) * (fd + frr) * L.h / wb; xr = solve(FvR, msR * G * nf + my / wb - pr, -5, M.travelR + 10); }
+    return { xF: solve(FvF, msF * G * nf - my / wb, -5, M.travelF * COSR + 10) / COSR, xR: xr }; };
   // Reifen: leicht progressiv, mit Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke)
   const kv = Math.min(1.25, 1 + 0.08 * (v / 50) ** 2), mu = (PROFILES[st.profile] || PROFILES.sport).wet ? MU.wet : MU.dry;
   const d0F = (FF0 + M.muF * G) / (ktF * kv), d0R = (FR0 + pairR0 + M.muR * G) / (ktR * kv);
@@ -1231,6 +1237,8 @@ function simRun(st, sc, v, L) {
   let z = 0, vz = 0, th = 0, w = 0, zf = 0, vf = 0, zr = 0, vr = 0, zd = 0, vd = 0, dist = 0, vel = v; // dist/vel: zurückgelegter Weg und aktuelles Tempo
   const eF = sc.envF, eR = sc.envR;
   let pF = eF(0), pR = eR(-wb);
+  // Start in Ruhelage auf der Fahrbahn: Räder, Aufbau und Fahrer folgen der Rauheit bei d = 0, sonst federt alles im ersten Moment ein oder aus
+  zf = pF; zr = pR; th = (zf - zr) / wb; z = zf - ac * th; zd = z + lr * th;
   const n = Math.floor(sc.T / DT);
   // Messkanäle vorab als Float64Array: kein Umkopieren beim Wachsen, dichte Zahlenfelder
   const NR = Math.floor(n / REC) + 1, A64 = () => new Float64Array(NR); let j = 0;
@@ -1284,6 +1292,7 @@ function simRun(st, sc, v, L) {
   }
   F.ar = R.ar = ard;
   F.x0 = x0F / COSR; F.static = (FF0 + M.muF * G); F.travel = M.travelF;
+  { const e = eqAt(vel, TNF[TNF.length - 1]); F.xEnd = e.xF; R.xEnd = e.xR; }
   R.x0 = x0R; R.static = (FR0 + pairR0 + M.muR * G); R.travel = M.travelR;
   return { F, R, pitch, axg, lean, T: sc.T, drag: Fd, aeroF: My0 / wb, antiSquat: asStat, fdrag, dist: dists, vel: vels, axq, v0: v, bz, gF: gFa, gR: gRa };
 }
@@ -1300,13 +1309,15 @@ function kpiAxle(o, sc) {
   const maB = i => { const a = Math.max(0, i - W), b = Math.min(iS, i + W + 1); return (pre[b] - pre[a]) / (b - a); }; // Mittel nur aus dem Vorlauf, sonst zählt der Stoß zum Grundrauschen
   for (let i = Math.round(0.05 / dtr); i < iS; i++) { bx += o.x[i]; bx2 += o.x[i] * o.x[i]; bf2 += (o.ft[i] - maB(i)) ** 2; ba2 += (o.ar || o.as)[i] ** 2; bn++; }
   const sdX = bn ? Math.sqrt(Math.max(0, bx2 / bn - (bx / bn) ** 2)) : 0, cvB = bn ? Math.sqrt(bf2 / bn) / o.static : 0, rmsB = bn ? Math.sqrt(ba2 / bn) : 0;
+  // Nach Fahrmanövern (quiet endlich) beginnt die Überschwing-Messung erst, wenn das Fahrwerk die neue Gleichgewichtslage einmal erreicht hat
+  const xRef = o.xEnd != null ? o.xEnd : o.x0, tolO = 1.5 + 3 * sdX; let iO = iE; if (Number.isFinite(sc.quiet) && !sc.rig) while (iO < n && o.x[iO] < xRef - tolO) iO++;
   let mx = -1e9, mn = 1e9, f2 = 0, cnt = 0, lift = 0, acc2 = 0, minAfter = 1e9;
   for (let i = i0; i < n; i++) {
     mx = Math.max(mx, o.x[i]); mn = Math.min(mn, o.x[i]);
     f2 += (o.ft[i] - ma(i)) ** 2; cnt++;
     if (o.ft[i] < 0.05 * o.static) lift += dtr * 1000;
     acc2 += (o.ar || o.as)[i] ** 2;
-    if (i >= iE) minAfter = Math.min(minAfter, o.x[i]);
+    if (i >= iO) minAfter = Math.min(minAfter, o.x[i]);
   }
   // Beruhigung auf geglättetem Signal, Toleranz wächst mit dem Grundrauschen
   const K = Math.round(0.04 / dtr), xs = i => { let s = 0, c = 0; for (let j = Math.max(0, i - K); j <= Math.min(n - 1, i + K); j++) { s += o.x[j]; c++; } return s / c; };
@@ -1316,13 +1327,14 @@ function kpiAxle(o, sc) {
   // Verhärten (Packing): bleibt die Federung nach dem Hindernis tiefer eingefedert als davor?
   const mean = (a, b) => { let s = 0, c = 0; for (let i = Math.max(0, a); i < Math.min(n, b); i++) { s += o.x[i]; c++; } return c ? s / c : 0; };
   const iT = Math.round((sc.tStart || 0.4) / dtr), w25 = Math.round(0.25 / dtr);
-  const pack = Math.max(0, mean(n - w25, n) - mean(iT - w25, iT) - tol);
+  // Verhärten: Abweichung von der Gleichgewichtslage am Ende minus Abweichung vor dem Hindernis (Straßenrauschen verschiebt beide gleich)
+  const pack = Math.max(0, (mean(n - w25, n) - xRef) - (mean(iT - w25, iT) - o.x0) - tol);
   let slipMs = 0; if (o.slip) for (let i = i0; i < n; i++) if (o.slip[i]) slipMs += dtr * 1000;
   const cvT = Math.sqrt(f2 / cnt) / o.static, rmsT = Math.sqrt(acc2 / cnt);
   const cv = Math.sqrt(Math.max(0, cvT * cvT - cvB * cvB)) + 0.5 * cvB, rms = Math.sqrt(Math.max(0, rmsT * rmsT - rmsB * rmsB)) + 0.5 * rmsB;
   return {
     usage: mx / o.travel, maxX: mx, minX: mn, bottom: mx > o.travel - 3, topout: minAfter < 1,
-    cv, cvRoad: cvB, lift, rms, rmsRoad: rmsB, settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter - 2 * sdX), pack, slipMs
+    cv, cvRoad: cvB, lift, rms, rmsRoad: rmsB, settle: Math.max(0, settle), over: minAfter < 1e8 ? Math.max(0, xRef - minAfter - 2 * sdX) : 0, pack, slipMs
   };
 }
 // Teilnoten: bis 60 Strafpunkte linear, darüber weich gegen 0 (stetig, gleiche Steigung bei 60). So bleibt auch in sehr harten
@@ -1837,6 +1849,7 @@ function mapSchedule() {
   if (key === LMAP.key) return;
   LMAP.key = key; LMAP.res = {}; clearTimeout(LMAP.t);
   for (const e of document.querySelectorAll('.lmap')) e.classList.add('stale');
+  for (const r of document.querySelectorAll('.brow[data-hint]')) r.dataset.tip = r.dataset.hint; // veraltete Farbband-Auswertung aus dem Tooltip nehmen
   document.querySelectorAll('.llegT').forEach(e => { e.textContent = `Farbband: Note in „${SCEN[scenario].short}“ über den Regelbereich, ▲ beste Stellung`; });
   const jobs = []; for (const k of MAPKEYS) { const c = findCtl(k), vals = mapVals(c); if (!vals.includes(S[k])) vals.push(S[k]); for (const v of vals) jobs.push([k, v]); }
   let i = 0; const base = JSON.parse(JSON.stringify(S)), scen = scenario;
@@ -1859,7 +1872,9 @@ function drawMap(k) {
   const flat = hi - lo < 0.5, cur = d.find(([v]) => v === S[k]);
   el.style.background = flat ? 'var(--line2)' : `linear-gradient(90deg,${pts.map(q => { const r = (q.sc - lo) / (hi - lo); return `color-mix(in oklab, ${r > 0.5 ? 'var(--good)' : 'var(--warn)'} ${(r > 0.5 ? (r - 0.5) * 2 : r * 2) * 100}%, ${r > 0.5 ? 'var(--warn)' : 'var(--bad)'}) ${q.p.toFixed(1)}%`; }).join(',')})`;
   el.classList.remove('stale');
-  el.title = flat ? `Kaum Einfluss in „${SCEN[scenario].short}“ (Note ${fmt(lo, 1)}–${fmt(hi, 1)})` : `Note in „${SCEN[scenario].short}“: ${fmt(lo, 1)} bis ${fmt(hi, 1)}, jetzt ${cur ? fmt(cur[1], 1) : '–'}. Beste Stellung ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]}`;
+  const info = flat ? `Kaum Einfluss in „${SCEN[scenario].short}“ (Note ${fmt(lo, 1)}–${fmt(hi, 1)})` : `Note in „${SCEN[scenario].short}“: ${fmt(lo, 1)} bis ${fmt(hi, 1)}, jetzt ${cur ? fmt(cur[1], 1) : '–'}. Beste Stellung ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]}`;
+  // .lmap fängt keine Zeiger (der Regler darunter bleibt bedienbar): die Auswertung deshalb an den Tooltip der Zeile hängen
+  const row = document.getElementById('br-' + k); if (row) { if (row.dataset.hint === undefined) row.dataset.hint = row.getAttribute('title') || row.dataset.tip || ''; row.removeAttribute('title'); row.dataset.tip = `${row.dataset.hint} · Farbband: ${info}`; }
   const b = el.querySelector('.lbest'); b.hidden = flat || (cur && best.sc - cur[1] < 0.3); b.style.left = best.p + '%'; b.dataset.best = best.v;
   b.title = `Auf ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]} stellen: Note ${fmt(best.sc, 1)} statt ${cur ? fmt(cur[1], 1) : '–'}`;
 }
@@ -1906,8 +1921,8 @@ function torSchedule() {
     if (TOR.key !== key) return;
     const t0 = performance.now();
     while (j < jobs.length && performance.now() - t0 < 8) {
-      const q = jobs[j], kk = ks[q.i++]; q.sum += swOf(kk, q.st.profile) * scoreScen(q.st, kk);
-      if (q.i === ks.length) { { const dyn = 0.75 * (q.sum / TOR.W - TOR.dyn0), stat = 0.25 * (staticScore(q.st, sags(q.st)) - TOR.stat0); TOR.res[q.k + q.dir] = { v: q.v, d: dyn + stat, dyn, stat }; } j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
+      const q = jobs[j]; if (q.i < ks.length) { const kk = ks[q.i++]; q.sum += swOf(kk, q.st.profile) * scoreScen(q.st, kk); } // ks leer: alle Situationen mit Gewicht 0, dann nur der Durchhang
+      if (q.i >= ks.length) { { const dyn = 0.75 * (q.sum / TOR.W - TOR.dyn0), stat = 0.25 * (staticScore(q.st, sags(q.st)) - TOR.stat0); TOR.res[q.k + q.dir] = { v: q.v, d: dyn + stat, dyn, stat }; } j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
     }
     if (j < jobs.length) TOR.t = setTimeout(step, 0); else TOR.done = key;
   };
@@ -1983,8 +1998,9 @@ function profSync() {
   for (const z of SAGZ.eigen) if (z[0] > z[1]) z.reverse();
   e.sagF = (SAGZ.eigen[0][0] + SAGZ.eigen[0][1]) / 2; e.sagR = (SAGZ.eigen[1][0] + SAGZ.eigen[1][1]) / 2; PROFV++;
 }
-function profSave() { try { const e = PROFILES.eigen; localStorage.setItem('k7lab.profile', JSON.stringify({ name: e.name, wr: e.wr, sagz: SAGZ.eigen, off: e.off, pF: e.pF, pR: e.pR, v: e.v, wet: e.wet, rough: e.rough, sw: e.sw })); } catch (err) { /* ohne Speicher weiterarbeiten */ } }
-try { const j = JSON.parse(localStorage.getItem('k7lab.profile') || 'null'); if (j) profFix(j); } catch (err) { /* kein gespeichertes Profil */ }
+let PE_HAVE = false; // gibt es schon ein eigenes Profil (gespeichert oder in dieser Sitzung bearbeitet)? Dann beim Öffnen des Editors nicht überschreiben
+function profSave() { PE_HAVE = true; try { const e = PROFILES.eigen; localStorage.setItem('k7lab.profile', JSON.stringify({ name: e.name, wr: e.wr, sagz: SAGZ.eigen, off: e.off, pF: e.pF, pR: e.pR, v: e.v, wet: e.wet, rough: e.rough, sw: e.sw })); } catch (err) { /* ohne Speicher weiterarbeiten */ } }
+try { const j = JSON.parse(localStorage.getItem('k7lab.profile') || 'null'); if (j) { profFix(j); PE_HAVE = true; } } catch (err) { /* kein gespeichertes Profil */ }
 function profFrom(k) {
   const src = PROFILES[k], e = PROFILES.eigen; if (!src || k === 'eigen') return;
   e.name = `Eigenes (aus ${src.short || src.name})`; e.desc = `Angepasst, Grundlage: ${src.name}.`;
@@ -1992,8 +2008,12 @@ function profFrom(k) {
   e.pF = src.pF; e.pR = src.pR; e.v = src.v; e.wet = src.wet; e.rough = src.rough; e.sw = Object.assign({}, src.sw); SAGZ.eigen = JSON.parse(JSON.stringify(SAGZ[k])); profSync();
 }
 function openProfEd() {
-  if (S.profile !== 'eigen') { profFrom(S.profile); noteChange('Eigenes Profil'); S.profile = 'eigen'; applyProfCond(); profSave(); schedule(); }
+  // Ein vorhandenes eigenes Profil nicht stillschweigend überschreiben: nur beim ersten Mal aus dem gewählten Profil anlegen,
+  // sonst das eigene Profil öffnen und das bisher gewählte unter „Vorlage laden“ vorschlagen (ein Klick auf „Übernehmen“ kopiert es)
+  const from = S.profile;
+  if (from !== 'eigen') { if (!PE_HAVE) profFrom(from); noteChange('Eigenes Profil'); S.profile = 'eigen'; applyProfCond(); profSave(); schedule(); }
   $('#peBase').innerHTML = Object.entries(PROFILES).filter(([k]) => k !== 'eigen').map(([k, p]) => `<option value="${k}">${p.name}</option>`).join('');
+  if (from !== 'eigen') $('#peBase').value = from;
   renderProfEd(); const d = $('#profDlg'); if (d.showModal) d.showModal(); else d.setAttribute('open', '');
 }
 function renderProfEd() {
@@ -2018,9 +2038,11 @@ function renderProfEd() {
 function renderPeIdx() { const e = $('#peIdx'); if (e && RUN && $('#profDlg').open) e.innerHTML = `Setup-Index <b>${fmt(overall(RUN, S, SG), 1)}</b>${RUNPART ? ' · rechnet …' : ''}`; }
 let peT = null;
 document.addEventListener('input', e => {
-  const id = e.target.dataset && e.target.dataset.pe; if (!id) return; const el = e.target, v = el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' ? el.value : +el.value, P = PROFILES.eigen;
+  const id = e.target.dataset && e.target.dataset.pe; if (!id) return; const el = e.target, P = PROFILES.eigen, sz = { zf0: [0, 0], zf1: [0, 1], zr0: [1, 0], zr1: [1, 1] }[id];
+  let v = el.type === 'checkbox' ? el.checked : el.tagName === 'SELECT' ? el.value : +el.value;
   if (id.startsWith('w-')) P.wr[id.slice(2)] = v; else if (id.startsWith('off-')) P.off[id.slice(4)] = v; else if (id.startsWith('sw-')) P.sw[id.slice(3)] = v;
-  else if (id === 'zf0') SAGZ.eigen[0][0] = v; else if (id === 'zf1') SAGZ.eigen[0][1] = v; else if (id === 'zr0') SAGZ.eigen[1][0] = v; else if (id === 'zr1') SAGZ.eigen[1][1] = v;
+  // Ziel-Durchhang: „von“ und „bis“ dürfen sich nicht überkreuzen, sonst tauscht profSync das Paar und die Regler zeigen etwas anderes, als gerechnet wird
+  else if (sz) { const [a, b] = sz, z = SAGZ.eigen[a]; v = b ? Math.max(v, z[0]) : Math.min(v, z[1]); z[b] = v; if (+el.value !== v) el.value = v; }
   else if (id === 'pF' || id === 'pR' || id === 'v' || id === 'rough' || id === 'wet') P[id] = v;
   profSync(); profSave();
   if (id.startsWith('w-')) { const tot = Object.values(P.wr).reduce((a, b) => a + b, 0) || 1; for (const k of Object.keys(P.wr)) { const o = $('#peo-w-' + k); if (o) o.textContent = `${fmt(P.wr[k])} = ${fmt(P.wr[k] / tot * 100)} %`; } }
@@ -2057,7 +2079,8 @@ function renderChan(i) {
   const tip = document.createElement('div'); tip.className = 'tipbox'; tip.setAttribute('role', 'tooltip'); document.body.appendChild(tip);
   let cur = null;
   const show = el => {
-    if (el.hasAttribute('title')) { const t = el.getAttribute('title'); if (t) { el.dataset.tip = t; if (!el.hasAttribute('aria-label') && !el.textContent.trim()) el.setAttribute('aria-label', t); } el.removeAttribute('title'); }
+    // title wird entfernt (sonst erscheint zusätzlich der langsame Browser-Tooltip); der Text bleibt für Screenreader als Name bzw. Beschreibung erhalten
+    if (el.hasAttribute('title')) { const t = el.getAttribute('title'); if (t) { el.dataset.tip = t; if (!el.textContent.trim()) { if (!el.hasAttribute('aria-label')) el.setAttribute('aria-label', t); } else el.setAttribute('aria-description', t); } el.removeAttribute('title'); }
     const t = el.dataset.tip; if (!t) return hide();
     cur = el; tip.textContent = t; tip.classList.add('on');
     const rc = el.getBoundingClientRect(), tw = Math.min(320, tip.offsetWidth), th = tip.offsetHeight;
@@ -2083,8 +2106,8 @@ function buildControls() {
   $('#cond').innerHTML = COND.map(rowHtml).join('') + `<div class="brow" title="Fahrgeschwindigkeit in allen Situationen"><div class="brow-h"><label for="speed">Tempo</label><output id="speedO">${speed} km/h</output></div>
     <div class="brow-c"><button data-spd="-5" aria-label="Tempo verringern">−</button><div class="rng"><input type="range" id="speed" min="20" max="280" step="5" value="${speed}"></div><button data-spd="5" aria-label="Tempo erhöhen">+</button></div></div>`;
 }
-let UNDO = [], PREV = null, LAST = null, fullT = null;
-function pushUndo() { UNDO.push(JSON.stringify(S)); if (UNDO.length > 40) UNDO.shift(); }
+let UNDO = [], UNDOC = [], PREV = null, LAST = null, fullT = null; // UNDOC: Straße und Tempo zu jedem Schritt (ein Profilwechsel setzt sie mit)
+function pushUndo() { UNDO.push(JSON.stringify(S)); UNDOC.push({ roughness, speed }); if (UNDO.length > 40) { UNDO.shift(); UNDOC.shift(); } }
 // Merkt den Zustand vor einer Änderung: Grundlage für „Vorher“-Vergleich und Wirkungsanzeige
 function sameSetup(a, b) { return KEYS.every(k => a[k] === b[k]); }
 function noteChange(label, k) {
@@ -2110,7 +2133,10 @@ document.addEventListener('click', e => {
   else if (b.dataset.p) { if (b.dataset.p !== S.profile) { noteChange('Einsatzprofil'); S.profile = b.dataset.p; applyProfCond(); schedule(); } }
   else if (b.dataset.act === 'stock') { const keep = { rider: S.rider, passenger: S.passenger, luggage: S.luggage, fuel: S.fuel, oilT: S.oilT, profile: S.profile }, next = Object.assign({}, STOCK, keep); if (sameSetup(next, S)) { toast('Serieneinstellung ist schon eingestellt'); return; } noteChange('Serie geladen'); S = next; schedule(); toast('Serieneinstellung geladen'); }
   else if (b.dataset.act === 'rec') { applyRecommendation(); }
-  else if (b.dataset.act === 'undo') { if (UNDO.length) { const back = JSON.parse(UNDO.pop()); PREV = JSON.parse(JSON.stringify(S)); LAST = { label: 'Rückgängig', scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN && !RUNPART ? overall(RUN, S, SG) : null, t: Date.now() }; S = back; schedule(); toast('Letzte Änderung zurückgenommen'); } }
+  else if (b.dataset.act === 'undo') { if (UNDO.length) { const back = JSON.parse(UNDO.pop()), cond = UNDOC.pop(), profChg = back.profile !== S.profile; PREV = JSON.parse(JSON.stringify(S)); LAST = { label: 'Rückgängig', scen: scenario, run: RUN ? RUN[scenario] : null, idx: RUN && !RUNPART ? overall(RUN, S, SG) : null, t: Date.now() }; S = back;
+    // Ein Profilwechsel hatte Straße und Tempo des neuen Profils gesetzt: beim Zurücknehmen die Bedingungen von vorher wiederherstellen
+    if (profChg && cond && (cond.roughness !== roughness || cond.speed !== speed)) { roughness = cond.roughness; speed = cond.speed; $$('#roughSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.r === roughness)); $('#speed').value = speed; $('#speedO').textContent = `${speed} km/h`; condChanged(); }
+    schedule(); toast('Letzte Änderung zurückgenommen'); } }
 });
 const FLASH = {};
 function syncControls() {
@@ -2975,7 +3001,7 @@ function renderCheck() {
     ['Nadelquerschnitt', 'A(n) = 3 + n^1,4 (n = Klicks offen)', 'Kegelnadel: Klicks nahe „ganz zu“ wirken stark, weit offen schwach'],
     ['Shim-Paket', 'Öffnet bei Knickgeschwindigkeit; je HS-Umdrehung zu +35 % Öffnungskraft, +28 % Steigung', 'Relativ zur Serie kalibriert'],
     ['Reibung', 'Gleiten: Gabel 60 N axial + 6 % der Vorderrad-Bremskraft · Federbein 30 N am Rad · Haften 1,6-fach', 'Stribeck-Kurve: Losbrechen kostet mehr als Gleiten'],
-    ['Gasdruck Federbein', '10 bar, Kolbenstange Ø 14 mm, 60 cm³ Gas, Polytropenexponent 1,3', '≈ 58 N am Rad, beim Einfedern steigend; in der Vorspann-Kalibrierung berücksichtigt'],
+    ['Gasdruck Federbein', '10 bar, Kolbenstange Ø 14 mm, 60 cm³ Gas, Polytropenexponent 1,3', `≈ ${fmt(gasW(0), 0)} N am Rad, beim Einfedern steigend; in der Vorspann-Kalibrierung berücksichtigt`],
     ['Topout-Federn', 'Gabel 12 mm / 30 N/mm · Federbein 10 mm / 25 N/mm', 'Fangen das Ausfedern bis zum Anschlag ab'],
     ['Reifen', 'progressiv (Exponent 1,15) · +8 % Steifigkeit je (v/50 m/s)² bis +25 % · −22 % × sin(Schräglage)', 'Kraftschluss μ 1,25 trocken / 0,75 nass'],
     ['Bremskraftverteilung', '85 % vorn / 15 % hinten', 'Hinten durch den Kraftschluss begrenzt; Abstützung über das Schwingenlager'],
@@ -3037,7 +3063,9 @@ $('#libList').addEventListener('click', e => {
   if (d) { const i = +d.dataset.del; if (d.dataset.sure) { const n = LIB[i].name; LIB.splice(i, 1); libSave(); renderLib(); toast(`„${n}“ gelöscht`); } else { d.dataset.sure = '1'; d.textContent = 'Wirklich löschen?'; d.classList.add('pri'); } }
 });
 $('#expBtn').addEventListener('click', () => { $('#ioText').value = JSON.stringify({ app: 'K7 Fahrwerkslabor', v: 1, setup: pick(S) }, null, 2); });
-$('#copyBtn').addEventListener('click', () => { const t = $('#ioText'); if (!t.value) $('#expBtn').click(); navigator.clipboard.writeText(t.value).then(() => toast('In die Zwischenablage kopiert'), () => { t.select(); toast('Text markiert, jetzt mit Strg+C kopieren'); }); });
+$('#copyBtn').addEventListener('click', () => { const t = $('#ioText'); if (!t.value) $('#expBtn').click(); const manual = () => { t.select(); toast('Text markiert, jetzt mit Strg+C kopieren'); };
+  if (!navigator.clipboard || !navigator.clipboard.writeText) { manual(); return; } // ohne sichere Verbindung (http) gibt es keine Clipboard-API
+  navigator.clipboard.writeText(t.value).then(() => toast('In die Zwischenablage kopiert'), manual); });
 $('#impBtn').addEventListener('click', () => {
   try { const j = JSON.parse($('#ioText').value), n = sanitize(j && (j.setup || j)); if (!Object.keys(n).length) throw new Error('kein Setup'); const next = Object.assign({}, S, n); if (!sameSetup(next, S)) { noteChange('Setup importiert'); S = next; schedule(); } toast('Setup übernommen'); }
   catch (e) { toast('Text ist kein gültiges Setup. Bitte den kompletten Export einfügen.'); }
