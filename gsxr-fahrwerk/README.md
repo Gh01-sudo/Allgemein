@@ -12,6 +12,8 @@ Interaktives Fahrwerks-Dashboard für die Suzuki GSX-R 1000 K7 (2007–2008) mit
 - Kraftschlussgrenze: Blockiert das Vorderrad oder dreht das Hinterrad durch, überträgt der Reifen nur Gleitreibung; Tempo, Weg und Nicken folgen der echten Verzögerung (Anzeige Soll/Ist). Reifensteifigkeit folgt dem aktuellen Tempo
 - Auswertung: Zerlegung, wo der Setup-Index Punkte verliert (Kriterium × Achse, summiert exakt auf 100 − Index, mit den verursachenden Situationen), Wirkung jedes Einstellers auf den Gesamtindex als Tornado-Diagramm mit Übernehmen-Knopf, Testparcours als Farbtabelle
 - Reifen-Lastempfindlichkeit (µ sinkt mit der Radlast) und 2 ms Verzögerung der Dämpferkraft (Hysterese durch Ölkompressibilität und Shim-Trägheit)
+- Erklärungen: „Was zeigt das?“ in jeder Karte, Wirkung des zuletzt verstellten Einstellers im Änderungsband, offene Liste, was das Modell rechnet und was nicht (keine Lenk- und Querdynamik)
+- Bewertung ohne harte Null-Sättigung (Teilnoten laufen weich gegen 0), Tornado wahlweise nur Fahrdynamik
 - Schnelle Rechnung: Federkennlinien, Reifen-Progression, Reibung und Fahrmanöver sind tabelliert (Abweichung unter 0,0001 mm), alle 21 Läufe für Setup und Vergleich in rund 0,2 s, verteilt auf ruckelfreie Häppchen
 - Live-Seitenansicht mit echter Kinematik: Lenkkopfwinkel, Nachlauf, Radstand, Nickwinkel
 - Durchhang-Messassistent mit konkreter Vorspann-Empfehlung

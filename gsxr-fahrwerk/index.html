@@ -264,7 +264,7 @@ tr.act td{background:var(--accent-soft)}
 .bar .zone{position:absolute;top:0;bottom:0;background:var(--good);opacity:.18}
 
 /* Register */
-.tabs{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;gap:2px;overflow-x:auto;margin-top:18px;border-bottom:1px solid var(--line);scrollbar-width:thin}
+.tabs{position:sticky;top:max(env(safe-area-inset-top,0px),var(--toph,0px));z-index:5;background:var(--bg);display:flex;gap:2px;overflow-x:auto;margin-top:18px;border-bottom:1px solid var(--line);scrollbar-width:thin}
 .tabs button{border:0;background:transparent;padding:12px 14px;cursor:pointer;font-family:var(--f-display);font-weight:600;font-size:.92rem;color:var(--muted);border-bottom:2px solid transparent;white-space:nowrap}
 .tabs button[aria-selected="true"]{color:var(--fg);border-bottom-color:var(--accent)}
 .panel{padding-top:16px}
@@ -315,6 +315,17 @@ details.grp>summary .tag{font-family:var(--f-mono);font-size:.7rem;color:var(--m
 @media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
 .recs{display:flex;flex-direction:column;gap:8px}
 .hm{background:color-mix(in srgb,var(--hc) 14%,transparent)}
+details.xp{margin:0 0 8px;font-size:.78rem;color:var(--muted)}
+details.xp>summary{cursor:pointer;color:var(--accent);font-size:.72rem;font-weight:600;list-style:none;display:inline-flex;align-items:center;gap:5px}
+details.xp>summary::-webkit-details-marker{display:none}
+details.xp>summary::before{content:"?";display:inline-grid;place-items:center;width:15px;height:15px;border-radius:50%;border:1px solid currentColor;font-size:.64rem}
+details.xp[open]>summary{margin-bottom:5px}
+details.xp>div{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;line-height:1.5;color:var(--fg)}
+h2.sec{font-size:1.02rem;margin:18px 0 10px;display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding-bottom:6px;border-bottom:1px solid var(--line)}
+h2.sec span{font-family:var(--f-body);font-weight:400;font-size:.78rem;color:var(--muted)}
+.limits{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:16px}
+@media (max-width:900px){.limits{grid-template-columns:minmax(0,1fr)}}
+.chgx{display:block;font-size:.76rem;color:var(--muted);margin-top:2px}
 .evalgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
 @media (max-width:1100px){.evalgrid{grid-template-columns:minmax(0,1fr)}}
 .loss{display:flex;flex-direction:column;gap:7px}
@@ -455,6 +466,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="change" id="change" role="status" aria-live="polite"></div>
         <div class="card scope">
           <div class="card-h"><h3 id="tcTitle">Messschrieb</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Vorher</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nicken</span><span><i style="background:var(--bad);opacity:.35;height:9px"></i>Rad in der Luft</span><span><i style="background:var(--comp);opacity:.5;height:9px"></i>blockiert / dreht durch</span></div></div>
+          <details class="xp"><summary>Was zeigt das?</summary><div><b>Oben</b> der Federweg vorn und hinten (gestrichelt der Vergleich, rote Linie = Anschlag). <b>Mitte</b> die Reifenlast; rote Felder = Rad in der Luft, orange = Rad blockiert oder dreht durch. <b>Unten</b> der Nickwinkel. Blau hinterlegt ist das Hindernis bzw. Manöver. Gute Zugstufe: nach dem Hindernis ein Überschwinger, dann Ruhe. Bleibt der Federweg über mehrere Wellen immer tiefer (Treppe nach oben), verhärtet das Fahrwerk: Zugstufe öffnen. Schwingt es mehrfach nach: Zugstufe schließen.</div></details>
           <canvas class="cv" id="timeCv" height="330" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
           <p class="note" id="timeNote"></p>
         </div>
@@ -472,9 +484,11 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="bars" id="sagBars"></div>
       </aside>
     </div>
+    <h2 class="sec">Messdaten &amp; Kennlinien <span>zum gewählten Zeitpunkt der gewählten Situation</span></h2>
     <div class="bench-low">
       <div class="card">
         <div class="card-h"><h3>Messwerte</h3><span class="chip info" id="geoMode">statisch</span></div>
+        <details class="xp"><summary>Was zeigt das?</summary><div><b>Note</b>: Bewertung der gewählten Situation, <b>Setup-Index</b>: 75 % Mittel aller Fahrsituationen + 25 % Durchhang. <b>Federweg max</b>: größte Einfederung in Prozent des Federwegs (über 85 % wird es knapp). <b>Haftung</b>: wie gleichmäßig die Radlast bleibt; Abheben und Blockieren kosten Punkte. <b>Beruhigung</b>: Zeit, bis das Fahrwerk nach dem Hindernis wieder ruhig ist. <b>Geometrie</b> im gewählten Zeitpunkt: taucht die Front ein, wird der Lenkkopf steiler und der Nachlauf kürzer, die Maschine lenkt williger, aber unruhiger.</div></details>
         <div class="kpis" id="kpis"></div>
         <div class="lbl" style="margin:10px 0 6px">Geometrie</div>
         <div class="geo-grid" id="geoGrid"></div>
@@ -482,12 +496,14 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
       <div class="card">
         <div class="card-h"><h3>Dämpfer live</h3><span class="note mleg"><i style="background:var(--comp)"></i>Druckstufe <i style="background:var(--reb)"></i>Zugstufe</span></div>
         <svg id="cut" viewBox="0 0 600 405" role="img" aria-label="Schnittbild von Gabel und Federbein mit Feder, Kolben, Ventilen, Luftpolster und Ausgleichsbehälter"></svg>
+        <details class="xp"><summary>Was zeigt das?</summary><div>Schnitt durch Gabel und Federbein im gewählten Zeitpunkt. <b>Orange</b> = Druckstufe (federt ein), <b>Türkis</b> = Zugstufe (federt aus). Bei langsamer Bewegung fließt das Öl durch die <b>Nadel</b> (Low-Speed, Klickschraube), bei schnellen Stößen öffnen die <b>Shims</b> (High-Speed, Sechskant). Das Histogramm zeigt, wie viel Zeit der Dämpfer in welchem Geschwindigkeitsbereich verbringt: Straße meist unter 0,3 m/s, Kanten und Fugen deutlich darüber. Balance Druck/Zug um 1,0–1,2 gilt als ausgewogen; deutlich darüber zieht sich das Fahrwerk auf Wellen zusammen.</div></details>
         <div class="lbl" style="margin:8px 0 4px">Dämpfergeschwindigkeit</div>
         <canvas class="cv" id="histCv" height="170" aria-label="Histogramm der Dämpfergeschwindigkeiten"></canvas>
         <div id="histStats"></div>
       </div>
       <div class="card">
         <div class="card-h"><h3>Kennlinien</h3><div class="legend"><span><i style="background:var(--front)"></i>vorn</span><span><i style="background:var(--rear)"></i>hinten</span><span><i class="dash"></i>Vergleich</span></div></div>
+        <details class="xp"><summary>Was zeigt das?</summary><div><b>Dämpfung</b>: Kraft über Radgeschwindigkeit, rechts Druck-, links Zugstufe. Der steile Anfang ist die Nadel (Low-Speed-Klicks), der Knick das Öffnen der Shims, der flachere Teil High-Speed (Umdrehungen). <b>Federn</b>: Kraft über Federweg. Die Gabel wird am Ende durch das Luftpolster progressiv (mehr Öl = früherer, steilerer Anstieg), das Federbein über Umlenkung und Gasdruck leicht progressiv. Vorspannung verschiebt die Kurve nach oben, ändert aber nicht ihre Steigung.</div></details>
         <div class="lbl">Dämpfung: Kraft über Radgeschwindigkeit</div>
         <canvas class="cv" id="fvCv" height="210" aria-label="Dämpfungskraft über Radgeschwindigkeit"></canvas>
         <div class="lbl" style="margin-top:8px">Federn: Kraft über Federweg</div>
@@ -498,12 +514,13 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="card">
       <div class="card-h"><h3>Frequenzgang vom Prüfstand</h3><div class="legend"><span><i style="background:var(--accent)"></i>Aufbau</span><span><i style="background:var(--front)"></i>vorn</span><span><i style="background:var(--rear)"></i>hinten</span><span><i class="dash"></i><span id="frCmp">Vorher</span></span></div></div>
       <div class="frq">
-        <div><canvas class="cv" id="frCv" height="230" aria-label="Frequenzgang aus dem Sinus-Sweep: Übertragung Hub und Nicken, Radlastschwankung"></canvas><p class="note" id="frNote"></p></div>
+        <div><details class="xp"><summary>Was zeigt das?</summary><div>Auf dem Prüfstand stehen beide Räder auf Hydraulikstempeln, die mit langsam steigender Frequenz schwingen. <b>Aufbau</b>: Bei 1,5–3 Hz schwingt die ganze Maschine in Resonanz; die Überhöhung zeigt, wie viel stärker sich der Rahmen bewegt als der Stempel. Mehr Dämpfung senkt diesen Gipfel, macht aber die Isolation darüber schlechter. <b>Radspringen</b>: Bei 12–25 Hz schwingt das Rad auf dem Reifen; eine hohe Radlastschwankung dort heißt weniger Grip auf welliger Fahrbahn. Weniger High-Speed-Druckstufe oder weniger Luftdruck senken sie.</div></details><canvas class="cv" id="frCv" height="230" aria-label="Frequenzgang aus dem Sinus-Sweep: Übertragung Hub und Nicken, Radlastschwankung"></canvas><p class="note" id="frNote"></p></div>
         <div class="frs" id="frStats"></div>
       </div>
     </div>
   </section>
 
+  <h2 class="sec" style="margin-top:22px">Auswertung &amp; Werkstatt <span>alle Situationen zusammen, Durchhang messen, Daten und Modell</span></h2>
   <nav class="tabs" role="tablist" aria-label="Bereiche">
     <button role="tab" aria-selected="true" data-tab="t-setup" id="tab-setup">Auswertung</button>
     <button role="tab" aria-selected="false" data-tab="t-sag" id="tab-sag">Durchhang messen</button>
@@ -517,19 +534,18 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
   <section class="panel" id="t-setup" role="tabpanel" aria-labelledby="tab-setup">
     <div class="setup">
       <div class="results">
-        <div class="card">
-          <div class="card-h"><h3>Testparcours: alle Fahrsituationen</h3><span class="note" id="matrixNote">aktuelles Setup gegen Vergleich, gleicher Fahrer, gleiche Hindernisse</span></div>
-          <div class="tablewrap"><table id="matrix"></table></div>
-        </div>
         <div class="evalgrid">
           <div class="card" id="lossCard">
             <div class="card-h"><h3>Wo der Index Punkte verliert</h3><span class="note">Summe aller Balken = 100 − Index</span></div>
+            <details class="xp"><summary>Was zeigt das?</summary><div>Jede Fahrsituation hat je Achse vier Teilnoten: <b>Komfort</b> (Beschleunigung am Fahrer), <b>Haftung</b> (Schwankung der Radlast, Abheben, Blockieren), <b>Kontrolle</b> (Nachschwingen, Überschwingen, Verhärten auf Wellenfolgen) und <b>Federweg-Reserve</b> (Nutzung über 85 %, Durchschlag). Das Einsatzprofil gewichtet sie (z. B. sportlich: Haftung 35 %, Kontrolle 30 %). Die Balken zeigen, wie viele Index-Punkte jede Teilnote über alle Fahrsituationen kostet, dazu der statische Durchhang (25 % des Index). Der längste Balken ist der beste Ansatzpunkt. Teilnoten fallen bei sehr harten Situationen weich gegen null, damit Verbesserungen sichtbar bleiben.</div></details>
             <div class="lsum" id="lossSum"></div>
             <div class="loss" id="loss"></div>
             <p class="note">Zerlegung nach Kriterium und Achse über alle Fahrsituationen (ohne Prüfstand), gewichtet wie im Einsatzprofil. Strich = Vergleich. Darunter die Situationen mit dem größten Anteil.</p>
           </div>
           <div class="card" id="torCard">
             <div class="card-h"><h3>Wirkung der Einsteller auf den Index</h3><span class="note" id="torNote">wird gerechnet …</span></div>
+            <div class="seg" id="torMode" role="group" aria-label="Wirkung zeigen" style="margin-bottom:8px;display:inline-flex"><button data-tm="all" aria-pressed="true">Gesamt</button><button data-tm="dyn" aria-pressed="false">nur Fahrdynamik</button></div>
+            <details class="xp"><summary>Was zeigt das?</summary><div>Jeder Einsteller wird einzeln um einen Schritt weicher und härter gestellt, dann rechnet das Programm alle 18 Fahrsituationen neu. <b>Gesamt</b> enthält die Durchhang-Bewertung: Federn und Vorspannung wirken dort fast nur über den Durchhang, denn ihre Hauptwirkung (Fahrzeughöhe, Lenkkopfwinkel, Nachlauf, Einlenkverhalten) ist Lenk- und Querdynamik, die dieses Vertikalmodell nicht rechnet. <b>Nur Fahrdynamik</b> zeigt allein, was die Simulation auf der Straße an Unterschied findet. Die Knöpfe stellen die bessere Richtung ein.</div></details>
             <div class="thead"><span>Einsteller · Schritt</span><span>weicher / weniger</span><span>härter / mehr</span><span></span></div>
             <div class="tor" id="tor"></div>
             <p class="note">Jeder Einsteller einzeln um den angegebenen Schritt verstellt, alle Fahrsituationen neu gerechnet. Grün = Index steigt. Die Wirkungen addieren sich nicht genau, nach dem Übernehmen wird neu gerechnet.</p>
@@ -538,6 +554,11 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="card">
           <div class="card-h"><h3>Analyse &amp; Empfehlungen</h3><button class="btn sm pri" data-act="rec">Empfehlung übernehmen</button></div>
           <div class="recs" id="recs"></div>
+        </div>
+        <div class="card">
+          <div class="card-h"><h3>Testparcours: alle Fahrsituationen</h3><span class="note" id="matrixNote">aktuelles Setup gegen Vergleich, gleicher Fahrer, gleiche Hindernisse</span></div>
+          <details class="xp"><summary>Was zeigt das?</summary><div>Alle Fahrsituationen mit den wichtigsten Kennwerten. <b>Gabel/Hinten max</b>: größter Federweg (rot = Durchschlag, gelb = über 85 %). <b>Haftung</b>, <b>Komfort</b>, <b>Kontrolle</b>: Teilnoten 0–100, ▲▼ gegenüber dem Vergleich. <b>Note</b>: gewichtete Gesamtnote der Situation. Klick auf eine Zeile öffnet die Situation oben im Prüfstand. Prüfstandsversuche zählen nicht zum Index.</div></details>
+          <div class="tablewrap"><table id="matrix"></table></div>
         </div>
         <div class="card">
           <div class="card-h"><h3>Einstellkarte</h3><span class="note">So stellst du es an der Maschine ein. Klicks immer von ganz zu (im Uhrzeigersinn) zurückzählen.</span></div>
@@ -608,6 +629,24 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
       </div>
     </div>
     <div class="card" style="margin-top:14px">
+      <h3 style="margin-bottom:8px">Was das Modell rechnet und was nicht</h3>
+      <div class="limits">
+        <div><div class="lbl" style="color:var(--good)">Gerechnet</div><ul class="list">
+          <li>Hub und Nicken des Rahmens, Hub beider Räder und des Fahrers auf der Sitzbank (5 Freiheitsgrade), Schrittweite 0,2 ms, gegen 0,1 ms geprüft.</li>
+          <li>Stahlfedern mit Vorspannung, Luftpolster der Gabel (Ölstand), Gasdruck und Umlenkung hinten, Topout- und Endanschlag.</li>
+          <li>Dämpfer als Ventilmodell (Nadel + Shims) je Klick, Ölviskosität über Temperatur, 2 ms Kraftaufbau, Reibung der Buchsen (Haft-/Gleitreibung, unter Bremslast höher).</li>
+          <li>Reifen als progressive Feder mit Dämpfung, Hüllkurve über Kanten, Abheben, Kraftschlussgrenze mit Gleiten und Lastempfindlichkeit, Steifigkeit nach Luftdruck, Tempo und Schräglage.</li>
+          <li>Bremsabstützung über Gabel und Schwinge, Kettenzug-Anti-Squat aus der Geometrie, Luftwiderstand, Tempo- und Wegänderung, Fliehkraft in Schräglage.</li>
+        </ul></div>
+        <div><div class="lbl" style="color:var(--warn)">Nicht gerechnet</div><ul class="list">
+          <li><b>Lenk- und Querdynamik</b>: Einlenken, Kurvenlinie, Pendeln, Lenkerflattern, Kickback. Gerade dafür stellt man Durchhang und Geometrie ein; deshalb wird der Durchhang über Zielwerte bewertet und die Geometrie nur angezeigt.</li>
+          <li>Reifentemperatur und -verschleiß, Erwärmung des Dämpferöls während der Fahrt, Flex von Rahmen, Schwinge und Gabel.</li>
+          <li>Fahrerreaktionen außer dem Nachregeln der Bremse; Gas und Bremse folgen dem vorgegebenen Manöver.</li>
+        </ul></div>
+      </div>
+      <p class="note">Nicht an einer K7 gemessen, sondern aus Literatur und Plausibilität angesetzt: Trägheitsradius Nicken 0,48 m, Dämpferkennfelder aus der Klickformel, Reifendämpfung, Fahrerkopplung, Gleitreibungsanteil 0,85, Lastempfindlichkeit 0,08, Dämpfer-Zeitkonstante 2 ms. Darum gilt: <b>Vergleiche zwischen Setups und Trends sind belastbar, absolute Zahlen (Millisekunden, Prozent) sind Richtwerte.</b> Kein Simulationsmodell ersetzt die Probefahrt; das Tool sagt dir, in welche Richtung du drehen solltest und warum.</p>
+    </div>
+    <div class="card" style="margin-top:14px">
       <h3 style="margin-bottom:8px">Modellannahmen der Simulation</h3>
       <div class="tablewrap"><table id="modelTbl"></table></div>
     </div>
@@ -629,7 +668,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Dämpfer-Verzögerung:</b> Die Ventilkraft folgt der Kolbengeschwindigkeit mit 2 ms Zeitkonstante (Kompressibilität von Öl und Gaspolster, Trägheit der Shims; Modellannahme, typische Größenordnung 1–5 ms). Das ergibt die Hysterese, die Dämpferprüfstände bei schnellen Stößen messen, und etwas weniger Dämpfung oberhalb von rund 30 Hz.</li>
         <li><b>Reifen-Lastempfindlichkeit:</b> Der Reibwert sinkt mit der Radlast: µ = µ0 · (Last / statische Last)^-0,08 (Modellannahme, Literatur 0,05–0,15). Beim harten Bremsen hat das hoch belastete Vorderrad daher etwas weniger Reserve als mit konstantem µ.</li>
         <li><b>Dämpfer als Ventilmodell:</b> Je Richtung zwei parallele Ölwege. Die Bypass-Nadel (Low-Speed) hat einen laminaren und einen quadratischen Anteil; ihr Querschnitt wächst mit den Klicks (Nadelkegel, Exponent 1,4). Daher wirken Klicks nahe „ganz zu“ stark und weit offen kaum noch. Das Shim-Paket (High-Speed) öffnet ab einer Öffnungskraft, die der High-Speed-Einsteller vorspannt. Die Kennlinie wird je Einstellung als Tabelle berechnet und im Schnittbild sichtbar gemacht.</li>
-        <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Bremskraft 85 % vorn, 15 % hinten. Vorn wirkt die axiale Komponente der Bremskraft in der Gabel, gerechnet mit dem aktuellen Lenkkopfwinkel. Hinten stützt sich der Bremssattel über die Schwinge ab und zieht das Heck etwas ein. Was der Reifen nicht übertragen kann, kommt auch nicht an: Blockiert das Vorderrad oder dreht das Hinterrad durch, wirkt nur noch Gleitreibung (85 % der Haftreibung, Modellannahme), die echte Verzögerung sinkt und die Anzeige zeigt Soll und Ist. Hebt ein Rad ab, fällt seine Brems- oder Antriebskraft weg. Die Reifensteifigkeit folgt dem aktuellen Tempo. Das Tempo ändert sich mit der Verzögerung: Fahrbahn, Luftwiderstand und Anzeige folgen dem echten Weg, bei Stillstand endet die Bremsung. Anti-Squat wird aus der Kettenzug-Geometrie berechnet (Ritzel 17, Kettenrad 43, Kette 530): etwa 125 % beim Fahrer-Durchhang, mit zunehmender Einfederung fallend.</li>
+        <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Bremskraft 85 % vorn, 15 % hinten. Vorn wirkt die axiale Komponente der Bremskraft in der Gabel, gerechnet mit dem aktuellen Lenkkopfwinkel. Hinten stützt sich der Bremssattel über die Schwinge ab und zieht das Heck etwas ein. Was der Reifen nicht übertragen kann, kommt auch nicht an: Blockiert das Vorderrad oder dreht das Hinterrad durch, wirkt nur noch Gleitreibung (85 % der Haftreibung, Modellannahme), die echte Verzögerung sinkt und die Anzeige zeigt Soll und Ist. Hebt das Vorderrad beim Bremsen ab, bremst nur noch die Hinterradbremse mit ihrem Anteil; wird das Hinterrad leicht oder hebt ab, übernimmt das Vorderrad den Rest (der Fahrer regelt nach). Antrieb gibt es nur mit Hinterradkontakt. Die Reifensteifigkeit folgt dem aktuellen Tempo. Das Tempo ändert sich mit der Verzögerung: Fahrbahn, Luftwiderstand und Anzeige folgen dem echten Weg, bei Stillstand endet die Bremsung. Anti-Squat wird aus der Kettenzug-Geometrie berechnet (Ritzel 17, Kettenrad 43, Kette 530): etwa 125 % beim Fahrer-Durchhang, mit zunehmender Einfederung fallend.</li>
         <li><b>Kurven:</b> Fliehkraft erhöht die Last um 1/cos(Schräglage). Fahrbahnwellen wirken in Schräglage nur mit ihrem Anteil in Fahrzeugebene.</li>
         <li><b>Geometrie:</b> echte ebene Kinematik mit Schwinge und Gabel. Lenkkopfwinkel, Nachlauf und Radstand ergeben sich aus der Nickstellung des Rahmens.</li>
         <li><b>Grenzen:</b> keine Reifenseitenkräfte, keine Rahmen- und Gabelelastizität (das Klemmen der Buchsen beim Bremsen ist nur als Reibungszuschlag erfasst). Das Modell zeigt Richtungen und Größenordnungen. Die Probefahrt entscheidet.</li>
@@ -998,9 +1037,14 @@ function scenDef(name, v, P) {
       def.ax = t => -P.g * smooth((t - T0) / 0.2) * (1 - smooth((t - T0 - 0.4) / 1.0));
       const lean = t => P.lean * smooth((t - T0 - 0.4) / 1.0); def.lean = lean;
       def.nfac = t => 1 / Math.cos(lean(t) * DEG);
-      const Da = v * (T0 + 1.45), cl = Math.cos(P.lean * DEG);
+      // Die Maschine wird langsamer: Welle dort, wo sie nach T0 + 1,45 s wirklich ist (gleiche Integration wie in simRun),
+      // Ende erst, wenn das Hinterrad die Welle überrollt hat. start/v bleibt der geplante Zeitpunkt des Radkontakts.
+      const cl = Math.cos(P.lean * DEG), dtw = 0.002; let vw = v, dw = 0, tw = 0;
+      const adv = () => { const a = def.ax(tw) * G; vw = Math.max(0, vw + (a < 0 && vw <= 0.3 ? 0 : a) * dtw); dw += vw * dtw; tw += dtw; };
+      while (tw < T0 + 1.45) adv();
+      const Da = dw; while (dw < Da + 0.9 + wbm && tw < 28) adv();
       def.road = d => tex(d) + cosBump(d, Da, 0.9, P.h * mm) * cl;
-      def.tEnd = Math.max(T0 + 1.5, (Da + 0.9 + wbm) / v); def.start = Da; def.quiet = T0; break;
+      def.tEnd = Math.max(T0 + 1.5, tw); def.start = v * (T0 + 1.45); def.quiet = T0; break;
     }
     case 'cycLand': { const k = P.s, mm1 = k * mm; cycBuild(def, v, {
       ax: [{ t: 1.2, ri: 0.3, d: 0.6, ro: 0.35, g: -Math.min(1.1, 0.55 * k) }, { t: 3.9, ri: 0.35, d: 1.1, ro: 0.3, g: Math.min(0.9, 0.35 * k) }],
@@ -1141,11 +1185,14 @@ function simRun(st, sc, v, L) {
     let tF = dFt > 0 ? Math.max(0, tyre(ktF * kl, d0F, dFt, kvt) + M.ctire * (vrF - vf)) : 0;
     let tR = dRt > 0 ? Math.max(0, tyre(ktR * kl, d0R, dRt, kvt) + M.ctire * (vrR - vr)) : 0;
     const Xn = L.tot * ax + Fdt;                                    // nötige Längskraft am Boden
-    const X = Xn < 0 ? (tF > 0 ? Xn : 0) : (tR > 0 ? Xn : 0), Fb = X < 0 ? -X : 0; // Bremsen nur mit Vorderrad-, Antrieb nur mit Hinterradkontakt
+    // Bremsen: braucht mindestens ein Rad am Boden (in der Luft bremst nur dessen Bremse nicht mehr); Antrieb nur mit Hinterradkontakt
+    const X = Xn < 0 ? (tF > 0 || tR > 0 ? Xn : 0) : (tR > 0 ? Xn : 0), Fb = X < 0 ? -X : 0;
     const uF = vf - vyF, uR = vr - vyR;
     // Lastempfindlichkeit: µ = µ0 · (N / N0)^-0,08, nur gerechnet, wenn Längskraft wirkt
     const muF = Fb > 0 ? mu * Math.pow(Math.max(0.25, tF / NF0), -MU.ls) : mu, muR = Fb > 0 || X > 0 ? mu * Math.pow(Math.max(0.25, tR / NR0), -MU.ls) : mu;
-    const FbR = Math.min(Fb * BRAKE.rearShare, muR * tR), FbQ = Fb - FbR;   // Bremskraftverteilung, Hinterrad durch Kraftschluss begrenzt
+    // Hinterradbremse mit ihrem Anteil, durch Kraftschluss begrenzt; den Rest übernimmt das Vorderrad (der Fahrer regelt nach),
+    // aber nur, solange es Bodenkontakt hat. Hebt das Vorderrad ab, bremst nur noch das Hinterrad.
+    const FbR = Math.min(Fb * BRAKE.rearShare, muR * tR), FbQ = tF > 0 ? Fb - FbR : 0;
     const slipF = FbQ > muF * tF + 1, slipR = X > 0 ? X > muR * tR + 1 : false;
     const FbF = slipF ? MUS * muF * tF : FbQ;                         // blockiertes Vorderrad überträgt nur Gleitreibung
     const Xa = X > 0 ? (slipR ? MUS * muR * tR : X) : -(FbF + FbR);   // tatsächliche Längskraft am Boden
@@ -1153,7 +1200,7 @@ function simRun(st, sc, v, L) {
     dFs += (dampF(uF, dmp.F) - dFs) * KLAG; dRs += (dampF(uR, dmp.R) - dRs) * KLAG; // Ventilkraft baut sich mit Zeitkonstante auf
     const dF = dFs + fricF(uF, frF + FRIC.muBrake * FbF), dR = dRs + fricF(uR, frR);
     const FF = SpF(xF) + dF, FR = SpR(xR) + dR;
-    const pairF = FbF * Math.tan(M.rake0 * DEG + th);              // Bremskraft-Anteil entlang der Gabel, mit aktuellem Lenkkopfwinkel (taucht die Front ein, wird er flacher)
+    const pairF = FbF * Math.tan(M.rake0 * DEG + th);              // Bremskraft-Anteil entlang der Gabel, mit aktuellem Lenkkopfwinkel (taucht die Front ein, wird er steiler)
     const pairR = (Xa > 0 ? asAt(xR) * Xa * L.h / wb : 0) - FbR * hP / lP; // Kettenzug-Anti-Squat (hebt das Heck) und Hinterradbremse: Sattel an der Schwinge, die Bremskraft zieht das Rad zum Rahmen (federt ein)
     const My = (Xa - Fdt) * L.h + Fdt * AERO.hcp;                     // Nickmoment um den Schwerpunkt: Längskraft am Boden und Luftwiderstand (in der Luft nur dieser)
     let Fs = 0, ad = 0;
@@ -1213,14 +1260,16 @@ function kpiAxle(o, sc) {
     cv, cvRoad: cvB, lift, rms, rmsRoad: rmsB, settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter - 2 * sdX), pack, slipMs
   };
 }
+// Teilnoten: bis 60 Strafpunkte linear, darüber weich gegen 0 (stetig, gleiche Steigung bei 60). So bleibt auch in sehr harten
+// Situationen sichtbar, ob eine Einstellung besser oder schlechter ist; vorher wurde dort hart auf 0 abgeschnitten.
+const softScore = P => P <= 60 ? 100 - Math.max(0, P) : 40 * Math.exp(-(P - 60) / 40);
 function subScores(k, sc) {
-  const comfort = clamp(100 - k.rms * 14, 0, 100);
-  const grip = clamp(100 - k.cv * 250 - k.lift * 0.5 - (k.slipMs || 0) * 0.3, 0, 100);
-  const control = clamp(100 - k.settle * 70 - k.over * 1.2 - (k.pack || 0) * 2.5 - (k.topout ? 15 : 0), 0, 100);
-  let reserve = 100;
-  if (k.usage > 0.85) reserve = 100 - (k.usage - 0.85) * 400;
-  if (k.bottom) reserve = Math.min(reserve, 35);
-  return { comfort, grip, control, reserve: clamp(reserve, 0, 100) };
+  const comfort = softScore(k.rms * 14);
+  const grip = softScore(k.cv * 250 + k.lift * 0.5 + (k.slipMs || 0) * 0.3);
+  const control = softScore(k.settle * 70 + k.over * 1.2 + (k.pack || 0) * 2.5 + (k.topout ? 15 : 0));
+  let P = k.usage > 0.85 ? (k.usage - 0.85) * 400 : 0;
+  if (k.bottom) P = Math.max(P, 65);
+  return { comfort, grip, control, reserve: softScore(P) };
 }
 function staticScore(st, sg) {
   const [zf, zr] = SAGZ[st.profile];
@@ -1618,20 +1667,20 @@ function drawCut(i) {
   CUT.fState.textContent = stateText(vF, shF);
   CUT.fVals.textContent = `${fmt(s, 0)} mm · ${vF >= 0 ? '+' : ''}${fmt(vF, 2)} m/s · Dämpfer ${fmt(r.F.fd[i] * COSR, 0)} N`;
   // Federbein
-  const X = 300, xr = clamp(r.R.x[i], 0, M.travelR + 2), str = xr / M.MR, spx = str * 2.1, vR = r.R.v[i] * M.MR, shR = shimShare(r.R.v[i], d.R);
+  const X = 300, xr = clamp(r.R.x[i], 0, M.travelR + 2), str = xr / M.MR, spx = str * 2.1, vW = r.R.v[i], vR = vW / M.MR, shR = shimShare(vW, d.R); // vR: Kolbenstange = Rad / Übersetzung (wie vF an der Gabel)
   const yEye = 340 - spx, yPp = 196 - spx;
   CUT.rEye.setAttribute('cy', yEye); CUT.rEyeT.setAttribute('y', yEye + 4);
   CUT.rRod.setAttribute('d', `M${X + 80},${yPp + 10}L${X + 80},${yEye - 10}`); CUT.rPiston.setAttribute('y', yPp);
   CUT.rShimC.setAttribute('d', vR > 0 ? `M${X + 60},${yPp - 1}Q${X + 80},${(yPp - 1 - 9 * shR).toFixed(1)} ${X + 100},${yPp - 1}` : `M${X + 60},${yPp - 1}L${X + 100},${yPp - 1}`);
   CUT.rShimR.setAttribute('d', vR < 0 ? `M${X + 60},${yPp + 11}Q${X + 80},${(yPp + 11 + 9 * shR).toFixed(1)} ${X + 100},${yPp + 11}` : `M${X + 60},${yPp + 11}L${X + 100},${yPp + 11}`);
-  CUT.rFlow.setAttribute('d', flowArrows(X + 80, yPp + 5, vR / M.MR * 1.6, 12)); CUT.rFlow.setAttribute('stroke', vR >= 0 ? 'var(--comp)' : 'var(--reb)');
+  CUT.rFlow.setAttribute('d', flowArrows(X + 80, yPp + 5, vW * 1.6, 12)); CUT.rFlow.setAttribute('stroke', vR >= 0 ? 'var(--comp)' : 'var(--reb)');
   const ySeat = yEye - 22, yCol = 66 + (S.rPre) * 1.5;
   CUT.rCollar.setAttribute('y', yCol.toFixed(1)); CUT.rSeat.setAttribute('y', ySeat);
   CUT.rSpring.setAttribute('d', zig(X + 42, X + 118, yCol + 8, ySeat, 7));
   const fp = 104 - str * 0.35; CUT.rFP.setAttribute('y', fp.toFixed(1)); CUT.rGas.setAttribute('height', (fp - 44).toFixed(1)); CUT.rOilR.setAttribute('y', (fp + 8).toFixed(1)); CUT.rOilR.setAttribute('height', (186 - fp - 8).toFixed(1));
   CUT.rNeedle.setAttribute('fill', vR > 0.01 && shR < 0.95 ? 'var(--comp)' : 'var(--bg2)');
   CUT.rState.textContent = stateText(vR, shR);
-  CUT.rVals.textContent = `Hub ${fmt(str, 1)} mm · ${vR >= 0 ? '+' : ''}${fmt(vR / M.MR, 2)} m/s am Rad`;
+  CUT.rVals.textContent = `Hub ${fmt(str, 1)} mm · ${vW >= 0 ? '+' : ''}${fmt(vW, 2)} m/s am Rad`;
 }
 function drawHist() {
   const cv = $('#histCv'), { c, w, h } = prep(cv), r = RUN[scenario];
@@ -1709,7 +1758,9 @@ const LMAP = { key: '', done: '', res: {}, t: null };
 function mapVals(c) { const n = Math.min(13, Math.round((c.max - c.min) / c.step) + 1), out = new Set(); for (let i = 0; i < n; i++) out.add(+(c.min + Math.round((c.max - c.min) * i / (n - 1) / c.step) * c.step).toFixed(4)); return [...out]; }
 function mapSchedule() {
   const key = JSON.stringify([S, scenario, speed, SP[scenario], roughness]);
-  if (key === LMAP.done || key === LMAP.key) return;
+  // LMAP.key bleibt nach dem Rechnen stehen: gleicher Schlüssel = läuft oder fertig. Ein Vergleich mit LMAP.done allein
+  // ließe eine noch laufende Rechnung für einen anderen Zustand weiterlaufen und deren Farbbänder für den jetzigen zeichnen.
+  if (key === LMAP.key) return;
   LMAP.key = key; LMAP.res = {}; clearTimeout(LMAP.t);
   for (const e of document.querySelectorAll('.lmap')) e.classList.add('stale');
   document.querySelectorAll('.llegT').forEach(e => { e.textContent = `Farbband: Note in „${SCEN[scenario].short}“ über den Regelbereich, ▲ beste Stellung`; });
@@ -1738,7 +1789,7 @@ function drawMap(k) {
   const b = el.querySelector('.lbest'); b.hidden = flat || (cur && best.sc - cur[1] < 0.3); b.style.left = best.p + '%'; b.dataset.best = best.v;
   b.title = `Auf ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]} stellen: Note ${fmt(best.sc, 1)} statt ${cur ? fmt(cur[1], 1) : '–'}`;
 }
-document.addEventListener('click', e => { const b = e.target.closest('.lbest'); if (!b) return; e.stopPropagation(); const k = b.closest('.lmap').id.slice(3); setVal(k, +b.dataset.best); toast(`${ctlName(k)}: beste Stellung für „${SCEN[scenario].short}“ eingestellt`); }, true);
+document.addEventListener('click', e => { const b = e.target.closest('.lbest'); if (!b) return; e.stopPropagation(); if (b.hidden || b.dataset.best === undefined) return; const k = b.closest('.lmap').id.slice(3); setVal(k, +b.dataset.best); toast(`${ctlName(k)}: beste Stellung für „${SCEN[scenario].short}“ eingestellt`); }, true);
 /* ---------- Auswertung: Punkteverlust ---------- */
 const CRIT = [['comfort', 'Komfort'], ['grip', 'Haftung'], ['control', 'Kontrolle'], ['reserve', 'Federweg-Reserve']];
 const LOSSHINT = {
@@ -1762,18 +1813,18 @@ function renderLoss() {
   const mx = Math.max(1, ...a.map(x => Math.max(x.tot, b[x.id]))), col = { comfort: 'var(--accent)', grip: 'var(--front)', control: 'var(--rear)', reserve: 'var(--warn)', static: 'var(--muted)' };
   $('#lossSum').innerHTML = `Index <b>${fmt(100 - sum, 1)}</b> · Verlust <b>${fmt(sum, 1)}</b> Punkte · ${cmpLabel()} <b>${fmt(Object.values(b).reduce((q, x) => q + x, 0), 1)}</b>`;
   $('#loss').innerHTML = a.sort((x, y) => y.tot - x.tot).map(x => { const d = x.tot - b[x.id];
-    return `<div class="lrow"><span>${x.name}</span><div class="lb" style="--c:${col[x.c]}"><i style="width:${(x.tot / mx * 100).toFixed(1)}%"></i><u style="left:${(b[x.id] / mx * 100).toFixed(1)}%" title="${cmpLabel()}: ${fmt(b[x.id], 1)}"></u></div><b>−${fmt(x.tot, 1)}${Math.abs(d) >= 0.05 ? ` <span class="${d < 0 ? 'delta-p' : 'delta-n'}" style="font-size:.66rem">${d > 0 ? '+' : ''}${fmt(-d, 1)}</span>` : ''}</b>
+    return `<div class="lrow"><span>${x.name}</span><div class="lb" style="--c:${col[x.c]}"><i style="width:${(x.tot / mx * 100).toFixed(1)}%"></i><u style="left:${(b[x.id] / mx * 100).toFixed(1)}%" title="${cmpLabel()}: ${fmt(b[x.id], 1)}"></u></div><b>−${fmt(x.tot, 1)}${Math.abs(d) >= 0.05 ? ` <span class="${d < 0 ? 'delta-p' : 'delta-n'}" style="font-size:.66rem">${d < 0 ? '+' : ''}${fmt(-d, 1)}</span>` : ''}</b>
       <div class="ls">${x.top.length ? 'vor allem ' + x.top.map(([k, l]) => `${SCEN[k].short} ${fmt(l, 2)}`).join(' · ') + '. ' : ''}${x.c === 'static' ? 'Durchhang mit Vorspannung in den Zielbereich bringen (Tab „Durchhang messen“).' : x.tot > 0.3 ? 'Ansatz: ' + LOSSHINT[x.c](x.ax) + '.' : ''}</div></div>`; }).join('');
 }
 /* ---------- Auswertung: Wirkung der Einsteller auf den Index ---------- */
 const TSTEP = { fPre: 1, fReb: 2, fLS: 2, fHS: 0.5, fOil: 5, fProt: 2, kF: 0.5, rPre: 1, rReb: 2, rLS: 2, rHS: 0.5, rShim: 2, kR: 5, pF: 0.1, pR: 0.1 };
-const TOR = { key: '', done: '', res: {}, base: 0, t: null, vis: true };
+const TOR = { key: '', done: '', res: {}, base: 0, t: null, vis: true, mode: 'all' };
 function torSchedule() {
   if (!RUN || RUNPART) return;
   const key = JSON.stringify([S, speed, SP, roughness]);
   if (!TOR.vis) { if (key !== TOR.done) $('#torNote').textContent = 'wird gerechnet, sobald sichtbar'; return; }
-  if (key === TOR.done || key === TOR.key) return;
-  TOR.key = key; TOR.res = {}; TOR.base = overall(RUN, S, SG); clearTimeout(TOR.t);
+  if (key === TOR.key) return; // wie bei der Landkarte: TOR.key bleibt nach dem Rechnen stehen, eine Rückkehr zu TOR.done muss die laufende Rechnung ablösen
+  TOR.key = key; TOR.res = {}; TOR.base = overall(RUN, S, SG); { const nk = Object.keys(SCEN).filter(k => !SCEN[k].rig); TOR.dyn0 = nk.reduce((a, k) => a + RUN[k].score, 0) / nk.length; TOR.stat0 = staticScore(S, SG); } clearTimeout(TOR.t);
   const ks = Object.keys(SCEN).filter(k => !SCEN[k].rig), jobs = [], base = JSON.parse(JSON.stringify(S));
   for (const k of MAPKEYS) { const c = findCtl(k), hs = c.hard || 1; for (const dir of [-1, 1]) { const v = clamp(+(base[k] + dir * hs * TSTEP[k]).toFixed(4), c.min, c.max); if (v !== base[k]) jobs.push({ k, dir, v, st: Object.assign({}, base, { [k]: v }), sum: 0, i: 0 }); else TOR.res[k + dir] = null; } }
   let j = 0; $('#torNote').textContent = `wird gerechnet … 0/${jobs.length}`;
@@ -1782,29 +1833,53 @@ function torSchedule() {
     const t0 = performance.now();
     while (j < jobs.length && performance.now() - t0 < 8) {
       const q = jobs[j]; q.sum += scoreScen(q.st, ks[q.i++]);
-      if (q.i === ks.length) { TOR.res[q.k + q.dir] = { v: q.v, d: 0.75 * q.sum / ks.length + 0.25 * staticScore(q.st, sags(q.st)) - TOR.base }; j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
+      if (q.i === ks.length) { { const dyn = 0.75 * (q.sum / ks.length - TOR.dyn0), stat = 0.25 * (staticScore(q.st, sags(q.st)) - TOR.stat0); TOR.res[q.k + q.dir] = { v: q.v, d: dyn + stat, dyn, stat }; } j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
     }
     if (j < jobs.length) TOR.t = setTimeout(step, 0); else TOR.done = key;
   };
   TOR.t = setTimeout(step, 600);
 }
 function drawTor() {
-  const rows = MAPKEYS.map(k => ({ k, lo: TOR.res[k + '-1'], hi: TOR.res[k + '1'] })).filter(r => r.lo !== undefined || r.hi !== undefined);
+  // nicht zwischen pointerdown und click neu aufbauen: ein Neuaufbau dazwischen verschluckt den Klick auf „→“ (nachgeholt nach pointerup)
+  if (TOR.hold) { TOR.dirty = true; return; } TOR.dirty = false;
+  const pick = q => q == null ? q : { v: q.v, d: TOR.mode === 'dyn' ? q.dyn : q.d, dyn: q.dyn, stat: q.stat };
+  const rows = MAPKEYS.map(k => ({ k, lo: pick(TOR.res[k + '-1']), hi: pick(TOR.res[k + '1']) })).filter(r => r.lo !== undefined || r.hi !== undefined);
   const mag = r => Math.max(r.lo ? Math.abs(r.lo.d) : 0, r.hi ? Math.abs(r.hi.d) : 0), mx = Math.max(0.5, ...rows.map(mag));
   rows.sort((a, b) => mag(b) - mag(a));
   const half = (q, side) => { if (!q) return `<div class="th ${side}"></div>`; const w = Math.max(1, Math.abs(q.d) / mx * 100), c = q.d > 0.05 ? 'var(--good)' : q.d < -0.05 ? 'var(--bad)' : 'var(--line2)';
     return `<div class="th ${side}" style="--c:${c}"><i style="width:${w.toFixed(1)}%"></i></div>`; };
-  const num = (q, side) => `<span class="tv ${side}" style="color:${!q ? 'var(--dim)' : q.d > 0.05 ? 'var(--good)' : q.d < -0.05 ? 'var(--bad)' : 'var(--muted)'}">${!q ? 'Ende' : (q.d >= 0 ? '+' : '') + fmt(q.d, 2)}</span>`;
+  const num = (q, side) => `<span class="tv ${side}" style="color:${!q ? 'var(--dim)' : q.d > 0.05 ? 'var(--good)' : q.d < -0.05 ? 'var(--bad)' : 'var(--muted)'}">${q === null ? 'Ende' : !q ? '…' : (q.d >= 0 ? '+' : '') + fmt(q.d, 2)}</span>`;
   const nm = k => (SIDE_F.includes(k) ? 'Gabel ' : SIDE_R.includes(k) ? 'Federbein ' : 'Reifen ') + (findCtl(k).short || findCtl(k).label);
   $('#tor').innerHTML = rows.map(r => { const c = findCtl(r.k), best = [r.lo, r.hi].filter(Boolean).sort((a, b) => b.d - a.d)[0];
     return `<div class="trow"><span>${nm(r.k)}<small>± ${fmt(TSTEP[r.k], TSTEP[r.k] < 1 ? 2 : 0)} ${c.unit.split(' ')[0]}</small></span>${num(r.lo, '')}${half(r.lo, 'l')}${half(r.hi, 'r')}${num(r.hi, 'r')}${best && best.d >= 0.2 ? `<button class="btn sm" data-tk="${r.k}" data-tv="${best.v}" title="${ctlName(r.k)} auf ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]}">→ ${fmt(best.v, c.d)}</button>` : '<span></span>'}</div>`; }).join('');
 }
 document.addEventListener('click', e => { const b = e.target.closest('[data-tk]'); if (!b) return; e.stopPropagation(); setVal(b.dataset.tk, +b.dataset.tv); toast(`${ctlName(b.dataset.tk)} übernommen, Index wird neu gerechnet`); }, true);
+$('#tor').addEventListener('pointerdown', () => { TOR.hold = true; });
+for (const ev of ['pointerup', 'pointercancel']) document.addEventListener(ev, () => { if (!TOR.hold) return; TOR.hold = false; if (TOR.dirty) setTimeout(drawTor, 0); }); // setTimeout: erst nach dem click zeichnen
 if ('IntersectionObserver' in window) { TOR.vis = false; new IntersectionObserver(es => { TOR.vis = es.some(x => x.isIntersecting); if (TOR.vis) torSchedule(); }).observe(document.getElementById('torCard')); }
+// Was jeder Einsteller bewirkt (wird nach dem Verstellen im Änderungsband und als Tooltip gezeigt)
+const EXPL = {
+  fPre: 'Vorspannung verschiebt nur die Höhe (Durchhang), nicht die Härte der Feder. Mehr Vorspannung: Front höher, Lenkkopf flacher, mehr Nachlauf, stabiler und träger.',
+  fReb: 'Zugstufe bremst das Ausfedern der Gabel. Zu offen: Front wippt nach, unruhig beim Herausbeschleunigen. Zu weit zu: Gabel kommt auf Wellenfolgen nicht zurück, das Vorderrad verliert Kontakt.',
+  fLS: 'Low-Speed-Druckstufe wirkt auf langsame Bewegungen: Eintauchen beim Bremsen, Einlenken, lange Wellen. Mehr: weniger Nicken, ruhiger. Zu viel: hart auf kleinen Unebenheiten.',
+  fHS: 'High-Speed-Druckstufe wirkt auf schnelle Stöße: Kanten, Fugen, Rippen. Zu viel: Schlag kommt am Lenker an, das Rad springt. Zu wenig: Durchschlagen bei großen Stößen.',
+  fOil: 'Mehr Öl macht das Luftpolster kleiner: stärkere Progression nur am Ende des Federwegs. Hilft gegen Durchschlagen beim harten Bremsen, ohne den Anfang härter zu machen.',
+  fProt: 'Gabel durchstecken senkt die Front: Lenkkopf steiler, Nachlauf kürzer. Einlenken schneller, Geradeauslauf unruhiger.',
+  kF: 'Die Federrate bestimmt, wie stark die Gabel unter Last einfedert. Sie muss zum Gewicht passen; Vorspannung gleicht eine falsche Rate nicht aus.',
+  rPre: 'Vorspannung hinten stellt Heckhöhe und Durchhang ein. Mehr: Heck höher, schnelleres Einlenken; zu wenig Durchhang kostet Traktion, weil das Hinterrad nicht mehr ausfedern kann.',
+  rReb: 'Zugstufe hinten bremst das Ausfedern des Hecks. Zu offen: Heck pumpt nach Wellen. Zu weit zu: Heck verhärtet auf Wellenfolgen, das Hinterrad verliert Kontakt.',
+  rLS: 'Low-Speed-Druckstufe hinten: Einsinken beim Beschleunigen und in langen Kurven. Mehr hält das Heck oben, zu viel macht es bockig.',
+  rHS: 'High-Speed-Druckstufe hinten: schnelle Stöße. Zu viel: Heck springt über Kanten und Fugen. Zu wenig: Durchschlagen.',
+  rShim: 'Eine Distanz am Federbein hebt das Heck (am Rad etwa das Doppelte): Lenkkopf steiler, Nachlauf kürzer, schnelleres Einlenken.',
+  kR: 'Federrate hinten muss zu Fahrer und Zuladung passen. Zu weich: zu viel Durchhang, Heck sackt; zu hart: kein Ausfedern, wenig Traktion.',
+  pF: 'Der Reifen ist auch eine Feder. Weniger Luftdruck: weicher, mehr Haftung auf Unebenheiten, aber mehr Walken und Wärme. Vorgabe des Reifenherstellers beachten.',
+  pR: 'Der Reifen ist auch eine Feder. Weniger Luftdruck: weicher, mehr Haftung, aber mehr Walken und Wärme. Vorgabe des Reifenherstellers beachten.'
+};
+document.addEventListener('click', e => { const b = e.target.closest('[data-tm]'); if (!b) return; TOR.mode = b.dataset.tm; document.querySelectorAll('#torMode button').forEach(x => x.setAttribute('aria-pressed', x === b)); drawTor(); });
 function rowHtml(k) {
   const c = findCtl(k), inv = c.hard === -1, pct = (STOCK_ALL[k] - c.min) / (c.max - c.min) * 100, p = inv ? 100 - pct : pct;
   const minus = inv ? 1 : -1, soft = c.hard ? 'weicher' : 'weniger', hard = c.hard ? 'härter' : 'mehr';
-  return `<div class="brow" id="br-${k}" title="${c.hint}"><div class="brow-h"><label for="b-${k}">${SHORT[k] || c.short || c.label}</label><span class="bdelta" id="bd-${k}"></span><output id="bo-${k}"></output></div>
+  return `<div class="brow" id="br-${k}" title="${c.hint}${EXPL[k] ? '. ' + EXPL[k] : ''}"><div class="brow-h"><label for="b-${k}">${SHORT[k] || c.short || c.label}</label><span class="bdelta" id="bd-${k}"></span><output id="bo-${k}"></output></div>
     <div class="brow-c"><button data-k="${k}" data-dir="${minus}" aria-label="${ctlName(k)} ${soft}">−</button><div class="rng"><input type="range" id="b-${k}" aria-label="${ctlName(k)}" data-k="${k}" min="${c.min}" max="${c.max}" step="${c.step}"${inv ? ' class="inv"' : ''}><span class="stk" style="left:calc(${p.toFixed(1)}% + ${(8 - p * 0.16).toFixed(1)}px)" title="Serie"></span>${MAPKEYS.includes(k) ? `<div class="lmap stale" id="lm-${k}"><button class="lbest" hidden aria-label="${ctlName(k)} auf beste Stellung"></button></div>` : ''}</div><button data-k="${k}" data-dir="${-minus}" aria-label="${ctlName(k)} ${hard}">+</button></div></div>`;
 }
 function buildControls() {
@@ -1827,7 +1902,7 @@ function noteChange(label, k) {
 function liveUpdate() { schedule(true); clearTimeout(fullT); fullT = setTimeout(() => schedule(), 380); }
 // Tempo, Hindernis oder Straße geändert: die Wirkung der letzten Setup-Änderung ist nicht mehr vergleichbar
 function condChanged() { if (LAST) { LAST.run = null; LAST.idx = null; } }
-function setVal(k, v) { const c = findCtl(k), nv = clamp(+(+v).toFixed(3), c.min, c.max); if (nv === S[k]) return; noteChange(ctlName(k), k); S[k] = nv; liveUpdate(); }
+function setVal(k, v) { if (!Number.isFinite(+v)) return; const c = findCtl(k), nv = clamp(+(+v).toFixed(3), c.min, c.max); if (nv === S[k]) return; noteChange(ctlName(k), k); S[k] = nv; liveUpdate(); }
 let dragEl = null; // Regler, dessen laufende Bewegung schon als Änderung vermerkt ist
 document.addEventListener('input', e => {
   const k = e.target.dataset && e.target.dataset.k;
@@ -1870,11 +1945,10 @@ function recommend(st) {
 }
 function recommendCalc(st) {
   const pr = PROFILES[st.profile], L = loads(st), out = Object.assign({}, st), notes = [];
-  // Vorspannung vorne
+  // Vorspannung vorne: für den Ölstand, den die Empfehlung selbst setzt (das Luftpolster trägt mit), nicht für den bisherigen
   const FaxL = L.msF * G * COSR;
-  const pF = (FaxL - airF(pr.sagF, st.fOil)) / (2 * st.kF) - pr.sagF;
-  let rings = M.ringsStock - (pF - P0F) / M.ringMm;
-  const ringsRaw = rings; rings = clamp(Math.round(rings * 2) / 2, 0, 8); out.fPre = rings;
+  const ringsFor = oil => M.ringsStock - ((FaxL - airF(pr.sagF, oil)) / (2 * st.kF) - pr.sagF - P0F) / M.ringMm;
+  let ringsRaw = ringsFor(STOCK.fOil); out.fPre = clamp(Math.round(ringsRaw * 2) / 2, 0, 8);
   // Vorspannung hinten
   const kw = st.kR / (M.MR * M.MR);
   const pRr = ((L.msR * G - gasW(pr.sagR)) / kw - pr.sagR - 0.1 * pr.sagR * pr.sagR / M.travelR) / M.MR;
@@ -1894,7 +1968,7 @@ function recommendCalc(st) {
   const vB = speed / 3.6;
   const scB = prepScen('brake', vB, SP.brake), useB = o2 => kpiAxle(simRun(o2, scB, vB, L).F, scB).usage;
   out.fOil = STOCK.fOil; const lsBase = out.fLS; let u = useB(out);
-  while (u > 0.9 && out.fOil < 10) { out.fOil = Math.min(10, out.fOil + 5); u = useB(out); }
+  while (u > 0.9 && out.fOil < 10) { out.fOil = Math.min(10, out.fOil + 5); ringsRaw = ringsFor(out.fOil); out.fPre = clamp(Math.round(ringsRaw * 2) / 2, 0, 8); u = useB(out); }
   for (let i = 0; i < 4 && u > 0.9 && out.fLS > 0; i++) { const tr = Object.assign({}, out, { fLS: out.fLS - 1 }), u2 = useB(tr); if (u2 >= u - 0.002) break; Object.assign(out, tr); u = u2; }
   if (out.fLS < lsBase) notes.push({ lvl: 'info', t: `Druckstufe Low-Speed vorn ${lsBase - out.fLS} Klick${lsBase - out.fLS > 1 ? 's' : ''} zusätzlich zu`, w: 'Auch mit höherem Ölstand nutzt die Gabel beim harten Bremsen mehr als 90 % ihres Federwegs.' });
   if (out.fOil !== STOCK.fOil) notes.push({ lvl: 'info', t: `Ölstand Gabel +${fmt(out.fOil - STOCK.fOil)} mm gegenüber Serie`, w: 'Mehr Endprogression gegen Durchschlagen beim harten Bremsen, ohne den Komfort im ersten Federwegsdrittel zu verändern. Ölstand bei ausgebauten Federn und ganz eingefahrener Gabel messen.' });
@@ -2030,7 +2104,7 @@ function renderChange(idx) {
     const e = (lbl, x, y, unit = '', inv = false, d = 0) => { const df = y - x, good = inv ? df < 0 : df > 0, cls = Math.abs(df) < (d ? 0.05 : 0.5) ? 'dz' : good ? 'delta-p' : 'delta-n'; return `<span class="eff">${lbl} ${fmt(x, d)} → <span class="${cls}">${fmt(y, d)}</span>${unit}</span>`; };
     eff = `<span class="cl">Wirkung · ${SCEN[LAST.scen].short}</span>` + e('Note', a.score, b.score) + e('Gabel max', a.kF.maxX, b.kF.maxX, ' mm', true) + e('Hinten max', a.kR.maxX, b.kR.maxX, ' mm', true) + e('Haftung v', a.sF.grip, b.sF.grip) + e('Haftung h', a.sR.grip, b.sR.grip) + (LAST.idx != null && !RUNPART ? e('Index', LAST.idx, idx) : '');
   }
-  box.innerHTML = `<span class="cl">Letzte Änderung</span><span>${what}</span>${eff}`;
+  box.innerHTML = `<span class="cl">Letzte Änderung</span><span>${what}${LAST.k && EXPL[LAST.k] ? `<span class="chgx">${EXPL[LAST.k]}</span>` : ''}</span>${eff}`;
   if (box._t !== LAST.t) { box.classList.remove('new'); void box.offsetWidth; box.classList.add('new'); box._t = LAST.t; }
 }
 const useChip = k => k.bottom ? 'bad' : k.usage > 0.85 ? 'warn' : 'good';
@@ -2216,18 +2290,19 @@ function drawFR() {
   const { c, w, h } = prep(cv);
   const H = { a: freqResp(RUN.rigHeave, 'heave'), b: freqResp(COMP.rigHeave, 'heave') }, P = { a: freqResp(RUN.rigPitch, 'pitch'), b: freqResp(COMP.rigPitch, 'pitch') };
   if (!H.a || !P.a) return;
-  const sc = RUN.rigHeave.sc, lx0 = Math.log10(sc.f0), lx1 = Math.log10(sc.f1), xt = [1, 2, 5, 10, 20, 30, 40].filter(f => f >= sc.f0 && f <= sc.f1).map(Math.log10);
+  // Frequenzachse je Feld: Hub- und Nick-Sweep haben eigene, getrennt einstellbare Endfrequenzen
+  const sc = RUN.rigHeave.sc, xr = s => ({ lx0: Math.log10(s.f0), lx1: Math.log10(s.f1), xt: [1, 2, 5, 10, 20, 30, 40].filter(f => f >= s.f0 && f <= s.f1).map(Math.log10) });
   const panels = [
-    { t: 'Hub: Aufbau / Stempel', d: [[H.b, 'tr', css('--ghost'), [5, 4]], [H.a, 'tr', css('--accent'), null]], one: true },
-    { t: 'Nicken: Aufbau / Stempel', d: [[P.b, 'tr', css('--ghost'), [5, 4]], [P.a, 'tr', css('--accent'), null]], one: true },
-    { t: 'Radlast-Schwankung % je mm Hub', d: [[H.b, 'lF', css('--ghost'), [5, 4]], [H.b, 'lR', css('--ghost'), [2, 3]], [H.a, 'lR', css('--rear'), null], [H.a, 'lF', css('--front'), null]] }
+    { t: 'Hub: Aufbau / Stempel', d: [[H.b, 'tr', css('--ghost'), [5, 4]], [H.a, 'tr', css('--accent'), null]], one: true, x: xr(sc) },
+    { t: 'Nicken: Aufbau / Stempel', d: [[P.b, 'tr', css('--ghost'), [5, 4]], [P.a, 'tr', css('--accent'), null]], one: true, x: xr(RUN.rigPitch.sc) },
+    { t: 'Radlast-Schwankung % je mm Hub', d: [[H.b, 'lF', css('--ghost'), [5, 4]], [H.b, 'lR', css('--ghost'), [2, 3]], [H.a, 'lR', css('--rear'), null], [H.a, 'lF', css('--front'), null]], x: xr(sc) }
   ];
   const gap = 46, pw = narrow ? w - 64 : (w - 52 - 2 * gap) / 3, ph = narrow ? 190 - 46 : h - 46;
   panels.forEach((pn, k) => {
     const x0 = narrow ? 52 : 52 + k * (pw + gap), y0 = narrow ? 18 + k * 190 : 18;
     let mx = pn.one ? 1.2 : 0; for (const [arr, key] of pn.d) for (const q of arr || []) mx = Math.max(mx, q[key]);
     const st = [0.25, 0.5, 1, 2, 5, 10, 20, 50].find(q => mx / q <= 5) || 100, top = Math.ceil(mx * 1.08 / st) * st, yt = []; for (let q = 0; q <= top + 1e-9; q += st) yt.push(q);
-    const A = axes(c, x0, y0, pw, ph, lx0, lx1, 0, top, xt, yt, k === 2 || narrow ? 'Frequenz Hz' : '', pn.t, q => fmt(10 ** q), q => fmt(q, st < 1 ? 2 : 0));
+    const A = axes(c, x0, y0, pw, ph, pn.x.lx0, pn.x.lx1, 0, top, pn.x.xt, yt, k === 2 || narrow ? 'Frequenz Hz' : '', pn.t, q => fmt(10 ** q), q => fmt(q, st < 1 ? 2 : 0));
     if (pn.one) { c.strokeStyle = css('--muted'); c.setLineDash([2, 3]); c.beginPath(); c.moveTo(x0, A.Y(1)); c.lineTo(x0 + pw, A.Y(1)); c.stroke(); c.setLineDash([]); }
     for (const [arr, key, col, dash] of pn.d) if (arr) path(c, arr.map(q => Math.log10(q.f)), arr.map(q => q[key]), A.X, A.Y, col, dash ? 1.4 : 2.2, dash);
     const mark = (arr, key, col, fmin, fmax, up) => { const p = peakOf(arr, key, fmin, fmax); if (!p) return; const X = A.X(Math.log10(p.f)), Y = A.Y(p[key]); c.fillStyle = col; c.beginPath(); c.arc(X, Y, 4, 0, 7); c.fill(); c.textAlign = X > x0 + pw - 70 ? 'right' : 'left'; c.textBaseline = up ? 'bottom' : 'top'; c.fillText(`${fmt(p.f, 1)} Hz`, X + (c.textAlign === 'right' ? -6 : 6), Y + (up ? -4 : 4)); };
@@ -2646,7 +2721,7 @@ $('#dataStat').addEventListener('click', e => { const b = e.target.closest('butt
 function renderCheck() {
   const cnt = k => DATA.filter(d => d[3] === k).length;
   $('#checkSummary').innerHTML = `<div class="geo-grid">${Object.entries(STATL).map(([k, [c, l]]) => `<div class="gcell"><div class="lbl">${l}</div><div class="v">${cnt(k)}</div><span class="chip ${c}">${k === 'ok2' ? 'belastbar' : k === 'ok1' ? 'plausibel' : k === 'conf' ? 'Widerspruch markiert' : k === 'open' ? 'am Fahrzeug prüfen' : 'Annahme'}</span></div>`).join('')}</div>
-  <div class="warnbox" style="margin-top:10px"><b>Rechenfehler gefunden und behoben:</b> (1) Die Abstützung der Hinterradbremse über die Schwinge wirkte in die falsche Richtung; richtig zieht sie das Heck etwas ein. (2) Beim Bremsen und Beschleunigen blieb das Tempo konstant; jetzt folgen Fahrbahn, Luftwiderstand und Anzeige dem echten Tempo, bei Stillstand endet die Bremsung. (3) Der Bremskraftanteil in der Gabel wurde mit dem Werks-Lenkkopfwinkel gerechnet statt mit dem aktuellen, flacheren Winkel beim Eintauchen (bis zu 18 % zu viel). Gegenproben ohne Befund: Ruhelage ohne Drift, stationäre Kurve, stationäres Beschleunigen.</div>
+  <div class="warnbox" style="margin-top:10px"><b>Rechenfehler gefunden und behoben:</b> (1) Die Abstützung der Hinterradbremse über die Schwinge wirkte in die falsche Richtung; richtig zieht sie das Heck etwas ein. (2) Beim Bremsen und Beschleunigen blieb das Tempo konstant; jetzt folgen Fahrbahn, Luftwiderstand und Anzeige dem echten Tempo, bei Stillstand endet die Bremsung. (3) Der Bremskraftanteil in der Gabel wurde mit dem Werks-Lenkkopfwinkel gerechnet statt mit dem aktuellen, steileren Winkel beim Eintauchen (bis zu 18 % zu viel). Gegenproben ohne Befund: Ruhelage ohne Drift, stationäre Kurve, stationäres Beschleunigen.</div>
   <div class="warnbox" style="margin-top:10px"><b>Testzyklen:</b> Vier Rundkurse (Landstraße, Rennstrecke, Stadt, Autobahn) verketten Bremsen, Schräglage, Beschleunigen und Hindernisse mit eigenem Starttempo. Hindernisse liegen dort, wo das Motorrad zum geplanten Zeitpunkt wirklich ist, und Querfugen in Schräglage wirken mit cos(Schräglage). Drei Prüfstandsversuche stellen die Maschine auf zwei Hydraulikstempel: logarithmischer Sinus-Sweep gleichphasig (Hub) und gegenphasig (Nicken), Stempelgeschwindigkeit wie bei echten Anlagen auf 0,25 m/s begrenzt, sowie ein Falltest. Der Frequenzgang wird je Band per Ausgleichsrechnung mit der bekannten Stempelphase bestimmt. Prüfstandsversuche zählen nicht zum Setup-Index.</div>
   <div class="warnbox" style="margin-top:10px"><b>Dritte Prüfung, Rechenwerte:</b> Ein eigenständiges Prüfprogramm rechnet 137 Modellwerte unabhängig nach, ohne den Code der Seite zu benutzen: Lasten, Feder- und Gaskräfte, Luftpolster, Vorspann-Kalibrierung, Durchhang, Geometrie, Anti-Squat, Dämpferkräfte, Luftwiderstand, stationäre Achslasten beim Bremsen sowie alle Gegenrechnungen der Fahrzeugdaten und den Tempoverlauf beim Bremsen. Alle 137 stimmen. Dazu sind 124 Anzeigen der Seite gegen die Rechnung geprüft, ebenfalls ohne Abweichung. Neu bestätigt: Gangstufen und Anti-Hopping-Kupplung.</div>
   <div class="warnbox" style="margin-top:10px"><b>Zweite Prüfrunde:</b> Jeder Wert wurde ein zweites Mal gegen unabhängige Quellen geprüft, vorrangig gegen den MOTORRAD-Top-Test der K7 mit Messwerten und gegen die Suzuki-Reifenbescheinigung 2007. Korrigiert: Gewicht 200 → 212 kg (gewogen), Gabel-Offset 31,1 (errechnet) → 28 mm (Werksangabe), Federbein-Übersetzung 2,05 → 2,13 (aus 61 mm Hub), Werkseinstellung Zugstufe hinten 11 → 12 Klicks. Neu bestätigt: Drehmoment, Reifen, Bremsen, Sitzhöhe, Federrate Gabel. Neu gefunden: Federweg hinten 130 oder 135 mm.</div>
@@ -2757,11 +2832,15 @@ $('#impBtn').addEventListener('click', () => {
 });
 
 /* ============================ START ============================ */
+// Register-Leiste klebt unter der festen Kopfleiste statt dahinter; deren Höhe ändert sich mit dem Umbruch, unter 900 px steht sie nicht fest
+const topEl = $('.top'), syncTopH = () => document.documentElement.style.setProperty('--toph', getComputedStyle(topEl).position === 'sticky' ? topEl.offsetHeight + 'px' : '0px');
+if ('ResizeObserver' in window) new ResizeObserver(syncTopH).observe(topEl);
+window.addEventListener('resize', syncTopH); syncTopH();
 let toastT; function toast(m) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toastT); toastT = setTimeout(() => t.classList.remove('on'), 2600); }
 initRef(); buildSvg(); buildCut(); buildControls(); libLoad(); scenario = 'bump';
 recompute(); renderDiag(); renderData(); renderCheck(); renderLib();
 if (!matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(true);
 try { const t = localStorage.getItem('k7lab.tab'); if (t && $(`[data-tab="${t}"]`)) $(`[data-tab="${t}"]`).click(); } catch (e) {}
-let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); drawProfile(); drawHist(); }, 120); });
-matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawTime(); drawFV(); drawSpring(); drawProfile(); drawHist(); });
+let rT; window.addEventListener('resize', () => { clearTimeout(rT); rT = setTimeout(() => { drawTime(); drawFV(); drawSpring(); drawProfile(); drawHist(); drawFR(); }, 120); });
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => { drawTime(); drawFV(); drawSpring(); drawProfile(); drawHist(); drawFR(); });
 </script>
