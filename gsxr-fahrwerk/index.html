@@ -70,6 +70,9 @@ button{font:inherit;color:inherit}
 @media (max-width:1100px){.stage{grid-template-columns:minmax(0,1fr)}}
 .bikebox{position:relative;background:radial-gradient(1200px 500px at 60% 30%,var(--accent-soft),transparent 70%),var(--bg2);border:1px solid var(--line);border-radius:14px;overflow:hidden;min-width:0}
 .bikebox #bike{display:block;width:100%;height:auto;aspect-ratio:2220/1400}
+.bikebox.big{position:fixed;z-index:40;top:calc(env(safe-area-inset-top,0px) + 10px);bottom:calc(env(safe-area-inset-bottom,0px) + 10px);left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));overflow:auto;box-shadow:0 20px 80px rgba(0,0,0,.45)}
+.bikebox.big #bike{max-height:calc(100vh - 330px)!important}
+body.bigview::after{content:"";position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:35}
 #leanG{flex:none;width:76px;height:76px}
 [hidden]{display:none!important}
 .gridbg{position:absolute;inset:0;background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px;opacity:.35;pointer-events:none;mask-image:linear-gradient(to bottom,#000 40%,transparent)}
@@ -387,6 +390,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
               <label class="inline" for="exag"><input type="checkbox" id="exag"> Bewegung ×3</label>
               <label class="inline" for="ghostOn"><input type="checkbox" id="ghostOn" checked> Vergleich im Bild</label>
               <label class="inline" for="riderOn"><input type="checkbox" id="riderOn" checked> Fahrer</label>
+              <button class="btn sm" id="bigBtn" aria-pressed="false">Großansicht</button>
             </div>
           </div>
           <div class="obst">
@@ -400,7 +404,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         </div>
         <div class="change" id="change" role="status" aria-live="polite"></div>
         <div class="card scope">
-          <div class="card-h"><h3 id="tcTitle">Messschrieb</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Vorher</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nicken</span></div></div>
+          <div class="card-h"><h3 id="tcTitle">Messschrieb</h3><div class="legend"><span><i style="background:var(--front)"></i>Gabel</span><span><i style="background:var(--rear)"></i>Federbein</span><span><i class="dash"></i><span id="cmpName">Vorher</span></span><span><i style="background:var(--bad);height:2px"></i>Anschlag</span><span><i style="background:var(--accent)"></i>Nicken</span><span><i style="background:var(--bad);opacity:.35;height:9px"></i>Rad in der Luft</span><span><i style="background:var(--comp);opacity:.5;height:9px"></i>blockiert / dreht durch</span></div></div>
           <canvas class="cv" id="timeCv" height="330" aria-label="Federweg, Reifenlast und Nickwinkel über der Zeit"></canvas>
           <p class="note" id="timeNote"></p>
         </div>
@@ -1310,7 +1314,7 @@ function drawBike(st) {
   tx(G_.tWb, { x: ax.x / 2, y: -150 }, `Radstand ${fmt(p.wb, 0)} mm`);
   tx(G_.tLoadF, { x: ax.x + 330, y: 60 + lf + 30 }, `${fmt((st.ftF || 0) / 1000, 2)} kN`);
   tx(G_.tLoadR, { x: -300, y: 60 + lr + 30 }, `${fmt((st.ftR || 0) / 1000, 2)} kN`);
-  const lab = (e, pt, name, mm, u) => { tx(e, pt, `${name} ${fmt(mm, 0)} mm`); e.setAttribute('fill', u > 0.03 ? 'var(--comp)' : u < -0.03 ? 'var(--reb)' : e === G_.tFork ? 'var(--front)' : 'var(--rear)'); };
+  const lab = (e, pt, name, mm, u) => { tx(e, pt, mm < 0.5 ? `${name} ausgefedert` : `${name} ${fmt(mm, 0)} mm`); e.setAttribute('fill', u > 0.03 ? 'var(--comp)' : u < -0.03 ? 'var(--reb)' : e === G_.tFork ? 'var(--front)' : 'var(--rear)'); };
   lab(G_.tFork, { x: ax.x + 170, y: ax.y + 380 }, 'Gabel', st.sFr != null ? st.sFr : st.sF, st.vF || 0);
   lab(G_.tShock, { x: p.axR.x - 40, y: p.axR.y + 380 }, 'Federbein', st.xRr != null ? st.xRr : st.xR, st.vR || 0);
   return p;
@@ -1801,8 +1805,8 @@ function renderGeo(live) {
   const p = live || pose(SG.sagF, SG.sagR, S.fProt, S.rShim);
   const cells = geoCells(p);
   const cs = compSetup(), pS = pose(SGc.sagF, SGc.sagR, cs.fProt, cs.rShim);
-  cells.push({ l: 'Gabel eingefedert', v: `${fmt(live ? live.sF : SG.sagF, 1)} mm`, d: `<span class="d">von ${M.travelF} mm · ${fmt((live ? live.sF : SG.sagF) / M.travelF * 100)} %</span>` });
-  cells.push({ l: 'Hinten eingefedert', v: `${fmt(live ? live.xR : SG.sagR, 1)} mm`, d: `<span class="d">von ${M.travelR} mm · ${fmt((live ? live.xR : SG.sagR) / M.travelR * 100)} %</span>` });
+  cells.push({ l: 'Gabel eingefedert', v: `${fmt(Math.max(0, live ? live.sF : SG.sagF), 1)} mm`, d: `<span class="d">von ${M.travelF} mm · ${fmt((live ? live.sF : SG.sagF) / M.travelF * 100)} %</span>` });
+  cells.push({ l: 'Hinten eingefedert', v: `${fmt(Math.max(0, live ? live.xR : SG.sagR), 1)} mm`, d: `<span class="d">von ${M.travelR} mm · ${fmt((live ? live.xR : SG.sagR) / M.travelR * 100)} %</span>` });
   cells.push({ l: `${cmpLabel()}, ${LOADKEYS.every(k => cs[k] === S[k]) ? 'gleicher Fahrer' : 'andere Beladung'}`, v: `${fmt(pS.rake, 2)}°`, d: `<span class="d">Nachlauf ${fmt(pS.trail, 1)} mm</span>` });
   cells.push({ l: 'Achslast vorn', v: `${fmt(SG.L.totF / SG.L.tot * 100, 1)} %`, d: `<span class="d">${fmt(SG.L.totF, 0)} von ${fmt(SG.L.tot, 0)} kg</span>` });
   $('#geoGrid').innerHTML = cells.map(c => `<div class="gcell ${live ? 'live' : ''}"><div class="lbl">${c.l}</div><div class="v">${c.v}</div>${c.d}</div>`).join('');
@@ -1898,6 +1902,13 @@ function drawTime() {
   const top = Math.ceil(mx / 0.5) * 0.5 || 1, yt2 = []; const nMax = Math.max(2, Math.floor(h2 / 24)), st2 = [0.5, 1, 2, 5].find(q => top / q <= nMax) || 5; for (let q = 0; q <= top + 1e-9; q += st2) yt2.push(q);
   const B = axes(c, x0, y2, pw, h2, 0, T, 0, top, [], yt2, '', 'Reifenlast kN', v => v, v => fmt(v, 1));
   const kN = a => a.map(q => q / 1000);
+  const band = (arr, test, y0, hh, col, alpha) => { c.fillStyle = col; c.globalAlpha = alpha; let a0 = -1; for (let j = 0; j <= arr.length; j++) { const on = j < arr.length && test(j); if (on && a0 < 0) a0 = j; if (!on && a0 >= 0) { const x0 = B.X(r.F.t[a0]), x1 = B.X(r.F.t[Math.min(j, arr.length - 1)]); c.fillRect(x0, y0, Math.max(2, x1 - x0), hh); a0 = -1; } } c.globalAlpha = 1; };
+  band(r.F.ft, j => r.F.ft[j] < 0.05 * r.F.static, y2, h2 / 2, css('--bad'), 0.22);
+  band(r.R.ft, j => r.R.ft[j] < 0.05 * r.R.static, y2 + h2 / 2, h2 / 2, css('--bad'), 0.22);
+  if (r.F.slip) band(r.F.slip, j => r.F.slip[j], y2, h2 / 2, css('--comp'), 0.35);
+  if (r.R.slip) band(r.R.slip, j => r.R.slip[j], y2 + h2 / 2, h2 / 2, css('--comp'), 0.35);
+  band(r.F.x, j => r.F.x[j] > M.travelF - 3, y1, h1, css('--bad'), 0.3);
+  band(r.R.x, j => r.R.x[j] > M.travelR - 3, y1, h1, css('--bad'), 0.3);
   path(c, s.F.t, kN(s.F.ft), B.X, B.Y, css('--ghost'), 1.2, [5, 4]); path(c, s.R.t, kN(s.R.ft), B.X, B.Y, css('--ghost'), 1.2, [2, 3]);
   path(c, r.F.t, kN(r.F.ft), B.X, B.Y, css('--front'), 1.8); path(c, r.R.t, kN(r.R.ft), B.X, B.Y, css('--rear'), 1.8);
   const pm = Math.max(0.5, ...r.pitch.map(Math.abs), ...s.pitch.map(Math.abs)), pl = Math.ceil(pm);
@@ -1954,7 +1965,7 @@ function showFrame(i) {
 function renderTele(i) {
   const r = RUN[scenario], c = COMP[scenario];
   let mF = 0, mR = 0; for (let j = 0; j <= i; j++) { mF = Math.max(mF, r.F.x[j]); mR = Math.max(mR, r.R.x[j]); }
-  const bar = (lbl, v, mx, cv, tr, col) => `<div class="tb"><div class="tb-h"><span>${lbl}</span><b class="mono">${fmt(v, 0)} mm</b></div><div class="tr"><div class="fill" style="width:${clamp(v / tr * 100, 0, 100)}%;background:${col}"></div><div class="mx" style="left:${clamp(mx / tr * 100, 0, 100)}%" title="Kabelbinder"></div><div class="gh" style="left:${clamp(cv / tr * 100, 0, 100)}%" title="${cmpLabel()}"></div></div></div>`;
+  const bar = (lbl, v, mx, cv, tr, col) => `<div class="tb"><div class="tb-h"><span>${lbl}</span><b class="mono">${v < 0.5 ? 'ausgefedert' : fmt(v, 0) + ' mm'}</b></div><div class="tr"><div class="fill" style="width:${clamp(v / tr * 100, 0, 100)}%;background:${col}"></div><div class="mx" style="left:${clamp(mx / tr * 100, 0, 100)}%" title="Kabelbinder"></div><div class="gh" style="left:${clamp(cv / tr * 100, 0, 100)}%" title="${cmpLabel()}"></div></div></div>`;
   const lamp = (lbl, ft, st, slip, slipTxt) => { const lift = ft < 0.05 * st, bad = lift || slip; return `<div class="tl"><span class="lamp" style="background:var(--${bad ? 'bad' : 'good'})"></span><span>${lbl}<br><b class="mono">${lift ? 'abgehoben' : slip ? slipTxt : fmt(ft / 1000, 2) + ' kN'}</b></span></div>`; };
   $('#tele').innerHTML = bar('Federbein', r.R.x[i], mR, c.R.x[i], M.travelR, 'var(--rear)') + lamp('Hinterrad', r.R.ft[i], r.R.static, r.R.slip && r.R.slip[i], r.axg[i] > 0 ? 'dreht durch' : 'rutscht') +
     `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs · Luft<br><b class="mono">${fmt(r.axg[i], 2)} g · ${fmt(r.drag, 0)} N</b></span></div>` +
@@ -2008,6 +2019,9 @@ $('#cmpSeg').addEventListener('click', e => {
   CMPMODE = b.dataset.cmp; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x === b)); schedule();
 });
 $('#pinBtn').addEventListener('click', () => { PINNED = pick(S); CMPMODE = 'pin'; $$('#cmpSeg button').forEach(x => x.setAttribute('aria-pressed', x.dataset.cmp === 'pin')); schedule(); toast('Setup gemerkt. Änderungen werden jetzt damit verglichen.'); });
+function setBig(on) { const bx = $('#bikeBig') || $('#hudTitle').closest('.bikebox'); bx.classList.toggle('big', on); document.body.classList.toggle('bigview', on); $('#bigBtn').textContent = on ? 'Großansicht schließen' : 'Großansicht'; $('#bigBtn').setAttribute('aria-pressed', on); requestAnimationFrame(() => { drawProfile(); showFrame(+$('#scrub').value); }); }
+$('#bigBtn').addEventListener('click', () => setBig(!$('#hudTitle').closest('.bikebox').classList.contains('big')));
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && document.body.classList.contains('bigview')) setBig(false); });
 $('#hudTitle').closest('.bikebox').addEventListener('dblclick', e => { if (!e.target.closest('button, input, label, select, .player, .obst')) setPlaying(!playing); });
 const RSHORT = { glatt: 'glatt', gut: 'neu', mittel: 'normal', schlecht: 'schlecht', kaputt: 'sehr schlecht' };
 $('#roughSeg').innerHTML = Object.entries(ROUGH).map(([k, r]) => `<button data-r="${k}" aria-pressed="${k === roughness}" title="${r.n}">${RSHORT[k] || r.n}</button>`).join('');
@@ -2109,6 +2123,8 @@ $('#t-diag').addEventListener('click', e => {
 /* ============================ TECHNISCHE DATEN ============================ */
 const SRC = {
   MOT: ['MOTORRAD Top-Test K7 (27.02.2007, Messwerte)', 'https://www.motorradonline.de/supersportler/top-test-suzuki-gsx-r-1000-der-siebte-streich/'],
+  TM: ['Total Motorcycle: 2007 GSX-R1000 (Suzuki-Pressetext)', 'https://www.totalmotorcycle.com/photos/2007models/2007models-Suzuki-GSX-R1000'],
+  PSD: ['1000PS.de Testbericht GSX-R 1000', 'https://www.1000ps.de/testbericht-2053415-suzuki-gsxr-1000'],
   MOG: ['MOTORRAD Gebrauchtberatung GSX-R 1000', 'https://www.motorradonline.de/ratgeber/gebrauchtberatung-suzuki-gsx-r-1000-der-supersportler-von-suzuki-als-gebrauchte/'],
   MCS: ['motorcyclespecs.co.za 2007 (Werksdaten)', 'https://www.motorcyclespecs.co.za/model/suzu/suzuki_gsxr1000%2007.htm'],
   CW: ['Cycle World, First Ride 2007', 'https://issues.cycleworld.com/article/2007/5/1/2007-suzuki-4gsx-r1000'],
@@ -2144,13 +2160,13 @@ const DATA = [
   ['Motor', 'Hubraum', '999 cm³ (998,6 cm³)', 'ok2', ['MOT', 'MCS'], 'Gegenrechnung: 73,4² × π/4 × 59,0 × 4 = 998,6 cm³', 'bestätigt'],
   ['Motor', 'Bohrung × Hub', '73,4 × 59,0 mm', 'ok2', ['MOT', 'MCS', 'MD'], 'Rechnerisch konsistent mit 998,6 cm³', 'bestätigt'],
   ['Motor', 'Verdichtung', '12,5 : 1', 'ok2', ['MOT', 'MCS'], '', 'neu bestätigt (Runde 1: nur 1 Quelle)'],
-  ['Motor', 'Nennleistung', '136 kW (185 PS) bei 12.000 /min', 'ok2', ['MOT', 'MOG'], '185 PS × 0,7355 = 136,1 kW. Prüfstand MOTORRAD: 180 PS. Die 178 PS auf 1000PS sind der Wert der K5/K6. motorcyclespecs nennt 185,1 hp, aber 138 kW (Einheitenfehler).', 'Widerspruch aufgelöst'],
+  ['Motor', 'Nennleistung', '136 kW (185 PS) bei 12.000 /min', 'ok2', ['MOT', 'MOG', 'PSD'], '185 PS × 0,7355 = 136,1 kW. Prüfstand MOTORRAD: 180 PS. Die 178 PS auf 1000PS sind der Wert der K5/K6. motorcyclespecs nennt 185,1 hp, aber 138 kW (Einheitenfehler). 1000PS.de maß 170 PS am Hinterrad, was nach Antriebsverlusten zu 180 PS an der Kurbelwelle passt.', 'Widerspruch aufgelöst'],
   ['Motor', 'Drehmoment', '117 Nm bei 10.000 /min', 'ok2', ['MOT', 'MCS'], 'K5/K6: 118 Nm bei 9.000 /min', 'neu bestätigt (Runde 1: offen)'],
-  ['Motor', 'Getriebe-Übersetzungen', '2,562 · 2,052 · 1,714 · 1,500 · 1,360 · 1,269', 'ok1', ['MCS'], '6 Gänge', 'neu'],
+  ['Motor', 'Getriebe-Übersetzungen', '2,562 · 2,052 · 1,714 · 1,500 · 1,360 · 1,269', 'ok2', ['MCS', 'TM'], '6 Gänge, Kette 530', 'Runde 3: bestätigt'],
   ['Antrieb', 'Sekundärübersetzung', 'Ritzel 17 / Kettenrad 43 (2,53), Kette 530 mit 112 Gliedern', 'ok2', ['JT', 'SC'], 'Grundlage für das Anti-Squat aus der Kettenzug-Geometrie', 'neu'],
   ['Elektronik', 'Fahrmodi S-DMS', 'Drei Leistungskennfelder A / B / C, Schalter am Lenker', 'ok2', ['CW', 'BSA'], 'Beeinflusst nur die Leistungsentfaltung, nicht das Fahrwerk', 'neu bestätigt'],
   ['Elektronik', 'Lenkungsdämpfer', 'Hydraulisch, elektronisch geregelt: Magnetventil mit Kegelnadel, dämpft abhängig vom Tempo. Nicht von Hand einstellbar', 'ok2', ['CW', 'ULT', 'JB'], 'MOTORRAD: bei niedrigem Tempo kaum spürbar', 'neu bestätigt'],
-  ['Antrieb', 'Getriebe / Kupplung', '6 Gänge, Anti-Hopping-Kupplung', 'ok1', ['CW', 'MCS'], '6 Gänge 2 Quellen; Anti-Hopping nur Cycle World', 'teilweise bestätigt'],
+  ['Antrieb', 'Getriebe / Kupplung', '6 Gänge, einstellbare Anti-Hopping-Kupplung, hydraulisch betätigt', 'ok2', ['CW', 'TM'], 'Suzuki-Pressetext 2007: „adjustable back-torque limiting clutch“', 'Runde 3: bestätigt'],
   ['Fahrwerk', 'Rahmen', 'Aluminium-Brückenrahmen', 'open', [], 'In keiner Quelle der beiden Runden ausdrücklich belegt', 'offen'],
   ['Fahrwerk', 'Gabel', 'Upside-down, Ø 43 mm, DLC-beschichtete Gleitrohre', 'ok2', ['MOT', 'MCS'], 'Hersteller KYB in keiner Quelle belegt', 'bestätigt'],
   ['Fahrwerk', 'Gabel-Einsteller', 'Vorspannung, Zugstufe, Druckstufe Low- und High-Speed', 'ok2', ['GX', 'SF'], '', 'bestätigt'],
@@ -2214,6 +2230,7 @@ $('#dataStat').addEventListener('click', e => { const b = e.target.closest('butt
 function renderCheck() {
   const cnt = k => DATA.filter(d => d[3] === k).length;
   $('#checkSummary').innerHTML = `<div class="geo-grid">${Object.entries(STATL).map(([k, [c, l]]) => `<div class="gcell"><div class="lbl">${l}</div><div class="v">${cnt(k)}</div><span class="chip ${c}">${k === 'ok2' ? 'belastbar' : k === 'ok1' ? 'plausibel' : k === 'conf' ? 'Widerspruch markiert' : k === 'open' ? 'am Fahrzeug prüfen' : 'Annahme'}</span></div>`).join('')}</div>
+  <div class="warnbox" style="margin-top:10px"><b>Dritte Prüfung, Rechenwerte:</b> Ein eigenständiges Prüfprogramm rechnet 128 Modellwerte unabhängig nach, ohne den Code der Seite zu benutzen: Lasten, Feder- und Gaskräfte, Luftpolster, Vorspann-Kalibrierung, Durchhang, Geometrie, Anti-Squat, Dämpferkräfte, Luftwiderstand, stationäre Achslasten beim Bremsen sowie alle Gegenrechnungen der Fahrzeugdaten. Alle 128 stimmen. Dazu sind 124 Anzeigen der Seite gegen die Rechnung geprüft, ebenfalls ohne Abweichung. Neu bestätigt: Gangstufen und Anti-Hopping-Kupplung.</div>
   <div class="warnbox" style="margin-top:10px"><b>Zweite Prüfrunde:</b> Jeder Wert wurde ein zweites Mal gegen unabhängige Quellen geprüft, vorrangig gegen den MOTORRAD-Top-Test der K7 mit Messwerten und gegen die Suzuki-Reifenbescheinigung 2007. Korrigiert: Gewicht 200 → 212 kg (gewogen), Gabel-Offset 31,1 (errechnet) → 28 mm (Werksangabe), Federbein-Übersetzung 2,05 → 2,13 (aus 61 mm Hub), Werkseinstellung Zugstufe hinten 11 → 12 Klicks. Neu bestätigt: Drehmoment, Reifen, Bremsen, Sitzhöhe, Federrate Gabel. Neu gefunden: Federweg hinten 130 oder 135 mm.</div>
   <p class="note" style="margin-top:10px">Bei den Werkseinstellungen widersprechen sich die Forenangaben in mehreren Punkten. Das Tool nutzt die Mehrheitsangabe als Ausgangspunkt. Vor dem ersten Verstellen deshalb den Ist-Zustand deiner Maschine zählen und notieren: Klicks ganz zudrehen, mitzählen, wieder auf den alten Wert zurück.</p>`;
   const s0 = sags(Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100 }, STOCK)), p0 = pose(REFC.sF, REFC.xR, 0, 0);
