@@ -10,6 +10,8 @@ Interaktives Fahrwerks-Dashboard für die Suzuki GSX-R 1000 K7 (2007–2008) mit
 - Prüfstand-Ansicht: 21 Prüfsituationen als Kacheln in fünf Gruppen mit Note, Notenbalken und Änderung; feste Kopfleiste mit Index-Ring und Gruppennoten; Federbein links, Gabel rechts, Maschine und Messschrieb in der Mitte. Jede Änderung rechnet sofort neu; die Zeile „Letzte Änderung“ zeigt die Wirkung, die gestrichelte Kontur den Zustand vorher. Vergleich mit Vorher, Serie oder gemerktem Setup
 - Einstell-Landkarte: Farbband unter jedem Fahrwerks-Einsteller zeigt die Note der gewählten Prüfsituation über den ganzen Regelbereich, ▲ markiert die beste Stellung und stellt sie per Klick ein
 - Kraftschlussgrenze: Blockiert das Vorderrad oder dreht das Hinterrad durch, überträgt der Reifen nur Gleitreibung; Tempo, Weg und Nicken folgen der echten Verzögerung (Anzeige Soll/Ist). Reifensteifigkeit folgt dem aktuellen Tempo
+- Auswertung: Zerlegung, wo der Setup-Index Punkte verliert (Kriterium × Achse, summiert exakt auf 100 − Index, mit den verursachenden Situationen), Wirkung jedes Einstellers auf den Gesamtindex als Tornado-Diagramm mit Übernehmen-Knopf, Testparcours als Farbtabelle
+- Reifen-Lastempfindlichkeit (µ sinkt mit der Radlast) und 2 ms Verzögerung der Dämpferkraft (Hysterese durch Ölkompressibilität und Shim-Trägheit)
 - Schnelle Rechnung: Federkennlinien, Reifen-Progression, Reibung und Fahrmanöver sind tabelliert (Abweichung unter 0,0001 mm), alle 21 Läufe für Setup und Vergleich in rund 0,2 s, verteilt auf ruckelfreie Häppchen
 - Live-Seitenansicht mit echter Kinematik: Lenkkopfwinkel, Nachlauf, Radstand, Nickwinkel
 - Durchhang-Messassistent mit konkreter Vorspann-Empfehlung

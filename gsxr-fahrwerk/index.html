@@ -314,6 +314,28 @@ details.grp>summary .tag{font-family:var(--f-mono);font-size:.7rem;color:var(--m
 .two{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
 @media (max-width:760px){.two{grid-template-columns:minmax(0,1fr)}}
 .recs{display:flex;flex-direction:column;gap:8px}
+.hm{background:color-mix(in srgb,var(--hc) 14%,transparent)}
+.evalgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:start}
+@media (max-width:1100px){.evalgrid{grid-template-columns:minmax(0,1fr)}}
+.loss{display:flex;flex-direction:column;gap:7px}
+.lrow{display:grid;grid-template-columns:172px minmax(0,1fr) 64px;gap:4px 10px;align-items:center;font-size:.8rem}
+.lrow .lb{height:12px;border-radius:4px;background:var(--line);position:relative;overflow:hidden}
+.lrow .lb i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;background:var(--c)}
+.lrow .lb u{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--fg);opacity:.55}
+.lrow b{font-family:var(--f-mono);text-align:right}
+.lrow .ls{grid-column:2/4;font-size:.7rem;color:var(--muted);margin-top:-3px}
+.lsum{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;font-size:.8rem;color:var(--muted);margin-bottom:8px}.lsum b{font-family:var(--f-mono);color:var(--fg);font-size:1rem}
+.tor{display:flex;flex-direction:column;gap:5px}
+.trow{display:grid;grid-template-columns:140px 46px minmax(0,1fr) minmax(0,1fr) 46px 64px;gap:4px;align-items:center;font-size:.78rem}
+.trow .tv{font-family:var(--f-mono);font-size:.7rem;text-align:right}.trow .tv.r{text-align:left}
+.trow .th{height:16px;position:relative}
+.trow .th i{position:absolute;top:0;bottom:0;border-radius:3px;background:var(--c)}
+.trow .th.l i{right:0}.trow .th.r i{left:0}.trow .th.l{border-right:1px solid var(--line2)}
+.trow small{display:block;color:var(--dim);font-family:var(--f-mono);font-size:.64rem}
+.trow .btn{padding:2px 6px;font-size:.7rem}
+.thead{display:grid;grid-template-columns:186px minmax(0,1fr) minmax(0,1fr) 110px;gap:4px;font-size:.66rem;color:var(--muted);text-transform:uppercase;letter-spacing:.06em}
+.thead span:nth-child(2){text-align:right}
+@media (max-width:640px){.trow{grid-template-columns:96px 40px minmax(0,1fr) minmax(0,1fr) 40px 52px}.thead{grid-template-columns:136px minmax(0,1fr) minmax(0,1fr) 92px}.lrow{grid-template-columns:110px minmax(0,1fr) 56px}}
 .rec{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:start;padding:9px 10px;border:1px solid var(--line);border-radius:10px;background:var(--panel2)}
 .rec .ic{width:22px;height:22px;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:.8rem;color:var(--accent-ink)}
 .rec p{margin:0;font-size:.84rem}
@@ -499,6 +521,20 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
           <div class="card-h"><h3>Testparcours: alle Fahrsituationen</h3><span class="note" id="matrixNote">aktuelles Setup gegen Vergleich, gleicher Fahrer, gleiche Hindernisse</span></div>
           <div class="tablewrap"><table id="matrix"></table></div>
         </div>
+        <div class="evalgrid">
+          <div class="card" id="lossCard">
+            <div class="card-h"><h3>Wo der Index Punkte verliert</h3><span class="note">Summe aller Balken = 100 − Index</span></div>
+            <div class="lsum" id="lossSum"></div>
+            <div class="loss" id="loss"></div>
+            <p class="note">Zerlegung nach Kriterium und Achse über alle Fahrsituationen (ohne Prüfstand), gewichtet wie im Einsatzprofil. Strich = Vergleich. Darunter die Situationen mit dem größten Anteil.</p>
+          </div>
+          <div class="card" id="torCard">
+            <div class="card-h"><h3>Wirkung der Einsteller auf den Index</h3><span class="note" id="torNote">wird gerechnet …</span></div>
+            <div class="thead"><span>Einsteller · Schritt</span><span>weicher / weniger</span><span>härter / mehr</span><span></span></div>
+            <div class="tor" id="tor"></div>
+            <p class="note">Jeder Einsteller einzeln um den angegebenen Schritt verstellt, alle Fahrsituationen neu gerechnet. Grün = Index steigt. Die Wirkungen addieren sich nicht genau, nach dem Übernehmen wird neu gerechnet.</p>
+          </div>
+        </div>
         <div class="card">
           <div class="card-h"><h3>Analyse &amp; Empfehlungen</h3><button class="btn sm pri" data-act="rec">Empfehlung übernehmen</button></div>
           <div class="recs" id="recs"></div>
@@ -590,6 +626,8 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Abgleich mit Messung:</b> MOTORRAD hat 10,1 m/s² mittlere Verzögerung gemessen und beschreibt ein abhebendes Hinterrad. Das Modell zeigt bei 1,03 g dasselbe.</li>
         <li><b>Gabel:</b> zwei lineare Stahlfedern mit Vorspannung, adiabates Luftpolster (Ölstand verändert das Luftvolumen), Endanschlag mit progressivem Puffer. Kräfte werden über den Lenkkopfwinkel in die Senkrechte umgerechnet.</li>
         <li><b>Federbein:</b> Radfederrate = Federrate / Übersetzung², leicht progressiv durch die Umlenkung.</li>
+        <li><b>Dämpfer-Verzögerung:</b> Die Ventilkraft folgt der Kolbengeschwindigkeit mit 2 ms Zeitkonstante (Kompressibilität von Öl und Gaspolster, Trägheit der Shims; Modellannahme, typische Größenordnung 1–5 ms). Das ergibt die Hysterese, die Dämpferprüfstände bei schnellen Stößen messen, und etwas weniger Dämpfung oberhalb von rund 30 Hz.</li>
+        <li><b>Reifen-Lastempfindlichkeit:</b> Der Reibwert sinkt mit der Radlast: µ = µ0 · (Last / statische Last)^-0,08 (Modellannahme, Literatur 0,05–0,15). Beim harten Bremsen hat das hoch belastete Vorderrad daher etwas weniger Reserve als mit konstantem µ.</li>
         <li><b>Dämpfer als Ventilmodell:</b> Je Richtung zwei parallele Ölwege. Die Bypass-Nadel (Low-Speed) hat einen laminaren und einen quadratischen Anteil; ihr Querschnitt wächst mit den Klicks (Nadelkegel, Exponent 1,4). Daher wirken Klicks nahe „ganz zu“ stark und weit offen kaum noch. Das Shim-Paket (High-Speed) öffnet ab einer Öffnungskraft, die der High-Speed-Einsteller vorspannt. Die Kennlinie wird je Einstellung als Tabelle berechnet und im Schnittbild sichtbar gemacht.</li>
         <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Bremskraft 85 % vorn, 15 % hinten. Vorn wirkt die axiale Komponente der Bremskraft in der Gabel, gerechnet mit dem aktuellen Lenkkopfwinkel. Hinten stützt sich der Bremssattel über die Schwinge ab und zieht das Heck etwas ein. Was der Reifen nicht übertragen kann, kommt auch nicht an: Blockiert das Vorderrad oder dreht das Hinterrad durch, wirkt nur noch Gleitreibung (85 % der Haftreibung, Modellannahme), die echte Verzögerung sinkt und die Anzeige zeigt Soll und Ist. Hebt ein Rad ab, fällt seine Brems- oder Antriebskraft weg. Die Reifensteifigkeit folgt dem aktuellen Tempo. Das Tempo ändert sich mit der Verzögerung: Fahrbahn, Luftwiderstand und Anzeige folgen dem echten Weg, bei Stillstand endet die Bremsung. Anti-Squat wird aus der Kettenzug-Geometrie berechnet (Ritzel 17, Kettenrad 43, Kette 530): etwa 125 % beim Fahrer-Durchhang, mit zunehmender Einfederung fallend.</li>
         <li><b>Kurven:</b> Fliehkraft erhöht die Last um 1/cos(Schräglage). Fahrbahnwellen wirken in Schräglage nur mit ihrem Anteil in Fahrzeugebene.</li>
@@ -748,7 +786,7 @@ const CC = {
   F: 2 * Math.sqrt((2 * M.kFstock * 1000 / (COSR * COSR)) * REF.msF),
   R: 2 * Math.sqrt((M.kRstock * 1000 / (M.MR * M.MR)) * REF.msR)
 };
-const DAMP = { area0: 3, areaExp: 1.4, linShare: 0.6, hsFc: 0.35, hsSlope: 0.25, dv: 0.01, n: 400 };
+const DAMP = { area0: 3, areaExp: 1.4, linShare: 0.6, hsFc: 0.35, hsSlope: 0.25, dv: 0.01, n: 400, lag: 0.002 };
 const clickArea = n => DAMP.area0 + Math.pow(Math.max(0, n), DAMP.areaExp);
 // Viskosität von Gabel-/Dämpferöl relativ zu 40 °C (typisch ISO VG 10–15)
 const VISC = [[0, 5.0], [20, 2.2], [40, 1.0], [60, 0.55], [80, 0.36]];
@@ -1032,7 +1070,7 @@ const pw115 = r => { if (r >= 6) return Math.pow(r, 1.15); const q = r * 500, k 
 // Antrieb 17/43, Kette 530 (Teilung 15,875 mm): Teilkreisradien der Kettenräder
 const DRIVE = { zF: 17, zR: 43, pitch: 15.875 }, rSpr = z => DRIVE.pitch / (2 * Math.sin(Math.PI / z));
 const BRAKE = { rearShare: 0.15 };            // Anteil Hinterradbremse an der Bremskraft (Modell)
-const MU = { dry: 1.25, wet: 0.75, slide: 0.85 };          // Kraftschluss Sportreifen trocken / nass (Modell, Literatur 1,2–1,4 trocken)
+const MU = { dry: 1.25, wet: 0.75, slide: 0.85, ls: 0.08 };          // Kraftschluss Sportreifen trocken / nass (Modell, Literatur 1,2–1,4 trocken)
 // Anti-Squat aus Kettenzug-Geometrie (Schnittpunkt Kettentrum/Schwinge), abhängig vom Federweg hinten
 function antiSquatAt(xR, hMM) {
   const a = M.alpha0 * DEG - (xR - REFC.xR) / M.Ls, A = { x: PIV.x - M.Ls * Math.cos(a), y: PIV.y - M.Ls * Math.sin(a) };
@@ -1080,6 +1118,8 @@ function simRun(st, sc, v, L) {
   const hP = PIV.y / 1000, lP = PIV.x / 1000;            // Schwingenlager über dem Boden / hinter der Achse
   const asStat = asAt(x0R);
   const frF = FRIC.F / COSR, frR = FRIC.R;
+  const NF0 = FF0 + M.muF * G, NR0 = FR0 + pairR0 + M.muR * G;   // statische Radlasten: Bezug der Lastempfindlichkeit
+  const KLAG = DT / DAMP.lag; let dFs = 0, dRs = 0;                // Dämpferkraft folgt mit Verzögerung (Startwert: Ruhe)
   let z = 0, vz = 0, th = 0, w = 0, zf = 0, vf = 0, zr = 0, vr = 0, zd = 0, vd = 0, dist = 0, vel = v; // dist/vel: zurückgelegter Weg und aktuelles Tempo
   const eF = sc.envF, eR = sc.envR;
   let pF = eF(0), pR = eR(-wb);
@@ -1103,12 +1143,15 @@ function simRun(st, sc, v, L) {
     const Xn = L.tot * ax + Fdt;                                    // nötige Längskraft am Boden
     const X = Xn < 0 ? (tF > 0 ? Xn : 0) : (tR > 0 ? Xn : 0), Fb = X < 0 ? -X : 0; // Bremsen nur mit Vorderrad-, Antrieb nur mit Hinterradkontakt
     const uF = vf - vyF, uR = vr - vyR;
-    const FbR = Math.min(Fb * BRAKE.rearShare, mu * tR), FbQ = Fb - FbR;   // Bremskraftverteilung, Hinterrad durch Kraftschluss begrenzt
-    const slipF = FbQ > mu * tF + 1, slipR = X > 0 ? X > mu * tR + 1 : false;
-    const FbF = slipF ? MUS * mu * tF : FbQ;                         // blockiertes Vorderrad überträgt nur Gleitreibung
-    const Xa = X > 0 ? (slipR ? MUS * mu * tR : X) : -(FbF + FbR);   // tatsächliche Längskraft am Boden
+    // Lastempfindlichkeit: µ = µ0 · (N / N0)^-0,08, nur gerechnet, wenn Längskraft wirkt
+    const muF = Fb > 0 ? mu * Math.pow(Math.max(0.25, tF / NF0), -MU.ls) : mu, muR = Fb > 0 || X > 0 ? mu * Math.pow(Math.max(0.25, tR / NR0), -MU.ls) : mu;
+    const FbR = Math.min(Fb * BRAKE.rearShare, muR * tR), FbQ = Fb - FbR;   // Bremskraftverteilung, Hinterrad durch Kraftschluss begrenzt
+    const slipF = FbQ > muF * tF + 1, slipR = X > 0 ? X > muR * tR + 1 : false;
+    const FbF = slipF ? MUS * muF * tF : FbQ;                         // blockiertes Vorderrad überträgt nur Gleitreibung
+    const Xa = X > 0 ? (slipR ? MUS * muR * tR : X) : -(FbF + FbR);   // tatsächliche Längskraft am Boden
     const axA = (Xa - Fdt) / L.tot;                                   // tatsächliche Längsbeschleunigung
-    const dF = dampF(uF, dmp.F) + fricF(uF, frF + FRIC.muBrake * FbF), dR = dampF(uR, dmp.R) + fricF(uR, frR);
+    dFs += (dampF(uF, dmp.F) - dFs) * KLAG; dRs += (dampF(uR, dmp.R) - dRs) * KLAG; // Ventilkraft baut sich mit Zeitkonstante auf
+    const dF = dFs + fricF(uF, frF + FRIC.muBrake * FbF), dR = dRs + fricF(uR, frR);
     const FF = SpF(xF) + dF, FR = SpR(xR) + dR;
     const pairF = FbF * Math.tan(M.rake0 * DEG + th);              // Bremskraft-Anteil entlang der Gabel, mit aktuellem Lenkkopfwinkel (taucht die Front ein, wird er flacher)
     const pairR = (Xa > 0 ? asAt(xR) * Xa * L.h / wb : 0) - FbR * hP / lP; // Kettenzug-Anti-Squat (hebt das Heck) und Hinterradbremse: Sattel an der Schwinge, die Bremskraft zieht das Rad zum Rahmen (federt ein)
@@ -1696,6 +1739,68 @@ function drawMap(k) {
   b.title = `Auf ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]} stellen: Note ${fmt(best.sc, 1)} statt ${cur ? fmt(cur[1], 1) : '–'}`;
 }
 document.addEventListener('click', e => { const b = e.target.closest('.lbest'); if (!b) return; e.stopPropagation(); const k = b.closest('.lmap').id.slice(3); setVal(k, +b.dataset.best); toast(`${ctlName(k)}: beste Stellung für „${SCEN[scenario].short}“ eingestellt`); }, true);
+/* ---------- Auswertung: Punkteverlust ---------- */
+const CRIT = [['comfort', 'Komfort'], ['grip', 'Haftung'], ['control', 'Kontrolle'], ['reserve', 'Federweg-Reserve']];
+const LOSSHINT = {
+  comfort: a => `Druckstufe ${a} (LS/HS) öffnen oder Luftdruck ${a} prüfen`,
+  grip: a => `High-Speed-Druckstufe ${a} öffnen, Zugstufe ${a} nicht zu offen, Luftdruck ${a} prüfen`,
+  control: a => `Zugstufe ${a} schließen gegen Nachschwingen, Low-Speed-Druckstufe ${a} für mehr Ruhe`,
+  reserve: a => `Vorspannung${a === 'vorn' ? ', Ölstand' : ''} oder härtere Feder ${a}`
+};
+function lossBreakdown(run, st, sg) {
+  const ks = Object.keys(SCEN).filter(k => !SCEN[k].rig), w = PROFILES[st.profile].w, n = ks.length, out = [];
+  for (const [c, name] of CRIT) for (const ax of ['F', 'R']) {
+    let tot = 0; const per = ks.map(k => { const l = 0.75 * w[c] * (100 - run[k]['s' + ax][c]) / 2 / n; tot += l; return [k, l]; }).sort((a, b) => b[1] - a[1]);
+    out.push({ id: c + ax, c, name: `${name} ${ax === 'F' ? 'vorn' : 'hinten'}`, ax: ax === 'F' ? 'vorn' : 'hinten', tot, top: per.filter(p => p[1] > 0.05).slice(0, 3) });
+  }
+  out.push({ id: 'static', c: 'static', name: 'Durchhang statisch', tot: 0.25 * (100 - staticScore(st, sg)), top: [] });
+  return out;
+}
+function renderLoss() {
+  if (!RUN || RUNPART) return;
+  const a = lossBreakdown(RUN, S, SG), b = Object.fromEntries(lossBreakdown(COMP, compSetup(), SGc).map(x => [x.id, x.tot])), sum = a.reduce((q, x) => q + x.tot, 0);
+  const mx = Math.max(1, ...a.map(x => Math.max(x.tot, b[x.id]))), col = { comfort: 'var(--accent)', grip: 'var(--front)', control: 'var(--rear)', reserve: 'var(--warn)', static: 'var(--muted)' };
+  $('#lossSum').innerHTML = `Index <b>${fmt(100 - sum, 1)}</b> · Verlust <b>${fmt(sum, 1)}</b> Punkte · ${cmpLabel()} <b>${fmt(Object.values(b).reduce((q, x) => q + x, 0), 1)}</b>`;
+  $('#loss').innerHTML = a.sort((x, y) => y.tot - x.tot).map(x => { const d = x.tot - b[x.id];
+    return `<div class="lrow"><span>${x.name}</span><div class="lb" style="--c:${col[x.c]}"><i style="width:${(x.tot / mx * 100).toFixed(1)}%"></i><u style="left:${(b[x.id] / mx * 100).toFixed(1)}%" title="${cmpLabel()}: ${fmt(b[x.id], 1)}"></u></div><b>−${fmt(x.tot, 1)}${Math.abs(d) >= 0.05 ? ` <span class="${d < 0 ? 'delta-p' : 'delta-n'}" style="font-size:.66rem">${d > 0 ? '+' : ''}${fmt(-d, 1)}</span>` : ''}</b>
+      <div class="ls">${x.top.length ? 'vor allem ' + x.top.map(([k, l]) => `${SCEN[k].short} ${fmt(l, 2)}`).join(' · ') + '. ' : ''}${x.c === 'static' ? 'Durchhang mit Vorspannung in den Zielbereich bringen (Tab „Durchhang messen“).' : x.tot > 0.3 ? 'Ansatz: ' + LOSSHINT[x.c](x.ax) + '.' : ''}</div></div>`; }).join('');
+}
+/* ---------- Auswertung: Wirkung der Einsteller auf den Index ---------- */
+const TSTEP = { fPre: 1, fReb: 2, fLS: 2, fHS: 0.5, fOil: 5, fProt: 2, kF: 0.5, rPre: 1, rReb: 2, rLS: 2, rHS: 0.5, rShim: 2, kR: 5, pF: 0.1, pR: 0.1 };
+const TOR = { key: '', done: '', res: {}, base: 0, t: null, vis: true };
+function torSchedule() {
+  if (!RUN || RUNPART) return;
+  const key = JSON.stringify([S, speed, SP, roughness]);
+  if (!TOR.vis) { if (key !== TOR.done) $('#torNote').textContent = 'wird gerechnet, sobald sichtbar'; return; }
+  if (key === TOR.done || key === TOR.key) return;
+  TOR.key = key; TOR.res = {}; TOR.base = overall(RUN, S, SG); clearTimeout(TOR.t);
+  const ks = Object.keys(SCEN).filter(k => !SCEN[k].rig), jobs = [], base = JSON.parse(JSON.stringify(S));
+  for (const k of MAPKEYS) { const c = findCtl(k), hs = c.hard || 1; for (const dir of [-1, 1]) { const v = clamp(+(base[k] + dir * hs * TSTEP[k]).toFixed(4), c.min, c.max); if (v !== base[k]) jobs.push({ k, dir, v, st: Object.assign({}, base, { [k]: v }), sum: 0, i: 0 }); else TOR.res[k + dir] = null; } }
+  let j = 0; $('#torNote').textContent = `wird gerechnet … 0/${jobs.length}`;
+  const step = () => {
+    if (TOR.key !== key) return;
+    const t0 = performance.now();
+    while (j < jobs.length && performance.now() - t0 < 8) {
+      const q = jobs[j]; q.sum += scoreScen(q.st, ks[q.i++]);
+      if (q.i === ks.length) { TOR.res[q.k + q.dir] = { v: q.v, d: 0.75 * q.sum / ks.length + 0.25 * staticScore(q.st, sags(q.st)) - TOR.base }; j++; if (j % 4 === 0 || j === jobs.length) { drawTor(); $('#torNote').textContent = j < jobs.length ? `wird gerechnet … ${j}/${jobs.length}` : `Index ${fmt(TOR.base, 1)}, je Einsteller ein Schritt`; } }
+    }
+    if (j < jobs.length) TOR.t = setTimeout(step, 0); else TOR.done = key;
+  };
+  TOR.t = setTimeout(step, 600);
+}
+function drawTor() {
+  const rows = MAPKEYS.map(k => ({ k, lo: TOR.res[k + '-1'], hi: TOR.res[k + '1'] })).filter(r => r.lo !== undefined || r.hi !== undefined);
+  const mag = r => Math.max(r.lo ? Math.abs(r.lo.d) : 0, r.hi ? Math.abs(r.hi.d) : 0), mx = Math.max(0.5, ...rows.map(mag));
+  rows.sort((a, b) => mag(b) - mag(a));
+  const half = (q, side) => { if (!q) return `<div class="th ${side}"></div>`; const w = Math.max(1, Math.abs(q.d) / mx * 100), c = q.d > 0.05 ? 'var(--good)' : q.d < -0.05 ? 'var(--bad)' : 'var(--line2)';
+    return `<div class="th ${side}" style="--c:${c}"><i style="width:${w.toFixed(1)}%"></i></div>`; };
+  const num = (q, side) => `<span class="tv ${side}" style="color:${!q ? 'var(--dim)' : q.d > 0.05 ? 'var(--good)' : q.d < -0.05 ? 'var(--bad)' : 'var(--muted)'}">${!q ? 'Ende' : (q.d >= 0 ? '+' : '') + fmt(q.d, 2)}</span>`;
+  const nm = k => (SIDE_F.includes(k) ? 'Gabel ' : SIDE_R.includes(k) ? 'Federbein ' : 'Reifen ') + (findCtl(k).short || findCtl(k).label);
+  $('#tor').innerHTML = rows.map(r => { const c = findCtl(r.k), best = [r.lo, r.hi].filter(Boolean).sort((a, b) => b.d - a.d)[0];
+    return `<div class="trow"><span>${nm(r.k)}<small>± ${fmt(TSTEP[r.k], TSTEP[r.k] < 1 ? 2 : 0)} ${c.unit.split(' ')[0]}</small></span>${num(r.lo, '')}${half(r.lo, 'l')}${half(r.hi, 'r')}${num(r.hi, 'r')}${best && best.d >= 0.2 ? `<button class="btn sm" data-tk="${r.k}" data-tv="${best.v}" title="${ctlName(r.k)} auf ${fmt(best.v, c.d)} ${c.unit.split(' ')[0]}">→ ${fmt(best.v, c.d)}</button>` : '<span></span>'}</div>`; }).join('');
+}
+document.addEventListener('click', e => { const b = e.target.closest('[data-tk]'); if (!b) return; e.stopPropagation(); setVal(b.dataset.tk, +b.dataset.tv); toast(`${ctlName(b.dataset.tk)} übernommen, Index wird neu gerechnet`); }, true);
+if ('IntersectionObserver' in window) { TOR.vis = false; new IntersectionObserver(es => { TOR.vis = es.some(x => x.isIntersecting); if (TOR.vis) torSchedule(); }).observe(document.getElementById('torCard')); }
 function rowHtml(k) {
   const c = findCtl(k), inv = c.hard === -1, pct = (STOCK_ALL[k] - c.min) / (c.max - c.min) * 100, p = inv ? 100 - pct : pct;
   const minus = inv ? 1 : -1, soft = c.hard ? 'weicher' : 'weniger', hard = c.hard ? 'härter' : 'mehr';
@@ -1882,7 +1987,7 @@ function renderAll(lite) {
   showFrame(+$('#scrub').value); // zeichnet auch Fahrbahnprofil und Messschrieb
   if (lite) { clearTimeout(renderAll._t); renderAll._t = setTimeout(renderRest, 0); } else renderRest();
 }
-function renderRest() { clearTimeout(renderAll._t); mapSchedule(); drawFR(); renderMatrix(); if (!RUNPART) renderRecs(); drawFV(); drawSpring(); renderDials(); renderSagTab(); drawHist(); }
+function renderRest() { clearTimeout(renderAll._t); mapSchedule(); renderLoss(); torSchedule(); drawFR(); renderMatrix(); if (!RUNPART) renderRecs(); drawFV(); drawSpring(); renderDials(); renderSagTab(); drawHist(); }
 function renderKpis(sc, scC) {
   const r = RUN[scenario], c = COMP[scenario], [zf, zr] = SAGZ[S.profile];
   const inZ = (v, [a, b]) => v >= a && v <= b;
@@ -1928,9 +2033,10 @@ function renderChange(idx) {
   box.innerHTML = `<span class="cl">Letzte Änderung</span><span>${what}</span>${eff}`;
   if (box._t !== LAST.t) { box.classList.remove('new'); void box.offsetWidth; box.classList.add('new'); box._t = LAST.t; }
 }
+const useChip = k => k.bottom ? 'bad' : k.usage > 0.85 ? 'warn' : 'good';
 function renderMatrix() {
   const cs = compSetup(); $('#matrixNote').textContent = `aktuelles Setup gegen ${cmpLabel()}, ${LOADKEYS.every(k => cs[k] === S[k]) ? 'gleicher Fahrer' : 'andere Beladung'}, gleiche Hindernisse`;
-  const cell = (a, b, d = 0) => { const diff = a - b; return `<td class="n">${fmt(a, d)} <span class="${diff > 0.5 ? 'delta-p' : diff < -0.5 ? 'delta-n' : ''}">${Math.abs(diff) >= 0.5 ? (diff > 0 ? '▲' : '▼') : '·'}</span></td>`; };
+  const cell = (a, b, d = 0) => { const diff = a - b; return `<td class="n hm" style="--hc:var(--${scoreChip(a)})">${fmt(a, d)} <span class="${diff > 0.5 ? 'delta-p' : diff < -0.5 ? 'delta-n' : ''}">${Math.abs(diff) >= 0.5 ? (diff > 0 ? '▲' : '▼') : '·'}</span></td>`; };
   let h = `<thead><tr><th>Situation</th><th>Gabel max</th><th>Hinten max</th><th>Haftung v</th><th>Haftung h</th><th>Komfort</th><th>Kontrolle</th><th>Note</th><th>${cmpLabel()}</th></tr></thead><tbody>`;
   let grp = '';
   for (const k of Object.keys(SCEN)) {
@@ -1938,7 +2044,7 @@ function renderMatrix() {
     if (SCEN[k].grp !== grp) { grp = SCEN[k].grp; h += `<tr class="grow"><td colspan="9">${grp}</td></tr>`; }
     const flag = kk => kk.bottom ? ' <span class="chip bad">Anschlag</span>' : '';
     h += `<tr data-s="${k}" style="cursor:pointer"${k === scenario ? ' class="act"' : ''}><td>${SCEN[k].name}</td>
-    <td class="n">${fmt(r.kF.maxX, 0)} mm${flag(r.kF)}</td><td class="n">${fmt(r.kR.maxX, 0)} mm${flag(r.kR)}</td>
+    <td class="n hm" style="--hc:var(--${useChip(r.kF)})">${fmt(r.kF.maxX, 0)} mm${flag(r.kF)}</td><td class="n hm" style="--hc:var(--${useChip(r.kR)})">${fmt(r.kR.maxX, 0)} mm${flag(r.kR)}</td>
     ${cell(r.sF.grip, s.sF.grip)}${cell(r.sR.grip, s.sR.grip)}${cell((r.sF.comfort + r.sR.comfort) / 2, (s.sF.comfort + s.sR.comfort) / 2)}${cell((r.sF.control + r.sR.control) / 2, (s.sF.control + s.sR.control) / 2)}
     <td class="n"><span class="chip ${scoreChip(r.score)}">${fmt(r.score)}</span></td><td class="n">${fmt(s.score)}</td></tr>`;
   }
