@@ -317,7 +317,7 @@ textarea{font-size:.75rem;min-height:120px;resize:vertical}
 .symps{display:flex;flex-wrap:wrap;gap:8px}
 .symp{border:1px solid var(--line2);background:var(--panel);border-radius:999px;padding:7px 13px;cursor:pointer;font-size:.82rem}
 .symp[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:var(--accent-ink);font-weight:600}
-.diag{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:12px;margin-top:14px}
+.diag{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(320px,100%),1fr));gap:12px;margin-top:14px}
 .diag .card h3{margin-bottom:6px}
 .diag ol{margin:6px 0 10px;padding-left:18px;font-size:.84rem;display:flex;flex-direction:column;gap:4px}
 
@@ -327,7 +327,7 @@ textarea{font-size:.75rem;min-height:120px;resize:vertical}
 .stat{white-space:nowrap}
 .srcs{font-size:.74rem;color:var(--muted)}
 .srcs a{white-space:nowrap}
-.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px}
+.cols{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(300px,100%),1fr));gap:14px}
 .list{margin:0;padding-left:18px;font-size:.84rem;display:flex;flex-direction:column;gap:5px}
 
 .toast{position:fixed;left:50%;bottom:calc(18px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--fg);color:var(--bg);padding:9px 16px;border-radius:10px;font-size:.84rem;font-weight:500;opacity:0;transition:opacity .2s;pointer-events:none;z-index:20}
@@ -540,7 +540,9 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Halbfahrzeug mit Nicken:</b> Aufbau mit Hub- und Nickbewegung, Vorder- und Hinterrad als ungefederte Massen, Reifen als Feder mit Dämpfung, Abheben möglich. Front und Heck beeinflussen sich gegenseitig. Integration mit 0,2 ms Schrittweite, bis das Hindernis überfahren ist und 1,1 s nachschwingen konnte (2,6 bis 30 s). Vor jedem Fahrmanöver liegen 0,4 s Geradeausfahrt.</li>
         <li><b>Reifen rollt über Kanten:</b> Die Radmitte folgt der Hüllkurve eines Rades mit echtem Radius (300 / 311 mm). Scharfe Kanten werden dadurch so verschliffen, wie es ein rollendes Rad tut.</li>
         <li><b>Straßenrauheit:</b> Zufallsprofil nach ISO 8608 aus 48 Wellenlängen von 0,08 bis 20 m. Klassen A, B, C mit 16, 64 und 256 · 10⁻⁶ m³. Die Bewertung trennt das Grundrauschen der Straße von der Reaktion auf das Hindernis und zählt das Rauschen nur zur Hälfte.</li>
-        <li><b>Reibung:</b> Losbrechkraft von Dichtungen und Gleitbuchsen, 60 N in der Gabel und 30 N am Hinterrad. Beim Bremsen biegt sich die Gabel und die Buchsen klemmen stärker (+6 % der Bremskraft). Das macht kleine Stöße in der Bremszone härter.</li>
+        <li><b>Reibung:</b> Gleitreibung von Dichtungen und Buchsen, 60 N in der Gabel und 30 N am Hinterrad, Haftreibung 1,6-fach (Stribeck-Kurve: Losbrechen kostet mehr als Gleiten). Beim Bremsen biegt sich die Gabel und die Buchsen klemmen stärker (+6 % der Vorderrad-Bremskraft).</li>
+        <li><b>Federbein:</b> Stickstoff-Gasdruck im Ausgleichsbehälter drückt die Kolbenstange heraus und steigt beim Einfedern. Gabel und Federbein haben Topout-Federn, die das Ausfedern bis zum Anschlag abfangen.</li>
+        <li><b>Reifen:</b> leicht progressiv, bei hohem Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke statt Lauffläche). Kraftschluss trocken μ 1,25, im Profil Nässe μ 0,75: Fordert die Bremse mehr als der Reifen überträgt, meldet der Prüfstand „blockiert“, beim Beschleunigen „dreht durch“.</li>
         <li><b>Fahrer als eigene Masse:</b> 60 % des Fahrergewichts federn über Sitzbank und Beine (Eigenfrequenz ≈ 5 Hz). Komfort wird am Fahrer gemessen, nicht am Rahmen.</li>
         <li><b>Luftwiderstand:</b> cW·A 0,33 m² am Druckpunkt 0,75 m. Mit dem Tempo wird die Front leichter (≈ 320 N bei 200 km/h), der Kettenzug stützt das Heck. Die Bremse muss den Luftwiderstand nicht mit abbauen.</li>
         <li><b>Öltemperatur:</b> Kaltes Öl ist zäher und erhöht vor allem die Low-Speed-Dämpfung.</li>
@@ -548,7 +550,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <li><b>Gabel:</b> zwei lineare Stahlfedern mit Vorspannung, adiabates Luftpolster (Ölstand verändert das Luftvolumen), Endanschlag mit progressivem Puffer. Kräfte werden über den Lenkkopfwinkel in die Senkrechte umgerechnet.</li>
         <li><b>Federbein:</b> Radfederrate = Federrate / Übersetzung², leicht progressiv durch die Umlenkung.</li>
         <li><b>Dämpfer als Ventilmodell:</b> Je Richtung zwei parallele Ölwege. Die Bypass-Nadel (Low-Speed) hat einen laminaren und einen quadratischen Anteil; ihr Querschnitt wächst mit den Klicks (Nadelkegel, Exponent 1,4). Daher wirken Klicks nahe „ganz zu“ stark und weit offen kaum noch. Das Shim-Paket (High-Speed) öffnet ab einer Öffnungskraft, die der High-Speed-Einsteller vorspannt. Die Kennlinie wird je Einstellung als Tabelle berechnet und im Schnittbild sichtbar gemacht.</li>
-        <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Beim Bremsen wirkt zusätzlich die axiale Komponente der Bremskraft in der Gabel, beim Beschleunigen 90 % Anti-Squat durch den Kettenzug.</li>
+        <li><b>Bremsen/Beschleunigen:</b> Nickmoment aus Masse × Verzögerung × Schwerpunkthöhe. Die Lastverlagerung entsteht dynamisch über das Nicken. Bremskraft 85 % vorn, 15 % hinten. Vorn wirkt die axiale Komponente der Bremskraft in der Gabel, hinten stützt sich der Bremssattel über die Schwinge ab. Anti-Squat wird aus der Kettenzug-Geometrie berechnet (Ritzel 17, Kettenrad 43, Kette 530): etwa 125 % beim Fahrer-Durchhang, mit zunehmender Einfederung fallend.</li>
         <li><b>Kurven:</b> Fliehkraft erhöht die Last um 1/cos(Schräglage). Fahrbahnwellen wirken in Schräglage nur mit ihrem Anteil in Fahrzeugebene.</li>
         <li><b>Geometrie:</b> echte ebene Kinematik mit Schwinge und Gabel. Lenkkopfwinkel, Nachlauf und Radstand ergeben sich aus der Nickstellung des Rahmens.</li>
         <li><b>Grenzen:</b> keine Reifenseitenkräfte, keine Rahmen- und Gabelelastizität (das Klemmen der Buchsen beim Bremsen ist nur als Reibungszuschlag erfasst). Das Modell zeigt Richtungen und Größenordnungen. Die Probefahrt entscheidet.</li>
@@ -578,7 +580,7 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     </div>
     <div class="card" style="margin-top:14px">
       <div class="card-h"><h3>Vergleich</h3>
-        <div class="inline"><label for="cmpA">A</label><select id="cmpA" class="txt" style="width:auto"></select><label for="cmpB">B</label><select id="cmpB" class="txt" style="width:auto"></select></div>
+        <div class="inline" style="flex-wrap:wrap"><label for="cmpA">A</label><select id="cmpA" class="txt" style="width:auto;max-width:100%"></select><label for="cmpB">B</label><select id="cmpB" class="txt" style="width:auto;max-width:100%"></select></div>
       </div>
       <div class="tablewrap"><table id="cmpTbl"></table></div>
     </div>
@@ -652,16 +654,22 @@ function airF(s, oil) {
 }
 const REF = loads({ rider: M.refRider, passenger: 0, luggage: 0, fuel: 100 });
 const P0F = (REF.msF * G * COSR - airF(M.refSagF, 0)) / (2 * M.kFstock) - M.refSagF;   // mm Grundvorspannung Gabel (Serie)
+// Stickstoff-Gasdruck im Ausgleichsbehälter drückt die Kolbenstange heraus (Modell: 10 bar, Stange Ø 14 mm, 60 cm³ Gas)
+const GAS = { p0: 1.0e6, Arod: Math.PI * 0.007 * 0.007, Vg: 60e-6, n: 1.3 };
+function gasW(x) { const u = Math.max(0, x) / M.MR * 1e-3, V = Math.max(GAS.Vg - GAS.Arod * u, GAS.Vg * 0.3); return GAS.p0 * Math.pow(GAS.Vg / V, GAS.n) * GAS.Arod / M.MR; } // N am Rad
+// Topout-Federn: kurze Gegenfedern, die das Ausfedern bis zum Anschlag abfangen (Modell)
+const TOPOUT = { F: { len: 12, k: 30 }, R: { len: 10, k: 25 } };
 const kw0 = M.kRstock / (M.MR * M.MR);
-const P0R = ((REF.msR * G) / kw0 - M.refSagR - 0.1 * M.refSagR * M.refSagR / M.travelR) / M.MR; // mm Grundvorspannung Federbein (Serie)
+const P0R = ((REF.msR * G - gasW(M.refSagR)) / kw0 - M.refSagR - 0.1 * M.refSagR * M.refSagR / M.travelR) / M.MR; // mm Grundvorspannung Federbein (Serie)
 
 function preF(st) { return P0F + (M.ringsStock - st.fPre) * M.ringMm; }
 function preR(st) { return P0R + st.rPre; }
 // Gabel: axiale Kraft (N) bei axialem Weg s (mm)
 function forkAx(s, st) {
-  const k = 2 * st.kF, p = preF(st);
-  if (s < 0) return k * p + 2000 * s;
+  const k = 2 * st.kF, p = preF(st), to = TOPOUT.F;
+  if (s < 0) return k * p - to.k * to.len + 2000 * s;
   let F = k * (p + s) + airF(s, st.fOil);
+  if (s < to.len) F -= to.k * (to.len - s);
   const b = M.travelF - 10;
   if (s > b) F += 30 * (s - b) * (s - b);
   if (s > M.travelF) F += 5000 * (s - M.travelF);
@@ -669,9 +677,10 @@ function forkAx(s, st) {
 }
 // Hinterrad: Kraft am Rad (N) bei Radweg x (mm)
 function rearW(x, st) {
-  const kw = st.kR / (M.MR * M.MR), p = preR(st);
-  if (x < 0) return kw * M.MR * p + 2000 * x;
-  let F = kw * (M.MR * p + x + 0.1 * x * x / M.travelR);
+  const kw = st.kR / (M.MR * M.MR), p = preR(st), to = TOPOUT.R;
+  if (x < 0) return kw * M.MR * p + gasW(0) - to.k * to.len + 2000 * x;
+  let F = kw * (M.MR * p + x + 0.1 * x * x / M.travelR) + gasW(x);
+  if (x < to.len) F -= to.k * (to.len - x);
   const b = M.travelR - 10;
   if (x > b) F += 30 * (x - b) * (x - b);
   if (x > M.travelR) F += 5000 * (x - M.travelR);
@@ -769,7 +778,7 @@ function prepScen(name, v, P) {
   if (SCACHE.has(key)) return SCACHE.get(key);
   const sc = scenDef(name, v, P), off = 3, len = v * sc.T + off + 3, n = Math.ceil(len / RDX) + 1;
   const rt = roughTable(roughness, len + 1), raw = new Float64Array(n);
-  for (let i = 0; i < n; i++) { const d = i * RDX - off; raw[i] = sc.road(d) + rt[i]; }
+  for (let i = 0; i < n; i++) { const d = i * RDX - off; raw[i] = sc.road(d) + rt[i] * (sc.lean ? Math.cos(sc.lean(Math.max(0, d) / v) * DEG) : 1); }
   let rmin = Infinity, rmax = -Infinity; for (let i = 0; i < n; i++) { if (raw[i] < rmin) rmin = raw[i]; if (raw[i] > rmax) rmax = raw[i]; }
   const span = rmax - rmin;
   const env = R => {
@@ -884,7 +893,23 @@ function scenDef(name, v, P) {
 // Freiheitsgrade: Hub und Nicken des Rahmens, Hub von Vorder- und Hinterrad, Hub des Fahrers auf der Sitzbank.
 // Reifen rollen als Hüllkurve über Kanten und können abheben.
 const K_PITCH = 0.48;                       // Trägheitsradius Nicken in m (Modellannahme)
-const FRIC = { F: 60, R: 30, v0: 0.004, muBrake: 0.06 }; // Losbrechreibung; Gabelbuchsen klemmen unter Bremslast stärker
+const FRIC = { F: 60, R: 30, v0: 0.004, muBrake: 0.06, stick: 1.6, vs: 0.01 }; // Gleitreibung; Haftreibung 1,6-fach (Stribeck); Gabelbuchsen klemmen unter Bremslast
+const fricF = (u, Fc) => (Fc + Fc * (FRIC.stick - 1) * Math.exp(-((u / FRIC.vs) ** 2))) * Math.tanh(u / FRIC.v0);
+// Antrieb 17/43, Kette 530 (Teilung 15,875 mm): Teilkreisradien der Kettenräder
+const DRIVE = { zF: 17, zR: 43, pitch: 15.875 }, rSpr = z => DRIVE.pitch / (2 * Math.sin(Math.PI / z));
+const BRAKE = { rearShare: 0.15 };            // Anteil Hinterradbremse an der Bremskraft (Modell)
+const MU = { dry: 1.25, wet: 0.75 };          // Kraftschluss Sportreifen trocken / nass (Modell, Literatur 1,2–1,4 trocken)
+// Anti-Squat aus Kettenzug-Geometrie (Schnittpunkt Kettentrum/Schwinge), abhängig vom Federweg hinten
+function antiSquatAt(xR, hMM) {
+  const a = M.alpha0 * DEG - (xR - REFC.xR) / M.Ls, A = { x: PIV.x - M.Ls * Math.cos(a), y: PIV.y - M.Ls * Math.sin(a) };
+  const r1 = rSpr(DRIVE.zF), r2 = rSpr(DRIVE.zR), dx = CSHAFT.x - A.x, dy = CSHAFT.y - A.y, L = Math.hypot(dx, dy), ux = dx / L, uy = dy / L;
+  const sg = (r2 - r1) / L, cg = Math.sqrt(1 - sg * sg), nx = ux * sg - uy * cg, ny = uy * sg + ux * cg;
+  const x1 = A.x + r2 * nx, y1 = A.y + r2 * ny, x2 = CSHAFT.x + r1 * nx, y2 = CSHAFT.y + r1 * ny, x3 = A.x, y3 = A.y, x4 = PIV.x, y4 = PIV.y;
+  const den = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4); if (Math.abs(den) < 1e-6) return 1;
+  const ix = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / den, iy = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / den;
+  const gy = A.y - M.Rr, has = gy + (iy - gy) * (M.wb0) / (ix - A.x);
+  return clamp((has - gy) / hMM, 0, 2.5);
+}
 const RIDER = { share: 0.6, k: 55000, c: 1300 };          // 60 % des Fahrers federn über Sitz/Beine (≈ 5 Hz, ζ ≈ 0,4)
 const AERO = { CdA: 0.33, rho: 1.2, hcp: 0.75 };          // Luftwiderstandsfläche geduckt, Druckpunkthöhe
 const dragN = v => 0.5 * AERO.rho * AERO.CdA * v * v;
@@ -897,31 +922,42 @@ function simRun(st, sc, v, L) {
   const ktF = M.ktF * Math.pow(st.pF / 2.5, 0.9) * 1000, ktR = M.ktR * Math.pow(st.pR / 2.9, 0.9) * 1000;
   const FvF = x => forkAx(x / COSR, st) / COSR, FvR = x => rearW(x, st);
   // Gleichgewicht bei Fahrt: Luftwiderstand hebt die Front an, Kettenzug stützt das Heck
-  const Fd = dragN(v), My0 = Fd * AERO.hcp, pairR0 = M.antiSquat * Fd * L.h / wb;
-  const FF0 = msF * G - My0 / wb, FR0 = msR * G + My0 / wb - pairR0;
-  const x0F = solve(FvF, FF0, -5, M.travelF * COSR + 10), x0R = solve(FvR, FR0, -5, M.travelR + 10);
-  const d0F = (FF0 + M.muF * G) / ktF, d0R = (FR0 + pairR0 + M.muR * G) / ktR;
+  const AST = []; for (let x = -10; x <= 150; x += 2) AST.push(antiSquatAt(x, L.h * 1000));
+  const asAt = x => { const q = clamp((x + 10) / 2, 0, AST.length - 1.001), i = Math.floor(q); return AST[i] + (AST[i + 1] - AST[i]) * (q - i); };
+  const Fd = dragN(v), My0 = Fd * AERO.hcp;
+  let pairR0 = 0, FF0 = msF * G - My0 / wb, FR0 = msR * G + My0 / wb, x0R = solve(FvR, FR0, -5, M.travelR + 10);
+  for (let k = 0; k < 3; k++) { pairR0 = asAt(x0R) * Fd * L.h / wb; FR0 = msR * G + My0 / wb - pairR0; x0R = solve(FvR, FR0, -5, M.travelR + 10); }
+  const x0F = solve(FvF, FF0, -5, M.travelF * COSR + 10);
+  // Reifen: leicht progressiv, mit Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke)
+  const kv = Math.min(1.25, 1 + 0.08 * (v / 50) ** 2), mu = st.profile === 'regen' ? MU.wet : MU.dry;
+  const d0F = (FF0 + M.muF * G) / (ktF * kv), d0R = (FR0 + pairR0 + M.muR * G) / (ktR * kv);
+  const tyre = (kt, d0, d) => kt * kv * d0 * Math.pow(Math.max(0, d) / d0, 1.15);
+  const hP = PIV.y / 1000, lP = PIV.x / 1000;            // Schwingenlager über dem Boden / hinter der Achse
+  const asStat = asAt(x0R);
   const frF = FRIC.F / COSR, frR = FRIC.R;
   let z = 0, vz = 0, th = 0, w = 0, zf = 0, vf = 0, zr = 0, vr = 0, zd = 0, vd = 0;
   const eF = sc.envF, eR = sc.envR;
   let pF = eF(0), pR = eR(-wb);
   const n = Math.floor(sc.T / DT);
-  const mk = () => ({ t: [], x: [], ft: [], zu: [], as: [], v: [], fd: [] });
+  const mk = () => ({ t: [], x: [], ft: [], zu: [], as: [], v: [], fd: [], slip: [] });
   const F = mk(), R = mk(), pitch = [], axg = [], lean = [], ard = [], fdrag = [];
   for (let i = 0; i <= n; i++) {
     const t = i * DT, nf = sc.nfac(t), ax = sc.ax(t) * G;
     const rF = eF(v * t), rR = eR(v * t - wb), vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
     const yF = z + ac * th, yR = z - bc * th, vyF = vz + ac * w, vyR = vz - bc * w;
     const xF = x0F + (zf - yF) * 1000, xR = x0R + (zr - yR) * 1000;
-    let tF = ktF * (d0F + rF - zf); tF = tF > 0 ? Math.max(0, tF + M.ctire * (vrF - vf)) : 0;
-    let tR = ktR * (d0R + rR - zr); tR = tR > 0 ? Math.max(0, tR + M.ctire * (vrR - vr)) : 0;
+    const kl = sc.lean ? 1 - 0.22 * Math.sin(Math.abs(sc.lean(t)) * DEG) : 1, dFt = d0F + rF - zf, dRt = d0R + rR - zr;
+    let tF = dFt > 0 ? Math.max(0, tyre(ktF * kl, d0F, dFt) + M.ctire * (vrF - vf)) : 0;
+    let tR = dRt > 0 ? Math.max(0, tyre(ktR * kl, d0R, dRt) + M.ctire * (vrR - vr)) : 0;
     const Xn = L.tot * ax + Fd;                                    // nötige Längskraft am Boden
     const X = Xn < 0 ? (tF > 0 ? Xn : 0) : (tR > 0 ? Xn : 0), Fb = X < 0 ? -X : 0; // Bremsen nur mit Vorderrad-, Antrieb nur mit Hinterradkontakt
     const uF = vf - vyF, uR = vr - vyR;
-    const dF = dampF(uF, dmp.F) + (frF + FRIC.muBrake * Fb) * Math.tanh(uF / FRIC.v0), dR = dampF(uR, dmp.R) + frR * Math.tanh(uR / FRIC.v0);
+    const FbR = Math.min(Fb * BRAKE.rearShare, mu * tR), FbF = Fb - FbR;   // Bremskraftverteilung, Hinterrad durch Kraftschluss begrenzt
+    const slipF = FbF > mu * tF + 1, slipR = X > 0 ? X > mu * tR + 1 : false;
+    const dF = dampF(uF, dmp.F) + fricF(uF, frF + FRIC.muBrake * FbF), dR = dampF(uR, dmp.R) + fricF(uR, frR);
     const FF = FvF(xF) + dF, FR = FvR(xR) + dR;
-    const pairF = Fb * TANR;                                       // Bremskraft-Anteil entlang der Gabel
-    const pairR = X > 0 ? M.antiSquat * X * L.h / wb : 0;          // Anti-Squat aus dem Kettenzug
+    const pairF = FbF * TANR;                                      // Bremskraft-Anteil entlang der Gabel
+    const pairR = (X > 0 ? asAt(xR) * X * L.h / wb : 0) + FbR * hP / lP; // Kettenzug-Anti-Squat (aus Geometrie) und Abstützung der Hinterradbremse über die Schwinge
     const My = (X - Fd) * L.h + Fd * AERO.hcp;                     // Nickmoment um den Schwerpunkt: Längskraft am Boden und Luftwiderstand (in der Luft nur dieser)
     let Fs = 0, ad = 0;
     if (mrd > 0) { const ys = z + lr * th, vys = vz + lr * w; Fs = mrd * G + RIDER.k * (ys - zd) + RIDER.c * (vys - vd); ad = (Fs - mrd * G * nf) / mrd; }
@@ -932,15 +968,15 @@ function simRun(st, sc, v, L) {
     vz += az * DT; w += aw * DT; vf += af * DT; vr += ar * DT; vd += ad * DT;
     z += vz * DT; th += w * DT; zf += vf * DT; zr += vr * DT; zd += vd * DT;
     if (i % REC === 0) {
-      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + ac * aw); F.v.push(uF); F.fd.push(dF);
-      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - bc * aw); R.v.push(uR); R.fd.push(dR);
+      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + ac * aw); F.v.push(uF); F.fd.push(dF); F.slip.push(slipF ? 1 : 0);
+      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - bc * aw); R.v.push(uR); R.fd.push(dR); R.slip.push(slipR ? 1 : 0);
       pitch.push(-th / DEG); axg.push(ax / G); lean.push(sc.lean ? sc.lean(t) : 0); ard.push(mrd > 0 ? ad : az); fdrag.push(Fd);
     }
   }
   F.ar = R.ar = ard;
   F.x0 = x0F / COSR; F.static = (FF0 + M.muF * G); F.travel = M.travelF;
   R.x0 = x0R; R.static = (FR0 + pairR0 + M.muR * G); R.travel = M.travelR;
-  return { F, R, pitch, axg, lean, T: sc.T, drag: Fd, aeroF: My0 / wb };
+  return { F, R, pitch, axg, lean, T: sc.T, drag: Fd, aeroF: My0 / wb, antiSquat: asStat };
 }
 function kpiAxle(o, sc) {
   // Grundrauheit der Straße wird vor dem Hindernis gemessen und nur zur Hälfte bewertet,
@@ -968,17 +1004,22 @@ function kpiAxle(o, sc) {
   const tail = Math.round(0.2 / dtr); let fin = 0; for (let i = n - tail; i < n; i++) fin += o.x[i]; fin /= tail;
   const tol = 1.5 + 3 * sdX; let settle = 0;
   for (let i = n - 1 - K; i >= iE; i -= 2) { if (Math.abs(xs(i) - fin) > tol) { settle = o.t[i] - sc.tEnd; break; } }
+  // Verhärten (Packing): bleibt die Federung nach dem Hindernis tiefer eingefedert als davor?
+  const mean = (a, b) => { let s = 0, c = 0; for (let i = Math.max(0, a); i < Math.min(n, b); i++) { s += o.x[i]; c++; } return c ? s / c : 0; };
+  const iT = Math.round((sc.tStart || 0.4) / dtr), w25 = Math.round(0.25 / dtr);
+  const pack = Math.max(0, mean(n - w25, n) - mean(iT - w25, iT) - tol);
+  let slipMs = 0; if (o.slip) for (let i = i0; i < n; i++) if (o.slip[i]) slipMs += dtr * 1000;
   const cvT = Math.sqrt(f2 / cnt) / o.static, rmsT = Math.sqrt(acc2 / cnt);
   const cv = Math.sqrt(Math.max(0, cvT * cvT - cvB * cvB)) + 0.5 * cvB, rms = Math.sqrt(Math.max(0, rmsT * rmsT - rmsB * rmsB)) + 0.5 * rmsB;
   return {
     usage: mx / o.travel, maxX: mx, minX: mn, bottom: mx > o.travel - 3, topout: minAfter < 1,
-    cv, cvRoad: cvB, lift, rms, rmsRoad: rmsB, settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter - 2 * sdX)
+    cv, cvRoad: cvB, lift, rms, rmsRoad: rmsB, settle: Math.max(0, settle), over: Math.max(0, o.x0 - minAfter - 2 * sdX), pack, slipMs
   };
 }
 function subScores(k, sc) {
   const comfort = clamp(100 - k.rms * 14, 0, 100);
-  const grip = clamp(100 - k.cv * 250 - k.lift * 0.5, 0, 100);
-  const control = clamp(100 - k.settle * 70 - k.over * 1.2 - (k.topout ? 15 : 0), 0, 100);
+  const grip = clamp(100 - k.cv * 250 - k.lift * 0.5 - (k.slipMs || 0) * 0.3, 0, 100);
+  const control = clamp(100 - k.settle * 70 - k.over * 1.2 - (k.pack || 0) * 2.5 - (k.topout ? 15 : 0), 0, 100);
   let reserve = 100;
   if (k.usage > 0.85) reserve = 100 - (k.usage - 0.85) * 400;
   if (k.bottom) reserve = Math.min(reserve, 35);
@@ -1340,7 +1381,7 @@ function drawCut(i) {
   CUT.rShimC.setAttribute('d', vR > 0 ? `M${X + 60},${yPp - 1}Q${X + 80},${(yPp - 1 - 9 * shR).toFixed(1)} ${X + 100},${yPp - 1}` : `M${X + 60},${yPp - 1}L${X + 100},${yPp - 1}`);
   CUT.rShimR.setAttribute('d', vR < 0 ? `M${X + 60},${yPp + 11}Q${X + 80},${(yPp + 11 + 9 * shR).toFixed(1)} ${X + 100},${yPp + 11}` : `M${X + 60},${yPp + 11}L${X + 100},${yPp + 11}`);
   CUT.rFlow.setAttribute('d', flowArrows(X + 80, yPp + 5, vR / M.MR * 1.6, 12)); CUT.rFlow.setAttribute('stroke', vR >= 0 ? 'var(--comp)' : 'var(--reb)');
-  const ySeat = yEye - 22, yCol = 66 - (S.rPre) * 1.5;
+  const ySeat = yEye - 22, yCol = 66 + (S.rPre) * 1.5;
   CUT.rCollar.setAttribute('y', yCol.toFixed(1)); CUT.rSeat.setAttribute('y', ySeat);
   CUT.rSpring.setAttribute('d', zig(X + 42, X + 118, yCol + 8, ySeat, 7));
   const fp = 104 - str * 0.35; CUT.rFP.setAttribute('y', fp.toFixed(1)); CUT.rGas.setAttribute('height', (fp - 44).toFixed(1)); CUT.rOilR.setAttribute('y', (fp + 8).toFixed(1)); CUT.rOilR.setAttribute('height', (186 - fp - 8).toFixed(1));
@@ -1352,19 +1393,19 @@ function drawHist() {
   const cv = $('#histCv'), { c, w, h } = prep(cv), r = RUN[scenario];
   const vmax = 1.5, bw = 0.05, nb = Math.round(2 * vmax / bw), i0 = Math.round(0.25 / (DT * REC));
   const hist = arr => { const hh = new Array(nb).fill(0); let n = 0; for (let i = i0; i < arr.length; i++) { const b = Math.floor((clamp(arr[i], -vmax + 1e-6, vmax - 1e-6) + vmax) / bw); hh[b]++; n++; } return hh.map(x => x / n * 100); };
-  const vFa = r.F.v.map(v => v / COSR), hF = hist(vFa), hR = hist(r.R.v);
+  const vFa = r.F.v.map(v => v / COSR), vRs = r.R.v.map(v => v / M.MR), hF = hist(vFa), hR = hist(vRs);
   const top = Math.max(5, Math.ceil(Math.max(...hF, ...hR) / 5) * 5), yt = [0, top / 2, top];
-  const A = axes(c, 44, 16, w - 56, h - 50, -vmax, vmax, 0, top, [-1.5, -1, -.5, 0, .5, 1, 1.5], yt, 'Geschwindigkeit m/s (− Zug · + Druck)', 'Zeitanteil %', v => fmt(v, 1), v => fmt(v));
-  c.fillStyle = css('--accent-soft'); c.fillRect(A.X(-M.vkReb), 16, A.X(M.vkReb) - A.X(-M.vkReb), h - 50);
+  const A = axes(c, 44, 16, w - 56, h - 50, -vmax, vmax, 0, top, [-1.5, -1, -.5, 0, .5, 1, 1.5], yt, 'Schaftgeschwindigkeit m/s (− Zug · + Druck)', 'Zeitanteil %', v => fmt(v, 1), v => fmt(v));
+  c.fillStyle = css('--accent-soft'); c.fillRect(A.X(-M.vkReb / COSR), 16, A.X(M.vkF / COSR) - A.X(-M.vkReb / COSR), h - 50);
   c.fillStyle = css('--muted'); c.textAlign = 'center'; c.textBaseline = 'top'; c.fillText('Low-Speed', A.X(0), 18);
   const bars = (hh, col, off) => { c.fillStyle = col; c.globalAlpha = .75; hh.forEach((v, b) => { const x0 = A.X(-vmax + b * bw), x1 = A.X(-vmax + (b + 1) * bw), mid = (x0 + x1) / 2; c.fillRect(off ? mid : x0 + 0.5, A.Y(v), (x1 - x0) / 2 - 0.5, A.Y(0) - A.Y(v)); }); c.globalAlpha = 1; };
   bars(hF, css('--front'), false); bars(hR, css('--rear'), true);
-  const stats = (arr, vkC) => {
+  const stats = (arr, vkC, vkRb) => {
     let cl = 0, ch = 0, rl = 0, rh = 0, sc = 0, nc = 0, sr = 0, nr = 0, n = 0;
-    for (let i = i0; i < arr.length; i++) { const v = arr[i]; n++; if (v >= 0) { v < vkC ? cl++ : ch++; sc += v; nc++; } else { -v < M.vkReb ? rl++ : rh++; sr -= v; nr++; } }
+    for (let i = i0; i < arr.length; i++) { const v = arr[i]; n++; if (v >= 0) { v < vkC ? cl++ : ch++; sc += v; nc++; } else { -v < vkRb ? rl++ : rh++; sr -= v; nr++; } }
     return { cl: cl / n * 100, ch: ch / n * 100, rl: rl / n * 100, rh: rh / n * 100, ac: nc ? sc / nc : 0, ar: nr ? sr / nr : 0 };
   };
-  const sF = stats(vFa, M.vkF / COSR), sR = stats(r.R.v, M.vkR);
+  const sF = stats(vFa, M.vkF / COSR, M.vkReb / COSR), sR = stats(vRs, M.vkR / M.MR, M.vkReb / M.MR);
   const bal = s => s.ar > 0 ? s.ac / s.ar : 1;
   const row = (l, s, col) => `<tr><td><span class="sw" style="background:${col}"></span>${l}</td><td class="n">${fmt(s.cl, 0)} %</td><td class="n">${fmt(s.ch, 0)} %</td><td class="n">${fmt(s.rl, 0)} %</td><td class="n">${fmt(s.rh, 0)} %</td><td class="n">${fmt(s.ac, 2)}/${fmt(s.ar, 2)}</td><td class="n">${fmt(bal(s), 2)}</td></tr>`;
   $('#histStats').innerHTML = `<div class="tablewrap"><table><thead><tr><th></th><th title="Druckstufe Low-Speed">D LS</th><th title="Druckstufe High-Speed">D HS</th><th title="Zugstufe Low-Speed">Z LS</th><th title="Zugstufe High-Speed">Z HS</th><th title="mittlere Geschwindigkeit Druck / Zug in m/s">Ø D/Z</th><th title="Balance">Bal.</th></tr></thead><tbody>${row('Gabel', sF, 'var(--front)')}${row('Federbein', sR, 'var(--rear)')}</tbody></table></div>
@@ -1417,7 +1458,7 @@ function rowHtml(k) {
   const c = findCtl(k), inv = c.hard === -1, pct = (STOCK_ALL[k] - c.min) / (c.max - c.min) * 100, p = inv ? 100 - pct : pct;
   const minus = inv ? 1 : -1, soft = c.hard ? 'weicher' : 'weniger', hard = c.hard ? 'härter' : 'mehr';
   return `<div class="brow" id="br-${k}" title="${c.hint}"><div class="brow-h"><label for="b-${k}">${SHORT[k] || c.short || c.label}</label><span class="bdelta" id="bd-${k}"></span><output id="bo-${k}"></output></div>
-    <div class="brow-c"><button data-k="${k}" data-dir="${minus}" aria-label="${c.label} ${soft}">−</button><div class="rng"><input type="range" id="b-${k}" data-k="${k}" min="${c.min}" max="${c.max}" step="${c.step}"${inv ? ' class="inv"' : ''}><span class="stk" style="left:calc(${p.toFixed(1)}% + ${(8 - p * 0.16).toFixed(1)}px)" title="Serie"></span></div><button data-k="${k}" data-dir="${-minus}" aria-label="${c.label} ${hard}">+</button></div></div>`;
+    <div class="brow-c"><button data-k="${k}" data-dir="${minus}" aria-label="${ctlName(k)} ${soft}">−</button><div class="rng"><input type="range" id="b-${k}" aria-label="${ctlName(k)}" data-k="${k}" min="${c.min}" max="${c.max}" step="${c.step}"${inv ? ' class="inv"' : ''}><span class="stk" style="left:calc(${p.toFixed(1)}% + ${(8 - p * 0.16).toFixed(1)}px)" title="Serie"></span></div><button data-k="${k}" data-dir="${-minus}" aria-label="${ctlName(k)} ${hard}">+</button></div></div>`;
 }
 function buildControls() {
   $('#sideF').innerHTML = SIDE_F.map(rowHtml).join('');
@@ -1482,26 +1523,27 @@ function recommend(st) {
   const ringsRaw = rings; rings = clamp(Math.round(rings * 2) / 2, 0, 8); out.fPre = rings;
   // Vorspannung hinten
   const kw = st.kR / (M.MR * M.MR);
-  const pRr = ((L.msR * G) / kw - pr.sagR - 0.1 * pr.sagR * pr.sagR / M.travelR) / M.MR;
+  const pRr = ((L.msR * G - gasW(pr.sagR)) / kw - pr.sagR - 0.1 * pr.sagR * pr.sagR / M.travelR) / M.MR;
   let rp = pRr - P0R; const rpRaw = rp; rp = clamp(Math.round(rp * 2) / 2, -5, 12) + 0; out.rPre = rp; // + 0 macht aus -0 eine 0
   // Dämpfung
-  const wcorr = Math.round((st.rider + st.passenger * 0.6 - 80) / 12);
+  // Dämpfung skaliert mit √(Masse): Klicks je Achse aus der gefederten Last gegenüber 80-kg-Referenz
+  const wF = Math.round(clamp(Math.log(Math.sqrt(L.msF / REF.msF)) / M.clickAlpha, -3, 3)), wR = Math.round(clamp(Math.log(Math.sqrt(L.msR / REF.msR)) / M.clickAlpha, -4, 4));
   const o = pr.off;
-  out.fReb = clamp(STOCK.fReb + o.fReb - wcorr, 0, M.clicksMax);
-  out.fLS = clamp(STOCK.fLS + o.fLS - wcorr, 0, M.clicksMax);
+  out.fReb = clamp(STOCK.fReb + o.fReb - wF, 0, M.clicksMax);
+  out.fLS = clamp(STOCK.fLS + o.fLS - wF, 0, M.clicksMax);
   out.fHS = clamp(STOCK.fHS + o.fHS, 0, M.hsMax);
-  out.rReb = clamp(STOCK.rReb + o.rReb - wcorr - (st.passenger > 0 ? 2 : 0), 0, M.clicksMax);
-  out.rLS = clamp(STOCK.rLS + o.rLS - wcorr - (st.passenger > 0 ? 1 : 0), 0, M.clicksMax);
+  out.rReb = clamp(STOCK.rReb + o.rReb - wR, 0, M.clicksMax);
+  out.rLS = clamp(STOCK.rLS + o.rLS - wR, 0, M.clicksMax);
   out.rHS = clamp(STOCK.rHS + o.rHS, 0, M.hsMax);
   out.pF = st.passenger > 0 && st.profile !== 'track' ? 2.5 : pr.pF; out.pR = st.passenger > 0 && st.profile !== 'track' ? 2.9 : pr.pR;
   // Bremsreserve der Gabel prüfen: erst Ölstand, dann Low-Speed-Druckstufe
   const vB = speed / 3.6;
-  for (let i = 0; i < 4; i++) {
-    const scB = prepScen('brake', vB, SP.brake), r = kpiAxle(simRun(out, scB, vB, L).F, scB);
-    if (r.usage <= 0.9) break;
-    if (out.fOil < 10) out.fOil = Math.min(10, out.fOil + 5); else out.fLS = Math.max(0, out.fLS - 1);
-  }
-  if (out.fOil !== st.fOil) notes.push({ lvl: 'info', t: `Ölstand Gabel +${fmt(out.fOil - st.fOil)} mm empfohlen`, w: 'Mehr Endprogression gegen Durchschlagen beim harten Bremsen, ohne den Komfort im ersten Federwegsdrittel zu verändern. Ölstand bei ausgebauten Federn und ganz eingefahrener Gabel messen.' });
+  const scB = prepScen('brake', vB, SP.brake), useB = o2 => kpiAxle(simRun(o2, scB, vB, L).F, scB).usage;
+  out.fOil = STOCK.fOil; const lsBase = out.fLS; let u = useB(out);
+  while (u > 0.9 && out.fOil < 10) { out.fOil = Math.min(10, out.fOil + 5); u = useB(out); }
+  for (let i = 0; i < 4 && u > 0.9 && out.fLS > 0; i++) { const tr = Object.assign({}, out, { fLS: out.fLS - 1 }), u2 = useB(tr); if (u2 >= u - 0.002) break; Object.assign(out, tr); u = u2; }
+  if (out.fLS < lsBase) notes.push({ lvl: 'info', t: `Druckstufe Low-Speed vorn ${lsBase - out.fLS} Klick${lsBase - out.fLS > 1 ? 's' : ''} zusätzlich zu`, w: 'Auch mit höherem Ölstand nutzt die Gabel beim harten Bremsen mehr als 90 % ihres Federwegs.' });
+  if (out.fOil !== STOCK.fOil) notes.push({ lvl: 'info', t: `Ölstand Gabel +${fmt(out.fOil - STOCK.fOil)} mm gegenüber Serie`, w: 'Mehr Endprogression gegen Durchschlagen beim harten Bremsen, ohne den Komfort im ersten Federwegsdrittel zu verändern. Ölstand bei ausgebauten Federn und ganz eingefahrener Gabel messen.' });
   // Federraten-Check
   const kFrec = M.kFstock * (L.msF / REF.msF), kRrec = M.kRstock * (L.msR / REF.msR);
   if (ringsRaw < 0) notes.push({ lvl: 'bad', t: `Gabelfedern zu weich für ${fmt(st.rider)} kg`, w: `Für ${pr.sagF} mm Durchhang bräuchte es ${fmt(-ringsRaw, 1)} Ringe mehr Vorspannung als möglich. Richtwert Federrate je Holm: ${fmt(kFrec, 2)} N/mm (${fmt(kFrec / 9.81, 3)} kg/mm).` });
@@ -1658,10 +1700,10 @@ function analysis() {
   if (pay > 178) items.push({ lvl: 'bad', t: `Zuladung ${fmt(pay)} kg über 178 kg`, w: 'MOTORRAD hat 178 kg zulässige Zuladung ermittelt (zulässiges Gesamtgewicht 390 kg). Reifen, Federn und Bremsen sind dafür nicht ausgelegt.' });
   if (S.oilT <= 15) items.push({ lvl: 'info', t: `Kaltes Dämpferöl (${fmt(S.oilT)} °C)`, w: 'Zähes Öl dämpft im Low-Speed-Bereich deutlich stärker. Erst nach einigen Kilometern einstellen und bewerten, nicht direkt nach dem Kaltstart.' });
   rec.notes.forEach(n => items.push({ lvl: n.lvl, t: n.t, w: n.w }));
-  if (SG.sagF > zf[1]) items.push({ lvl: 'warn', t: `Mehr Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm liegt über dem Ziel ${zf[0]}–${zf[1]} mm. Die Front steht zu tief, die Gabel hat weniger Reserve beim Bremsen.` });
-  if (SG.sagF < zf[0]) items.push({ lvl: 'warn', t: `Weniger Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm unter Ziel. Die Gabel federt kaum aus, das Vorderrad verliert in Senken den Kontakt.` });
-  if (SG.sagR > zr[1]) items.push({ lvl: 'warn', t: `Mehr Vorspannung hinten: ${fmt(rec.out.rPre, 1)} mm gegenüber Serie`, w: `Durchhang ${fmt(SG.sagR, 1)} mm über Ziel ${zr[0]}–${zr[1]} mm. Heck zu tief: träges Einlenken, Front entlastet.` });
-  if (SG.sagR < zr[0]) items.push({ lvl: 'warn', t: `Weniger Vorspannung hinten: ${fmt(rec.out.rPre, 1)} mm gegenüber Serie`, w: `Durchhang ${fmt(SG.sagR, 1)} mm unter Ziel. Weniger Traktion am Kurvenausgang.` });
+  if (SG.sagF > zf[1] && Math.abs(rec.out.fPre - S.fPre) > 0.01) items.push({ lvl: 'warn', t: `Mehr Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm liegt über dem Ziel ${zf[0]}–${zf[1]} mm. Die Front steht zu tief, die Gabel hat weniger Reserve beim Bremsen.` });
+  if (SG.sagF < zf[0] && Math.abs(rec.out.fPre - S.fPre) > 0.01) items.push({ lvl: 'warn', t: `Weniger Vorspannung vorn: ${fmt(rec.out.fPre, 1)} Ringe sichtbar`, w: `Durchhang ${fmt(SG.sagF, 1)} mm unter Ziel. Die Gabel federt kaum aus, das Vorderrad verliert in Senken den Kontakt.` });
+  if (SG.sagR > zr[1] && Math.abs(rec.out.rPre - S.rPre) > 0.01) items.push({ lvl: 'warn', t: `Mehr Vorspannung hinten: ${fmt(rec.out.rPre, 1)} mm gegenüber Serie`, w: `Durchhang ${fmt(SG.sagR, 1)} mm über Ziel ${zr[0]}–${zr[1]} mm. Heck zu tief: träges Einlenken, Front entlastet.` });
+  if (SG.sagR < zr[0] && Math.abs(rec.out.rPre - S.rPre) > 0.01) items.push({ lvl: 'warn', t: `Weniger Vorspannung hinten: ${fmt(rec.out.rPre, 1)} mm gegenüber Serie`, w: `Durchhang ${fmt(SG.sagR, 1)} mm unter Ziel. Weniger Traktion am Kurvenausgang.` });
   if (SG.freeR < 4) items.push({ lvl: 'warn', t: 'Freier Durchhang hinten fast null', w: `Nur ${fmt(SG.freeR, 1)} mm ohne Fahrer: die Feder ist für die Zuladung zu weich und wird über Vorspannung kompensiert. Härtere Feder prüfen.` });
   if (SG.freeF < 12) items.push({ lvl: 'warn', t: 'Freier Durchhang vorn sehr klein', w: `${fmt(SG.freeF, 1)} mm: Gabelfedern zu weich oder zu viel Vorspannung.` });
   if (r.brake.kF.bottom) items.push({ lvl: 'bad', t: 'Gabel schlägt beim harten Bremsen durch', w: 'Reihenfolge: Ölstand +5 mm (wirkt nur am Ende des Federwegs), dann Druckstufe Low-Speed 2 Klicks zu, erst danach Vorspannung. Bleibt es, sind die Federn zu weich.' });
@@ -1853,9 +1895,9 @@ function renderTele(i) {
   const r = RUN[scenario], c = COMP[scenario];
   let mF = 0, mR = 0; for (let j = 0; j <= i; j++) { mF = Math.max(mF, r.F.x[j]); mR = Math.max(mR, r.R.x[j]); }
   const bar = (lbl, v, mx, cv, tr, col) => `<div class="tb"><div class="tb-h"><span>${lbl}</span><b class="mono">${fmt(v, 0)} mm</b></div><div class="tr"><div class="fill" style="width:${clamp(v / tr * 100, 0, 100)}%;background:${col}"></div><div class="mx" style="left:${clamp(mx / tr * 100, 0, 100)}%" title="Kabelbinder"></div><div class="gh" style="left:${clamp(cv / tr * 100, 0, 100)}%" title="${cmpLabel()}"></div></div></div>`;
-  const lamp = (lbl, ft, st) => { const lift = ft < 0.05 * st; return `<div class="tl"><span class="lamp" style="background:var(--${lift ? 'bad' : 'good'})"></span><span>${lbl}<br><b class="mono">${lift ? 'abgehoben' : fmt(ft / 1000, 2) + ' kN'}</b></span></div>`; };
+  const lamp = (lbl, ft, st, slip, slipTxt) => { const lift = ft < 0.05 * st, bad = lift || slip; return `<div class="tl"><span class="lamp" style="background:var(--${bad ? 'bad' : 'good'})"></span><span>${lbl}<br><b class="mono">${lift ? 'abgehoben' : slip ? slipTxt : fmt(ft / 1000, 2) + ' kN'}</b></span></div>`; };
   $('#tele').innerHTML = bar('Gabel', r.F.x[i], mF, c.F.x[i], M.travelF, 'var(--front)') + bar('Federbein', r.R.x[i], mR, c.R.x[i], M.travelR, 'var(--rear)') +
-    lamp('Vorderrad', r.F.ft[i], r.F.static) + lamp('Hinterrad', r.R.ft[i], r.R.static) +
+    lamp('Vorderrad', r.F.ft[i], r.F.static, r.F.slip && r.F.slip[i], 'blockiert') + lamp('Hinterrad', r.R.ft[i], r.R.static, r.R.slip && r.R.slip[i], r.axg[i] > 0 ? 'dreht durch' : 'rutscht') +
     `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs · Luft<br><b class="mono">${fmt(r.axg[i], 2)} g · ${fmt(r.drag, 0)} N</b></span></div>`;
 }
 let rafId = 0; // genau eine laufende Abspielschleife
@@ -1887,7 +1929,8 @@ function setPlaying(on) {
   cancelAnimationFrame(rafId);
   if (on) { lastTs = 0; playT = (+$('#scrub').value) * DT * REC; if (playT >= RUN[scenario].T - 0.01) playT = 0; rafId = requestAnimationFrame(loop); }
 }
-$('#playBtn').addEventListener('click', () => setPlaying(!playing));
+let userPaused = false;
+$('#playBtn').addEventListener('click', () => { userPaused = playing; setPlaying(!playing); });
 $('#scrub').addEventListener('input', e => { if (playing) setPlaying(false); showFrame(+e.target.value); });
 for (const id of ['exag', 'ghostOn', 'riderOn']) $('#' + id).addEventListener('change', () => showFrame(+$('#scrub').value));
 document.addEventListener('input', e => { if (e.target.id === 'speed') { speed = +e.target.value; $('#speedO').textContent = `${speed} km/h`; condChanged(); liveUpdate(); } });
@@ -1896,7 +1939,7 @@ function setScenario(k) {
   if (LAST) LAST.run = null;
   const len = RUN[scenario].F.t.length; $('#scrub').max = len - 1; $('#scrub').value = 0; playT = 0;
   renderKpis(overall(RUN, S, SG), overall(COMP, compSetup(), SGc)); renderMatrix(); renderObst(); drawProfile(); drawHist();
-  if (!playing) setPlaying(true); else showFrame(0);
+  if (!playing && !userPaused && !matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(true); else showFrame(0);
 }
 $('#scenSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setScenario(b.dataset.s); });
 $('#cmpSeg').addEventListener('click', e => {
@@ -1933,16 +1976,17 @@ function renderSagTab() {
     const z = F ? zf : zr, t = F ? tf : trr, fz = F ? [20, 30] : [5, 15];
     const delta = rider - t;
     let action;
-    if (F) { const rings = clamp(baseF - delta / M.ringMm, 0, 8); action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(delta / M.ringMm), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(baseF, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.`; }
-    else { const mm = delta / M.MR; action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: Feder um ${fmt(Math.abs(mm), 1)} mm ${delta > 0 ? 'zusätzlich spannen' : 'entspannen'} (1 mm an der Feder ≈ ${fmt(M.MR, 2)} mm am Rad).`; }
+    const lim = (need, got) => Math.abs(need) - Math.abs(got) > 0.05 ? ` Damit ist der Einsteller am Anschlag. Für die restlichen ${fmt(Math.abs(need) - Math.abs(got), 1)} ${F ? 'Ringe' : 'mm'} braucht es eine ${delta > 0 ? 'härtere' : 'weichere'} Feder.` : '';
+    if (F) { const rings = clamp(baseF - delta / M.ringMm, 0, 8), got = baseF - rings; action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : Math.abs(got) < 0.05 ? `Der Einsteller steht schon am Anschlag (${fmt(baseF, 1)} Ringe). Für ${fmt(Math.abs(delta), 1)} mm ${delta > 0 ? 'weniger' : 'mehr'} Durchhang braucht es eine ${delta > 0 ? 'härtere' : 'weichere'} Feder.` : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(got), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(baseF, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.${lim(delta / M.ringMm, got)}`; }
+    else { const baseR = SAGAT.R != null ? SAGAT.R : S.rPre, tgt = clamp(baseR + delta / M.MR, -5, 12), got = tgt - baseR; action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : Math.abs(got) < 0.05 ? `Der Einsteller steht schon am Anschlag (${fmt(baseR, 1)} mm). Für ${fmt(Math.abs(delta), 1)} mm ${delta > 0 ? 'weniger' : 'mehr'} Durchhang braucht es eine ${delta > 0 ? 'härtere' : 'weichere'} Feder.` : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: Feder um ${fmt(Math.abs(got), 1)} mm ${delta > 0 ? 'zusätzlich spannen' : 'entspannen'} (von ${fmt(baseR, 1)} auf ${fmt(tgt, 1)} mm gegenüber Serie; 1 mm an der Feder ≈ ${fmt(M.MR, 2)} mm am Rad).${lim(delta / M.MR, got)}`; }
     let springNote = '';
     if (free < fz[0] - 3 && rider > z[0]) springNote = '<p class="warnbox" style="margin-top:8px">Wenig freier Durchhang bei viel Fahrer-Durchhang: die Feder ist für dein Gewicht zu weich. Vorspannung allein löst das nicht sauber.</p>';
     if (free > fz[1] + 5 && rider <= z[1]) springNote = '<p class="warnbox" style="margin-top:8px">Viel freier Durchhang bei passendem Fahrer-Durchhang: die Feder ist für dein Gewicht eher zu hart.</p>';
     const st = (val, zz) => val >= zz[0] && val <= zz[1] ? 'good' : 'warn';
     const shell = `<div class="card-h"><h3>${F ? 'Gabel vorn' : 'Federbein hinten'}</h3><span class="chip mut">Beispielwerte, eigene eintragen</span></div>
       <div class="fields">${a.map((k, i) => `<div class="fld"><label for="sg-${k}">${k} · ${['ausgefedert', 'ohne Fahrer', 'mit Fahrer'][i]}</label><input id="sg-${k}" data-k="${k}" type="number" step="0.5" inputmode="decimal" value="${SAGIN[k]}"></div>`).join('')}</div>
-      <div class="sag-out"></div>
-      <div class="btnrow" style="margin-top:10px"><button class="btn sm pri" data-apply="${side}">Ins Modell übernehmen</button></div>`;
+      <div class="btnrow" style="margin-top:10px"><button class="btn sm pri" data-apply="${side}">Ins Modell übernehmen</button></div>
+      <div class="sag-out"></div>`;
     const out = `<div class="res3">
         <div class="gcell"><div class="lbl">Frei</div><div class="v">${fmt(free, 1)} mm</div><span class="chip ${st(free, fz)}">Ziel ${fz[0]}–${fz[1]}</span></div>
         <div class="gcell"><div class="lbl">Mit Fahrer</div><div class="v">${fmt(rider, 1)} mm</div><span class="chip ${st(rider, z)}">Ziel ${z[0]}–${z[1]}</span></div>
@@ -2145,12 +2189,16 @@ function renderCheck() {
     ['Klickbereich', `0–${M.clicksMax} Klicks, HS 0–${M.hsMax} Umdrehungen`, 'Gesamtzahl je Einsteller an deiner Maschine zählen'],
     ['Nadelquerschnitt', 'A(n) = 3 + n^1,4 (n = Klicks offen)', 'Kegelnadel: Klicks nahe „ganz zu“ wirken stark, weit offen schwach'],
     ['Shim-Paket', 'Öffnet bei Knickgeschwindigkeit; je HS-Umdrehung zu +35 % Öffnungskraft, +28 % Steigung', 'Relativ zur Serie kalibriert'],
-    ['Reibung', 'Gabel 60 N axial (beide Holme) + 6 % der Bremskraft · Federbein 30 N am Rad', 'Dichtungen und Gleitbuchsen; unter Bremslast klemmen die Buchsen durch Biegung stärker'],
+    ['Reibung', 'Gleiten: Gabel 60 N axial + 6 % der Vorderrad-Bremskraft · Federbein 30 N am Rad · Haften 1,6-fach', 'Stribeck-Kurve: Losbrechen kostet mehr als Gleiten'],
+    ['Gasdruck Federbein', '10 bar, Kolbenstange Ø 14 mm, 60 cm³ Gas, Polytropenexponent 1,3', '≈ 58 N am Rad, beim Einfedern steigend; in der Vorspann-Kalibrierung berücksichtigt'],
+    ['Topout-Federn', 'Gabel 12 mm / 30 N/mm · Federbein 10 mm / 25 N/mm', 'Fangen das Ausfedern bis zum Anschlag ab'],
+    ['Reifen', 'progressiv (Exponent 1,15) · +8 % Steifigkeit je (v/50 m/s)² bis +25 % · −22 % × sin(Schräglage)', 'Kraftschluss μ 1,25 trocken / 0,75 nass'],
+    ['Bremskraftverteilung', '85 % vorn / 15 % hinten', 'Hinten durch den Kraftschluss begrenzt; Abstützung über das Schwingenlager'],
     ['Dämpfungsmaß Serie', 'Zug vorn ζ 0,55 · Druck vorn ζ 0,28 · Zug hinten ζ 0,60 · Druck hinten ζ 0,30', 'Übliche Werte für Straßen-Supersportler'],
     ['Luftpolster Gabel', '260 cm³ je Holm, Kolbenfläche 14,5 cm², Adiabatenexponent 1,4', 'Ölstand +1 mm ≈ −1,7 cm³ Luft'],
     ['Reifensteifigkeit', '175 N/mm vorn bei 2,5 bar · 210 N/mm hinten bei 2,9 bar', 'Skaliert mit Luftdruck^0,9'],
     ['Straßenrauheit', 'Gd(n0) = 4 / 16 / 64 / 256 · 10⁻⁶ m³', 'Neuer Asphalt (unteres Viertel ISO-Klasse A), normal (Mitte A), schlecht (B), sehr schlecht (C). Standard: neuer Asphalt. Ergibt 5–10 % Radlastschwankung bei 50–100 km/h, wie für gute Straßen typisch'],
-    ['Anti-Squat', '90 %', 'Kettenzug stützt das Heck beim Beschleunigen'],
+    ['Anti-Squat', `aus Geometrie: Ritzel 17 (r ${fmt(rSpr(17), 1)} mm), Kettenrad 43 (r ${fmt(rSpr(43), 1)} mm), Ritzelwelle 94 mm vor / 26 mm unter dem Schwingenlager`, 'Schnittpunkt Kettentrum mit Schwinge; Lage der Ritzelwelle ist eine Modellannahme'],
     ['Schwinge', '575 mm, 10° Neigung', 'Für die Geometrie-Kinematik'],
     ['Nickträgheit', 'Trägheitsradius 0,48 m', 'Gefederte Masse inkl. Fahrer; bestimmt, wie schnell die Maschine nickt']
   ];
