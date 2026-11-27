@@ -77,7 +77,7 @@ button{font:inherit;color:inherit}
 .hud>div{display:flex;flex-direction:column;gap:2px}
 .hud .big{font-family:var(--f-display);font-size:1.05rem;font-weight:600}
 .hud .sub{font-size:.75rem;color:var(--muted)}
-.tele{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1.4fr) repeat(4,minmax(0,.8fr));gap:10px;padding:10px 14px;border-top:1px solid var(--line);background:var(--panel);font-size:.74rem;color:var(--muted);align-items:center}
+.tele{display:grid;grid-template-columns:minmax(0,1.4fr) repeat(4,minmax(0,.8fr)) minmax(0,1.4fr);gap:10px;padding:10px 14px;border-top:1px solid var(--line);background:var(--panel);font-size:.74rem;color:var(--muted);align-items:center}
 @media (max-width:760px){.tele{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .tb-h{display:flex;justify-content:space-between;margin-bottom:3px}.tb-h b{color:var(--fg)}
 .tele .tr{position:relative;height:10px;border-radius:5px;background:var(--bg2);border:1px solid var(--line);overflow:hidden}
@@ -163,8 +163,8 @@ tr.act td{background:var(--accent-soft)}
 .player-row.opts{gap:4px 14px}
 .ratebox{flex-wrap:wrap}.ratebox input{width:140px}.ratebox output{min-width:52px}.ratebox .seg button{padding:4px 7px;font-size:.72rem}
 .bikebox .tele{padding:8px 12px}
-@media (max-width:1180px){.bench-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"c c" "f r"}.bench-main .center{grid-area:c}.side-f{grid-area:f}.side-r{grid-area:r}}
-@media (max-width:700px){.bench-main{grid-template-columns:minmax(0,1fr);grid-template-areas:"c" "f" "r"}}
+@media (max-width:1180px){.bench-main{grid-template-columns:minmax(0,1fr) minmax(0,1fr);grid-template-areas:"c c" "r f"}.bench-main .center{grid-area:c}.side-f{grid-area:f}.side-r{grid-area:r}}
+@media (max-width:700px){.bench-main{grid-template-columns:minmax(0,1fr);grid-template-areas:"c" "r" "f"}}
 .side{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .side-h{display:flex;align-items:center;justify-content:space-between;gap:6px;padding:3px 0 3px 9px;border-left:3px solid var(--c);font-family:var(--f-display);font-weight:600;font-size:.95rem}
 .side-n{display:flex;justify-content:space-between;font-size:.62rem;text-transform:uppercase;letter-spacing:.08em;color:var(--dim);padding:0 30px}
@@ -356,10 +356,12 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
   <section class="bench" aria-label="Prüfstand">
     <div class="parc" id="scenSeg" role="group" aria-label="Prüfsituation wählen"></div>
     <div class="bench-main">
-      <aside class="side side-f" aria-label="Gabel und Prüfbedingungen einstellen">
-        <div class="side-h" style="--c:var(--front)"><span>Gabel vorn</span><span class="chip mut" id="chgF">Serie</span></div>
+      <aside class="side side-r" aria-label="Federbein hinten und Prüfbedingungen einstellen">
+        <div class="side-h" style="--c:var(--rear)"><span>Federbein hinten</span><span class="chip mut" id="chgR">Serie</span></div>
         <div class="side-n"><span>weicher</span><span>härter</span></div>
-        <div id="sideF"></div>
+        <div id="sideR"></div>
+        <div class="side-h" style="--c:var(--rear);margin-top:8px"><span>Reifen hinten (kalt)</span><span class="chip mut" id="chgTR">Serie</span></div>
+        <div id="sideTR"></div>
         <div class="side-h" style="--c:var(--muted);margin-top:8px"><span>Prüfbedingungen</span></div>
         <div id="cond"></div>
         <div class="lbl" style="margin-top:4px">Straße</div>
@@ -403,12 +405,12 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
           <p class="note" id="timeNote"></p>
         </div>
       </div>
-      <aside class="side side-r" aria-label="Federbein und Reifen einstellen">
-        <div class="side-h" style="--c:var(--rear)"><span>Federbein hinten</span><span class="chip mut" id="chgR">Serie</span></div>
+      <aside class="side side-f" aria-label="Gabel vorn einstellen">
+        <div class="side-h" style="--c:var(--front)"><span>Gabel vorn</span><span class="chip mut" id="chgF">Serie</span></div>
         <div class="side-n"><span>weicher</span><span>härter</span></div>
-        <div id="sideR"></div>
-        <div class="side-h" style="--c:var(--accent);margin-top:8px"><span>Reifen (kalt)</span><span class="chip mut" id="chgT">Serie</span></div>
-        <div id="sideT"></div>
+        <div id="sideF"></div>
+        <div class="side-h" style="--c:var(--front);margin-top:8px"><span>Reifen vorn (kalt)</span><span class="chip mut" id="chgTF">Serie</span></div>
+        <div id="sideTF"></div>
         <div class="side-h" style="--c:var(--muted);margin-top:8px"><span>Profil &amp; Aktionen</span></div>
         <div class="profwrap"></div>
         <div class="btnrow"><button class="btn sm" data-act="stock">Serie</button><button class="btn sm pri" data-act="rec">Empfehlung</button><button class="btn sm" data-act="undo" id="undoBtn" disabled>Rückgängig</button></div>
@@ -1187,6 +1189,7 @@ function buildSvg() {
   G_.tWb = T('var(--muted)', 42);
   G_.tLoadF = T('var(--front)', 40);
   G_.tLoadR = T('var(--rear)', 40);
+  G_.tFork = T('var(--front)', 42, 'middle'); G_.tShock = T('var(--rear)', 42, 'middle');
   svg.setAttribute('viewBox', VIEWS[viewMode]);
 }
 function drawBike(st) {
@@ -1283,6 +1286,9 @@ function drawBike(st) {
   tx(G_.tWb, { x: ax.x / 2, y: -150 }, `Radstand ${fmt(p.wb, 0)} mm`);
   tx(G_.tLoadF, { x: ax.x + 330, y: 60 + lf + 30 }, `${fmt((st.ftF || 0) / 1000, 2)} kN`);
   tx(G_.tLoadR, { x: -300, y: 60 + lr + 30 }, `${fmt((st.ftR || 0) / 1000, 2)} kN`);
+  const lab = (e, pt, name, mm, u) => { tx(e, pt, `${name} ${fmt(mm, 0)} mm`); e.setAttribute('fill', u > 0.03 ? 'var(--comp)' : u < -0.03 ? 'var(--reb)' : e === G_.tFork ? 'var(--front)' : 'var(--rear)'); };
+  lab(G_.tFork, { x: ax.x + 170, y: ax.y + 380 }, 'Gabel', st.sFr != null ? st.sFr : st.sF, st.vF || 0);
+  lab(G_.tShock, { x: p.axR.x - 40, y: p.axR.y + 380 }, 'Federbein', st.xRr != null ? st.xRr : st.xR, st.vR || 0);
   return p;
 }
 
@@ -1316,6 +1322,8 @@ function buildCut() {
   CUT.fBrT = ctext(160, 0, 'Druckstufe LS/HS', { 'font-size': 10 });
   CUT.fState = ctext(20, 380, '', { fill: 'var(--fg)', 'font-size': 11 });
   CUT.fVals = ctext(20, 396, '', { 'font-size': 10.5 });
+  // Gabel nach rechts (Front), Federbein nach links (Heck)
+  const gF = cel('g', { transform: 'translate(305,0)' }); while (cut.firstChild !== gF) gF.appendChild(cut.firstChild);
   // ---------- Federbein ----------
   const X = 300;
   ctext(X, 16, 'FEDERBEIN (Schnitt)', { fill: 'var(--rear)', 'font-weight': 600 });
@@ -1341,6 +1349,7 @@ function buildCut() {
   CUT.rEyeT = ctext(X + 96, 0, 'Zugstufe', { 'font-size': 10 });
   CUT.rState = ctext(X, 380, '', { fill: 'var(--fg)', 'font-size': 11 });
   CUT.rVals = ctext(X, 396, '', { 'font-size': 10.5 });
+  const gR = cel('g', { transform: 'translate(-290,0)' }); while (gF.nextSibling !== gR) gR.appendChild(gF.nextSibling);
 }
 const zig = (x0, x1, y0, y1, n) => { let d = `M${(x0 + x1) / 2},${y0.toFixed(1)}`; for (let i = 1; i <= n * 2; i++) d += `L${i % 2 ? x0 : x1},${(y0 + (y1 - y0) * i / (n * 2)).toFixed(1)}`; return d + `L${(x0 + x1) / 2},${y1.toFixed(1)}`; };
 function flowArrows(x, y, v, w) {
@@ -1450,7 +1459,7 @@ const STOCK_ALL = Object.assign({ rider: 80, passenger: 0, luggage: 0, fuel: 100
 const findCtl = k => CTL.flatMap(g => g.items).find(c => c.k === k);
 const PSHORT = { komfort: 'Komfort', sport: 'Sportlich', track: 'Rennstrecke', regen: 'Nässe' };
 const profSeg = () => `<div class="seg profSeg" role="group" aria-label="Einsatzprofil">${Object.entries(PROFILES).map(([k, p]) => `<button data-p="${k}" aria-pressed="false" title="${p.name}">${PSHORT[k] || p.name}</button>`).join('')}</div>`;
-const SIDE_F = ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt', 'kF'], SIDE_R = ['rPre', 'rReb', 'rLS', 'rHS', 'rShim', 'kR'], SIDE_T = ['pF', 'pR'];
+const SIDE_F = ['fPre', 'fReb', 'fLS', 'fHS', 'fOil', 'fProt', 'kF'], SIDE_R = ['rPre', 'rReb', 'rLS', 'rHS', 'rShim', 'kR'], SIDE_T = ['pF', 'pR'], SIDE_TF = ['pF'], SIDE_TR = ['pR'];
 const COND = ['rider', 'passenger', 'luggage', 'fuel', 'oilT'];
 const SHORT = { rider: 'Fahrer inkl. Ausrüstung', passenger: 'Sozius', luggage: 'Gepäck', fuel: 'Tank', oilT: 'Öltemperatur' };
 function ctlName(k) { const c = findCtl(k); return (SIDE_F.includes(k) ? 'Gabel · ' : SIDE_R.includes(k) ? 'Federbein · ' : SIDE_T.includes(k) ? 'Reifen · ' : '') + c.label; }
@@ -1463,7 +1472,7 @@ function rowHtml(k) {
 function buildControls() {
   $('#sideF').innerHTML = SIDE_F.map(rowHtml).join('');
   $('#sideR').innerHTML = SIDE_R.map(rowHtml).join('');
-  $('#sideT').innerHTML = SIDE_T.map(rowHtml).join('');
+  $('#sideTF').innerHTML = SIDE_TF.map(rowHtml).join(''); $('#sideTR').innerHTML = SIDE_TR.map(rowHtml).join('');
   $('.profwrap').innerHTML = profSeg();
   $('#cond').innerHTML = COND.map(rowHtml).join('') + `<div class="brow" title="Fahrgeschwindigkeit in allen Situationen"><div class="brow-h"><label for="speed">Tempo</label><output id="speedO">${speed} km/h</output></div>
     <div class="brow-c"><button data-spd="-5" aria-label="Tempo verringern">−</button><div class="rng"><input type="range" id="speed" min="20" max="280" step="5" value="${speed}"></div><button data-spd="5" aria-label="Tempo erhöhen">+</button></div></div>`;
@@ -1510,7 +1519,7 @@ function syncControls() {
   }
   $$('.profSeg button').forEach(b => b.setAttribute('aria-pressed', b.dataset.p === S.profile));
   const cnt = keys => keys.filter(k => Math.abs(S[k] - STOCK_ALL[k]) > 1e-6).length;
-  for (const [id, keys] of [['#chgF', SIDE_F], ['#chgR', SIDE_R], ['#chgT', SIDE_T]]) { const n = cnt(keys), e = $(id); e.textContent = n ? `${n} geändert` : 'Serie'; e.className = 'chip ' + (n ? 'info' : 'mut'); }
+  for (const [id, keys] of [['#chgF', SIDE_F], ['#chgR', SIDE_R], ['#chgTF', SIDE_TF], ['#chgTR', SIDE_TR]]) { const n = cnt(keys), e = $(id); e.textContent = n ? `${n} geändert` : 'Serie'; e.className = 'chip ' + (n ? 'info' : 'mut'); }
   $('#undoBtn').disabled = !UNDO.length;
 }
 /* ============================ EMPFEHLUNG ============================ */
@@ -1635,7 +1644,7 @@ function renderParc() {
 }
 function renderChange(idx) {
   const box = $('#change');
-  if (!LAST) { box.innerHTML = `<span class="cl">Prüfstand bereit</span><span>Stell links an der Gabel oder rechts am Federbein etwas um. Die Maschine fährt sofort mit der neuen Einstellung, die gestrichelte Kontur zeigt den Zustand davor.</span>`; return; }
+  if (!LAST) { box.innerHTML = `<span class="cl">Prüfstand bereit</span><span>Stell rechts an der Gabel oder links am Federbein etwas um. Die Maschine fährt sofort mit der neuen Einstellung, die gestrichelte Kontur zeigt den Zustand davor.</span>`; return; }
   let what = `<b>${LAST.label}</b>`;
   if (LAST.k) { const c = findCtl(LAST.k), to = S[LAST.k], dir = c.hard && to !== LAST.from ? ((to - LAST.from) * (c.hard === -1 ? -1 : 1) > 0 ? 'härter' : 'weicher') : ''; what += ` <span class="mono">${fmt(LAST.from, c.d)} → ${fmt(to, c.d)} ${c.unit.split(' ')[0]}</span>${dir ? ` <span class="chip ${dir === 'härter' ? 'warn' : 'info'}">${dir}</span>` : ''}`; }
   const a = LAST.run, b = RUN[LAST.scen];
@@ -1867,7 +1876,7 @@ function frameState(run, i, ex) {
   let sMax = run.F.x0; for (let j = 0; j <= i; j++) sMax = Math.max(sMax, run.F.x[j]);
   return {
     sF: run.F.x0 + (run.F.x[i] - run.F.x0) * ex, xR: run.R.x0 + (run.R.x[i] - run.R.x0) * ex, hF: run.F.zu[i] * ex, hR: run.R.zu[i] * ex,
-    dist: v * t * 1000, ftF: run.F.ft[i], ftR: run.R.ft[i], vF: run.F.v[i], vR: run.R.v[i], sMax: run.F.x0 + (sMax - run.F.x0) * ex,
+    dist: v * t * 1000, ftF: run.F.ft[i], ftR: run.R.ft[i], vF: run.F.v[i], vR: run.R.v[i], sFr: run.F.x[i], xRr: run.R.x[i], sMax: run.F.x0 + (sMax - run.F.x0) * ex,
     road: x => sc.raw(v * t - M.wb0 / 1000 + x / 1000) * 1000 * ex, t
   };
 }
@@ -1896,9 +1905,9 @@ function renderTele(i) {
   let mF = 0, mR = 0; for (let j = 0; j <= i; j++) { mF = Math.max(mF, r.F.x[j]); mR = Math.max(mR, r.R.x[j]); }
   const bar = (lbl, v, mx, cv, tr, col) => `<div class="tb"><div class="tb-h"><span>${lbl}</span><b class="mono">${fmt(v, 0)} mm</b></div><div class="tr"><div class="fill" style="width:${clamp(v / tr * 100, 0, 100)}%;background:${col}"></div><div class="mx" style="left:${clamp(mx / tr * 100, 0, 100)}%" title="Kabelbinder"></div><div class="gh" style="left:${clamp(cv / tr * 100, 0, 100)}%" title="${cmpLabel()}"></div></div></div>`;
   const lamp = (lbl, ft, st, slip, slipTxt) => { const lift = ft < 0.05 * st, bad = lift || slip; return `<div class="tl"><span class="lamp" style="background:var(--${bad ? 'bad' : 'good'})"></span><span>${lbl}<br><b class="mono">${lift ? 'abgehoben' : slip ? slipTxt : fmt(ft / 1000, 2) + ' kN'}</b></span></div>`; };
-  $('#tele').innerHTML = bar('Gabel', r.F.x[i], mF, c.F.x[i], M.travelF, 'var(--front)') + bar('Federbein', r.R.x[i], mR, c.R.x[i], M.travelR, 'var(--rear)') +
-    lamp('Vorderrad', r.F.ft[i], r.F.static, r.F.slip && r.F.slip[i], 'blockiert') + lamp('Hinterrad', r.R.ft[i], r.R.static, r.R.slip && r.R.slip[i], r.axg[i] > 0 ? 'dreht durch' : 'rutscht') +
-    `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs · Luft<br><b class="mono">${fmt(r.axg[i], 2)} g · ${fmt(r.drag, 0)} N</b></span></div>`;
+  $('#tele').innerHTML = bar('Federbein', r.R.x[i], mR, c.R.x[i], M.travelR, 'var(--rear)') + lamp('Hinterrad', r.R.ft[i], r.R.static, r.R.slip && r.R.slip[i], r.axg[i] > 0 ? 'dreht durch' : 'rutscht') +
+    `<div class="tl"><span>Nicken<br><b class="mono">${r.pitch[i] >= 0 ? '+' : ''}${fmt(r.pitch[i], 2)}°</b></span></div><div class="tl"><span>Längs · Luft<br><b class="mono">${fmt(r.axg[i], 2)} g · ${fmt(r.drag, 0)} N</b></span></div>` +
+    lamp('Vorderrad', r.F.ft[i], r.F.static, r.F.slip && r.F.slip[i], 'blockiert') + bar('Gabel', r.F.x[i], mF, c.F.x[i], M.travelF, 'var(--front)');
 }
 let rafId = 0; // genau eine laufende Abspielschleife
 // Wiedergabegeschwindigkeit: logarithmischer Regler von 0,02× bis 2× (Mitte des Weges = feine Zeitlupe)
