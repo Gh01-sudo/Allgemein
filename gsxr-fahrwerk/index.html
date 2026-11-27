@@ -54,8 +54,21 @@ button{font:inherit;color:inherit}
 :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 
 /* Kopf */
-.top{display:flex;flex-wrap:wrap;gap:8px 24px;align-items:flex-end;justify-content:space-between;padding-block:14px 10px;border-bottom:1px solid var(--line)}
-.brand h1{font-size:clamp(1.4rem,2.6vw,1.9rem);font-weight:700;line-height:1.05}
+.top{display:flex;flex-wrap:wrap;gap:8px 20px;align-items:center;justify-content:space-between;padding-block:8px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;background:color-mix(in srgb,var(--bg) 88%,transparent);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px)}
+.brand h1{font-size:clamp(1.15rem,1.9vw,1.5rem);font-weight:700;line-height:1.05}
+.brand .lbl{font-size:.6rem}
+.grpbar{display:flex;flex-wrap:wrap;gap:6px;align-items:center;justify-content:center;flex:1 1 420px}
+.ring{position:relative;width:46px;height:46px;flex:none}.ring svg{width:46px;height:46px;transform:rotate(-90deg)}
+.ring circle{fill:none;stroke-width:4}.ring .rb{stroke:var(--line2)}.ring .rf{stroke:var(--st,var(--accent));stroke-linecap:round;transition:stroke-dasharray .4s}
+.ring b{position:absolute;inset:0;display:grid;place-items:center;font-family:var(--f-mono);font-size:.86rem}
+.gchip{display:inline-flex;gap:6px;align-items:center;border:1px solid var(--line);border-radius:8px;padding:3px 9px;font-size:.72rem;color:var(--muted);background:var(--panel);cursor:pointer}
+.gchip:hover{border-color:var(--line2)}.gchip b{font-family:var(--f-mono);color:var(--fg);font-weight:600}
+.gchip i{width:8px;height:8px;border-radius:50%;background:var(--st)}
+@media (max-width:1700px){.top .pills .pill:first-child,.top .pills .pill:last-child{display:none}}
+@media (max-width:900px){.top{position:static;background:none;-webkit-backdrop-filter:none;backdrop-filter:none}.grpbar{justify-content:flex-start}}
+.frq{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px;align-items:start}
+@media (max-width:1000px){.frq{grid-template-columns:minmax(0,1fr)}}
+.frq .frs{display:grid;gap:6px}.frq .frs .kpi{padding:7px 10px}.frq .frs .kpi .v{font-size:1.05rem}
 .brand h1 span{color:var(--accent)}
 .brand p{margin:4px 0 0;color:var(--muted);max-width:70ch}
 .pills{display:flex;flex-wrap:wrap;gap:8px}
@@ -134,13 +147,20 @@ tr.act td{background:var(--accent-soft)}
 .roughseg button,.profwrap .seg button{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 /* Prüfstand */
 .bench{margin-top:10px;display:flex;flex-direction:column;gap:10px}
-.parc{display:grid;grid-template-columns:repeat(14,minmax(0,1fr));gap:5px}
-@media (max-width:1500px){.parc{grid-template-columns:repeat(7,minmax(0,1fr))}}
-@media (max-width:1000px){.parc{grid-template-columns:repeat(5,minmax(0,1fr))}}
-@media (max-width:640px){.parc{grid-template-columns:repeat(3,minmax(0,1fr))}}
+.parc{display:flex;flex-wrap:wrap;gap:8px 12px}
+.pgrp{flex:var(--n) 1 calc(var(--n) * 6.9vw);max-width:calc(var(--n) * 230px);min-width:0;display:flex;flex-direction:column;gap:4px}
+.pgh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;font-size:.64rem;text-transform:uppercase;letter-spacing:.09em;color:var(--muted);font-weight:600;padding:0 2px 3px;border-bottom:1px solid var(--line)}
+.pgh b{font-family:var(--f-mono);color:var(--fg);letter-spacing:0;font-size:.74rem}
+.pgh small{font-weight:500;text-transform:none;letter-spacing:0;color:var(--dim)}
+.pgt{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:5px}
+@media (max-width:1000px){.pgrp{flex-basis:calc(var(--n) * 118px)}}
+@media (max-width:640px){.pgrp{flex-basis:100%;max-width:none}.pgt{grid-template-columns:repeat(3,minmax(0,1fr))}}
 .pt{position:relative;text-align:left;border:1px solid var(--line);background:var(--panel);border-radius:9px;padding:4px 6px 4px 11px;cursor:pointer;min-width:0;display:flex;flex-direction:column;gap:0;color:var(--fg)}
 .pt::before{content:"";position:absolute;left:0;top:7px;bottom:7px;width:4px;border-radius:2px;background:var(--st)}
 .pt:hover{border-color:var(--line2)}
+.pt{padding-bottom:8px}
+.pt::after{content:"";position:absolute;left:11px;right:7px;bottom:4px;height:2px;border-radius:2px;background:linear-gradient(90deg,var(--st) var(--sw,0%),var(--line) var(--sw,0%));transition:background .3s}
+.pgrp.rig .pt::before{background:var(--muted)}
 .pt .pg{display:none}
 .pt .pn{font-size:.78rem;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pt .ps{font-family:var(--f-mono);font-size:1rem;font-weight:600;font-variant-numeric:tabular-nums}
@@ -347,8 +367,8 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
     <div class="brand">
       <div class="lbl">Suzuki GSX-R 1000 · K7 (2007–2008) · Serienfahrwerk</div>
       <h1>K7 <span>Fahrwerkslabor</span></h1>
-      <p>Fahrwerks-Prüfstand: Jede Einstellung wirkt sofort auf 14 Prüfsituationen. Physikalisches Modell mit Nicken, Ventil-Dämpfern, Reibung, Fahrer und Straßenrauheit.</p>
     </div>
+    <div class="grpbar" id="grpBar" aria-label="Noten je Prüfgruppe"><span class="ring" id="idxRing" title="Setup-Index aus allen Fahrsituationen und dem Durchhang"><svg viewBox="0 0 36 36" aria-hidden="true"><circle class="rb" cx="18" cy="18" r="15.5"/><circle class="rf" cx="18" cy="18" r="15.5" stroke-dasharray="0 100" pathLength="100"/></svg><b id="idxV">–</b></span><span id="grpChips" style="display:contents"></span></div>
     <div class="pills">
       <span class="pill"><span class="dot" id="statusDot"></span>Setup-Index <b id="pillScore">–</b></span>
       <span class="pill">Profil <b id="pillProfile">–</b></span>
@@ -445,6 +465,13 @@ footer{margin-top:28px;padding-top:14px;border-top:1px solid var(--line);font-si
         <div class="lbl" style="margin-top:8px">Federn: Kraft über Federweg</div>
         <canvas class="cv" id="spCv" height="210" aria-label="Federkraft über Federweg"></canvas>
         <p class="note">Punkte = Durchhang mit Fahrer. Gabel inklusive Luftpolster.</p>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-h"><h3>Frequenzgang vom Prüfstand</h3><div class="legend"><span><i style="background:var(--accent)"></i>Aufbau</span><span><i style="background:var(--front)"></i>vorn</span><span><i style="background:var(--rear)"></i>hinten</span><span><i class="dash"></i><span id="frCmp">Vorher</span></span></div></div>
+      <div class="frq">
+        <div><canvas class="cv" id="frCv" height="230" aria-label="Frequenzgang aus dem Sinus-Sweep: Übertragung Hub und Nicken, Radlastschwankung"></canvas><p class="note" id="frNote"></p></div>
+        <div class="frs" id="frStats"></div>
       </div>
     </div>
   </section>
@@ -784,9 +811,9 @@ const SCACHE = new Map();
 function prepScen(name, v, P) {
   const key = name + JSON.stringify(P) + v.toFixed(3) + roughness;
   if (SCACHE.has(key)) return SCACHE.get(key);
-  const sc = scenDef(name, v, P), off = 3, len = v * sc.T + 6 * sc.T * sc.T + off + 3, n = Math.ceil(len / RDX) + 1; // Reserve für Beschleunigung bis 1,2 g
+  const sc = scenDef(name, v, P), off = 3, len = (sc.len || v * sc.T + 6 * sc.T * sc.T) + off + 3, n = Math.ceil(len / RDX) + 1; // Reserve für Beschleunigung bis 1,2 g; Rundkurse kennen ihre Länge
   const rt = roughTable(roughness, len + 1), raw = new Float64Array(n);
-  for (let i = 0; i < n; i++) { const d = i * RDX - off; raw[i] = sc.road(d) + rt[i] * (sc.lean ? Math.cos(sc.lean(Math.max(0, d) / v) * DEG) : 1); }
+  for (let i = 0; i < n; i++) { const d = i * RDX - off; raw[i] = sc.road(d) + (sc.rig ? 0 : rt[i] * (sc.leanAtD ? Math.cos(sc.leanAtD(d) * DEG) : sc.lean ? Math.cos(sc.lean(Math.max(0, d) / v) * DEG) : 1)); }
   let rmin = Infinity, rmax = -Infinity; for (let i = 0; i < n; i++) { if (raw[i] < rmin) rmin = raw[i]; if (raw[i] > rmax) rmax = raw[i]; }
   const span = rmax - rmin;
   const env = R => {
@@ -803,7 +830,7 @@ function prepScen(name, v, P) {
   sc.raw = look(raw); sc.envF = look(eF); sc.envR = look(eR); sc.tStart = Math.max(0.15, Math.min(sc.start / v, sc.T));
   // Grundrauschen nur bis kurz vor dem ersten Radkontakt mit dem Hindernis (das Rad berührt eine Kante schon bis zu einem Radius davor) bzw. bis zum Manöverbeginn
   sc.tNoise = Math.max(0.1, Math.min(sc.tStart, sc.quiet) - Math.max(0.05, 0.35 / v));
-  if (SCACHE.size > 80) SCACHE.clear();
+  if (SCACHE.size > 48) SCACHE.clear(); // Tabellen je Situation: Speicher begrenzen
   SCACHE.set(key, sc); return sc;
 }
 
@@ -837,7 +864,51 @@ const SCEN = {
   trail: { grp: 'Kurve', name: 'Anbremsen in die Kurve', short: 'Anbremsen', desc: 'Bremse löst sich, während die Schräglage aufgebaut wird (Trail Braking). Welle am Scheitel.',
     p: [{ k: 'g', l: 'Verzögerung Start', min: 0.3, max: 1.1, step: 0.05, u: 'g', def: 0.7, d: 2 }, { k: 'lean', l: 'Schräglage', min: 15, max: 55, step: 1, u: '°', def: 40 }, { k: 'h', l: 'Welle am Scheitel', min: 0, max: 30, step: 1, u: 'mm', def: 10 }] },
   chicane: { grp: 'Kurve', name: 'Wechselkurve', short: 'Wechselkurve', desc: 'Links-rechts-Wechsel. Beim Umlegen wird das Fahrwerk entlastet und wieder belastet.',
-    p: [{ k: 'lean', l: 'Schräglage', min: 15, max: 55, step: 1, u: '°', def: 40 }, { k: 'T', l: 'Zeit je Kurve', min: 0.4, max: 2, step: 0.1, u: 's', def: 0.9, d: 1 }] }
+    p: [{ k: 'lean', l: 'Schräglage', min: 15, max: 55, step: 1, u: '°', def: 40 }, { k: 'T', l: 'Zeit je Kurve', min: 0.4, max: 2, step: 0.1, u: 's', def: 0.9, d: 1 }] },
+  // Rundkurse: zusammenhängende Fahrten mit eigenem Tempo. Bremsen, Schräglage und Hindernisse greifen ineinander wie auf echter Straße.
+  cycLand: { grp: 'Rundkurs', cyc: true, name: 'Landstraßen-Runde', short: 'Landstraße', desc: 'Welle, Anbremsen, Kurve mit Wellen, Herausbeschleunigen, Kuppe, Schlagloch und Rippen in einem Zug.',
+    p: [{ k: 'v', l: 'Tempo Start', min: 50, max: 140, step: 5, u: 'km/h', def: 90 }, { k: 's', l: 'Intensität', min: 0.5, max: 2, step: 0.1, u: '×', def: 1, d: 1 }] },
+  cycTrack: { grp: 'Rundkurs', cyc: true, name: 'Rennstrecken-Runde', short: 'Rennstrecke', desc: 'Harte Bremsung über Bremswellen, Einlenken mit Restbremse, Curbs am Scheitel und Ausgang, Vollgas, Schikane.',
+    p: [{ k: 'v', l: 'Tempo Start', min: 100, max: 240, step: 5, u: 'km/h', def: 170 }, { k: 's', l: 'Intensität', min: 0.5, max: 1.5, step: 0.1, u: '×', def: 1, d: 1 }] },
+  cycCity: { grp: 'Rundkurs', cyc: true, name: 'Stadt & Kopfsteinpflaster', short: 'Stadt', desc: 'Gullydeckel, Bremsen, Bodenschwelle, Abbiegen, Kopfsteinpflaster, Bahnübergang und Bordstein-Absatz.',
+    p: [{ k: 'v', l: 'Tempo Start', min: 20, max: 70, step: 5, u: 'km/h', def: 50 }, { k: 's', l: 'Intensität', min: 0.5, max: 2, step: 0.1, u: '×', def: 1, d: 1 }] },
+  cycHwy: { grp: 'Rundkurs', cyc: true, name: 'Autobahn & Brücken', short: 'Autobahn', desc: 'Brückenfugen, lange Bodenwellen, Spurwechsel, Bremsen aus hohem Tempo und Brückenübergang.',
+    p: [{ k: 'v', l: 'Tempo Start', min: 100, max: 280, step: 10, u: 'km/h', def: 160 }, { k: 's', l: 'Intensität', min: 0.5, max: 2, step: 0.1, u: '×', def: 1, d: 1 }] },
+  // Prüfstand: Motorrad steht mit beiden Rädern auf Hydraulikstempeln (Zwei-Stempel-Prüfstand), ohne Fahrtwind und Rauheit.
+  rigHeave: { grp: 'Prüfstand', rig: true, name: 'Sinus-Sweep Hub', short: 'Sweep Hub', desc: 'Beide Stempel gleichphasig, Frequenz steigt stetig von 0,6 Hz an. Zeigt Aufbau- und Rad-Eigenfrequenz und wie gut die Dämpfung sie beruhigt.',
+    p: [{ k: 'A', l: 'Hub (Amplitude)', min: 1, max: 10, step: 0.5, u: 'mm', def: 4, d: 1 }, { k: 'f1', l: 'Endfrequenz', min: 10, max: 40, step: 1, u: 'Hz', def: 30 }, { k: 'Ts', l: 'Sweep-Dauer', min: 8, max: 20, step: 1, u: 's', def: 14 }] },
+  rigPitch: { grp: 'Prüfstand', rig: true, name: 'Sinus-Sweep Nicken', short: 'Sweep Nicken', desc: 'Stempel gegenphasig: vorn hoch, hinten runter. Regt das Nicken an, typisch für das Wippen auf langen Wellen.',
+    p: [{ k: 'A', l: 'Hub (Amplitude)', min: 1, max: 10, step: 0.5, u: 'mm', def: 4, d: 1 }, { k: 'f1', l: 'Endfrequenz', min: 10, max: 40, step: 1, u: 'Hz', def: 30 }, { k: 'Ts', l: 'Sweep-Dauer', min: 8, max: 20, step: 1, u: 's', def: 14 }] },
+  rigDrop: { grp: 'Prüfstand', rig: true, name: 'Falltest', short: 'Falltest', desc: 'Beide Stempel fallen schlagartig ab und fahren wieder hoch. Prüft Ausfedern (Zugstufe), Aufsetzen und Durchschlagreserve.',
+    p: [{ k: 'h', l: 'Fallhöhe', min: 10, max: 80, step: 1, u: 'mm', def: 40 }, { k: 'ft', l: 'Zeit unten', min: 0.3, max: 3, step: 0.1, u: 's', def: 1.2, d: 1 }] }
+};
+// Tempo je Situation: Rundkurse haben ein eigenes Starttempo, der Prüfstand steht (0,001 m/s statt 0, damit Weg/Zeit-Umrechnungen definiert bleiben)
+function vOf(name, kmh) { const s = SCEN[name]; return s.rig ? 0.001 : s.cyc ? SP[name].v / 3.6 : kmh / 3.6; }
+// Baut einen Rundkurs: Längs- und Schräglagen-Pulse über der Zeit, Hindernisse an dem Ort, an dem das Motorrad zum gewünschten Zeitpunkt ist
+function cycBuild(def, v, spec) {
+  const pulse = (t, e) => e.g * smooth((t - e.t) / e.ri) * (1 - smooth((t - e.t - e.ri - e.d) / e.ro));
+  const A = spec.ax, Ln = spec.lean;
+  def.ax = t => { let a = 0; for (const e of A) a += pulse(t, e); return a; };
+  const lean = t => { let l = 0; for (const e of Ln) l += pulse(t, e); return l; };
+  def.lean = lean; def.nfac = t => 1 / Math.cos(lean(t) * DEG);
+  // Weg über der Zeit, gleiche Integration wie in simRun (Bremsen endet bei Stillstand)
+  const dt = 0.002, N = Math.ceil((spec.tEnd + 1.4) / dt) + 2, D = new Float64Array(N); let vel = v, d = 0;
+  for (let i = 0; i < N; i++) { D[i] = d; const a = def.ax(i * dt) * G; vel = Math.max(0, vel + (a < 0 && vel <= 0.3 ? 0 : a) * dt); d += vel * dt; }
+  const dAt = t => { const x = clamp(t / dt, 0, N - 1.001), i = Math.floor(x); return D[i] + (D[i + 1] - D[i]) * (x - i); };
+  const tAt = dd => { let lo = 0, hi = N - 1; if (dd <= 0) return dd / Math.max(v, 0.1); if (dd >= D[hi]) return hi * dt; while (hi - lo > 1) { const m = (lo + hi) >> 1; if (D[m] <= dd) lo = m; else hi = m; } return (lo + (dd - D[lo]) / Math.max(1e-9, D[hi] - D[lo])) * dt; };
+  const feats = spec.feat.map(f => ({ x0: dAt(f.t), len: f.len, fn: f.fn, k: Math.cos(lean(f.t) * DEG) }));
+  def.road = dd => { let z = 0; for (const f of feats) { const x = dd - f.x0; if (x >= 0 && x <= f.len) z += f.k * f.fn(x); } return z; };
+  def.leanAtD = dd => lean(tAt(dd)); // Rauheit in Schräglage am echten Ort, auch wenn sich das Tempo ändert
+  def.len = D[N - 1] + 2; def.tEnd = spec.tEnd; def.start = Math.min(...feats.map(f => f.x0));
+  def.quiet = Math.min(...A.map(e => e.t), ...Ln.map(e => e.t), spec.tEnd); def.marks = spec.marks;
+}
+// Bausteine für Rundkurse (x = Weg ab Beginn des Hindernisses in m, Höhen in m)
+const FB = {
+  bump: (h, L) => ({ len: L, fn: x => h * (1 - Math.cos(2 * Math.PI * x / L)) / 2 }),
+  hole: (h, L) => { const e = Math.min(0.05, L / 4); return { len: L, fn: x => -h * smooth(x / e) * (1 - smooth((x - L + e) / e)) }; },
+  step: (h, r) => ({ len: 1e4, fn: x => h * smooth(x / r) }),
+  series: (n, sp, w, h) => ({ len: (n - 1) * sp + w, fn: x => { const k = Math.floor(x / sp), u = x - k * sp; return k < n && u <= w ? h * (1 - Math.cos(2 * Math.PI * u / w)) / 2 : 0; } }),
+  cobbles: (len, sp, h) => ({ len, fn: x => { const k = Math.floor(x / sp), u = x - k * sp, r = Math.abs(Math.sin(k * 12.9898) * 43758.5453) % 1, w = sp * 0.86; return u <= w ? h * (0.55 + 0.45 * r) * Math.sin(Math.PI * u / w) ** 0.6 : 0; } })
 };
 const SP = {};
 for (const [k, s] of Object.entries(SCEN)) { SP[k] = {}; for (const p of s.p) SP[k][p.k] = p.def; }
@@ -887,6 +958,50 @@ function scenDef(name, v, P) {
       def.road = d => tex(d) + cosBump(d, Da, 0.9, P.h * mm) * cl;
       def.tEnd = Math.max(T0 + 1.5, (Da + 0.9 + wbm) / v); def.start = Da; def.quiet = T0; break;
     }
+    case 'cycLand': { const k = P.s, mm1 = k * mm; cycBuild(def, v, {
+      ax: [{ t: 1.2, ri: 0.3, d: 0.6, ro: 0.35, g: -Math.min(1.1, 0.55 * k) }, { t: 3.9, ri: 0.35, d: 1.1, ro: 0.3, g: Math.min(0.9, 0.35 * k) }],
+      lean: [{ t: 1.8, ri: 0.7, d: 1.6, ro: 0.6, g: Math.min(55, 30 + 8 * k) }],
+      feat: [Object.assign({ t: 0.75 }, FB.bump(20 * mm1, 0.7)), Object.assign({ t: 2.9 }, FB.bump(15 * mm1, 1.0)), Object.assign({ t: 3.35 }, FB.bump(15 * mm1, 1.0)),
+        Object.assign({ t: 5.6 }, FB.bump(0.15 * k, 28)), Object.assign({ t: 7.0 }, FB.hole(25 * mm1, 0.4)), Object.assign({ t: 7.45 }, FB.series(5, 1.1, 1.1, 6 * mm1))],
+      marks: [{ t: 0.75, l: 'Welle' }, { t: 1.2, l: 'Bremsen' }, { t: 1.8, l: 'Kurve' }, { t: 2.9, l: 'Wellen in Schräglage' }, { t: 3.9, l: 'Gas' }, { t: 5.6, l: 'Kuppe' }, { t: 7.0, l: 'Schlagloch' }, { t: 7.45, l: 'Rippen' }],
+      tEnd: 8.2 }); break; }
+    case 'cycTrack': { const k = P.s, mm1 = k * mm; cycBuild(def, v, {
+      ax: [{ t: 0.7, ri: 0.25, d: 1.15, ro: 0.5, g: -Math.min(1.1, 0.9 * k) }, { t: 3.5, ri: 0.4, d: 1.3, ro: 0.3, g: Math.min(1.0, 0.7 * k) }, { t: 5.5, ri: 0.2, d: 0.2, ro: 0.3, g: -Math.min(1.1, 0.5 * k) }],
+      lean: [{ t: 1.5, ri: 0.9, d: 0.6, ro: 1.0, g: Math.min(56, 42 + 6 * k) }, { t: 6.0, ri: 0.45, d: 0.25, ro: 0.45, g: -Math.min(50, 34 + 6 * k) }, { t: 7.15, ri: 0.45, d: 0.2, ro: 0.45, g: Math.min(50, 34 + 6 * k) }],
+      feat: [Object.assign({ t: 1.0 }, FB.series(6, 1.1, 1.1, 4 * mm1)), Object.assign({ t: 2.7 }, FB.series(4, 0.8, 0.4, 10 * mm1)), Object.assign({ t: 4.0 }, FB.series(5, 1.0, 0.5, 10 * mm1)), Object.assign({ t: 5.0 }, FB.bump(15 * mm1, 0.8))],
+      marks: [{ t: 0.7, l: 'Bremspunkt' }, { t: 1.0, l: 'Bremswellen' }, { t: 1.5, l: 'Einlenken' }, { t: 2.7, l: 'Curb Scheitel' }, { t: 3.5, l: 'Vollgas' }, { t: 4.0, l: 'Curb Ausgang' }, { t: 5.5, l: 'Anbremsen' }, { t: 6.0, l: 'Schikane' }],
+      tEnd: 8.1 }); break; }
+    case 'cycCity': { const k = P.s, mm1 = k * mm; cycBuild(def, v, {
+      ax: [{ t: 1.15, ri: 0.3, d: 0.5, ro: 0.3, g: -Math.min(1.0, 0.45 * k) }, { t: 3.8, ri: 0.3, d: 1.0, ro: 0.3, g: Math.min(0.8, 0.3 * k) }],
+      lean: [{ t: 3.0, ri: 0.5, d: 0.3, ro: 0.5, g: Math.min(45, 20 + 6 * k) }],
+      feat: [Object.assign({ t: 0.8 }, FB.hole(20 * mm1, 0.6)), Object.assign({ t: 2.45 }, FB.bump(50 * mm1, 1.6)), Object.assign({ t: 4.75 }, FB.cobbles(14, 0.14, 7 * mm1)),
+        Object.assign({ t: 6.05 }, FB.series(2, 1.435, 0.08, 12 * mm1)), Object.assign({ t: 6.75 }, FB.step(-30 * mm1, 0.03))],
+      marks: [{ t: 0.8, l: 'Gullydeckel' }, { t: 1.15, l: 'Bremsen' }, { t: 2.45, l: 'Bodenschwelle' }, { t: 3.0, l: 'Abbiegen' }, { t: 3.8, l: 'Anfahren' }, { t: 4.75, l: 'Kopfsteinpflaster' }, { t: 6.05, l: 'Gleise' }, { t: 6.75, l: 'Bordstein ↓' }],
+      tEnd: 7.25 }); break; }
+    case 'cycHwy': { const k = P.s, mm1 = k * mm; cycBuild(def, v, {
+      ax: [{ t: 5.0, ri: 0.4, d: 0.6, ro: 0.4, g: -Math.min(1.0, 0.45 * k) }],
+      lean: [{ t: 3.3, ri: 0.45, d: 0.15, ro: 0.45, g: Math.min(30, 8 + 4 * k) }, { t: 4.3, ri: 0.45, d: 0.15, ro: 0.45, g: -Math.min(30, 8 + 4 * k) }],
+      feat: [Object.assign({ t: 0.7 }, FB.series(3, 8, 0.1, 10 * mm1)), Object.assign({ t: 1.6 }, FB.series(3, 20, 20, 30 * mm1)), Object.assign({ t: 5.6 }, FB.bump(18 * mm1, 0.6)), Object.assign({ t: 6.6 }, FB.series(2, 3, 0.12, 15 * mm1))],
+      marks: [{ t: 0.7, l: 'Brückenfugen' }, { t: 1.6, l: 'lange Wellen' }, { t: 3.3, l: 'Spurwechsel' }, { t: 5.0, l: 'Bremsen' }, { t: 5.6, l: 'Welle' }, { t: 6.6, l: 'Brückenübergang' }],
+      tEnd: 7.3 }); break; }
+    case 'rigHeave': case 'rigPitch': {
+      // logarithmischer Sinus-Sweep. Der Hydraulikstempel ist wie echte Prüfstände geschwindigkeitsbegrenzt (0,25 m/s): oben wird der Hub kleiner.
+      const f0 = 0.6, f1 = P.f1, Ts = P.Ts, A = P.A * mm, VM = 0.25, kk = f1 / f0, lk = Math.log(kk), t0 = 0.6;
+      const fr = t => { const u = t - t0; return u <= 0 ? f0 : u >= Ts ? f1 : f0 * Math.pow(kk, u / Ts); };
+      const ph = t => { const u = t - t0; return u < 0 ? 2 * Math.PI * f0 * u : u > Ts ? 2 * Math.PI * (f0 * Ts / lk * (kk - 1) + f1 * (u - Ts)) : 2 * Math.PI * f0 * Ts / lk * (Math.pow(kk, u / Ts) - 1); };
+      const g = t => Math.min(A, VM / (2 * Math.PI * fr(t))) * smooth((t - 0.1) / 0.45) * (1 - smooth((t - t0 - Ts) / 0.3)) * Math.sin(ph(t));
+      def.gF = g; def.gR = name === 'rigPitch' ? t => -g(t) : g; def.phase = ph; def.f1 = f1; def.f0 = f0;
+      def.freq = t => (t >= t0 && t <= t0 + Ts) ? fr(t) : 0;
+      def.rig = true; def.tEnd = t0 + Ts + 0.3; def.start = v * t0; def.quiet = t0; def.len = 4;
+      def.marks = [1, 2, 5, 10, 20, 30, 40].filter(f => f > f0 && f <= f1).map(f => ({ t: t0 + Ts * Math.log(f / f0) / lk, l: fmt(f) + ' Hz' }));
+      break;
+    }
+    case 'rigDrop': {
+      const t0 = 0.5, h = P.h * mm, g = t => -h * (smooth((t - t0) / 0.025) - smooth((t - t0 - P.ft) / 0.06));
+      def.gF = g; def.gR = g; def.rig = true; def.tEnd = t0 + P.ft + 0.06; def.start = v * t0; def.quiet = t0; def.len = 4;
+      def.marks = [{ t: t0, l: 'Stempel fallen' }, { t: t0 + P.ft, l: 'Stempel heben' }];
+      break;
+    }
     case 'chicane': {
       const T = P.T, lean = t => (t > T0 && t < T0 + 2 * T) ? P.lean * Math.pow(Math.abs(Math.sin(Math.PI * (t - T0) / T)), 0.7) * (t - T0 < T ? 1 : -1) : 0;
       def.lean = lean; def.nfac = t => 1 / Math.cos(lean(t) * DEG); def.road = tex;
@@ -902,7 +1017,12 @@ function scenDef(name, v, P) {
 // Reifen rollen als Hüllkurve über Kanten und können abheben.
 const K_PITCH = 0.48;                       // Trägheitsradius Nicken in m (Modellannahme)
 const FRIC = { F: 60, R: 30, v0: 0.004, muBrake: 0.06, stick: 1.6, vs: 0.01 }; // Gleitreibung; Haftreibung 1,6-fach (Stribeck); Gabelbuchsen klemmen unter Bremslast
-const fricF = (u, Fc) => (Fc + Fc * (FRIC.stick - 1) * Math.exp(-((u / FRIC.vs) ** 2))) * Math.tanh(u / FRIC.v0);
+// Reibungsform (Stribeck × tanh) als Tabelle: jenseits ±0,05 m/s ist sie exakt ±1 (exp(-25) und tanh(12,5) ≈ 1)
+const FRG = (() => { const h = 5e-5, N = Math.round(0.1 / h), T = new Float64Array(N + 1); for (let k = 0; k <= N; k++) { const u = -0.05 + k * h; T[k] = (1 + (FRIC.stick - 1) * Math.exp(-((u / FRIC.vs) ** 2))) * Math.tanh(u / FRIC.v0); } return { h, N, T }; })();
+const fricF = (u, Fc) => { if (u >= 0.05) return Fc; if (u <= -0.05) return -Fc; const q = (u + 0.05) / FRG.h, k = Math.min(FRG.N - 1, q | 0); return Fc * (FRG.T[k] + (FRG.T[k + 1] - FRG.T[k]) * (q - k)); };
+// Reifen-Progression (d/d0)^1,15 als Tabelle bis zum Sechsfachen der statischen Einfederung
+const PW115 = (() => { const h = 0.002, N = 3000, T = new Float64Array(N + 1); for (let k = 0; k <= N; k++) T[k] = Math.pow(k * h, 1.15); return T; })();
+const pw115 = r => { if (r >= 6) return Math.pow(r, 1.15); const q = r * 500, k = q | 0; return PW115[k] + (PW115[k + 1] - PW115[k]) * (q - k); };
 // Antrieb 17/43, Kette 530 (Teilung 15,875 mm): Teilkreisradien der Kettenräder
 const DRIVE = { zF: 17, zR: 43, pitch: 15.875 }, rSpr = z => DRIVE.pitch / (2 * Math.sin(Math.PI / z));
 const BRAKE = { rearShare: 0.15 };            // Anteil Hinterradbremse an der Bremskraft (Modell)
@@ -921,7 +1041,14 @@ function antiSquatAt(xR, hMM) {
 const RIDER = { share: 0.6, k: 55000, c: 1300 };          // 60 % des Fahrers federn über Sitz/Beine (≈ 5 Hz, ζ ≈ 0,4)
 const AERO = { CdA: 0.33, rho: 1.2, hcp: 0.75 };          // Luftwiderstandsfläche geduckt, Druckpunkthöhe
 const dragN = v => 0.5 * AERO.rho * AERO.CdA * v * v;
+function scTab(sc) {
+  if (sc.tab) return sc.tab;
+  const n = Math.floor(sc.T / DT) + 1, ax = new Float32Array(n), nf = new Float32Array(n), ln = sc.lean ? new Float32Array(n) : null, gF = sc.gF ? new Float64Array(n) : null, gR = sc.gR ? new Float64Array(n) : null;
+  for (let i = 0; i < n; i++) { const t = i * DT; ax[i] = sc.ax(t); nf[i] = sc.nfac(t); if (ln) ln[i] = sc.lean(t); if (gF) gF[i] = sc.gF(t); if (gR) gR[i] = sc.gR(t); }
+  return (sc.tab = { ax, nf, ln, gF, gR });
+}
 function simRun(st, sc, v, L) {
+  const TB = scTab(sc), TAX = TB.ax, TNF = TB.nf, TLN = TB.ln;
   const dmp = damping(st), wb = M.wb0 / 1000;
   const msF = L.msF, msR = L.msR, m = msF + msR, a = wb * msR / m;
   const mrd = st.rider > 0 ? st.rider * RIDER.share : 0, mc = m - mrd, cr = (1 - M.riderFront) * wb;
@@ -939,7 +1066,10 @@ function simRun(st, sc, v, L) {
   // Reifen: leicht progressiv, mit Tempo steifer (Fliehkraft im Gürtel), in Schräglage weicher (Flanke)
   const kv = Math.min(1.25, 1 + 0.08 * (v / 50) ** 2), mu = st.profile === 'regen' ? MU.wet : MU.dry;
   const d0F = (FF0 + M.muF * G) / (ktF * kv), d0R = (FR0 + pairR0 + M.muR * G) / (ktR * kv);
-  const tyre = (kt, d0, d) => kt * kv * d0 * Math.pow(Math.max(0, d) / d0, 1.15);
+  const tyre = (kt, d0, d) => kt * kv * d0 * pw115(Math.max(0, d) / d0);
+  // Federkennlinien als Tabellen (0,05 mm): Luftpolster und Gasdruck nicht in jedem Schritt mit pow neu rechnen
+  const mkLU = (fn, lo, hi, h) => { const N = Math.ceil((hi - lo) / h), T = new Float64Array(N + 1); for (let k = 0; k <= N; k++) T[k] = fn(lo + k * h); return x => { const q = (x - lo) / h; if (q < 0 || q >= N) return fn(x); const k = q | 0; return T[k] + (T[k + 1] - T[k]) * (q - k); }; };
+  const SpF = mkLU(FvF, -30, M.travelF * COSR + 30, 0.05), SpR = mkLU(FvR, -30, M.travelR + 30, 0.05);
   const hP = PIV.y / 1000, lP = PIV.x / 1000;            // Schwingenlager über dem Boden / hinter der Achse
   const asStat = asAt(x0R);
   const frF = FRIC.F / COSR, frR = FRIC.R;
@@ -947,15 +1077,19 @@ function simRun(st, sc, v, L) {
   const eF = sc.envF, eR = sc.envR;
   let pF = eF(0), pR = eR(-wb);
   const n = Math.floor(sc.T / DT);
-  const mk = () => ({ t: [], x: [], ft: [], zu: [], as: [], v: [], fd: [], slip: [] });
-  const F = mk(), R = mk(), pitch = [], axg = [], lean = [], ard = [], fdrag = [], dists = [], vels = [];
+  // Messkanäle vorab als Float64Array: kein Umkopieren beim Wachsen, dichte Zahlenfelder
+  const NR = Math.floor(n / REC) + 1, A64 = () => new Float64Array(NR); let j = 0;
+  const mk = () => ({ t: A64(), x: A64(), ft: A64(), zu: A64(), as: A64(), v: A64(), fd: A64(), slip: new Uint8Array(NR) });
+  const F = mk(), R = mk(), pitch = A64(), axg = A64(), lean = A64(), ard = A64(), fdrag = A64(), dists = A64(), vels = A64(), bz = A64(), gFa = A64(), gRa = A64();
+  const gFf = TB.gF, gRf = TB.gR; // Prüfstand: Stempelweg je Rad (tabelliert)
   for (let i = 0; i <= n; i++) {
-    const t = i * DT, nf = sc.nfac(t), axReq = sc.ax(t) * G, ax = axReq < 0 && vel <= 0.3 ? 0 : axReq; // steht das Motorrad, endet die Bremsung
+    const t = i * DT, nf = TNF[i], axReq = TAX[i] * G, ax = axReq < 0 && vel <= 0.3 ? 0 : axReq; // steht das Motorrad, endet die Bremsung
     const Fdt = dragN(vel);
-    const rF = eF(dist), rR = eR(dist - wb), vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
+    const gFt = gFf ? gFf[i] : 0, gRt = gRf ? gRf[i] : 0;
+    const rF = eF(dist) + gFt, rR = eR(dist - wb) + gRt, vrF = (rF - pF) / DT, vrR = (rR - pR) / DT; pF = rF; pR = rR;
     const yF = z + ac * th, yR = z - bc * th, vyF = vz + ac * w, vyR = vz - bc * w;
     const xF = x0F + (zf - yF) * 1000, xR = x0R + (zr - yR) * 1000;
-    const kl = sc.lean ? 1 - 0.22 * Math.sin(Math.abs(sc.lean(t)) * DEG) : 1, dFt = d0F + rF - zf, dRt = d0R + rR - zr;
+    const kl = TLN ? 1 - 0.22 * Math.sin(Math.abs(TLN[i]) * DEG) : 1, dFt = d0F + rF - zf, dRt = d0R + rR - zr;
     let tF = dFt > 0 ? Math.max(0, tyre(ktF * kl, d0F, dFt) + M.ctire * (vrF - vf)) : 0;
     let tR = dRt > 0 ? Math.max(0, tyre(ktR * kl, d0R, dRt) + M.ctire * (vrR - vr)) : 0;
     const Xn = L.tot * ax + Fdt;                                    // nötige Längskraft am Boden
@@ -964,7 +1098,7 @@ function simRun(st, sc, v, L) {
     const FbR = Math.min(Fb * BRAKE.rearShare, mu * tR), FbF = Fb - FbR;   // Bremskraftverteilung, Hinterrad durch Kraftschluss begrenzt
     const slipF = FbF > mu * tF + 1, slipR = X > 0 ? X > mu * tR + 1 : false;
     const dF = dampF(uF, dmp.F) + fricF(uF, frF + FRIC.muBrake * FbF), dR = dampF(uR, dmp.R) + fricF(uR, frR);
-    const FF = FvF(xF) + dF, FR = FvR(xR) + dR;
+    const FF = SpF(xF) + dF, FR = SpR(xR) + dR;
     const pairF = FbF * Math.tan(M.rake0 * DEG + th);              // Bremskraft-Anteil entlang der Gabel, mit aktuellem Lenkkopfwinkel (taucht die Front ein, wird er flacher)
     const pairR = (X > 0 ? asAt(xR) * X * L.h / wb : 0) - FbR * hP / lP; // Kettenzug-Anti-Squat (hebt das Heck) und Hinterradbremse: Sattel an der Schwinge, die Bremskraft zieht das Rad zum Rahmen (federt ein)
     const My = (X - Fdt) * L.h + Fdt * AERO.hcp;                     // Nickmoment um den Schwerpunkt: Längskraft am Boden und Luftwiderstand (in der Luft nur dieser)
@@ -977,15 +1111,15 @@ function simRun(st, sc, v, L) {
     vz += az * DT; w += aw * DT; vf += af * DT; vr += ar * DT; vd += ad * DT; vel = Math.max(0, vel + ax * DT); dist += vel * DT;
     z += vz * DT; th += w * DT; zf += vf * DT; zr += vr * DT; zd += vd * DT;
     if (i % REC === 0) {
-      F.t.push(t); F.x.push(xF / COSR); F.ft.push(tF); F.zu.push(zf * 1000); F.as.push(az + ac * aw); F.v.push(uF); F.fd.push(dF); F.slip.push(slipF ? 1 : 0);
-      R.t.push(t); R.x.push(xR); R.ft.push(tR); R.zu.push(zr * 1000); R.as.push(az - bc * aw); R.v.push(uR); R.fd.push(dR); R.slip.push(slipR ? 1 : 0);
-      pitch.push(-th / DEG); axg.push(ax / G); lean.push(sc.lean ? sc.lean(t) : 0); ard.push(mrd > 0 ? ad : az); fdrag.push(Fdt); dists.push(dist); vels.push(vel);
+      F.t[j] = t; F.x[j] = xF / COSR; F.ft[j] = tF; F.zu[j] = zf * 1000; F.as[j] = az + ac * aw; F.v[j] = uF; F.fd[j] = dF; F.slip[j] = slipF ? 1 : 0;
+      R.t[j] = t; R.x[j] = xR; R.ft[j] = tR; R.zu[j] = zr * 1000; R.as[j] = az - bc * aw; R.v[j] = uR; R.fd[j] = dR; R.slip[j] = slipR ? 1 : 0;
+      pitch[j] = -th / DEG; axg[j] = ax / G; lean[j] = TLN ? TLN[i] : 0; ard[j] = mrd > 0 ? ad : az; fdrag[j] = Fdt; dists[j] = dist; vels[j] = vel; bz[j] = z * 1000; gFa[j] = gFt * 1000; gRa[j] = gRt * 1000; j++;
     }
   }
   F.ar = R.ar = ard;
   F.x0 = x0F / COSR; F.static = (FF0 + M.muF * G); F.travel = M.travelF;
   R.x0 = x0R; R.static = (FR0 + pairR0 + M.muR * G); R.travel = M.travelR;
-  return { F, R, pitch, axg, lean, T: sc.T, drag: Fd, aeroF: My0 / wb, antiSquat: asStat, fdrag, dist: dists, vel: vels };
+  return { F, R, pitch, axg, lean, T: sc.T, drag: Fd, aeroF: My0 / wb, antiSquat: asStat, fdrag, dist: dists, vel: vels, v0: v, bz, gF: gFa, gR: gRa };
 }
 function kpiAxle(o, sc) {
   // Grundrauheit der Straße wird vor dem Hindernis gemessen und nur zur Hälfte bewertet,
@@ -1140,6 +1274,8 @@ function buildSvg() {
   for (let i = 0; i < 6; i++) { const g = el('g', {}, G_.posts); el('rect', { x: -9, y: -1000, width: 18, height: 1000, rx: 5, fill: 'var(--post)' }, g); el('rect', { x: -9, y: -930, width: 18, height: 90, fill: 'var(--warn)', opacity: .8 }, g); }
   G_.ground = el('path', { fill: 'url(#gGround)', stroke: 'var(--muted)', 'stroke-width': 3 });
   G_.lane = el('path', { stroke: 'var(--lane)', 'stroke-width': 10, 'stroke-dasharray': '600 400', fill: 'none' });
+  G_.rigG = el('g', { style: 'display:none' });
+  G_.rigP = [0, 1].map(() => { const g = el('g', {}, G_.rigG); return { g, base: el('rect', { x: -150, width: 300, y: 120, height: 300, rx: 10, fill: 'var(--panel2)', stroke: 'var(--line2)', 'stroke-width': 4 }, g), rod: el('rect', { x: -45, width: 90, rx: 8, fill: 'var(--metal)' }, g), plate: el('rect', { x: -270, width: 540, height: 46, rx: 8, fill: 'var(--panel2)', stroke: 'var(--accent)', 'stroke-width': 6 }, g) }; });
   G_.shadow = el('ellipse', { rx: 900, ry: 34, fill: 'url(#gShadow)' });
   G_.axisLine = el('path', { stroke: 'var(--accent)', 'stroke-width': 3, 'stroke-dasharray': '18 12', fill: 'none', opacity: .8 });
   G_.trailSeg = el('path', { stroke: 'var(--warn)', 'stroke-width': 9, fill: 'none', 'stroke-linecap': 'round' });
@@ -1225,6 +1361,9 @@ function drawBike(st) {
   for (let x = -2400; x <= 4000; x += x < -400 || x > 1860 ? 40 : 10) pts.push({ x, y: st.road ? st.road(x) : 0 });
   G_.ground.setAttribute('d', 'M' + pts.map(P).join('L') + `L4000,400L-2400,400Z`);
   G_.lane.setAttribute('d', 'M-2400,28L4000,28'); G_.lane.setAttribute('stroke-dashoffset', (dist % 1000).toFixed(0));
+  // Prüfstand: Stempel unter den Rädern statt Straße
+  G_.rigG.style.display = st.rig ? '' : 'none'; G_.lane.style.display = G_.posts.style.display = st.rig ? 'none' : '';
+  if (st.rig) [[p.axF.x, st.rig.gF], [p.axR.x, st.rig.gR]].forEach(([x, g], k) => { const q = G_.rigP[k]; q.g.setAttribute('transform', `translate(${x.toFixed(1)},0)`); q.plate.setAttribute('y', (-g).toFixed(1)); q.rod.setAttribute('y', (-g + 40).toFixed(1)); q.rod.setAttribute('height', Math.max(0, 140 + g).toFixed(1)); });
   const sp = 900, off = (dist * 0.45) % sp;
   [...G_.posts.children].forEach((g, i) => g.setAttribute('transform', `translate(${(-400 + i * sp - off + sp).toFixed(0)},0) scale(.75)`));
   G_.shadow.setAttribute('cx', (p.wb / 2).toFixed(0)); G_.shadow.setAttribute('cy', 8);
@@ -1625,8 +1764,8 @@ const cmpLabel = () => CMPMODE === 'pin' && PINNED ? 'Gemerkt' : CMPMODE === 'pr
 function runAll(st, v) {
   const L = loads(st), res = {};
   for (const name of Object.keys(SCEN)) {
-    const sc = prepScen(name, v / 3.6, SP[name]);
-    const r = simRun(st, sc, v / 3.6, L);
+    const vv = vOf(name, v), sc = prepScen(name, vv, SP[name]);
+    const r = simRun(st, sc, vv, L);
     const kF = kpiAxle(r.F, sc), kR = kpiAxle(r.R, sc);
     const w = PROFILES[st.profile].w, sF = subScores(kF, sc), sR = subScores(kR, sc);
     const avg = key => (sF[key] + sR[key]) / 2;
@@ -1636,7 +1775,7 @@ function runAll(st, v) {
   return res;
 }
 function runOne(st, v, name, res) {
-  const L = loads(st), sc = prepScen(name, v / 3.6, SP[name]), r = simRun(st, sc, v / 3.6, L);
+  const L = loads(st), vv = vOf(name, v), sc = prepScen(name, vv, SP[name]), r = simRun(st, sc, vv, L);
   const kF = kpiAxle(r.F, sc), kR = kpiAxle(r.R, sc), w = PROFILES[st.profile].w, sF = subScores(kF, sc), sR = subScores(kR, sc);
   const avg = key => (sF[key] + sR[key]) / 2;
   res[name] = Object.assign(r, { kF, kR, sF, sR, sc, score: w.comfort * avg('comfort') + w.grip * avg('grip') + w.control * avg('control') + w.reserve * avg('reserve') });
@@ -1650,15 +1789,16 @@ function recomputeProgressive() {
   const gen = ++GEN; syncControls();
   SG = sags(S); const cs = compSetup(); SGc = sags(cs);
   const order = [scenario, ...Object.keys(SCEN).filter(n => n !== scenario)], nR = Object.assign({}, RUN), nC = Object.assign({}, COMP);
+  const jobs = []; for (const k of order) jobs.push([k, 0], [k, 1]);
   let i = 0;
   const step = () => {
     if (gen !== GEN) return;
     const t0 = performance.now();
-    while (i < order.length && (i === 0 || performance.now() - t0 < 10)) { const n = order[i++]; runOne(S, speed, n, nR); runOne(cs, speed, n, nC); }
-    RUN = nR; COMP = nC; RUNPART = i < order.length;
+    while (i < jobs.length && (i < 2 || performance.now() - t0 < 8)) { const [k, w] = jobs[i++]; if (w) runOne(cs, speed, k, nC); else runOne(S, speed, k, nR); }
+    RUN = nR; COMP = nC; RUNPART = i < jobs.length;
     const len = RUN[scenario].F.t.length; $('#scrub').max = len - 1; if (+$('#scrub').value > len - 1) $('#scrub').value = len - 1;
-    if (RUNPART) { renderParc(); if (i <= 2) renderAll(); setTimeout(step, 0); }
-    else { if (!$('#t-lib').hidden) renderCmp(); renderAll(); }
+    if (RUNPART) { renderParc(); if (i <= 2) setTimeout(() => { if (gen === GEN) renderAll(); setTimeout(step, 0); }, 0); else setTimeout(step, 0); }
+    else setTimeout(() => { if (gen !== GEN) return; if (!$('#t-lib').hidden) renderCmp(); renderAll(); }, 0);
   };
   step();
 }
@@ -1668,22 +1808,29 @@ function recompute(onlyScen) {
   if (onlyScen && RUN) { runOne(S, speed, scenario, RUN); runOne(cs, speed, scenario, COMP); RUNPART = true; }
   else { RUN = runAll(S, speed); COMP = runAll(cs, speed); RUNPART = false; if (!$('#t-lib').hidden) renderCmp(); }
   const len = RUN[scenario].F.t.length; $('#scrub').max = len - 1; if (+$('#scrub').value > len - 1) $('#scrub').value = len - 1;
-  renderAll();
+  renderAll(onlyScen && RUNPART);
 }
-function overall(run, st, sg) { const dyn = Object.values(run).reduce((a, r) => a + r.score, 0) / Object.keys(run).length; return 0.75 * dyn + 0.25 * staticScore(st, sg); }
+// Prüfstandsversuche messen Kennwerte, sie sind keine Fahrsituation und zählen nicht zum Index
+function overall(run, st, sg) { const ks = Object.keys(run).filter(k => !SCEN[k].rig), dyn = ks.reduce((a, k) => a + run[k].score, 0) / ks.length; return 0.75 * dyn + 0.25 * staticScore(st, sg); }
+function groupScores(run) { const g = {}; for (const k of Object.keys(SCEN)) { const n = SCEN[k].grp; (g[n] = g[n] || []).push(run[k].score); } return Object.entries(g).map(([n, a]) => ({ n, v: a.reduce((x, y) => x + y, 0) / a.length, rig: n === 'Prüfstand' })); }
+function renderGroups(sc) {
+  $('#idxV').textContent = fmt(sc); const rf = $('#idxRing .rf'); rf.setAttribute('stroke-dasharray', `${clamp(sc, 0, 100).toFixed(1)} 100`); $('#idxRing').style.setProperty('--st', `var(--${scoreChip(sc)})`);
+  const c = COMP ? Object.fromEntries(groupScores(COMP).map(x => [x.n, x.v])) : {};
+  $('#grpChips').innerHTML = groupScores(RUN).map(x => { const d = x.v - (c[x.n] ?? x.v); return `<button class="gchip" data-g="${x.n}" style="--st:var(--${scoreChip(x.v)})" title="${x.rig ? 'Prüfstand: Kennwerte, nicht im Index' : 'Mittel der Noten in dieser Gruppe'}"><i></i>${x.n} <b>${fmt(x.v)}</b>${Math.abs(d) >= 0.5 ? ` <span class="${d > 0 ? 'delta-p' : 'delta-n'}">${d > 0 ? '+' : ''}${fmt(d)}</span>` : ''}</button>`; }).join('');
+}
 function scoreChip(v) { return v >= 80 ? 'good' : v >= 62 ? 'warn' : 'bad'; }
-function renderAll() {
+function renderAll(lite) {
   const sc = overall(RUN, S, SG), scC = overall(COMP, compSetup(), SGc);
   $('#pillScore').textContent = `${fmt(sc)} / 100`;
   $('#statusDot').style.background = `var(--${scoreChip(sc)})`;
   $('#pillProfile').textContent = PROFILES[S.profile].name;
   $('#pillRider').textContent = `${fmt(S.rider)} kg${S.passenger ? ' + ' + fmt(S.passenger) + ' kg' : ''}`;
   $('#cmpName').textContent = cmpLabel();
-  renderKpis(sc, scC); renderParc(); renderChange(sc); renderMatrix(); if (!RUNPART) renderRecs(); renderGeo(); renderSagBars(); renderObst(); drawProfile();
-  drawFV(); drawSpring(); renderDials(); renderSagTab();
-  drawHist();
-  showFrame(+$('#scrub').value);
+  renderKpis(sc, scC); renderGroups(sc); renderParc(); renderChange(sc); renderGeo(); renderSagBars(); renderObst();
+  showFrame(+$('#scrub').value); // zeichnet auch Fahrbahnprofil und Messschrieb
+  if (lite) { clearTimeout(renderAll._t); renderAll._t = setTimeout(renderRest, 0); } else renderRest();
 }
+function renderRest() { clearTimeout(renderAll._t); drawFR(); renderMatrix(); if (!RUNPART) renderRecs(); drawFV(); drawSpring(); renderDials(); renderSagTab(); drawHist(); }
 function renderKpis(sc, scC) {
   const r = RUN[scenario], c = COMP[scenario], [zf, zr] = SAGZ[S.profile];
   const inZ = (v, [a, b]) => v >= a && v <= b;
@@ -1703,10 +1850,14 @@ function renderKpis(sc, scC) {
 function renderParc() {
   // Kacheln einmal aufbauen und danach nur aktualisieren: ein Neuaufbau zwischen mousedown und mouseup verschluckt den Klick
   const host = $('#scenSeg');
-  if (!host.children.length) host.innerHTML = Object.entries(SCEN).map(([k, sc]) => `<button class="pt" data-s="${k}" title="${sc.name}: ${sc.desc}"><span class="pg">${sc.grp}</span><span class="pn">${sc.short}</span><span class="ps"><span class="pv"></span><span class="pd"></span></span></button>`).join('');
-  for (const b of host.children) {
+  if (!host.children.length) {
+    const grps = []; for (const [k, sc] of Object.entries(SCEN)) { let g = grps.find(x => x.n === sc.grp); if (!g) grps.push(g = { n: sc.grp, k: [], rig: sc.rig }); g.k.push(k); }
+    host.innerHTML = grps.map(g => `<div class="pgrp${g.rig ? ' rig' : ''}" style="--n:${g.k.length}" data-g="${g.n}"><div class="pgh"><span>${g.n}${g.rig ? ' <small>· nicht im Index</small>' : ''}</span><b></b></div><div class="pgt">${g.k.map(k => { const sc = SCEN[k]; return `<button class="pt" data-s="${k}" title="${sc.name}: ${sc.desc}"><span class="pg">${sc.grp}</span><span class="pn">${sc.short}</span><span class="ps"><span class="pv"></span><span class="pd"></span></span></button>`; }).join('')}</div></div>`).join('');
+  }
+  for (const g of host.querySelectorAll('.pgrp')) { const ks = [...g.querySelectorAll('.pt')].map(b => RUN[b.dataset.s].score); g.querySelector('.pgh b').textContent = fmt(ks.reduce((a, b) => a + b, 0) / ks.length); }
+  for (const b of host.querySelectorAll('.pt')) {
     const k = b.dataset.s, r = RUN[k], c = COMP[k], d = r.score - c.score, pd = b.querySelector('.pd');
-    b.setAttribute('aria-pressed', k === scenario); b.style.setProperty('--st', `var(--${scoreChip(r.score)})`);
+    b.setAttribute('aria-pressed', k === scenario); b.style.setProperty('--st', `var(--${scoreChip(r.score)})`); b.style.setProperty('--sw', `${clamp(r.score, 0, 100).toFixed(0)}%`);
     b.querySelector('.pv').textContent = fmt(r.score);
     pd.className = 'pd ' + (d > 0.5 ? 'delta-p' : d < -0.5 ? 'delta-n' : 'dz'); pd.textContent = Math.abs(d) < 0.5 ? '±0' : (d > 0 ? '+' : '') + fmt(d);
   }
@@ -1746,7 +1897,7 @@ $('#matrix').addEventListener('click', e => { const tr = e.target.closest('tr[da
 /* Hindernis-Parameter */
 function renderObst() {
   const s = SCEN[scenario], host = $('#obstCtl');
-  $('#obstDesc').textContent = s.desc; $('#obstTitle').textContent = `Hindernis: ${s.name}`; $('#obstTitle').title = s.desc;
+  $('#obstDesc').textContent = s.desc; $('#obstTitle').textContent = `${s.rig ? 'Prüfstand' : s.cyc ? 'Rundkurs' : 'Hindernis'}: ${s.name}`; $('#obstTitle').title = s.desc;
   if (host.dataset.s !== scenario) {
     host.dataset.s = scenario;
     host.innerHTML = s.p.map(p => `<div class="op"><div class="ctl-h"><label for="sp-${p.k}">${p.l}</label><output id="spo-${p.k}"></output></div><input type="range" id="sp-${p.k}" data-sp="${p.k}" min="${p.min}" max="${p.max}" step="${p.step}" value="${SP[scenario][p.k]}"></div>`).join('');
@@ -1757,18 +1908,35 @@ $('#obstCtl').addEventListener('input', e => { const k = e.target.dataset.sp; if
 let obstT;
 $('#obstReset').addEventListener('click', () => { for (const p of SCEN[scenario].p) SP[scenario][p.k] = p.def; condChanged(); schedule(); toast('Hindernis auf Standardwerte gesetzt'); });
 function drawProfile() {
-  const cv = $('#profCv'), { c, w, h } = prep(cv), sc = RUN[scenario].sc, v = speed / 3.6;
-  const d0 = 0, d1 = Math.max(sc.start + 4, v * sc.T * 0.9);
-  const N = 400; let mn = 0, mx = 0; const ys = [];
-  for (let i = 0; i <= N; i++) { const y = sc.raw(d0 + (d1 - d0) * i / N) * 1000; ys.push(y); mn = Math.min(mn, y); mx = Math.max(mx, y); }
+  const cv = $('#profCv'), { c, w, h } = prep(cv), run = RUN[scenario], sc = run.sc, v = run.v0;
+  if (sc.rig) { // Stempelweg über der Zeit
+    const t = run.F.t, T = run.T; let m = 1; for (let i = 0; i < t.length; i++) m = Math.max(m, Math.abs(run.gF[i]), Math.abs(run.gR[i]));
+    const X = q => 40 + (w - 52) * q / T, Y = y => 8 + (h - 26) * (1 - (y + m * 1.15) / (2.3 * m)), st = Math.max(1, Math.floor(t.length / (w - 52)));
+    const ln = (arr, col) => { c.strokeStyle = col; c.lineWidth = 1.3; c.beginPath(); for (let i = 0; i < t.length; i += st) i ? c.lineTo(X(t[i]), Y(arr[i])) : c.moveTo(X(t[i]), Y(arr[i])); c.stroke(); };
+    c.strokeStyle = css('--line'); c.beginPath(); c.moveTo(40, Y(0)); c.lineTo(w - 12, Y(0)); c.stroke();
+    ln(run.gR, css('--rear')); ln(run.gF, css('--front'));
+    c.fillStyle = css('--muted'); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(`${fmt(m, 0)} mm`, 36, Y(m)); c.fillText(`−${fmt(m, 0)}`, 36, Y(-m));
+    c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`Stempelweg vorn / hinten · ${fmt(T, 1)} s`, 40, h - 1);
+    const ti = t[+$('#scrub').value] || 0; c.fillStyle = css('--fg'); c.fillRect(X(ti) - 1, 6, 2, h - 24);
+    return;
+  }
+  const d0 = 0, d1 = sc.len ? sc.len - 2 : Math.max(sc.start + 4, v * sc.T * 0.9);
+  // Profil je Pixelspalte als Min/Max, damit schmale Fugen auch auf langen Rundkursen sichtbar bleiben (pro Breite zwischengespeichert)
+  const N = Math.max(200, Math.round(w - 52)), key = N + ':' + d1;
+  if (!sc._prof || sc._prof.key !== key) { const lo = [], hi = []; let a = 0, b = 0; const sub = Math.max(1, Math.ceil((d1 - d0) / N / RDX));
+    for (let i = 0; i <= N; i++) { let l = Infinity, u = -Infinity; for (let j = 0; j < sub; j++) { const y = sc.raw(d0 + (d1 - d0) * (i + j / sub) / N) * 1000; if (y < l) l = y; if (y > u) u = y; } lo.push(l); hi.push(u); a = Math.min(a, l); b = Math.max(b, u); }
+    sc._prof = { key, lo, hi, mn: a, mx: b }; }
+  const PR = sc._prof; let mn = PR.mn, mx = PR.mx; const ys = PR.hi;
   const pad = Math.max(2, (mx - mn) * 0.15); mn -= pad; mx += pad;
-  const X = i => 40 + (w - 52) * i / N, Y = y => 8 + (h - 26) * (1 - (y - mn) / (mx - mn));
+  const X = i => 40 + (w - 52) * i / N, Y = y => (sc.marks ? 14 : 8) + (h - (sc.marks ? 32 : 26)) * (1 - (y - mn) / (mx - mn));
   c.fillStyle = css('--line2'); c.beginPath(); c.moveTo(X(0), h - 18); ys.forEach((y, i) => c.lineTo(X(i), Y(y))); c.lineTo(X(N), h - 18); c.closePath(); c.globalAlpha = .5; c.fill(); c.globalAlpha = 1;
   c.strokeStyle = css('--fg'); c.lineWidth = 1.5; c.beginPath(); ys.forEach((y, i) => i ? c.lineTo(X(i), Y(y)) : c.moveTo(X(i), Y(y))); c.stroke();
+  c.lineWidth = 1; c.beginPath(); PR.lo.forEach((y, i) => { if (PR.hi[i] - y > 0.3) { c.moveTo(X(i), Y(y)); c.lineTo(X(i), Y(PR.hi[i])); } }); c.stroke();
+  if (sc.marks) { c.fillStyle = css('--muted'); c.textAlign = 'center'; c.textBaseline = 'top'; c.font = `10px ${css('--f-body')}`; let lastX = -1e9; for (const mk of sc.marks) { const dd = run.dist[Math.min(run.dist.length - 1, Math.round(mk.t / (DT * REC)))], px = 40 + (w - 52) * (dd - d0) / (d1 - d0); if (px - lastX > 70 && px < w - 20) { c.fillText(mk.l, px, 0); lastX = px; } } c.font = `11px ${css('--f-mono')}`; }
   c.fillStyle = css('--muted'); c.textAlign = 'right'; c.textBaseline = 'middle'; c.fillText(`${fmt(mx - pad, mx - pad > 100 ? 0 : 0)} mm`, 36, Y(mx - pad)); if (mn + pad < -0.5) c.fillText(`${fmt(mn + pad)} mm`, 36, Y(mn + pad));
   c.textAlign = 'left'; c.textBaseline = 'bottom'; c.fillText(`Fahrbahnprofil über ${fmt(d1 - d0)} m · Radstand ${fmt(M.wb0 / 1000, 2)} m`, 40, h - 1);
   // Position des Vorderrads im Abspielzeitpunkt
-  const i = +$('#scrub').value, t = RUN[scenario].F.t[i] || 0, df = RUN[scenario].dist ? RUN[scenario].dist[i] || 0 : v * t;
+  const i = +$('#scrub').value, t = run.F.t[i] || 0, df = run.dist ? run.dist[i] || 0 : v * t;
   if (df <= d1) { const px = 40 + (w - 52) * (df - d0) / (d1 - d0), pr = 40 + (w - 52) * (df - M.wb0 / 1000 - d0) / (d1 - d0); c.fillStyle = css('--front'); c.fillRect(px - 1, 6, 2, h - 24); c.fillStyle = css('--rear'); if (pr > 40) c.fillRect(pr - 1, 6, 2, h - 24); }
 }
 function analysis() {
@@ -1853,6 +2021,76 @@ function axes(c, x0, y0, w, h, xmin, xmax, ymin, ymax, xt, yt, xl, yl, xf = v =>
 }
 function path(c, xs, ys, X, Y, col, lw = 2, dash = null) { c.beginPath(); c.strokeStyle = col; c.lineWidth = lw; c.setLineDash(dash || []); for (let i = 0; i < xs.length; i++) { const px = X(xs[i]), py = Y(ys[i]); i ? c.lineTo(px, py) : c.moveTo(px, py); } c.stroke(); c.setLineDash([]); }
 
+// Frequenzgang aus dem Sinus-Sweep: je Frequenzband Ausgleichsrechnung a·sin φ + b·cos φ + c mit der bekannten Stempelphase φ.
+// So stimmt die Amplitude auch bei tiefen Frequenzen, wo ein Band kürzer als eine Schwingung ist.
+function freqResp(r, mode) {
+  const sc = r && r.sc; if (!sc || !sc.freq || !r.bz) return null;
+  if (r._fr && r._fr[mode]) return r._fr[mode]; // je Rechenlauf nur einmal auswerten
+  const f0 = sc.f0, lk = Math.log(sc.f1 / f0), NB = 26, B = [];
+  for (let b = 0; b < NB; b++) B.push({ m: new Float64Array(6), y: new Float64Array(12) });
+  const sig = i => mode === 'pitch' ? [r.pitch[i] * DEG * 1000, (r.gF[i] - r.gR[i]) / M.wb0 * 1000, r.F.ft[i], r.R.ft[i]] : [r.bz[i], (r.gF[i] + r.gR[i]) / 2, r.F.ft[i], r.R.ft[i]];
+  for (let i = 0; i < r.F.t.length; i++) {
+    const t = r.F.t[i], f = sc.freq(t); if (!f) continue;
+    const b = Math.min(NB - 1, Math.floor(Math.log(f / f0) / lk * NB)); if (b < 0) continue;
+    const ph = sc.phase(t), sn = Math.sin(ph), cs = Math.cos(ph), q = B[b], m = q.m;
+    m[0] += sn * sn; m[1] += sn * cs; m[2] += sn; m[3] += cs * cs; m[4] += cs; m[5] += 1;
+    const v = sig(i); for (let k = 0; k < 4; k++) { q.y[k * 3] += v[k] * sn; q.y[k * 3 + 1] += v[k] * cs; q.y[k * 3 + 2] += v[k]; }
+  }
+  const out = [];
+  B.forEach((q, b) => {
+    const [a, bb, c, d, e, f] = q.m; if (f < 20) return; // symmetrische 3×3-Normalgleichung [a bb c; bb d e; c e f]
+    const det = a * (d * f - e * e) - bb * (bb * f - c * e) + c * (bb * e - c * d); if (Math.abs(det) < 1e-6 * f * f * f) return;
+    const amp = k => { const y0 = q.y[k * 3], y1 = q.y[k * 3 + 1], y2 = q.y[k * 3 + 2];
+      const A1 = (y0 * (d * f - e * e) - bb * (y1 * f - e * y2) + c * (y1 * e - d * y2)) / det, A2 = (a * (y1 * f - e * y2) - y0 * (bb * f - c * e) + c * (bb * y2 - y1 * c)) / det;
+      return Math.hypot(A1, A2); };
+    const u = amp(1); if (u < 1e-6) return;
+    out.push({ f: f0 * Math.exp((b + 0.5) / NB * lk), tr: amp(0) / u, lF: amp(2) / r.F.static * 100 / (mode === 'pitch' ? 1 : u), lR: amp(3) / r.R.static * 100 / (mode === 'pitch' ? 1 : u), u });
+  });
+  (r._fr = r._fr || {})[mode] = out; return out;
+}
+const peakOf = (arr, key, fmin = 0, fmax = 1e9) => { let p = null; for (const q of arr || []) if (q.f >= fmin && q.f <= fmax && (!p || q[key] > p[key])) p = q; return p; };
+function drawFR() {
+  const cv = $('#frCv'); if (!RUN.rigHeave || !RUN.rigPitch || !COMP.rigHeave || !COMP.rigPitch) return;
+  // nur neu zeichnen, wenn sich Prüfstandsläufe, Breite, Farbschema oder Vergleich geändert haben
+  const key = [RUN.rigHeave, RUN.rigPitch, COMP.rigHeave, COMP.rigPitch, cv.clientWidth, css('--accent'), cmpLabel()];
+  if (drawFR._k && key.every((x, i) => x === drawFR._k[i])) return; drawFR._k = key;
+  const narrow = cv.clientWidth < 640; cv.dataset.h = narrow ? 3 * 190 : 230;
+  const { c, w, h } = prep(cv);
+  const H = { a: freqResp(RUN.rigHeave, 'heave'), b: freqResp(COMP.rigHeave, 'heave') }, P = { a: freqResp(RUN.rigPitch, 'pitch'), b: freqResp(COMP.rigPitch, 'pitch') };
+  if (!H.a || !P.a) return;
+  const sc = RUN.rigHeave.sc, lx0 = Math.log10(sc.f0), lx1 = Math.log10(sc.f1), xt = [1, 2, 5, 10, 20, 30, 40].filter(f => f >= sc.f0 && f <= sc.f1).map(Math.log10);
+  const panels = [
+    { t: 'Hub: Aufbau / Stempel', d: [[H.b, 'tr', css('--ghost'), [5, 4]], [H.a, 'tr', css('--accent'), null]], one: true },
+    { t: 'Nicken: Aufbau / Stempel', d: [[P.b, 'tr', css('--ghost'), [5, 4]], [P.a, 'tr', css('--accent'), null]], one: true },
+    { t: 'Radlast-Schwankung % je mm Hub', d: [[H.b, 'lF', css('--ghost'), [5, 4]], [H.b, 'lR', css('--ghost'), [2, 3]], [H.a, 'lR', css('--rear'), null], [H.a, 'lF', css('--front'), null]] }
+  ];
+  const gap = 46, pw = narrow ? w - 64 : (w - 52 - 2 * gap) / 3, ph = narrow ? 190 - 46 : h - 46;
+  panels.forEach((pn, k) => {
+    const x0 = narrow ? 52 : 52 + k * (pw + gap), y0 = narrow ? 18 + k * 190 : 18;
+    let mx = pn.one ? 1.2 : 0; for (const [arr, key] of pn.d) for (const q of arr || []) mx = Math.max(mx, q[key]);
+    const st = [0.25, 0.5, 1, 2, 5, 10, 20, 50].find(q => mx / q <= 5) || 100, top = Math.ceil(mx * 1.08 / st) * st, yt = []; for (let q = 0; q <= top + 1e-9; q += st) yt.push(q);
+    const A = axes(c, x0, y0, pw, ph, lx0, lx1, 0, top, xt, yt, k === 2 || narrow ? 'Frequenz Hz' : '', pn.t, q => fmt(10 ** q), q => fmt(q, st < 1 ? 2 : 0));
+    if (pn.one) { c.strokeStyle = css('--muted'); c.setLineDash([2, 3]); c.beginPath(); c.moveTo(x0, A.Y(1)); c.lineTo(x0 + pw, A.Y(1)); c.stroke(); c.setLineDash([]); }
+    for (const [arr, key, col, dash] of pn.d) if (arr) path(c, arr.map(q => Math.log10(q.f)), arr.map(q => q[key]), A.X, A.Y, col, dash ? 1.4 : 2.2, dash);
+    const mark = (arr, key, col, fmin, fmax, up) => { const p = peakOf(arr, key, fmin, fmax); if (!p) return; const X = A.X(Math.log10(p.f)), Y = A.Y(p[key]); c.fillStyle = col; c.beginPath(); c.arc(X, Y, 4, 0, 7); c.fill(); c.textAlign = X > x0 + pw - 70 ? 'right' : 'left'; c.textBaseline = up ? 'bottom' : 'top'; c.fillText(`${fmt(p.f, 1)} Hz`, X + (c.textAlign === 'right' ? -6 : 6), Y + (up ? -4 : 4)); };
+    if (pn.one) mark(pn.d[1][0], 'tr', css('--accent'), 0, 6, true);
+    else { mark(H.a, 'lF', css('--front'), 6, 99, true); mark(H.a, 'lR', css('--rear'), 6, 99, false); }
+  });
+  // Kennwerte
+  const pk = (arr, key, a, b) => peakOf(arr, key, a, b) || { f: 0, [key]: 0 };
+  const hA = pk(H.a, 'tr', 0, 6), hB = pk(H.b, 'tr', 0, 6), pA = pk(P.a, 'tr', 0, 6), pB = pk(P.b, 'tr', 0, 6);
+  const wF = pk(H.a, 'lF', 6, 99), wR = pk(H.a, 'lR', 6, 99), wFb = pk(H.b, 'lF', 6, 99), wRb = pk(H.b, 'lR', 6, 99);
+  const dl = (a, b, d = 1, inv = true) => { const x = a - b; if (Math.abs(x) < (d ? 0.05 : 0.5)) return `<span class="dz">= ${cmpLabel()}</span>`; return `<span class="${(inv ? x < 0 : x > 0) ? 'delta-p' : 'delta-n'}">${x > 0 ? '+' : ''}${fmt(x, d)} zu ${cmpLabel()}</span>`; };
+  const stt = v => v < 1.8 ? 'good' : v < 2.6 ? 'warn' : 'bad';
+  $('#frStats').innerHTML = [
+    { l: 'Aufbau Hub', v: `${fmt(hA.f, 1)} Hz · ${fmt(hA.tr, 2)}×`, s: `Überhöhung ${dl(hA.tr, hB.tr, 2)}`, st: stt(hA.tr) },
+    { l: 'Aufbau Nicken', v: `${fmt(pA.f, 1)} Hz · ${fmt(pA.tr, 2)}×`, s: `Überhöhung ${dl(pA.tr, pB.tr, 2)}`, st: stt(pA.tr) },
+    { l: 'Rad vorn (Radspringen)', v: `${fmt(wF.f, 1)} Hz · ${fmt(wF.lF, 0)} %/mm`, s: dl(wF.lF, wFb.lF, 0), st: wF.lF < 25 ? 'good' : wF.lF < 40 ? 'warn' : 'bad' },
+    { l: 'Rad hinten (Radspringen)', v: `${fmt(wR.f, 1)} Hz · ${fmt(wR.lR, 0)} %/mm`, s: dl(wR.lR, wRb.lR, 0), st: wR.lR < 25 ? 'good' : wR.lR < 40 ? 'warn' : 'bad' }
+  ].map(t => `<div class="kpi" style="--st:var(--${t.st})"><div class="lbl">${t.l}</div><div class="v">${t.v}</div><div class="s">${t.s}</div></div>`).join('');
+  $('#frCmp').textContent = cmpLabel();
+  $('#frNote').textContent = `Aus den Prüfstands-Sweeps (Hub ${fmt(SP.rigHeave.A, 1)} mm, ${fmt(sc.f0, 1)}–${fmt(sc.f1)} Hz). Überhöhung = Aufbaubewegung geteilt durch Stempelbewegung im Resonanzband: unter 1,8 gut beruhigt, über 2,6 schwingt die Maschine nach (mehr Druck-/Zugstufe auf der Achse). Radspringen: Radlastschwankung je mm Anregung um die Rad-Eigenfrequenz, gesenkt durch weniger High-Speed-Druckstufe oder weniger Luftdruck.`;
+}
 function drawFV() {
   const cv = $('#fvCv'), { c, w, h } = prep(cv);
   const dS = damping(compSetup()), dC = damping(S);
@@ -1908,8 +2146,9 @@ function drawTime() {
   const A = axes(c, x0, y1, pw, h1, 0, T, 0, 135, [], [0, 25, 50, 75, 100, 125], '', 'Federweg mm');
   c.strokeStyle = css('--bad'); c.setLineDash([4, 4]); for (const y of [125, 130]) { c.beginPath(); c.moveTo(x0, A.Y(y)); c.lineTo(x0 + pw, A.Y(y)); c.stroke(); } c.setLineDash([]);
   // Hindernis-Zeitfenster
-  const sc = r.sc, v = speed / 3.6; c.fillStyle = css('--accent-soft');
+  const sc = r.sc, v = r.v0; c.fillStyle = css('--accent-soft');
   const tF0 = Math.min(sc.start / v, sc.quiet); if (tF0 < T) c.fillRect(A.X(tF0), y1, Math.max(2, A.X(Math.min(T, sc.tEnd)) - A.X(tF0)), h1);
+  if (sc.marks) { c.save(); c.font = `10px ${css('--f-body')}`; c.textAlign = 'left'; c.textBaseline = 'top'; let row = 0, lastX = -1e9; for (const mk of sc.marks) { if (mk.t > T) continue; const px = A.X(mk.t); row = px - lastX < 90 ? 1 - row : 0; lastX = px; c.strokeStyle = css('--muted'); c.globalAlpha = .5; c.setLineDash([2, 3]); c.beginPath(); c.moveTo(px, y1); c.lineTo(px, y1 + h1); c.stroke(); c.setLineDash([]); c.globalAlpha = 1; c.fillStyle = css('--muted'); c.fillText(mk.l, px + 3, y1 + 2 + row * 12); } c.restore(); }
   path(c, s.F.t, s.F.x, A.X, A.Y, css('--ghost'), 1.4, [5, 4]); path(c, s.R.t, s.R.x, A.X, A.Y, css('--ghost'), 1.4, [2, 3]);
   path(c, r.F.t, r.F.x, A.X, A.Y, css('--front'), 2.2); path(c, r.R.t, r.R.x, A.X, A.Y, css('--rear'), 2.2);
   const mx = Math.max(...r.F.ft, ...r.R.ft, ...s.F.ft, ...s.R.ft) / 1000;
@@ -1935,7 +2174,7 @@ function drawTime() {
   dot(B.X(t), B.Y(r.F.ft[i] / 1000), css('--front')); dot(B.X(t), B.Y(r.R.ft[i] / 1000), css('--rear')); dot(C.X(t), C.Y(r.pitch[i]), css('--accent'));
   c.font = `11px ${css('--f-mono')}`; c.textAlign = 'right'; c.textBaseline = 'top'; c.fillStyle = css('--fg');
   c.fillText(`t ${fmt(t, 2)} s · Gabel ${fmt(r.F.x[i], 1)} · hinten ${fmt(r.R.x[i], 1)} mm · Last ${fmt(r.F.ft[i] / 1000, 2)} / ${fmt(r.R.ft[i] / 1000, 2)} kN`, x0 + pw, 2);
-  $('#tcTitle').textContent = `Zeitverlauf: ${SCEN[scenario].name} bei ${speed} km/h`;
+  $('#tcTitle').textContent = sc.rig ? `Zeitverlauf: ${SCEN[scenario].name} auf dem Prüfstand` : `Zeitverlauf: ${SCEN[scenario].name} ab ${fmt(v * 3.6)} km/h`;
   const k = r.kF, kr = r.kR;
   $('#timeNote').textContent = `Gabel max. ${fmt(k.maxX, 0)} mm (${fmt(k.usage * 100)} %), hinten max. ${fmt(kr.maxX, 0)} mm (${fmt(kr.usage * 100)} %). Ohne Bodenkontakt: vorn ${fmt(k.lift)} ms, hinten ${fmt(kr.lift)} ms. Blau hinterlegt: Zeitraum mit Hindernis bzw. Fahrmanöver. Maus über die Kurven zeigt jeden Zeitpunkt.`;
 }
@@ -1948,12 +2187,13 @@ $('#timeCv').addEventListener('pointerleave', () => { hoverI = null; drawTime();
 
 /* ============================ ABSPIELEN ============================ */
 function frameState(run, i, ex) {
-  const v = speed / 3.6, t = run.F.t[i], sc = run.sc;
+  const v = run.v0, t = run.F.t[i], sc = run.sc;
   let sMax = run.F.x0; for (let j = 0; j <= i; j++) sMax = Math.max(sMax, run.F.x[j]);
   return {
     sF: run.F.x0 + (run.F.x[i] - run.F.x0) * ex, xR: run.R.x0 + (run.R.x[i] - run.R.x0) * ex, hF: run.F.zu[i] * ex, hR: run.R.zu[i] * ex,
     dist: (run.dist ? run.dist[i] : v * t) * 1000, ftF: run.F.ft[i], ftR: run.R.ft[i], vF: run.F.v[i], vR: run.R.v[i], sFr: run.F.x[i], xRr: run.R.x[i], sMax: run.F.x0 + (sMax - run.F.x0) * ex,
-    road: x => sc.raw((run.dist ? run.dist[i] : v * t) - M.wb0 / 1000 + x / 1000) * 1000 * ex, t
+    road: sc.rig ? x => (Math.abs(x - M.wb0) < 260 ? run.gF[i] : Math.abs(x) < 260 ? run.gR[i] : 0) * ex : x => sc.raw((run.dist ? run.dist[i] : v * t) - M.wb0 / 1000 + x / 1000) * 1000 * ex, t,
+    rig: sc.rig ? { gF: run.gF[i] * ex, gR: run.gR[i] * ex } : null
   };
 }
 function showFrame(i) {
@@ -1967,12 +2207,14 @@ function showFrame(i) {
   const pTrue = pose(r.F.x[i], r.R.x[i], S.fProt, S.rShim, r.F.zu[i], r.R.zu[i]); pTrue.sF = r.F.x[i]; pTrue.xR = r.R.x[i];
   if (i > 0) { renderGeo(pTrue); $('#hudTitle').textContent = SCEN[scenario].name; } else { renderGeo(); $('#hudTitle').textContent = `${SCEN[scenario].name} · Start`; }
   let sub = `${fmt(r.vel ? r.vel[i] * 3.6 : speed, 0)} km/h · t = ${fmt(fs.t, 2)} s`;
+  if (r.sc.rig) sub = r.sc.freq ? `Prüfstand · ${r.sc.freq(fs.t) ? 'f = ' + fmt(r.sc.freq(fs.t), r.sc.freq(fs.t) < 10 ? 2 : 1) + ' Hz' : 'Ein-/Ausschwingen'} · Stempel ${fmt(r.gF[i], 1)} / ${fmt(r.gR[i], 1)} mm · t = ${fmt(fs.t, 2)} s` : `Prüfstand · Stempel ${fmt(r.gF[i], 0)} mm · t = ${fmt(fs.t, 2)} s`;
   if (Math.abs(r.axg[i]) > 0.01) sub += ` · ${r.axg[i] < 0 ? 'Bremsen' : 'Beschleunigen'} ${fmt(Math.abs(r.axg[i]), 2)} g`;
+  if (r.sc.marks && !r.sc.rig) { let mk = null; for (const m of r.sc.marks) if (m.t <= fs.t + 0.05) mk = m; if (mk) sub += ` · ${mk.l}`; }
   if (ex > 1) sub += ' · Bewegung ×3';
   if (Math.abs(rate - 1) > 0.005) sub += ` · Wiedergabe ${fmt(rate, rate < 0.1 ? 3 : 2)}×`;
   $('#hudSub').textContent = sub;
   const ln = r.lean[i] || 0, lg = $('#leanG');
-  lg.toggleAttribute('hidden', !SCEN[scenario].p.some(p => p.k === 'lean'));
+  lg.toggleAttribute('hidden', !r.sc.lean);
   $('#leanBike').setAttribute('transform', `rotate(${(-ln).toFixed(1)} 0 14)`); $('#leanT').textContent = `${fmt(Math.abs(ln))}°`;
   renderTele(i); drawTime(); drawProfile(); drawCut(i);
 }
@@ -2027,7 +2269,8 @@ function setScenario(k) {
   renderKpis(overall(RUN, S, SG), overall(COMP, compSetup(), SGc)); renderMatrix(); renderObst(); drawProfile(); drawHist();
   if (!playing && !userPaused && !matchMedia('(prefers-reduced-motion: reduce)').matches) setPlaying(true); else showFrame(0);
 }
-$('#scenSeg').addEventListener('click', e => { const b = e.target.closest('button'); if (b) setScenario(b.dataset.s); });
+$('#scenSeg').addEventListener('click', e => { const b = e.target.closest('button.pt'); if (b) setScenario(b.dataset.s); });
+$('#grpBar').addEventListener('click', e => { const b = e.target.closest('.gchip'); if (!b) return; const k = Object.keys(SCEN).find(n => SCEN[n].grp === b.dataset.g); if (k) { setScenario(k); $('#scenSeg').scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } });
 $('#cmpSeg').addEventListener('click', e => {
   const b = e.target.closest('button'); if (!b) return;
   if (b.dataset.cmp === 'pin' && !PINNED) { toast('Erst „Merken“ drücken'); return; }
@@ -2246,6 +2489,7 @@ function renderCheck() {
   const cnt = k => DATA.filter(d => d[3] === k).length;
   $('#checkSummary').innerHTML = `<div class="geo-grid">${Object.entries(STATL).map(([k, [c, l]]) => `<div class="gcell"><div class="lbl">${l}</div><div class="v">${cnt(k)}</div><span class="chip ${c}">${k === 'ok2' ? 'belastbar' : k === 'ok1' ? 'plausibel' : k === 'conf' ? 'Widerspruch markiert' : k === 'open' ? 'am Fahrzeug prüfen' : 'Annahme'}</span></div>`).join('')}</div>
   <div class="warnbox" style="margin-top:10px"><b>Rechenfehler gefunden und behoben:</b> (1) Die Abstützung der Hinterradbremse über die Schwinge wirkte in die falsche Richtung; richtig zieht sie das Heck etwas ein. (2) Beim Bremsen und Beschleunigen blieb das Tempo konstant; jetzt folgen Fahrbahn, Luftwiderstand und Anzeige dem echten Tempo, bei Stillstand endet die Bremsung. (3) Der Bremskraftanteil in der Gabel wurde mit dem Werks-Lenkkopfwinkel gerechnet statt mit dem aktuellen, flacheren Winkel beim Eintauchen (bis zu 18 % zu viel). Gegenproben ohne Befund: Ruhelage ohne Drift, stationäre Kurve, stationäres Beschleunigen.</div>
+  <div class="warnbox" style="margin-top:10px"><b>Testzyklen:</b> Vier Rundkurse (Landstraße, Rennstrecke, Stadt, Autobahn) verketten Bremsen, Schräglage, Beschleunigen und Hindernisse mit eigenem Starttempo. Hindernisse liegen dort, wo das Motorrad zum geplanten Zeitpunkt wirklich ist, und Querfugen in Schräglage wirken mit cos(Schräglage). Drei Prüfstandsversuche stellen die Maschine auf zwei Hydraulikstempel: logarithmischer Sinus-Sweep gleichphasig (Hub) und gegenphasig (Nicken), Stempelgeschwindigkeit wie bei echten Anlagen auf 0,25 m/s begrenzt, sowie ein Falltest. Der Frequenzgang wird je Band per Ausgleichsrechnung mit der bekannten Stempelphase bestimmt. Prüfstandsversuche zählen nicht zum Setup-Index.</div>
   <div class="warnbox" style="margin-top:10px"><b>Dritte Prüfung, Rechenwerte:</b> Ein eigenständiges Prüfprogramm rechnet 137 Modellwerte unabhängig nach, ohne den Code der Seite zu benutzen: Lasten, Feder- und Gaskräfte, Luftpolster, Vorspann-Kalibrierung, Durchhang, Geometrie, Anti-Squat, Dämpferkräfte, Luftwiderstand, stationäre Achslasten beim Bremsen sowie alle Gegenrechnungen der Fahrzeugdaten und den Tempoverlauf beim Bremsen. Alle 137 stimmen. Dazu sind 124 Anzeigen der Seite gegen die Rechnung geprüft, ebenfalls ohne Abweichung. Neu bestätigt: Gangstufen und Anti-Hopping-Kupplung.</div>
   <div class="warnbox" style="margin-top:10px"><b>Zweite Prüfrunde:</b> Jeder Wert wurde ein zweites Mal gegen unabhängige Quellen geprüft, vorrangig gegen den MOTORRAD-Top-Test der K7 mit Messwerten und gegen die Suzuki-Reifenbescheinigung 2007. Korrigiert: Gewicht 200 → 212 kg (gewogen), Gabel-Offset 31,1 (errechnet) → 28 mm (Werksangabe), Federbein-Übersetzung 2,05 → 2,13 (aus 61 mm Hub), Werkseinstellung Zugstufe hinten 11 → 12 Klicks. Neu bestätigt: Drehmoment, Reifen, Bremsen, Sitzhöhe, Federrate Gabel. Neu gefunden: Federweg hinten 130 oder 135 mm.</div>
   <p class="note" style="margin-top:10px">Bei den Werkseinstellungen widersprechen sich die Forenangaben in mehreren Punkten. Das Tool nutzt die Mehrheitsangabe als Ausgangspunkt. Vor dem ersten Verstellen deshalb den Ist-Zustand deiner Maschine zählen und notieren: Klicks ganz zudrehen, mitzählen, wieder auf den alten Wert zurück.</p>`;
