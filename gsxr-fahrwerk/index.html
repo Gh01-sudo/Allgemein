@@ -1234,6 +1234,10 @@ $$('.tabs button').forEach(b => b.addEventListener('click', () => {
 
 /* ============================ DURCHHANG-TAB ============================ */
 const SAGIN = { L1: 180, L2: 158, L3: 143, R1: 600, R2: 588, R3: 568 };
+const SAGDONE = { F: null, R: null };   // zuletzt übernommene Messung je Achse: { m, from, to }
+const sagKey = side => (side === 'F' ? ['L1', 'L2', 'L3'] : ['R1', 'R2', 'R3']).map(k => SAGIN[k]).join('|');
+// Vorspannung, zu der die eingetragene Messung gehört: nach dem Übernehmen bleibt das der alte Wert, bis neu gemessen wird
+function sagBase(side) { const d = SAGDONE[side], cur = side === 'F' ? S.fPre : S.rPre; return d && d.m === sagKey(side) && Math.abs(d.to - cur) < 1e-9 ? d.from : cur; }
 function renderSagTab() {
   const [zf, zr] = SAGZ[S.profile], tf = PROFILES[S.profile].sagF, trr = PROFILES[S.profile].sagR;
   $('#sagTargets').innerHTML = `<thead><tr><th>Profil</th><th>Vorn mit Fahrer</th><th>Hinten mit Fahrer</th><th>Frei vorn</th><th>Frei hinten</th></tr></thead><tbody>` +
@@ -1242,9 +1246,9 @@ function renderSagTab() {
     const F = side === 'F', a = F ? ['L1', 'L2', 'L3'] : ['R1', 'R2', 'R3'];
     const v = a.map(k => SAGIN[k]), free = v[0] - v[1], rider = v[0] - v[2];
     const z = F ? zf : zr, t = F ? tf : trr, fz = F ? [20, 30] : [5, 15];
-    const delta = rider - t;
+    const delta = rider - t, base = sagBase(side);
     let action;
-    if (F) { const rings = clamp(S.fPre - delta / M.ringMm, 0, 8); action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(delta / M.ringMm), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(S.fPre, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.`; }
+    if (F) { const rings = clamp(base - delta / M.ringMm, 0, 8); action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: um ${fmt(Math.abs(delta / M.ringMm), 1)} Ringe ${delta > 0 ? 'hineindrehen' : 'herausdrehen'} (von ${fmt(base, 1)} auf ${fmt(rings, 1)} Ringe sichtbar), beide Holme gleich.`; }
     else { const mm = delta / M.MR; action = Math.abs(delta) < 1 ? 'Passt. Vorspannung so lassen.' : `${delta > 0 ? 'Mehr' : 'Weniger'} Vorspannung: Feder um ${fmt(Math.abs(mm), 1)} mm ${delta > 0 ? 'zusätzlich spannen' : 'entspannen'} (1 mm an der Feder ≈ ${fmt(M.MR, 2)} mm am Rad).`; }
     let springNote = '';
     if (free < fz[0] - 3 && rider > z[0]) springNote = '<p class="warnbox" style="margin-top:8px">Wenig freier Durchhang bei viel Fahrer-Durchhang: die Feder ist für dein Gewicht zu weich. Vorspannung allein löst das nicht sauber.</p>';
@@ -1257,7 +1261,7 @@ function renderSagTab() {
         <div class="gcell"><div class="lbl">Mit Fahrer</div><div class="v">${fmt(rider, 1)} mm</div><span class="chip ${st(rider, z)}">Ziel ${z[0]}–${z[1]}</span></div>
         <div class="gcell"><div class="lbl">Abweichung</div><div class="v">${delta >= 0 ? '+' : ''}${fmt(delta, 1)} mm</div><span class="d">zu ${t} mm Ziel</span></div>
       </div>
-      <p style="margin:10px 0 0;font-size:.88rem"><b>${action}</b></p>${springNote}
+      <p style="margin:10px 0 0;font-size:.88rem"><b>${action}</b></p>${springNote}${base !== (F ? S.fPre : S.rPre) ? '<p class="note" style="margin-top:8px">Ins Modell übernommen. Nach dem Einstellen am Motorrad neu messen und die neuen Werte eintragen.</p>' : ''}
       <div class="btnrow" style="margin-top:10px"><button class="btn sm pri" data-apply="${side}">Ins Modell übernehmen</button></div>`;
   };
   const keepFocus = document.activeElement && document.activeElement.id;
@@ -1267,9 +1271,12 @@ function renderSagTab() {
 $('#t-sag').addEventListener('change', e => { const k = e.target.dataset.k; if (k) { SAGIN[k] = parseFloat(e.target.value) || 0; renderSagTab(); } });
 $('#t-sag').addEventListener('click', e => {
   const b = e.target.closest('[data-apply]'); if (!b) return;
-  const t = b.dataset.apply === 'F' ? PROFILES[S.profile].sagF : PROFILES[S.profile].sagR;
-  if (b.dataset.apply === 'F') { const d = (SAGIN.L1 - SAGIN.L3) - t; S.fPre = clamp(Math.round((S.fPre - d / M.ringMm) * 2) / 2, 0, 8); }
-  else { const d = (SAGIN.R1 - SAGIN.R3) - t; S.rPre = clamp(Math.round((S.rPre + d / M.MR) * 2) / 2, -5, 12); }
+  // Relativ zur Vorspannung der Messung rechnen: ein zweiter Klick auf dieselbe Messung ändert nichts mehr
+  const side = b.dataset.apply, base = sagBase(side);
+  const t = side === 'F' ? PROFILES[S.profile].sagF : PROFILES[S.profile].sagR;
+  if (side === 'F') { const d = (SAGIN.L1 - SAGIN.L3) - t; S.fPre = clamp(Math.round((base - d / M.ringMm) * 2) / 2, 0, 8); }
+  else { const d = (SAGIN.R1 - SAGIN.R3) - t; S.rPre = clamp(Math.round((base + d / M.MR) * 2) / 2, -5, 12); }
+  SAGDONE[side] = { m: sagKey(side), from: base, to: side === 'F' ? S.fPre : S.rPre };
   schedule(); toast('Vorspannung im Modell angepasst');
 });
 
@@ -1458,7 +1465,16 @@ $('#libList').addEventListener('click', e => {
 $('#expBtn').addEventListener('click', () => { $('#ioText').value = JSON.stringify({ app: 'K7 Fahrwerkslabor', v: 1, setup: pick(S) }, null, 2); });
 $('#copyBtn').addEventListener('click', () => { const t = $('#ioText'); if (!t.value) $('#expBtn').click(); navigator.clipboard.writeText(t.value).then(() => toast('In die Zwischenablage kopiert'), () => { t.select(); toast('Text markiert, jetzt mit Strg+C kopieren'); }); });
 $('#impBtn').addEventListener('click', () => {
-  try { const j = JSON.parse($('#ioText').value), v = j.setup || j, n = {}; for (const k of KEYS) if (k in v) n[k] = k === 'profile' ? (PROFILES[v[k]] ? v[k] : S.profile) : clamp(+v[k], (findCtl(k) || { min: -1e9 }).min, (findCtl(k) || { max: 1e9 }).max); S = Object.assign({}, S, n); schedule(); toast('Setup übernommen'); }
+  try {
+    const j = JSON.parse($('#ioText').value), v = j.setup || j, n = {}; let skipped = 0;
+    for (const k of KEYS) if (k in v) {
+      // Nur echte Zahlen übernehmen (+"abc" wäre NaN und legte die ganze Rechnung lahm), Profil nur aus der eigenen Liste
+      if (k === 'profile') { if (Object.prototype.hasOwnProperty.call(PROFILES, v[k])) n[k] = v[k]; else skipped++; continue; }
+      const x = typeof v[k] === 'number' ? v[k] : typeof v[k] === 'string' && v[k].trim() ? +v[k].replace(',', '.') : NaN;
+      if (Number.isFinite(x)) n[k] = clamp(x, (findCtl(k) || { min: -1e9 }).min, (findCtl(k) || { max: 1e9 }).max); else skipped++;
+    }
+    S = Object.assign({}, S, n); schedule(); toast(skipped ? `Setup übernommen, ${skipped} ungültige Werte ignoriert` : 'Setup übernommen');
+  }
   catch (e) { toast('Text ist kein gültiges Setup. Bitte den kompletten Export einfügen.'); }
 });
 
