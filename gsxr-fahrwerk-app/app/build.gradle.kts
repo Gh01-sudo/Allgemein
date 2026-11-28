@@ -13,8 +13,8 @@ android {
         applicationId = "de.k7labor.fahrwerk"
         minSdk = 31
         targetSdk = 37
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.1.0"
     }
 
     // Signaturschlüssel liegt NICHT im Repository. Pfad über Umgebungsvariable K7_KEYSTORE_PROPS

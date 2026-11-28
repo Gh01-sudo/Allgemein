@@ -2,11 +2,14 @@ package de.k7labor.fahrwerk.ui
 
 import android.graphics.Bitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.test.captureToImage
+import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performSemanticsAction
 import de.k7labor.fahrwerk.MainActivity
 import de.k7labor.fahrwerk.physics.Checks
 import org.junit.Rule
@@ -42,9 +45,11 @@ class ScreenshotTest {
     }
 
     private fun waitCompute() {
+        // Der Setup-Index ist jetzt ein Canvas ohne Text: fertig, sobald die Beschreibung einen Wert trägt
+        val ready = hasContentDescription("Setup-Index", substring = true) and !hasContentDescription("wird gerechnet", substring = true)
         for (i in 0 until 240) {
             pump(1)
-            val done = runCatching { rule.onNodeWithText("/ 100", substring = true).assertExists(); true }.getOrDefault(false)
+            val done = runCatching { rule.onNode(ready).assertExists(); true }.getOrDefault(false)
             if (done) break
         }
         pump(4)
@@ -54,9 +59,14 @@ class ScreenshotTest {
         rule.mainClock.autoAdvance = false
         waitCompute()
         shot("1-setup")
+        rule.onNodeWithText("Technik").performClick(); pump(2); shot("1c-setup-technik")
         rule.onNodeWithText("Prüfstand").performClick()
         pump(6)
         shot("2-pruefstand-fahrt")
+        rule.onNodeWithText("Technik").performClick(); pump(2); shot("2a-technik")
+        // Chip liegt unterhalb des sichtbaren Bereichs in einer waagerecht scrollenden Zeile: Klick-Aktion direkt auslösen
+        rule.onNodeWithText("Gabel vorn").performSemanticsAction(SemanticsActions.OnClick); pump(2); shot("2c-gabel")
+        rule.onNodeWithText("Außen").performClick(); pump(2)
         rule.onNodeWithText("Bremsen").performClick(); pump(6); shot("2b-bremsen")
         rule.onNodeWithText("Dämpfer").performClick(); pump(2); shot("3-daempfer")
         rule.onNodeWithText("Feder").performClick(); pump(2); shot("4-feder")

@@ -14,7 +14,7 @@ data class Pose(
     val frontAxle: Pair<Double, Double>, val rearAxle: Pair<Double, Double>, val pivot: Pair<Double, Double>
 )
 
-data class RunAll(val results: Map<ScenarioId, ScenarioResult>, val sags: Sags, val staticScore: Double, val overall: Double)
+data class RunAll(val results: Map<ScenarioId, ScenarioResult>, val sags: Sags, val staticScore: Double, val overall: Double, val setup: Setup = Setup.STOCK)
 
 object Physics {
 
@@ -101,7 +101,7 @@ object Physics {
         val ss = staticScore(st, sg)
         val scored = res.values.filter { it.id.scored }
         val dyn = if (scored.isEmpty()) 0.0 else scored.sumOf { it.score } / scored.size
-        return RunAll(res, sg, ss, 0.75 * dyn + 0.25 * ss)
+        return RunAll(res, sg, ss, 0.75 * dyn + 0.25 * ss, st)
     }
 
     // ---------------- Empfehlung ----------------
@@ -156,14 +156,16 @@ object Physics {
         return Recommendation(out, notes, kFrec, kRrec)
     }
 
+    /** Durchhang im Zielfenster? ±0,05 mm = halber Anzeigeschritt: „36,0 mm“ bei Ziel 32–36 gilt als drin (Balken und Protokoll gleich). */
+    fun inSagWindow(v: Double, w: Pair<Double, Double>) = v >= w.first - 0.05 && v <= w.second + 0.05
+
     /** Hinweise aus dem Rechenlauf, wie ein Prüfstandsprotokoll. */
     fun insights(st: Setup, run: RunAll): List<Note> {
         val out = mutableListOf<Note>()
         val p = st.profile
         val sg = run.sags
-        fun win(v: Double, w: Pair<Double, Double>) = v >= w.first && v <= w.second
-        if (!win(sg.sagF, p.sagWinF)) out += Note(Level.WARN, "Durchhang vorn ${fmt(sg.sagF, 1)} mm", "Ziel für „${p.label}“: ${fmt(p.sagWinF.first, 0)}–${fmt(p.sagWinF.second, 0)} mm. ${if (sg.sagF > p.sagWinF.second) "Mehr Vorspannung (weniger Ringe sichtbar)." else "Weniger Vorspannung (mehr Ringe sichtbar)."}")
-        if (!win(sg.sagR, p.sagWinR)) out += Note(Level.WARN, "Durchhang hinten ${fmt(sg.sagR, 1)} mm", "Ziel für „${p.label}“: ${fmt(p.sagWinR.first, 0)}–${fmt(p.sagWinR.second, 0)} mm. ${if (sg.sagR > p.sagWinR.second) "Federbein mehr vorspannen." else "Federbein weniger vorspannen."}")
+        if (!inSagWindow(sg.sagF, p.sagWinF)) out += Note(Level.WARN, "Durchhang vorn ${fmt(sg.sagF, 1)} mm", "Ziel für „${p.label}“: ${fmt(p.sagWinF.first, 0)}–${fmt(p.sagWinF.second, 0)} mm. ${if (sg.sagF > p.sagWinF.second) "Mehr Vorspannung (weniger Ringe sichtbar)." else "Weniger Vorspannung (mehr Ringe sichtbar)."}")
+        if (!inSagWindow(sg.sagR, p.sagWinR)) out += Note(Level.WARN, "Durchhang hinten ${fmt(sg.sagR, 1)} mm", "Ziel für „${p.label}“: ${fmt(p.sagWinR.first, 0)}–${fmt(p.sagWinR.second, 0)} mm. ${if (sg.sagR > p.sagWinR.second) "Federbein mehr vorspannen." else "Federbein weniger vorspannen."}")
         if (sg.freeF < 15) out += Note(Level.WARN, "Wenig freier Durchhang vorn (${fmt(sg.freeF, 1)} mm)", "Die Gabel steht ohne Fahrer fast ganz ausgefedert. Das Rad kann in Senken nicht nachfedern. Ursache meist: Feder für das Fahrergewicht zu weich und mit viel Vorspannung ausgeglichen.")
         for ((id, r) in run.results) {
             if (!id.scored) continue

@@ -45,6 +45,19 @@ import de.k7labor.fahrwerk.physics.ScenarioId
 import de.k7labor.fahrwerk.physics.ScenarioResult
 import de.k7labor.fahrwerk.physics.ShakeMode
 import de.k7labor.fahrwerk.physics.fmt
+import de.k7labor.fahrwerk.physics.Vehicle
+import de.k7labor.fahrwerk.ui.bike.BikePart
+import de.k7labor.fahrwerk.ui.bike.BikeScene
+import de.k7labor.fahrwerk.ui.bike.Knob
+import de.k7labor.fahrwerk.ui.bike.PartChips
+import de.k7labor.fahrwerk.ui.bike.PartPanel
+import de.k7labor.fahrwerk.ui.bike.SceneHint
+import de.k7labor.fahrwerk.ui.bike.SceneState
+import de.k7labor.fahrwerk.data.Content
+import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 
 private val RIG_TABS = listOf("Fahrt", "Rütteln", "Dämpfer", "Feder")
 
@@ -79,11 +92,22 @@ private fun DriveRig(vm: LabViewModel) {
     val res = run?.results?.get(scen)
     val sres = stock?.results?.get(scen)
 
-    var playing by remember { mutableStateOf(true) }
+    val calm by vm.calm.collectAsState()
+    var playing by remember { mutableStateOf(!calm) }
     var exaggerate by rememberSaveable { mutableStateOf(false) }
-    var slow by rememberSaveable { mutableStateOf(true) }
+    var rate by rememberSaveable { mutableFloatStateOf(0.25f) }
+    var technical by rememberSaveable { mutableStateOf(false) }
+    var ghostOn by rememberSaveable { mutableStateOf(true) }
+    var selName by rememberSaveable { mutableStateOf<String?>(null) }
+    val selected = selName?.let { n -> BikePart.entries.firstOrNull { it.name == n } }
     var tPlay by remember { mutableFloatStateOf(0f) }
     var speedDraft by remember(speed) { mutableFloatStateOf(speed.toFloat()) }
+    // Fahrzeug immer zu dem Setup bauen, mit dem der gezeigte Verlauf gerechnet wurde
+    val runSt = run?.setup ?: st
+    val stockRunSt = stock?.setup ?: st.toStockKeepLoad()
+    val veh = remember(runSt) { Vehicle(runSt, Physics.calibration) }
+    val stockVeh = remember(stockRunSt) { Vehicle(stockRunSt, Physics.calibration) }
+    LaunchedEffect(calm) { if (calm) playing = false }
 
     // Genau eine Animationsschleife, sie läuft nur solange dieser Bildschirm sichtbar ist (Review-Punkte 14/15)
     LaunchedEffect(playing, res) {
@@ -92,7 +116,7 @@ private fun DriveRig(vm: LabViewModel) {
         while (true) {
             withFrameNanos { now ->
                 if (last != 0L) {
-                    val dt = (now - last) / 1e9f * if (slow) 0.25f else 1f
+                    val dt = (now - last) / 1e9f * rate
                     tPlay += dt
                     val tMax = res.trace.t[res.trace.size - 1]
                     if (tPlay > tMax) tPlay = 0f
@@ -120,18 +144,51 @@ private fun DriveRig(vm: LabViewModel) {
             }
         }
         item {
-            SectionCard("Seitenansicht") {
+            SectionCard("Prüfstand-Ansicht") {
                 if (res == null) BodyText("Rechnet…") else {
-                    val frame = res.trace.t.indexOfFirst { it >= tPlay }.let { if (it < 0) res.trace.size - 1 else it }
-                    BikeView(res, st, frame, exaggerate)
-                    Slider(value = tPlay.coerceIn(0f, res.trace.t[res.trace.size - 1]), onValueChange = { tPlay = it; playing = false }, valueRange = 0f..res.trace.t[res.trace.size - 1])
-                    FlowRow(verticalArrangement = Arrangement.Center, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        FilledTonalButton(onClick = { playing = !playing }) { Text(if (playing) "Pause" else "Abspielen") }
-                        Row(verticalAlignment = Alignment.CenterVertically) { Switch(checked = slow, onCheckedChange = { slow = it }); Text(" Zeitlupe ¼") }
-                        Row(verticalAlignment = Alignment.CenterVertically) { Switch(checked = exaggerate, onCheckedChange = { exaggerate = it }); Text(" Bewegung ×3") }
+                    val tr = res.trace
+                    val tMax = tr.t[tr.size - 1]
+                    val frame = frameAt(tr.t, tr.size, tPlay)
+                    val k = if (exaggerate) 3.0 else 1.0
+                    val real = SceneState.fromTrace(res, frame)
+                    val drawn = if (exaggerate) SceneState.fromTrace(res, frame, k) else real
+                    val ghost = if (ghostOn && sres != null) stockVeh to SceneState.fromTrace(sres, frameAt(sres.trace.t, sres.trace.size, tPlay), k) else null
+                    SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(bottom = 6.dp)) {
+                        SegmentedButton(selected = !technical, onClick = { technical = false }, shape = SegmentedButtonDefaults.itemShape(0, 2)) { Text("Außen") }
+                        SegmentedButton(selected = technical, onClick = { technical = true }, shape = SegmentedButtonDefaults.itemShape(1, 2)) { Text("Technik") }
                     }
+                    BikeScene(
+                        veh, drawn, real, res.road, k, ghost, technical, selected, { selName = it?.name },
+                        onScrub = { d -> tPlay = (tPlay + d * tMax).coerceIn(0f, tMax); playing = false },
+                        exaggerated = exaggerate
+                    )
+                    SceneHint("Bauteil oder weißen Einsteller antippen · waagrecht wischen = Zeit · zwei Finger = Zoom")
+                    Slider(value = tPlay.coerceIn(0f, tMax), onValueChange = { tPlay = it; playing = false }, valueRange = 0f..tMax,
+                        modifier = Modifier.semantics { contentDescription = "Zeitleiste"; stateDescription = "${fmt(tPlay.toDouble(), 2)} von ${fmt(tMax.toDouble(), 2)} Sekunden" })
+                    val dtS = if (tr.size > 1) tr.t[1] - tr.t[0] else 0.01f
+                    Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        FilledTonalIconButton(onClick = { playing = false; tPlay = (tPlay - dtS).coerceAtLeast(0f) }, modifier = Modifier.semantics { contentDescription = "Ein Bild zurück" }) { Text("⏮") }
+                        FilledTonalButton(onClick = { playing = !playing }) { Text(if (playing) "Pause" else "Abspielen") }
+                        FilledTonalIconButton(onClick = { playing = false; tPlay = (tPlay + dtS).coerceAtMost(tMax) }, modifier = Modifier.semantics { contentDescription = "Ein Bild vor" }) { Text("⏭") }
+                        Text("${fmt(tPlay.toDouble(), 3)} s", style = MaterialTheme.typography.labelLarge)
+                    }
+                    FlowRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        for ((r, l) in listOf(1f to "Echtzeit", 0.25f to "¼", 0.1f to "⅒")) FilterChip(selected = rate == r, onClick = { rate = r }, label = { Text(l) })
+                    }
+                    FlowRow(verticalArrangement = Arrangement.Center, horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Row(verticalAlignment = Alignment.CenterVertically) { Switch(checked = ghostOn, onCheckedChange = { ghostOn = it }); Text(" Serie als Geisterbild") }
+                        Row(verticalAlignment = Alignment.CenterVertically) { Switch(checked = exaggerate, onCheckedChange = { exaggerate = it }); Text(" Bewegung ×3") }
+                        Row(verticalAlignment = Alignment.CenterVertically) { Switch(checked = calm, onCheckedChange = { vm.setCalm(it) }); Text(" Ruhige Darstellung") }
+                    }
+                    if (calm) BodyText("Ruhige Darstellung: Nichts läuft von selbst. Mit „Abspielen“, der Zeitleiste oder Wischen im Bild weiterschalten.")
+                    Spacer(Modifier.height(6.dp))
+                    PartChips(selected) { selName = it?.name }
                 }
             }
+        }
+        if (res != null && selected != null) item {
+            val frame = frameAt(res.trace.t, res.trace.size, tPlay)
+            PartPanel(selected, veh, SceneState.fromTrace(res, frame), st, { k, v -> vm.set(k, v) }, { k, d -> vm.step(k, d) })
         }
         if (res != null && sres != null) {
             item { KpiTable(res, sres) }
@@ -144,7 +201,7 @@ private fun DriveRig(vm: LabViewModel) {
                             Series("Heck (Rad)", res.trace.t.toD(n), res.trace.xR.toD(n), lab.rear),
                             Series("Gabel Serie", sres.trace.t.toD(sres.trace.size), sres.trace.sF.toD(sres.trace.size), lab.front.copy(alpha = 0.55f), dashed = true),
                             Series("Heck Serie", sres.trace.t.toD(sres.trace.size), sres.trace.xR.toD(sres.trace.size), lab.rear.copy(alpha = 0.55f), dashed = true)
-                        ), "Zeit s", "Federweg mm", yMin = -5.0, yMax = 135.0, cursorX = tPlay.toDouble(),
+                        ), "Zeit s", "Federweg mm", yMin = -5.0, yMax = 135.0, cursorX = tPlay.toDouble(), onScrub = { tPlay = it.toFloat(); playing = false },
                         hLines = listOf(K7.TRAVEL_F_MM to "Gabel Ende 125", K7.TRAVEL_R_MM to "Heck Ende 130")
                     )
                 }
@@ -158,7 +215,7 @@ private fun DriveRig(vm: LabViewModel) {
                             Series("hinten", res.trace.t.toD(n), DoubleArray(n) { res.trace.fzR[it] / 1000.0 }, lab.rear),
                             Series("vorn Serie", sres.trace.t.toD(sres.trace.size), DoubleArray(sres.trace.size) { sres.trace.fzF[it] / 1000.0 }, lab.front.copy(alpha = 0.5f), dashed = true),
                             Series("hinten Serie", sres.trace.t.toD(sres.trace.size), DoubleArray(sres.trace.size) { sres.trace.fzR[it] / 1000.0 }, lab.rear.copy(alpha = 0.5f), dashed = true)
-                        ), "Zeit s", "Radlast kN", yMin = 0.0, cursorX = tPlay.toDouble(), yDecimals = 1
+                        ), "Zeit s", "Radlast kN", yMin = 0.0, cursorX = tPlay.toDouble(), onScrub = { tPlay = it.toFloat(); playing = false }, yDecimals = 1
                     )
                     BodyText("Je ruhiger die Radlast, desto mehr Haftung. Null heißt: Rad ohne Bodenkontakt.")
                 }
@@ -170,14 +227,14 @@ private fun DriveRig(vm: LabViewModel) {
                         listOf(
                             Series("Nickwinkel °", res.trace.t.toD(n), res.trace.pitch.toD(n), lab.extra),
                             Series("Serie", sres.trace.t.toD(sres.trace.size), sres.trace.pitch.toD(sres.trace.size), lab.stock, dashed = true)
-                        ), "Zeit s", "Nicken ° (+ = Front hoch)", cursorX = tPlay.toDouble(), yDecimals = 1, height = 150.dp
+                        ), "Zeit s", "Nicken ° (+ = Front hoch)", cursorX = tPlay.toDouble(), onScrub = { tPlay = it.toFloat(); playing = false }, yDecimals = 1, height = 150.dp
                     )
                     if (scen == ScenarioId.BRAKE || scen == ScenarioId.FULLBRAKE || scen == ScenarioId.ACCEL) {
                         LineChart(
                             listOf(
                                 Series("Schlupf vorn %", res.trace.t.toD(n), DoubleArray(n) { res.trace.slipF[it] * 100.0 }, lab.front),
                                 Series("Schlupf hinten %", res.trace.t.toD(n), DoubleArray(n) { res.trace.slipR[it] * 100.0 }, lab.rear)
-                            ), "Zeit s", "Reifenschlupf % (− = Bremsen)", cursorX = tPlay.toDouble(), height = 150.dp
+                            ), "Zeit s", "Reifenschlupf % (− = Bremsen)", cursorX = tPlay.toDouble(), onScrub = { tPlay = it.toFloat(); playing = false }, height = 150.dp
                         )
                         BodyText("Haftmaximum bei rund ±13 % Schlupf. Unter −25 % gilt das Rad als blockierend, über +25 % als durchdrehend.")
                     }
@@ -203,6 +260,16 @@ private fun DriveRig(vm: LabViewModel) {
             Spacer(Modifier.height(24.dp))
         }
     }
+}
+
+/** Index des ersten Bildes mit Zeit ≥ t (binäre Suche). */
+private fun frameAt(ts: FloatArray, n: Int, t: Float): Int {
+    if (n <= 0) return 0
+    if (t <= ts[0]) return 0
+    if (t >= ts[n - 1]) return n - 1
+    var lo = 0; var hi = n - 1
+    while (hi - lo > 1) { val m = (lo + hi) / 2; if (ts[m] < t) lo = m else hi = m }
+    return hi
 }
 
 @Composable
@@ -301,6 +368,18 @@ private fun ShakeRig(vm: LabViewModel) {
     }
 }
 
+/** Drehknöpfe direkt am Prüfstand: Kurve ändert sich beim Drehen sofort. */
+@OptIn(ExperimentalLayoutApi::class)
+@Composable
+private fun KnobRow(vm: LabViewModel, st: de.k7labor.fahrwerk.physics.Setup, keys: List<String>) {
+    FlowRow(Modifier.fillMaxWidth().padding(top = 6.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+        for (k in keys) {
+            val c = de.k7labor.fahrwerk.physics.Controls.get(k)
+            Knob(c, st[k], k in Content.UNSURE_STOCK, { vm.set(k, it) }, { vm.step(k, it) })
+        }
+    }
+}
+
 @Composable
 private fun DamperRig(vm: LabViewModel) {
     val st by vm.setup.collectAsState()
@@ -319,6 +398,7 @@ private fun DamperRig(vm: LabViewModel) {
             val loopS = remember(stock, front) { Rig.damperLoop(stock, front, if (front) 40.0 else 20.0, 2.0) }
             val col = if (front) lab.front else lab.rear
             SectionCard(if (front) "Gabel (beide Holme)" else "Federbein") {
+                KnobRow(vm, st, if (front) listOf("fReb", "fLS", "fHS") else listOf("rReb", "rLS", "rHS"))
                 LineChart(
                     listOf(Series("Aktuell", cur.first, DoubleArray(cur.second.size) { cur.second[it] / 1000 }, col), Series("Serie", stk.first, DoubleArray(stk.second.size) { stk.second[it] / 1000 }, lab.stock, dashed = true)),
                     "Kolbengeschwindigkeit m/s", "Kraft kN", yDecimals = 1
@@ -347,6 +427,7 @@ private fun SpringRig(vm: LabViewModel) {
             val stk = remember(stock, front) { Rig.springCurve(stock, front) }
             val col = if (front) lab.front else lab.rear
             SectionCard(if (front) "Gabel" else "Federbein (am Rad)") {
+                KnobRow(vm, st, if (front) listOf("fPre", "kF", "fOil") else listOf("rPre", "kR", "rShim"))
                 LineChart(
                     listOf(Series("Aktuell", cur.first, DoubleArray(cur.second.size) { cur.second[it] / 1000 }, col), Series("Serie", stk.first, DoubleArray(stk.second.size) { stk.second[it] / 1000 }, lab.stock, dashed = true)),
                     "Federweg mm", "Kraft kN", yMin = 0.0, yDecimals = 1
