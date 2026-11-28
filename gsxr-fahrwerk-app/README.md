@@ -4,7 +4,7 @@ Fahrwerksprüfstand für die **Suzuki GSX-R 1000 K7 (2007–2008)** als native A
 
 ## Installation
 
-Die fertige APK liegt unter [`release/K7-Fahrwerkslabor-1.0.0.apk`](release/) und als GitHub-Release `fahrwerk-app-v1.0.0`. Auf dem Handy öffnen und die Installation aus dieser Quelle erlauben.
+Die fertige APK liegt unter [`release/K7-Fahrwerkslabor-1.1.0.apk`](release/) und als GitHub-Release `fahrwerk-app-v1.1.0`. Auf dem Handy öffnen und die Installation aus dieser Quelle erlauben.
 
 ## Was die App kann
 
@@ -15,6 +15,14 @@ Die fertige APK liegt unter [`release/K7-Fahrwerkslabor-1.0.0.apk`](release/) un
 | **Werkstatt** | Durchhang messen und auswerten, Diagnose nach Fahrgefühl mit konkreten Änderungen. |
 | **Setups** | Speichern, vergleichen, als Datei oder Text exportieren und importieren. |
 | **Daten** | Datenblatt mit Quellen und Status, Modellannahmen, Selbstprüfungen, Grenzen des Modells. |
+
+## Darstellung und Bedienung
+
+- **Seitenansicht außen und Technik:** maßstäblich nach Radstand, Rädern und Lenkkopf. Technik zeigt Federn, Ölstand, Kette, Schwerpunkte und Radlast-Pfeile (1 kN = 12 cm).
+- **Antippen:** Bauteil oder weißen Einsteller im Bild antippen → Erklärung, Live-Werte, Drehknöpfe (im Uhrzeigersinn = zu bzw. mehr Vorspannung, wie am Motorrad).
+- **Gesten:** zwei Finger zoomen, waagrecht wischen = Zeitleiste, Doppeltippen = Zoom zurück.
+- **Geisterbild:** Serie gestrichelt im selben Augenblick.
+- **Ruhige Darstellung:** keine selbstlaufende Animation (folgt anfangs „Animationen entfernen“ des Systems).
 
 ## Physikmodell
 
@@ -33,7 +41,7 @@ Ebenes Mehrkörpermodell mit Zeitschritt 0,2 ms:
 Voraussetzungen: JDK 21 und Android SDK (Platform 37).
 
 ```bash
-./gradlew testDebugUnitTest   # 21 Physik- und Datentests, Bildschirm-Test mit Robolectric
+./gradlew testDebugUnitTest   # 27 Physik-, Daten- und Geometrietests, Bildschirm-Test mit Robolectric
 ./gradlew assembleDebug       # Debug-APK
 ```
 

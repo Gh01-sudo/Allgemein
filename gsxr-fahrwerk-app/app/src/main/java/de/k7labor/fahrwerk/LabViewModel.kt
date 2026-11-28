@@ -67,6 +67,15 @@ class LabViewModel(app: Application) : AndroidViewModel(app) {
     private val _messages = MutableSharedFlow<String>(extraBufferCapacity = 8)
     val messages = _messages.asSharedFlow()
 
+    /** Ruhige Darstellung (keine selbstlaufende Animation). Folgt anfangs „Animationen entfernen“ des Systems. */
+    private val _calm = MutableStateFlow(
+        store.loadCalm(
+            runCatching { android.provider.Settings.Global.getFloat(app.contentResolver, android.provider.Settings.Global.ANIMATOR_DURATION_SCALE, 1f) == 0f }.getOrDefault(false)
+        )
+    )
+    val calm = _calm.asStateFlow()
+    fun setCalm(v: Boolean) { _calm.value = v; store.saveCalm(v) }
+
     val tab = MutableStateFlow(Tab.SETUP)
     val scenario = MutableStateFlow(ScenarioId.BUMP)
 

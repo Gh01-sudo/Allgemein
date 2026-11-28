@@ -65,6 +65,10 @@ class Store(ctx: Context) {
     var speed: Double
         get() = prefs.getFloat("speed", 80f).toDouble().coerceIn(30.0, 250.0)
         set(v) { prefs.edit().putFloat("speed", v.toFloat()).apply() }
+
+    /** Ruhige Darstellung: keine automatische Animation. Ohne gespeicherten Wert gilt die Systemeinstellung. */
+    fun loadCalm(systemDefault: Boolean): Boolean = if (prefs.contains("calm")) prefs.getBoolean("calm", false) else systemDefault
+    fun saveCalm(v: Boolean) { prefs.edit().putBoolean("calm", v).apply() }
 }
 
 /** Zuletzt übernommene Durchhang-Empfehlung einer Achse: Messwerte und Vorspannung vorher/nachher. */

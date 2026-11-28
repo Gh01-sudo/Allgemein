@@ -34,6 +34,9 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.foundation.layout.height
+import androidx.compose.ui.text.drawText
 import de.k7labor.fahrwerk.physics.Control
 import de.k7labor.fahrwerk.physics.Physics
 import de.k7labor.fahrwerk.physics.fmt
@@ -165,5 +168,66 @@ fun TableRow(cells: List<String>, header: Boolean = false, weights: List<Float> 
                 color = colors[i] ?: if (header) MaterialTheme.colorScheme.onSurfaceVariant else MaterialTheme.colorScheme.onSurface
             )
         }
+    }
+}
+
+
+/** Halbkreis-Anzeige für den Setup-Index mit Marke für Serie. */
+@Composable
+fun ScoreGauge(value: Double?, stock: Double?, modifier: Modifier = Modifier) {
+    val lab = LocalLabColors.current
+    val track = MaterialTheme.colorScheme.surfaceContainerHighest
+    val txt = MaterialTheme.colorScheme.onSurface
+    val measurer = androidx.compose.ui.text.rememberTextMeasurer()
+    val v = value ?: 0.0
+    val col = when { v >= 80 -> lab.good; v >= 62 -> lab.warn; else -> lab.bad }
+    androidx.compose.foundation.Canvas(
+        modifier.size(width = 118.dp, height = 80.dp).semantics {
+            contentDescription = "Setup-Index ${value?.let { fmt(it, 0) } ?: "wird gerechnet"} von 100" + (stock?.let { ", Serie ${fmt(it, 0)}" } ?: "")
+        }
+    ) {
+        val sw = 11.dp.toPx()
+        val d = size.width - sw
+        val tl = androidx.compose.ui.geometry.Offset(sw / 2, sw / 2)
+        val sz = androidx.compose.ui.geometry.Size(d, d)
+        drawArc(track, 180f, 180f, false, tl, sz, style = androidx.compose.ui.graphics.drawscope.Stroke(sw, cap = androidx.compose.ui.graphics.StrokeCap.Round))
+        if (value != null) drawArc(col, 180f, (180 * (v / 100).coerceIn(0.0, 1.0)).toFloat(), false, tl, sz, style = androidx.compose.ui.graphics.drawscope.Stroke(sw, cap = androidx.compose.ui.graphics.StrokeCap.Round))
+        stock?.let {
+            val a = Math.toRadians(180 + 180 * (it / 100).coerceIn(0.0, 1.0))
+            val c = androidx.compose.ui.geometry.Offset(size.width / 2, sw / 2 + d / 2)
+            val r0 = d / 2 - sw; val r1 = d / 2 + sw * 0.7f
+            drawLine(lab.stock, androidx.compose.ui.geometry.Offset(c.x + r0 * kotlin.math.cos(a).toFloat(), c.y + r0 * kotlin.math.sin(a).toFloat()),
+                androidx.compose.ui.geometry.Offset(c.x + r1 * kotlin.math.cos(a).toFloat(), c.y + r1 * kotlin.math.sin(a).toFloat()), 3.dp.toPx())
+        }
+        val t = measurer.measure(value?.let { fmt(it, 0) } ?: "…", androidx.compose.ui.text.TextStyle(fontSize = 26.sp, fontWeight = FontWeight.Bold, color = txt))
+        drawText(t, topLeft = androidx.compose.ui.geometry.Offset(size.width / 2 - t.size.width / 2, sw / 2 + d / 2 - t.size.height * 0.95f))
+        val s2 = measurer.measure("Setup-Index" + (stock?.let { " · Serie ${fmt(it, 0)}" } ?: ""), androidx.compose.ui.text.TextStyle(fontSize = 9.sp, color = txt.copy(alpha = 0.7f)))
+        drawText(s2, topLeft = androidx.compose.ui.geometry.Offset(size.width / 2 - s2.size.width / 2, size.height - s2.size.height))
+    }
+}
+
+/** Balken mit Zielfenster (grün) und aktuellem Wert. */
+@Composable
+fun SagBar(label: String, value: Double?, window: Pair<Double, Double>, max: Double) {
+    val lab = LocalLabColors.current
+    val track = MaterialTheme.colorScheme.surfaceContainerHighest
+    val inWin = value != null && Physics.inSagWindow(value, window)
+    Column(Modifier.fillMaxWidth().padding(vertical = 3.dp)) {
+        Row {
+            Text(label, style = MaterialTheme.typography.labelMedium, modifier = Modifier.weight(1f))
+            Text(value?.let { "${fmt(it, 1)} mm" } ?: "…", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold, color = if (inWin) lab.good else lab.warn)
+        }
+        androidx.compose.foundation.Canvas(Modifier.fillMaxWidth().height(12.dp).semantics { contentDescription = "$label, Ziel ${fmt(window.first, 0)} bis ${fmt(window.second, 0)} mm" }) {
+            val r = androidx.compose.ui.geometry.CornerRadius(size.height / 2)
+            drawRoundRect(track, cornerRadius = r)
+            val x0 = (window.first / max * size.width).toFloat(); val x1 = (window.second / max * size.width).toFloat()
+            drawRoundRect(lab.good.copy(alpha = 0.35f), topLeft = androidx.compose.ui.geometry.Offset(x0, 0f), size = androidx.compose.ui.geometry.Size(x1 - x0, size.height), cornerRadius = r)
+            value?.let {
+                val x = (it.coerceIn(0.0, max) / max * size.width).toFloat()
+                drawCircle(if (inWin) lab.good else lab.warn, size.height * 0.62f, androidx.compose.ui.geometry.Offset(x, size.height / 2))
+                drawCircle(androidx.compose.ui.graphics.Color.White, size.height * 0.25f, androidx.compose.ui.geometry.Offset(x, size.height / 2))
+            }
+        }
+        Text("Ziel ${fmt(window.first, 0)}–${fmt(window.second, 0)} mm", style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
     }
 }

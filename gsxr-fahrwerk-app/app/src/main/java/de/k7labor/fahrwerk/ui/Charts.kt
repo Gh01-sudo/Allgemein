@@ -13,7 +13,15 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -80,18 +88,33 @@ fun LineChart(
     cursorX: Double? = null,
     hLines: List<Pair<Double, String>> = emptyList(),
     xDecimals: Int = 1,
-    yDecimals: Int = 0
+    yDecimals: Int = 0,
+    onScrub: ((Double) -> Unit)? = null
 ) {
     val measurer = rememberTextMeasurer()
+    // Antippen oder waagrecht wischen zeigt die Werte an dieser Stelle; mit onScrub wird zusätzlich die Zeit gesetzt
+    var inspect by remember { mutableStateOf<Double?>(null) }
+    val geo = remember { ChartGeo() }
+    val curScrub by rememberUpdatedState(onScrub)
+    fun pick(px: Float) {
+        val v = geo.xAt(px) ?: return
+        inspect = v
+        curScrub?.invoke(v)
+    }
     val onSurf = MaterialTheme.colorScheme.onSurfaceVariant
     val lab = LocalLabColors.current
+    val tipBg = MaterialTheme.colorScheme.surfaceContainerHighest.copy(alpha = 0.94f)
     val desc = "Diagramm $yLabel über $xLabel: " + series.joinToString("; ") { s ->
         val ymax = s.y.maxOrNull() ?: 0.0
         "${s.label} bis ${fmt(ymax, yDecimals)}"
     }
     Column(modifier) {
         Box(Modifier.fillMaxWidth().height(height).semantics { contentDescription = desc }) {
-            Canvas(Modifier.fillMaxWidth().height(height)) {
+            Canvas(
+                Modifier.fillMaxWidth().height(height)
+                    .pointerInput(Unit) { detectTapGestures(onTap = { pick(it.x) }, onDoubleTap = { inspect = null }) }
+                    .pointerInput(Unit) { detectHorizontalDragGestures { ch, _ -> ch.consume(); pick(ch.position.x) } }
+            ) {
                 val padL = 46.dp.toPx(); val padR = 8.dp.toPx(); val padT = 8.dp.toPx(); val padB = 30.dp.toPx()
                 val w = size.width - padL - padR
                 val h = size.height - padT - padB
@@ -112,6 +135,7 @@ fun LineChart(
                 }
                 val lx0 = tx(x0); val lx1 = tx(x1)
                 fun px(v: Double) = padL + ((tx(v) - lx0) / (lx1 - lx0) * w).toFloat()
+                geo.set(padL, w, lx0, lx1, logX)
                 fun py(v: Double) = padT + (h - (v - y0) / (y1 - y0) * h).toFloat()
                 val style = TextStyle(fontSize = 10.sp, color = onSurf)
 
@@ -181,6 +205,23 @@ fun LineChart(
                         drawLine(onSurf.copy(alpha = 0.8f), Offset(p, padT), Offset(p, padT + h), 1.5f)
                     }
                 }
+                // Messwerte an der gewählten Stelle (bei Zeitverläufen folgt sie der Wiedergabe)
+                val ix = (if (onScrub != null) cursorX else null) ?: inspect
+                if (ix != null && ix >= x0 && ix <= x1) {
+                    val p = px(ix)
+                    drawLine(onSurf, Offset(p, padT), Offset(p, padT + h), 1.2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 4f)))
+                    val rows = all.mapNotNull { s -> valueAt(s, ix)?.let { v -> Triple(s, v, py(v)) } }
+                    for ((s, _, yy) in rows) if (yy in padT..(padT + h)) { drawCircle(s.color, 4.dp.toPx(), Offset(p, yy)); drawCircle(Color.White, 1.8.dp.toPx(), Offset(p, yy)) }
+                    val tipStyle = TextStyle(fontSize = 10.sp, color = onSurf)
+                    val lines = listOf(measurer.measure("$xLabel: ${fmt(ix, if (logX) 2 else max(xDecimals, 2))}", tipStyle)) +
+                        rows.map { (s, v, _) -> measurer.measure("${s.label}: ${fmt(v, max(yDecimals, 1))}", tipStyle.copy(color = s.color)) }
+                    val tw = lines.maxOf { it.size.width } + 10f
+                    val th = lines.sumOf { it.size.height } + 6f
+                    val bx = if (p + 8 + tw < padL + w) p + 8 else p - 8 - tw
+                    drawRoundRect(tipBg, Offset(bx, padT + 2), androidx.compose.ui.geometry.Size(tw, th.toFloat()), androidx.compose.ui.geometry.CornerRadius(8f))
+                    var yy = padT + 5
+                    for (t in lines) { drawText(t, topLeft = Offset(bx + 5, yy)); yy += t.size.height }
+                }
                 // Achsbeschriftung
                 val yl = measurer.measure(yLabel, style)
                 drawText(yl, topLeft = Offset(padL + 4.dp.toPx(), padT))
@@ -198,6 +239,37 @@ fun LineChart(
             }
         }
     }
+}
+
+/** Geometrie der letzten Zeichnung, um Fingerposition in x-Werte umzurechnen. */
+private class ChartGeo {
+    private var padL = 0f; private var w = 0f; private var lx0 = 0.0; private var lx1 = 1.0; private var log = false
+    fun set(padL: Float, w: Float, lx0: Double, lx1: Double, log: Boolean) { this.padL = padL; this.w = w; this.lx0 = lx0; this.lx1 = lx1; this.log = log }
+    fun xAt(px: Float): Double? {
+        if (w <= 0f) return null
+        val f = ((px - padL) / w).coerceIn(0f, 1f)
+        val t = lx0 + (lx1 - lx0) * f
+        return if (log) 10.0.pow(t) else t
+    }
+}
+
+/** Wert einer Kurve an x: bei steigender x-Folge linear interpoliert, sonst nächster Punkt. */
+fun valueAt(s: Series, x: Double): Double? {
+    val n = min(s.x.size, s.y.size)
+    if (n == 0) return null
+    var mono = true
+    for (i in 1 until n) if (s.x[i] < s.x[i - 1]) { mono = false; break }
+    if (mono) {
+        if (x < s.x[0] || x > s.x[n - 1]) return null
+        var lo = 0; var hi = n - 1
+        while (hi - lo > 1) { val mid = (lo + hi) / 2; if (s.x[mid] <= x) lo = mid else hi = mid }
+        val dx = s.x[hi] - s.x[lo]
+        val v = if (dx <= 0) s.y[lo] else s.y[lo] + (s.y[hi] - s.y[lo]) * (x - s.x[lo]) / dx
+        return v.takeIf { it.isFinite() }
+    }
+    var best = 0; var bd = Double.MAX_VALUE
+    for (i in 0 until n) { val d = abs(s.x[i] - x); if (d < bd) { bd = d; best = i } }
+    return s.y[best].takeIf { it.isFinite() }
 }
 
 fun absMax(a: DoubleArray) = a.maxOfOrNull { abs(it) } ?: 0.0

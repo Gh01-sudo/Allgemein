@@ -31,6 +31,20 @@ import de.k7labor.fahrwerk.physics.Group
 import de.k7labor.fahrwerk.physics.Physics
 import de.k7labor.fahrwerk.physics.Profile
 import de.k7labor.fahrwerk.physics.fmt
+import de.k7labor.fahrwerk.ui.bike.BikePart
+import de.k7labor.fahrwerk.ui.bike.BikeScene
+import de.k7labor.fahrwerk.ui.bike.PartChips
+import de.k7labor.fahrwerk.ui.bike.PartPanel
+import de.k7labor.fahrwerk.ui.bike.SceneHint
+import de.k7labor.fahrwerk.ui.bike.SceneState
+import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.SegmentedButton
+import androidx.compose.material3.SegmentedButtonDefaults
+import androidx.compose.material3.SingleChoiceSegmentedButtonRow
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import kotlin.math.abs
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -42,17 +56,26 @@ fun SetupScreen(vm: LabViewModel) {
     val busy by vm.busy.collectAsState()
     val rec by vm.recommendation.collectAsState()
     val recBusy by vm.recBusy.collectAsState()
-    val pose = remember(st) { Physics.staticPose(st) }
-    val stockPose = remember(st.values["rider"], st.values["passenger"], st.values["luggage"], st.values["fuel"]) { Physics.staticPose(st.toStockKeepLoad()) }
+    val sim = remember(st) { Physics.staticState(st) }
+    val stockSt = remember(st) { st.toStockKeepLoad() }
+    val stockSim = remember(stockSt) { Physics.staticState(stockSt) }
+    val pose = remember(sim) { Physics.pose(sim.veh, sim.q[0], sim.q[1], sim.q[2], sim.q[3], sim.q[4]) }
+    val stockPose = remember(stockSim) { Physics.pose(stockSim.veh, stockSim.q[0], stockSim.q[1], stockSim.q[2], stockSim.q[3], stockSim.q[4]) }
+    var technical by rememberSaveable { mutableStateOf(false) }
+    var selName by rememberSaveable { mutableStateOf<String?>(null) }
+    val selected = selName?.let { n -> BikePart.entries.firstOrNull { it.name == n } }
+    val state = remember(sim) { SceneState.fromSim(sim) }
 
     LazyColumn(Modifier.fillMaxWidth()) {
         item {
             if (busy) LinearProgressIndicator(Modifier.fillMaxWidth()) else Spacer(Modifier.height(4.dp))
             SectionCard("Ergebnis") {
-                Row(Modifier.fillMaxWidth()) {
-                    KeyValue("Setup-Index", run?.let { "${fmt(it.overall, 0)} / 100" } ?: "…", Modifier.weight(1f), sub = stock?.let { "Serie ${fmt(it.overall, 0)}" })
-                    KeyValue("Durchhang vorn", run?.let { "${fmt(it.sags.sagF, 1)} mm" } ?: "…", Modifier.weight(1f), sub = "Ziel ${fmt(st.profile.sagWinF.first, 0)}–${fmt(st.profile.sagWinF.second, 0)}")
-                    KeyValue("Durchhang hinten", run?.let { "${fmt(it.sags.sagR, 1)} mm" } ?: "…", Modifier.weight(1f), sub = "Ziel ${fmt(st.profile.sagWinR.first, 0)}–${fmt(st.profile.sagWinR.second, 0)}")
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    ScoreGauge(run?.overall, stock?.overall, Modifier.padding(end = 8.dp))
+                    Column(Modifier.weight(1f)) {
+                        SagBar("Durchhang vorn", run?.sags?.sagF, st.profile.sagWinF, 60.0)
+                        SagBar("Durchhang hinten", run?.sags?.sagR, st.profile.sagWinR, 60.0)
+                    }
                 }
                 Row(Modifier.fillMaxWidth()) {
                     KeyValue("Lenkkopf", "${fmt(pose.rakeDeg, 2)}°", Modifier.weight(1f), sub = "Serie ${fmt(stockPose.rakeDeg, 2)}°")
@@ -70,6 +93,24 @@ fun SetupScreen(vm: LabViewModel) {
                     Button(onClick = { vm.requestRecommendation() }, enabled = !recBusy, modifier = Modifier.weight(1f)) { Text(if (recBusy) "Rechne…" else "Empfehlung anzeigen") }
                 }
             }
+        }
+        item {
+            SectionCard("Dein Motorrad im Stand") {
+                SingleChoiceSegmentedButtonRow(Modifier.fillMaxWidth().padding(bottom = 6.dp)) {
+                    SegmentedButton(selected = !technical, onClick = { technical = false }, shape = SegmentedButtonDefaults.itemShape(0, 2)) { Text("Außen") }
+                    SegmentedButton(selected = technical, onClick = { technical = true }, shape = SegmentedButtonDefaults.itemShape(1, 2)) { Text("Technik") }
+                }
+                BikeScene(
+                    sim.veh, state, state, { 0.0 }, 1.0, stockSim.veh to SceneState.fromSim(stockSim), technical, selected,
+                    { selName = it?.name }, onScrub = null, exaggerated = false, height = 270.dp, showHeader = false
+                )
+                SceneHint("Bauteil oder weißen Einsteller antippen · zwei Finger = Zoom · gestrichelt = Serie")
+                Spacer(Modifier.height(6.dp))
+                PartChips(selected) { selName = it?.name }
+            }
+        }
+        if (selected != null) item {
+            PartPanel(selected, sim.veh, state, st, { k, v -> vm.set(k, v) }, { k, d -> vm.step(k, d) })
         }
         for (g in Group.entries) {
             item(key = g.name) {
