@@ -3,8 +3,8 @@ package de.k7labor.fahrwerk.physics
 import kotlin.math.abs
 import kotlin.math.atan2
 import kotlin.math.cos
+import kotlin.math.floor
 import kotlin.math.max
-import kotlin.math.round
 import kotlin.math.sin
 
 data class Sags(val sagF: Double, val sagR: Double, val freeF: Double, val freeR: Double, val loadF: Double, val loadR: Double)
@@ -124,7 +124,8 @@ object Physics {
         val rRaw = solvePreload(out, false, p.sagR)
         out = out.with("rPre", rRaw)
         // Dämpfung
-        val wcorr = round((st.rider + st.passenger * 0.6 - 80) / 12)
+        // halbe Klicks aufrunden wie im Web-Labor (kotlin.math.round rundet ,5 zur geraden Zahl: 86 kg ergäbe 0, 110 kg 2)
+        val wcorr = floor((st.rider + st.passenger * 0.6 - 80) / 12 + 0.5)
         val s = Setup.STOCK
         out = out.with("fReb", s.fReb + p.offFReb - wcorr)
             .with("fLS", s.fLS + p.offFLS - wcorr)
@@ -132,8 +133,8 @@ object Physics {
             .with("rReb", s.rReb + p.offRReb - wcorr - (if (st.passenger > 0) 2 else 0))
             .with("rLS", s.rLS + p.offRLS - wcorr - (if (st.passenger > 0) 1 else 0))
             .with("rHS", s.rHS + p.offRHS)
-        val two = st.passenger > 0 && p != Profile.TRACK
-        out = out.with("pF", if (two) 2.5 else p.pF).with("pR", if (two) 2.9 else p.pR)
+        val (wantF, wantR) = targetPressures(p, st.passenger)
+        out = out.with("pF", wantF).with("pR", wantR)
         // Durchschlagreserve Gabel beim Bremsen prüfen
         val r = runScenario(ScenarioId.BRAKE, out, speedKmh, calibration)
         if (r.front.usage > 0.95) {
@@ -183,13 +184,18 @@ object Physics {
             if (r.veh.spinMs > 20) out += Note(Level.WARN, "Hinterrad dreht durch", "${fmt(r.veh.spinMs, 0)} ms mit mehr als 25 % Schlupf.")
         }
         // Luftdruck (Review-Punkt 16: schon ab 0,05 bar Abweichung melden)
-        val two = st.passenger > 0
-        val wantF = if (p == Profile.TRACK && !two) p.pF else 2.5
-        val wantR = if (p == Profile.TRACK && !two) p.pR else 2.9
-        if (abs(st.pF - wantF) > 0.025 || abs(st.pR - wantR) > 0.025) out += Note(Level.INFO, "Luftdruck weicht ab", "Eingestellt ${fmt(st.pF, 2)} / ${fmt(st.pR, 2)} bar kalt, Richtwert ${fmt(wantF, 2)} / ${fmt(wantR, 2)} bar kalt${if (p == Profile.TRACK) " (Rennstrecke: Reifenhersteller-Angabe für warme Reifen beachten)" else " (Suzuki)"}.")
+        val (wantF, wantR) = targetPressures(p, st.passenger)
+        if (abs(st.pF - wantF) > 0.025 || abs(st.pR - wantR) > 0.025) out += Note(Level.INFO, "Luftdruck weicht ab", "Eingestellt ${fmt(st.pF, 2)} / ${fmt(st.pR, 2)} bar kalt, Richtwert ${fmt(wantF, 2)} / ${fmt(wantR, 2)} bar kalt${if (p == Profile.TRACK && st.passenger <= 0) " (Rennstrecke: Reifenhersteller-Angabe für warme Reifen beachten)" else " (Suzuki)"}.")
         if (out.isEmpty()) out += Note(Level.INFO, "Keine Auffälligkeiten", "Durchhang im Zielfenster, keine Durchschläge, kein Blockieren.")
         return out
     }
+
+    /**
+     * Richtwert Luftdruck kalt (vorn to hinten), gemeinsam für Empfehlung und Prüfprotokoll:
+     * mit Sozius immer die Suzuki-Vorgabe 2,50 / 2,90 bar, solo der Wert des Profils.
+     */
+    fun targetPressures(p: Profile, passenger: Double): Pair<Double, Double> =
+        if (passenger > 0) 2.5 to 2.9 else p.pF to p.pR
 
     /** Vorspannung (Ringe vorn bzw. mm hinten) für einen Ziel-Durchhang, ohne Begrenzung. */
     fun solvePreload(st: Setup, front: Boolean, target: Double): Double {

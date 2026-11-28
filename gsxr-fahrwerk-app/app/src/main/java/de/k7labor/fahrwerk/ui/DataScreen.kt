@@ -167,7 +167,7 @@ private fun AboutTab() {
                 Text("Sicherheit", style = MaterialTheme.typography.titleSmall)
                 BodyText("Fahrwerksänderungen verändern das Fahrverhalten. Immer in kleinen Schritten ändern, beide Gabelholme gleich einstellen, auf einer bekannten Strecke vorsichtig probefahren. Ölstand und Federn: Werkstattarbeit. Diese App ersetzt keine Fachwerkstatt.")
                 Spacer(Modifier.height(6.dp))
-                BodyText("Alle Daten bleiben auf dem Handy. Keine Internetverbindung, keine Werbung, kein Konto. Suzuki und GSX-R sind Marken der Suzuki Motor Corporation; diese App ist ein privates Projekt ohne Verbindung zu Suzuki.")
+                BodyText("Die App sendet nichts: keine Internetverbindung, keine Werbung, kein Konto. Gespeichert wird auf dem Handy; ist die Android-Datensicherung eingeschaltet, sichert Android Setups und Messwerte mit. Suzuki und GSX-R sind Marken der Suzuki Motor Corporation; diese App ist ein privates Projekt ohne Verbindung zu Suzuki.")
             }
             Spacer(Modifier.height(24.dp))
         }

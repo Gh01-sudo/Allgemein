@@ -188,8 +188,9 @@ fun runScenario(id: ScenarioId, st: Setup, speedKmh: Double, cal: Calibration, d
     var seatAccAcc = 0.0
     var seatCount = 0
     val seatBx = veh.seatX; val seatBz = veh.seatZ
-    // Bremsweg und mittlere Verzögerung
+    // Bremsweg und mittlere Verzögerung, nur solange wirklich gebremst wird
     var tBrakeStart = -1.0; var xBrakeStart = 0.0
+    var tBrakeEnd = -1.0; var xBrakeEnd = 0.0
 
     for (i in 0..nSteps) {
         val t = i * dt
@@ -211,6 +212,8 @@ fun runScenario(id: ScenarioId, st: Setup, speedKmh: Double, cal: Calibration, d
             sim.brakeR = min(0.15 * fb, 0.8 * st.profile.mu * sim.fzR) * sim.reR
             sim.drive = 0.0
         } else {
+            // Bremsende: unter 4 m/s gelöst oder Rampe ausgelaufen
+            if (tBrakeStart >= 0 && tBrakeEnd < 0) { tBrakeEnd = t; xBrakeEnd = sim.q[0] }
             sim.brakeF = 0.0; sim.brakeR = 0.0
             val fd = drag + mTot * aAcc + mTot * (3.0 * err + 2.0 * integ)
             val (fMax, gear) = K7.maxDrive(v, sim.reR)
@@ -249,7 +252,7 @@ fun runScenario(id: ScenarioId, st: Setup, speedKmh: Double, cal: Calibration, d
     val front = axleKpi(tr, tr.sF, tr.fzF, K7.TRAVEL_F_MM, staticF, sc.tEnd)
     val rear = axleKpi(tr, tr.xR, tr.fzR, K7.TRAVEL_R_MM, staticR, sc.tEnd)
     val longitudinal = id == ScenarioId.BRAKE || id == ScenarioId.FULLBRAKE || id == ScenarioId.ACCEL
-    val vk = vehKpi(tr, staticF, staticR, tBrakeStart, xBrakeStart, sim, longitudinal)
+    val vk = vehKpi(tr, staticF, staticR, tBrakeStart, xBrakeStart, tBrakeEnd, xBrakeEnd, sim, longitudinal)
     val sF = subScores(front, vk, id, true)
     val sR = subScores(rear, vk, id, false)
     val p = st.profile
@@ -286,7 +289,7 @@ private fun axleKpi(tr: Trace, x: FloatArray, fz: FloatArray, travel: Double, st
     )
 }
 
-private fun vehKpi(tr: Trace, sF: Double, sR: Double, tB: Double, xB: Double, sim: Sim, longitudinal: Boolean): VehKpi {
+private fun vehKpi(tr: Trace, sF: Double, sR: Double, tB: Double, xB: Double, tBE: Double, xBE: Double, sim: Sim, longitudinal: Boolean): VehKpi {
     val dtr = DT * REC
     val n = tr.size
     val i0 = (0.25 / dtr).toInt()
@@ -307,11 +310,14 @@ private fun vehKpi(tr: Trace, sF: Double, sR: Double, tB: Double, xB: Double, si
     var meanDecel = 0.0
     var dist = 0.0
     if (tB >= 0) {
-        // mittlere Verzögerung in der Haltephase (0,4 s nach Bremsbeginn bis 1,4 s danach)
-        val iB = min(n - 2, ((tB + 0.4) / dtr).toInt())
-        val iE = min(n - 1, iB + (1.0 / dtr).toInt())
+        // mittlere Verzögerung in der Haltephase (0,4 s nach Bremsbeginn bis 1,4 s danach), höchstens bis zum
+        // Bremsende: bei niedrigem Tempo ist die Bremsung vorher vorbei, das Rollen danach zählt nicht mit
+        val iStop = if (tBE >= 0) min(n - 1, (tBE / dtr).toInt()) else n - 1
+        var iB = min(n - 2, ((tB + 0.4) / dtr).toInt())
+        var iE = min(iStop, iB + (1.0 / dtr).toInt())
+        if (iE <= iB) { iB = min(n - 2, (tB / dtr).toInt()); iE = max(iB + 1, iStop) }
         meanDecel = (tr.speed[iB] - tr.speed[iE]) / 3.6 / ((iE - iB) * dtr) / G
-        dist = sim.q[0] - xB
+        dist = (if (tBE >= 0) xBE else sim.q[0]) - xB
     }
     return VehKpi(sqrt(acc2 / max(cnt, 1)), maxP, minP, meanDecel, lockF, lockR, stoppie, wheelie, spin, dist, tr.speed[n - 1].toDouble())
 }

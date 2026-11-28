@@ -34,6 +34,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -47,6 +48,10 @@ import de.k7labor.fahrwerk.physics.Group
 import de.k7labor.fahrwerk.physics.RunAll
 import de.k7labor.fahrwerk.physics.ScenarioId
 import de.k7labor.fahrwerk.physics.fmt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.InputStream
 import java.text.DateFormat
 import java.util.Date
 import kotlin.math.abs
@@ -71,9 +76,11 @@ fun LibraryScreen(vm: LabViewModel) {
             vm.toast(if (ok) "Setup als Datei gespeichert" else "Speichern fehlgeschlagen")
         }
     }
+    val scope = rememberCoroutineScope()
     val openDoc = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        if (uri != null) {
-            val txt = runCatching { ctx.contentResolver.openInputStream(uri)?.use { s -> s.readBytes().take(200_000).toByteArray().decodeToString() } }.getOrNull()
+        if (uri != null) scope.launch {
+            // Höchstens 200 kB lesen und nicht im Hauptthread: eine versehentlich gewählte große Datei soll weder hängen noch abstürzen
+            val txt = withContext(Dispatchers.IO) { runCatching { ctx.contentResolver.openInputStream(uri)?.use { s -> readAtMost(s, 200_000).decodeToString() } }.getOrNull() }
             if (txt == null) vm.toast("Datei konnte nicht gelesen werden") else importMsgs = vm.importText(txt, saveAsNew = true).messages.ifEmpty { listOf("Setup importiert und in der Bibliothek gespeichert.") }
         }
     }
@@ -100,7 +107,7 @@ fun LibraryScreen(vm: LabViewModel) {
                     OutlinedButton(onClick = { openDoc.launch(arrayOf("application/json", "text/plain", "*/*")) }) { Text("Datei importieren") }
                     OutlinedButton(onClick = { importOpen = true }) { Text("Text einfügen") }
                 }
-                BodyText("Alles bleibt auf dem Handy. Dateien aus dem alten Web-Labor (JSON) lassen sich ebenfalls importieren.")
+                BodyText("Gespeichert wird auf dem Handy (und in der Android-Datensicherung, falls eingeschaltet). Dateien aus dem alten Web-Labor (JSON) lassen sich ebenfalls importieren.")
             }
         }
         item {
@@ -178,6 +185,17 @@ fun LibraryScreen(vm: LabViewModel) {
             confirmButton = { TextButton(onClick = { importMsgs = null }) { Text("OK") } }
         )
     }
+}
+
+private fun readAtMost(s: InputStream, limit: Int): ByteArray {
+    val buf = ByteArray(limit)
+    var n = 0
+    while (n < limit) {
+        val r = s.read(buf, n, limit - n)
+        if (r < 0) break
+        n += r
+    }
+    return buf.copyOf(n)
 }
 
 @Composable

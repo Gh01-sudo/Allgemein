@@ -1,0 +1,62 @@
+name: K7 Fahrwerkslabor (Android)
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "gsxr-fahrwerk-app/**"
+      - ".github/workflows/fahrwerk-app.yml"
+  pull_request:
+    paths:
+      - "gsxr-fahrwerk-app/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: gsxr-fahrwerk-app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Tests und Debug-Build
+        run: ./gradlew --no-daemon testDebugUnitTest assembleDebug
+
+  release:
+    # Die signierte APK wird lokal mit dem privaten Schlüssel gebaut und liegt im Ordner release/.
+    # Dieser Job veröffentlicht sie nur als GitHub-Release, er braucht keinen Schlüssel.
+    needs: test
+    if: github.event_name == 'push' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Version lesen
+        id: v
+        run: |
+          v=$(grep -oP 'versionName = "\K[^"]+' gsxr-fahrwerk-app/app/build.gradle.kts)
+          echo "version=$v" >> "$GITHUB_OUTPUT"
+          test -f "gsxr-fahrwerk-app/release/K7-Fahrwerkslabor-$v.apk"
+      - name: Release anlegen (nur wenn noch nicht vorhanden)
+        env:
+          GH_TOKEN: ${{ github.token }}
+          V: ${{ steps.v.outputs.version }}
+        run: |
+          tag="fahrwerk-app-v$V"
+          if gh release view "$tag" >/dev/null 2>&1; then
+            echo "Release $tag gibt es schon."
+            exit 0
+          fi
+          gh release create "$tag" "gsxr-fahrwerk-app/release/K7-Fahrwerkslabor-$V.apk" \
+            --title "K7 Fahrwerkslabor $V" \
+            --notes-file gsxr-fahrwerk-app/release/NOTES.md \
+            --target "$GITHUB_SHA"

@@ -30,6 +30,7 @@ import de.k7labor.fahrwerk.ui.LibraryScreen
 import de.k7labor.fahrwerk.ui.RigScreen
 import de.k7labor.fahrwerk.ui.SetupScreen
 import de.k7labor.fahrwerk.ui.WorkshopScreen
+import kotlinx.coroutines.flow.collectLatest
 
 class MainActivity : ComponentActivity() {
     private val vm: LabViewModel by viewModels()
@@ -46,7 +47,8 @@ class MainActivity : ComponentActivity() {
 fun App(vm: LabViewModel) {
     val tab by vm.tab.collectAsState()
     val snack = remember { SnackbarHostState() }
-    LaunchedEffect(Unit) { vm.messages.collect { snack.currentSnackbarData?.dismiss(); snack.showSnackbar(it) } }
+    // collectLatest bricht die laufende Meldung ab (blendet sie aus), statt neue Meldungen hinten anzustellen
+    LaunchedEffect(Unit) { vm.messages.collectLatest { snack.showSnackbar(it) } }
     Scaffold(
         topBar = { CenterAlignedTopAppBar(title = { Text("K7 Fahrwerkslabor · ${tab.title}") }) },
         bottomBar = {

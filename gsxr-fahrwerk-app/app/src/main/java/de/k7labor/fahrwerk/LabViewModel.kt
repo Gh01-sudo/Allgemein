@@ -5,6 +5,7 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import de.k7labor.fahrwerk.data.Content
 import de.k7labor.fahrwerk.data.ImportResult
+import de.k7labor.fahrwerk.data.SagApplied
 import de.k7labor.fahrwerk.data.SagInput
 import de.k7labor.fahrwerk.data.SavedSetup
 import de.k7labor.fahrwerk.data.SetupCodec
@@ -24,6 +25,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
@@ -35,7 +37,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.util.UUID
-import kotlin.coroutines.coroutineContext
 import kotlin.math.abs
 
 enum class Tab(val title: String, val glyph: String) {
@@ -98,7 +99,9 @@ class LabViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             combine(_setup, _speed) { s, v -> s to v }.debounce(180).collectLatest { (s, v) ->
                 _busy.value = true
-                val job = coroutineContext[Job]
+                // currentCoroutineContext(): der Job dieses collectLatest-Durchlaufs. Ein bloßes
+                // coroutineContext würde hier den äußeren launch-Job liefern, der nie abgebrochen wird.
+                val job = currentCoroutineContext()[Job]
                 val cancelled = { job?.isActive == false }
                 val stockSt = s.toStockKeepLoad()
                 val key = SetupCodec.export(stockSt) + v
@@ -117,7 +120,7 @@ class LabViewModel(app: Application) : AndroidViewModel(app) {
             combine(_setup, shakeMode, shakeActive) { s, m, a -> Triple(s, m, a) }.debounce(250).collectLatest { (s, m, a) ->
                 if (!a) return@collectLatest
                 _frfBusy.value = true
-                val job = coroutineContext[Job]
+                val job = currentCoroutineContext()[Job]
                 val cancelled = { job?.isActive == false }
                 val r = withContext(Dispatchers.Default) {
                     Rig.shake(s, m, cancelled = cancelled) to Rig.shake(s.toStockKeepLoad(), m, cancelled = cancelled)
@@ -128,7 +131,7 @@ class LabViewModel(app: Application) : AndroidViewModel(app) {
         viewModelScope.launch {
             combine(_setup, cmpA, cmpB, _library, _speed) { s, a, b, lib, v -> listOf(a, b) to Triple(s, lib, v) }.debounce(300).collectLatest { (refs, ctx) ->
                 val (s, lib, v) = ctx
-                val job = coroutineContext[Job]
+                val job = currentCoroutineContext()[Job]
                 val map = mutableMapOf<String, RunAll>()
                 for (r in refs) {
                     val st = resolve(r.id, s, lib) ?: continue
@@ -175,9 +178,16 @@ class LabViewModel(app: Application) : AndroidViewModel(app) {
     fun requestRecommendation() {
         if (_recBusy.value) return
         _recBusy.value = true
-        val s = _setup.value; val v = _speed.value
         viewModelScope.launch {
-            val r = withContext(Dispatchers.Default) { Physics.recommend(s, v) }
+            // Ändert sich das Setup während der Rechnung, neu rechnen: sonst würde „Übernehmen“
+            // die inzwischen geänderten Werte (z. B. Fahrergewicht) stillschweigend zurücksetzen.
+            var s: Setup
+            var v: Double
+            var r: Physics.Recommendation
+            do {
+                s = _setup.value; v = _speed.value
+                r = withContext(Dispatchers.Default) { Physics.recommend(s, v) }
+            } while (s != _setup.value || v != _speed.value)
             _recommendation.value = r
             _recBusy.value = false
         }
@@ -210,8 +220,19 @@ class LabViewModel(app: Application) : AndroidViewModel(app) {
     // --- Durchhang ---
     fun setSag(s: SagInput) { _sag.value = s; store.saveSag(s) }
 
-    fun applySag(front: Boolean, newValue: Double) {
-        set(if (front) "fPre" else "rPre", newValue)
+    /** Zuletzt übernommene Durchhang-Empfehlung je Achse, gespeichert wie die Messwerte selbst. */
+    private val _sagApplied = MutableStateFlow(store.loadSagApplied())
+    val sagApplied = _sagApplied.asStateFlow()
+
+    /**
+     * Die Messung gehört zur Vorspannung [from]. Nach dem Übernehmen bezieht sich die Empfehlung weiter
+     * auf diesen Wert, bis neu gemessen wird; sonst würde dieselbe Messung die Änderung erneut vorschlagen.
+     */
+    fun applySag(front: Boolean, measured: List<Double>, from: Double, newValue: Double) {
+        val key = if (front) "fPre" else "rPre"
+        set(key, newValue)
+        _sagApplied.update { it + (front to SagApplied(measured, from, _setup.value[key])) }
+        store.saveSagApplied(_sagApplied.value)
         toast("Vorspannung im Modell angepasst")
     }
 

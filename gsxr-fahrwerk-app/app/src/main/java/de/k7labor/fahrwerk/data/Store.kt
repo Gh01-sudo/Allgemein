@@ -2,6 +2,7 @@ package de.k7labor.fahrwerk.data
 
 import android.content.Context
 import de.k7labor.fahrwerk.physics.Setup
+import org.json.JSONArray
 import org.json.JSONObject
 
 /** Lokale Speicherung auf dem Handy (keine Internetverbindung, kein Konto). */
@@ -34,10 +35,40 @@ class Store(ctx: Context) {
         prefs.edit().putString("sag", o.toString()).apply()
     }
 
+    /** Übernommene Durchhang-Empfehlungen überleben einen Neustart, sonst schlüge dieselbe Messung die Änderung erneut vor. */
+    fun loadSagApplied(): Map<Boolean, SagApplied> {
+        val txt = prefs.getString("sagApplied", null) ?: return emptyMap()
+        return try {
+            val o = JSONObject(txt)
+            val out = mutableMapOf<Boolean, SagApplied>()
+            for ((name, front) in listOf("front" to true, "rear" to false)) {
+                val e = o.optJSONObject(name) ?: continue
+                val arr = e.optJSONArray("measured") ?: continue
+                val measured = List(arr.length()) { arr.optDouble(it) }
+                val from = e.optDouble("from")
+                val to = e.optDouble("to")
+                if (measured.size == 3 && measured.all { it.isFinite() } && from.isFinite() && to.isFinite()) out[front] = SagApplied(measured, from, to)
+            }
+            out
+        } catch (e: Exception) { emptyMap() }
+    }
+
+    fun saveSagApplied(m: Map<Boolean, SagApplied>) {
+        val o = JSONObject()
+        for ((front, a) in m) {
+            if (!(a.measured.all { it.isFinite() } && a.from.isFinite() && a.to.isFinite())) continue
+            o.put(if (front) "front" else "rear", JSONObject().put("measured", JSONArray(a.measured)).put("from", a.from).put("to", a.to))
+        }
+        prefs.edit().putString("sagApplied", o.toString()).apply()
+    }
+
     var speed: Double
         get() = prefs.getFloat("speed", 80f).toDouble().coerceIn(30.0, 250.0)
         set(v) { prefs.edit().putFloat("speed", v.toFloat()).apply() }
 }
+
+/** Zuletzt übernommene Durchhang-Empfehlung einer Achse: Messwerte und Vorspannung vorher/nachher. */
+data class SagApplied(val measured: List<Double>, val from: Double, val to: Double)
 
 /** Durchhang-Messwerte in mm: 1 = ausgefedert, 2 = ohne Fahrer, 3 = mit Fahrer. */
 data class SagInput(

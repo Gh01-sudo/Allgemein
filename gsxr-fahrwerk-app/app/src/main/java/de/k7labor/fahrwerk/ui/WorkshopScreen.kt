@@ -37,6 +37,8 @@ import de.k7labor.fahrwerk.data.SagAdvice
 import de.k7labor.fahrwerk.data.SagInput
 import de.k7labor.fahrwerk.physics.Profile
 import de.k7labor.fahrwerk.physics.fmt
+import java.util.Locale
+import kotlin.math.abs
 
 @Composable
 fun WorkshopScreen(vm: LabViewModel) {
@@ -76,10 +78,16 @@ private fun SagTab(vm: LabViewModel) {
 private fun SagCard(vm: LabViewModel, front: Boolean, sag: SagInput, profile: Profile, currentPre: Double) {
     val v = if (front) listOf(sag.l1, sag.l2, sag.l3) else listOf(sag.r1, sag.r2, sag.r3)
     val labels = listOf("1 ausgefedert", "2 ohne Fahrer", "3 mit Fahrer")
-    // Texte separat halten, damit Kommas und halbe Eingaben nicht sofort überschrieben werden
-    val texts = remember(front) { mutableStateOf(v.map { fmt(it, 1) }) }
+    // Texte separat halten, damit Kommas und halbe Eingaben nicht sofort überschrieben werden.
+    // Ohne Tausenderpunkt und ohne Rundung formatieren: „1.050,0“ wäre beim Einlesen ungültig, und ein auf
+    // eine Stelle gerundeter Text passte nach dem Neuaufbau nicht mehr zur gespeicherten Messung.
+    val texts = remember(front) { mutableStateOf(v.map(::sagText)) }
     val parsed = texts.value.map { it.replace(',', '.').trim().toDoubleOrNull() ?: Double.NaN }
-    val r = SagAdvice.evaluate(front, parsed[0], parsed[1], parsed[2], profile, currentPre)
+    // Schon übernommen und seitdem nicht neu gemessen: Empfehlung bleibt auf die Vorspannung der Messung bezogen
+    val applied by vm.sagApplied.collectAsState()
+    val done = applied[front]?.takeIf { abs(it.to - currentPre) < 1e-9 && it.measured == parsed }
+    val basePre = done?.from ?: currentPre
+    val r = SagAdvice.evaluate(front, parsed[0], parsed[1], parsed[2], profile, basePre)
     val lab = LocalLabColors.current
     SectionCard(if (front) "Gabel vorn" else "Federbein hinten") {
         Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
@@ -87,8 +95,9 @@ private fun SagCard(vm: LabViewModel, front: Boolean, sag: SagInput, profile: Pr
                 OutlinedTextField(
                     value = texts.value[i],
                     onValueChange = { nv ->
-                        val l = texts.value.toMutableList(); l[i] = nv.take(8); texts.value = l
-                        val num = nv.replace(',', '.').trim().toDoubleOrNull()
+                        val t = nv.take(8)
+                        val l = texts.value.toMutableList(); l[i] = t; texts.value = l
+                        val num = t.replace(',', '.').trim().toDoubleOrNull()
                         if (num != null && num.isFinite()) {
                             val s = when {
                                 front && i == 0 -> sag.copy(l1 = num); front && i == 1 -> sag.copy(l2 = num); front -> sag.copy(l3 = num)
@@ -114,9 +123,17 @@ private fun SagCard(vm: LabViewModel, front: Boolean, sag: SagInput, profile: Pr
             Text(r.action, style = MaterialTheme.typography.bodyMedium)
             r.springNote?.let { Text(it, color = lab.warn, style = MaterialTheme.typography.bodySmall) }
             val nv = r.newValue
-            Button(onClick = { if (nv != null) vm.applySag(front, nv) }, enabled = nv != null && kotlin.math.abs(nv - currentPre) > 1e-9, modifier = Modifier.padding(top = 6.dp)) { Text("Ins Modell übernehmen") }
+            if (done != null && nv != null && abs(nv - currentPre) <= 1e-9) BodyText("Ins Modell übernommen. Nach dem Einstellen am Motorrad neu messen und die neuen Werte eintragen.")
+            Button(onClick = { if (nv != null) vm.applySag(front, parsed, basePre, nv) }, enabled = nv != null && abs(nv - currentPre) > 1e-9, modifier = Modifier.padding(top = 6.dp)) { Text("Ins Modell übernehmen") }
         }
     }
+}
+
+/** Messwert als Eingabetext, der beim Einlesen wieder genau den gespeicherten Wert ergibt. */
+private fun sagText(x: Double): String = when {
+    !x.isFinite() -> ""
+    x == Math.rint(x) -> String.format(Locale.GERMANY, "%.1f", x)
+    else -> java.math.BigDecimal.valueOf(x).toPlainString().replace('.', ',')
 }
 
 @OptIn(ExperimentalLayoutApi::class)
